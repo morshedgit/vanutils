@@ -1,0 +1,436 @@
+[
+  {
+    "id": "lions-gate",
+    "name": "Lions Gate Bridge (First Narrows)",
+    "shortName": "Lions Gate",
+    "highwayNumber": "Hwy 99",
+    "region": "burrard_inlet",
+    "directions": {
+      "primary": {
+        "directionName": "Northbound (To North Shore)",
+        "travelTimeMinutes": 16,
+        "normalTimeMinutes": 6,
+        "delayMinutes": 10,
+        "averageSpeedKmh": 24,
+        "status": "moderate"
+      },
+      "reverse": {
+        "directionName": "Southbound (To Downtown)",
+        "travelTimeMinutes": 8,
+        "normalTimeMinutes": 6,
+        "delayMinutes": 2,
+        "averageSpeedKmh": 48,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": true,
+      "activeConfiguration": "2 Lanes Northbound, 1 Lane Southbound",
+      "state": "outbound_priority",
+      "lastChangedTimestamp": "2026-08-17T15:00:00Z"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Lions Gate Mid-Span",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg",
+        "viewLocation": "North & Southbound Overdeck"
+      },
+      {
+        "name": "Lions Gate North Approach",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/530.jpg",
+        "viewLocation": "Marine Dr & Taylor Way Intersection"
+      },
+      {
+        "name": "Stanley Park Causeway",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/240.jpg",
+        "viewLocation": "Causeway near Pipeline Rd"
+      }
+    ],
+    "officialSourceUrl": "https://www.drivebc.ca/",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "ironworkers",
+    "name": "Ironworkers Memorial Bridge (Second Narrows)",
+    "shortName": "Ironworkers Memorial",
+    "highwayNumber": "Hwy 1",
+    "region": "burrard_inlet",
+    "directions": {
+      "primary": {
+        "directionName": "Northbound (To North Shore)",
+        "travelTimeMinutes": 7,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 2,
+        "averageSpeedKmh": 62,
+        "status": "flowing"
+      },
+      "reverse": {
+        "directionName": "Southbound (To Vancouver)",
+        "travelTimeMinutes": 6,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 68,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": false,
+      "activeConfiguration": "3 Lanes Northbound, 3 Lanes Southbound (Standard)",
+      "state": "not_applicable"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Hwy 1 at Cassiar Tunnel",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/528.jpg",
+        "viewLocation": "East Vancouver South Approach"
+      },
+      {
+        "name": "Hwy 1 at Main St North Van",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/563.jpg",
+        "viewLocation": "North Vancouver North Approach"
+      }
+    ],
+    "officialSourceUrl": "https://www.drivebc.ca/",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "massey-tunnel",
+    "name": "George Massey Tunnel",
+    "shortName": "Massey Tunnel",
+    "highwayNumber": "Hwy 99",
+    "region": "fraser_river",
+    "directions": {
+      "primary": {
+        "directionName": "Southbound (To Delta/Surrey)",
+        "travelTimeMinutes": 15,
+        "normalTimeMinutes": 7,
+        "delayMinutes": 8,
+        "averageSpeedKmh": 32,
+        "status": "moderate"
+      },
+      "reverse": {
+        "directionName": "Northbound (To Richmond/Vancouver)",
+        "travelTimeMinutes": 8,
+        "normalTimeMinutes": 7,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 58,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": true,
+      "activeConfiguration": "3 Lanes Southbound, 1 Lane Northbound",
+      "state": "outbound_priority",
+      "lastChangedTimestamp": "2026-08-17T15:15:00Z"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Hwy 99 at Steveston Hwy",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/534.jpg",
+        "viewLocation": "Richmond North Approach"
+      },
+      {
+        "name": "Hwy 99 at Hwy 17A",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/535.jpg",
+        "viewLocation": "Delta South Approach"
+      }
+    ],
+    "officialSourceUrl": "https://www.drivebc.ca/",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "alex-fraser",
+    "name": "Alex Fraser Bridge",
+    "shortName": "Alex Fraser",
+    "highwayNumber": "Hwy 91",
+    "region": "fraser_river",
+    "directions": {
+      "primary": {
+        "directionName": "Southbound (To Delta/Surrey)",
+        "travelTimeMinutes": 12,
+        "normalTimeMinutes": 6,
+        "delayMinutes": 6,
+        "averageSpeedKmh": 42,
+        "status": "moderate"
+      },
+      "reverse": {
+        "directionName": "Northbound (To Richmond/New West)",
+        "travelTimeMinutes": 7,
+        "normalTimeMinutes": 6,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 64,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": true,
+      "activeConfiguration": "4 Lanes Southbound, 3 Lanes Northbound (Road Zipper Active)",
+      "state": "outbound_priority",
+      "lastChangedTimestamp": "2026-08-17T15:00:00Z"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Alex Fraser Mid-Span",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/533.jpg",
+        "viewLocation": "Mid-Span Deck Camera"
+      },
+      {
+        "name": "Alex Fraser North Approach",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/532.jpg",
+        "viewLocation": "Hwy 91 at Cliveden Ave"
+      }
+    ],
+    "officialSourceUrl": "https://www.drivebc.ca/",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "oak-street",
+    "name": "Oak Street Bridge",
+    "shortName": "Oak Street",
+    "highwayNumber": "Hwy 99",
+    "region": "fraser_river",
+    "directions": {
+      "primary": {
+        "directionName": "Southbound (To Richmond/YVR)",
+        "travelTimeMinutes": 11,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 6,
+        "averageSpeedKmh": 36,
+        "status": "moderate"
+      },
+      "reverse": {
+        "directionName": "Northbound (To Vancouver)",
+        "travelTimeMinutes": 6,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 55,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": false,
+      "activeConfiguration": "2 Lanes Southbound, 2 Lanes Northbound",
+      "state": "not_applicable"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Hwy 99 at 70th Ave",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/531.jpg",
+        "viewLocation": "Marpole South Vancouver Approach"
+      }
+    ],
+    "officialSourceUrl": "https://www.drivebc.ca/",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "knight-street",
+    "name": "Knight Street Bridge",
+    "shortName": "Knight Street",
+    "region": "fraser_river",
+    "directions": {
+      "primary": {
+        "directionName": "Southbound (To Richmond/Hwy 91)",
+        "travelTimeMinutes": 8,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 3,
+        "averageSpeedKmh": 45,
+        "status": "flowing"
+      },
+      "reverse": {
+        "directionName": "Northbound (To Vancouver)",
+        "travelTimeMinutes": 6,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 52,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": false,
+      "activeConfiguration": "3 Lanes Southbound, 3 Lanes Northbound",
+      "state": "not_applicable"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Knight St at SE Marine Dr",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg",
+        "viewLocation": "Vancouver South Approach"
+      }
+    ],
+    "officialSourceUrl": "https://vancouver.ca/streets-transportation/traffic-cameras.aspx",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "port-mann",
+    "name": "Port Mann Bridge",
+    "shortName": "Port Mann",
+    "highwayNumber": "Hwy 1",
+    "region": "fraser_river",
+    "directions": {
+      "primary": {
+        "directionName": "Eastbound (To Surrey/Langley)",
+        "travelTimeMinutes": 9,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 4,
+        "averageSpeedKmh": 60,
+        "status": "flowing"
+      },
+      "reverse": {
+        "directionName": "Westbound (To Coquitlam/Vancouver)",
+        "travelTimeMinutes": 5,
+        "normalTimeMinutes": 5,
+        "delayMinutes": 0,
+        "averageSpeedKmh": 85,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": false,
+      "activeConfiguration": "5 Lanes Eastbound, 5 Lanes Westbound (10-Lane Deck)",
+      "state": "not_applicable"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Hwy 1 at 152nd St",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/528.jpg",
+        "viewLocation": "Surrey East Approach"
+      }
+    ],
+    "officialSourceUrl": "https://www.drivebc.ca/",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "burrard-street",
+    "name": "Burrard Street Bridge",
+    "shortName": "Burrard Bridge",
+    "region": "false_creek",
+    "directions": {
+      "primary": {
+        "directionName": "Southbound (To Kitsilano)",
+        "travelTimeMinutes": 5,
+        "normalTimeMinutes": 4,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 38,
+        "status": "flowing"
+      },
+      "reverse": {
+        "directionName": "Northbound (To Downtown)",
+        "travelTimeMinutes": 5,
+        "normalTimeMinutes": 4,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 36,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": false,
+      "activeConfiguration": "2 Lanes Southbound, 2 Lanes Northbound + Protected Bike Lanes",
+      "state": "not_applicable"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Burrard St at Pacific St",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg",
+        "viewLocation": "Downtown North Approach"
+      }
+    ],
+    "officialSourceUrl": "https://vancouver.ca/streets-transportation/traffic-cameras.aspx",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "granville-street",
+    "name": "Granville Street Bridge",
+    "shortName": "Granville Bridge",
+    "region": "false_creek",
+    "directions": {
+      "primary": {
+        "directionName": "Southbound (To South Granville)",
+        "travelTimeMinutes": 6,
+        "normalTimeMinutes": 4,
+        "delayMinutes": 2,
+        "averageSpeedKmh": 35,
+        "status": "flowing"
+      },
+      "reverse": {
+        "directionName": "Northbound (To Downtown)",
+        "travelTimeMinutes": 5,
+        "normalTimeMinutes": 4,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 38,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": false,
+      "activeConfiguration": "3 Lanes Southbound, 3 Lanes Northbound + Active Greenway",
+      "state": "not_applicable"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Granville St at Drake St",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/530.jpg",
+        "viewLocation": "Downtown North Approach"
+      }
+    ],
+    "officialSourceUrl": "https://vancouver.ca/streets-transportation/traffic-cameras.aspx",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  },
+  {
+    "id": "cambie-street",
+    "name": "Cambie Street Bridge",
+    "shortName": "Cambie Bridge",
+    "region": "false_creek",
+    "directions": {
+      "primary": {
+        "directionName": "Southbound (To Mount Pleasant)",
+        "travelTimeMinutes": 5,
+        "normalTimeMinutes": 4,
+        "delayMinutes": 1,
+        "averageSpeedKmh": 40,
+        "status": "flowing"
+      },
+      "reverse": {
+        "directionName": "Northbound (To Downtown)",
+        "travelTimeMinutes": 4,
+        "normalTimeMinutes": 4,
+        "delayMinutes": 0,
+        "averageSpeedKmh": 45,
+        "status": "flowing"
+      }
+    },
+    "counterflow": {
+      "hasCounterflow": false,
+      "activeConfiguration": "3 Lanes Southbound, 3 Lanes Northbound",
+      "state": "not_applicable"
+    },
+    "activeIncidents": [],
+    "webcams": [
+      {
+        "name": "Cambie St at Nelson St",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/531.jpg",
+        "viewLocation": "Downtown North Approach"
+      }
+    ],
+    "officialSourceUrl": "https://vancouver.ca/streets-transportation/traffic-cameras.aspx",
+    "lastUpdated": "2026-08-17T22:56:01.454Z",
+    "isStale": false
+  }
+]

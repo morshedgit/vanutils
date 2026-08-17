@@ -50,6 +50,7 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 | **Tool #3: Mountain Snow Line** | `/snow` | **Active Live** | Live coastal freezing level, Cypress/Grouse/Seymour/Whistler soundings. |
 | **Tool #4: Evo Parking Radar** | `/parking` | **Active Live** | 1-Tap GPS spot clearance, street sweeping countdown & YVR/UBC lots. |
 | **Tool #5: ER & Urgent Care** | `/health` | **Active Live** | 11 Hospital ERs & 9 UPCCs, real-time wait times & triage routing. |
+| **Tool #6: Bridges & Tunnels** | `/bridges` | **Active Live** | 10 Marine crossings, live delays, counterflow lane visualizer & webcams. |
 
 ---
 

@@ -1,0 +1,102 @@
+---
+import type { BridgeCrossing } from '../types';
+import { getStatusMeta } from '../services/bridgeService';
+
+interface Props {
+  crossing: BridgeCrossing;
+}
+
+const { crossing } = Astro.props;
+const p = crossing.directions.primary;
+const r = crossing.directions.reverse;
+const pMeta = getStatusMeta(p.status);
+const rMeta = getStatusMeta(r.status);
+---
+
+<div
+  class="crossing-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-sky-500 transition-all flex flex-col justify-between"
+  data-crossing-id={crossing.id}
+  data-region={crossing.region}
+>
+  <div>
+    <!-- Header: Title, Highway Pill & Pin -->
+    <div class="flex items-start justify-between gap-2 mb-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <a href={`/bridges/${crossing.id}`} class="hover:text-sky-500 transition-colors">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+              {crossing.name}
+            </h3>
+          </a>
+          {crossing.highwayNumber && (
+            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[11px] font-extrabold text-slate-600 dark:text-slate-300">
+              {crossing.highwayNumber}
+            </span>
+          )}
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          {crossing.region === 'burrard_inlet' && '🌲 North Shore / Burrard Inlet'}
+          {crossing.region === 'false_creek' && '🏙️ False Creek / Downtown South'}
+          {crossing.region === 'fraser_river' && '🌊 Fraser River Connector'}
+          {crossing.counterflow.hasCounterflow && ' • 🔄 Dynamic Counterflow'}
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          class="star-btn p-1.5 rounded-lg text-slate-300 hover:text-amber-400 dark:text-slate-600 dark:hover:text-amber-400 transition-colors"
+          data-crossing-star-id={crossing.id}
+          title="Pin to Dashboard"
+        >
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Directional Travel Times Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3">
+      <!-- Primary Direction -->
+      <div class={`p-2.5 rounded-xl border ${pMeta.badgeBg} flex items-center justify-between`}>
+        <div>
+          <span class="text-[11px] block font-semibold">{p.directionName}</span>
+          <span class="text-xs font-black">{p.travelTimeMinutes} mins ({p.delayMinutes > 0 ? `+${p.delayMinutes}m delay` : 'Normal'})</span>
+        </div>
+        <span class="text-[11px] font-bold shrink-0">{p.averageSpeedKmh} km/h</span>
+      </div>
+
+      <!-- Reverse Direction -->
+      <div class={`p-2.5 rounded-xl border ${rMeta.badgeBg} flex items-center justify-between`}>
+        <div>
+          <span class="text-[11px] block font-semibold">{r.directionName}</span>
+          <span class="text-xs font-black">{r.travelTimeMinutes} mins ({r.delayMinutes > 0 ? `+${r.delayMinutes}m delay` : 'Normal'})</span>
+        </div>
+        <span class="text-[11px] font-bold shrink-0">{r.averageSpeedKmh} km/h</span>
+      </div>
+    </div>
+
+    <!-- Active Counterflow Note if present -->
+    {crossing.counterflow.hasCounterflow && (
+      <div class="p-2 rounded-lg bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/20 text-[11px] text-amber-800 dark:text-amber-300 font-medium mb-3 flex items-center gap-1.5">
+        <span>🔄 Counterflow:</span>
+        <span class="font-bold">{crossing.counterflow.activeConfiguration}</span>
+      </div>
+    )}
+  </div>
+
+  <!-- Bottom Link -->
+  <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/60 text-xs font-semibold">
+    <span class="text-slate-500 dark:text-slate-400">
+      📷 {crossing.webcams.length} Approach Webcams
+    </span>
+    <a
+      href={`/bridges/${crossing.id}`}
+      class="text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1"
+    >
+      <span>Live Cams & Lanes</span>
+      <span>→</span>
+    </a>
+  </div>
+</div>

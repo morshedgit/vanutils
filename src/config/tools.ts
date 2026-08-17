@@ -106,6 +106,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       '11 Hospital ERs & 9 Urgent Care Centres',
     ],
   },
+  {
+    id: 'bridge-traffic',
+    name: 'Bridges & Tunnel Radar',
+    shortDescription: 'Live crossing delays, dynamic counterflow lane directions (Lions Gate, Massey, Alex Fraser) & DriveBC webcams.',
+    path: '/bridges',
+    icon: 'compass',
+    category: 'transit',
+    status: 'active',
+    badgeText: 'Live Crossings',
+    previewStat: {
+      value: '2 Lanes NB',
+      label: 'Lions Gate Counterflow',
+      statusType: 'info',
+    },
+    features: [
+      'Live crossing delays vs. baseline normal',
+      'Dynamic counterflow lane signal visualizer',
+      'Synchronized DriveBC approach webcams',
+      'DriveBC Open511 active incident radar',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

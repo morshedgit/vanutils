@@ -1,0 +1,70 @@
+---
+import type { CounterflowDetails } from '../types';
+
+interface Props {
+  counterflow: CounterflowDetails;
+  crossingName: string;
+}
+
+const { counterflow, crossingName } = Astro.props;
+---
+
+{counterflow.hasCounterflow ? (
+  <div class="p-3 sm:p-4 rounded-xl bg-slate-900 text-white border border-slate-800 space-y-2">
+    <div class="flex items-center justify-between text-xs">
+      <span class="font-bold flex items-center gap-1.5 text-amber-400">
+        <span>🔄</span>
+        <span>Active Dynamic Counterflow Configuration</span>
+      </span>
+      <span class="text-[11px] text-slate-400">DriveBC ITS Control</span>
+    </div>
+
+    <!-- Active Lanes Diagram -->
+    <div class="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 flex items-center justify-around gap-2 text-xs font-mono">
+      {crossingName.includes('Lions Gate') && (
+        <>
+          <div class="flex-1 text-center p-2 rounded bg-slate-900 border border-slate-800">
+            <span class="block text-[10px] text-slate-400">Lane 1 (West)</span>
+            <span class="text-rose-400 font-bold">⬇️ SB to Van</span>
+          </div>
+          <div class="flex-1 text-center p-2 rounded bg-emerald-950/60 border border-emerald-500/40">
+            <span class="block text-[10px] text-emerald-400 font-bold">Lane 2 (Center)</span>
+            <span class="text-emerald-400 font-extrabold animate-pulse">⬆️ NB Active</span>
+          </div>
+          <div class="flex-1 text-center p-2 rounded bg-emerald-950/60 border border-emerald-500/40">
+            <span class="block text-[10px] text-emerald-400 font-bold">Lane 3 (East)</span>
+            <span class="text-emerald-400 font-bold">⬆️ NB to N.Shore</span>
+          </div>
+        </>
+      )}
+
+      {crossingName.includes('Massey') && (
+        <>
+          <div class="flex-1 text-center p-2 rounded bg-emerald-950/60 border border-emerald-500/40">
+            <span class="block text-[10px] text-emerald-400 font-bold">West Tube</span>
+            <span class="text-emerald-400 font-bold">⬇️ 2 Lanes SB</span>
+          </div>
+          <div class="flex-1 text-center p-2 rounded bg-emerald-950/60 border border-emerald-500/40">
+            <span class="block text-[10px] text-emerald-400 font-bold">East Tube (Counter)</span>
+            <span class="text-emerald-400 font-extrabold animate-pulse">⬇️ 1 Lane SB</span>
+          </div>
+          <div class="flex-1 text-center p-2 rounded bg-slate-900 border border-slate-800">
+            <span class="block text-[10px] text-slate-400">East Tube (NB)</span>
+            <span class="text-slate-300 font-bold">⬆️ 1 Lane NB</span>
+          </div>
+        </>
+      )}
+
+      {!crossingName.includes('Lions Gate') && !crossingName.includes('Massey') && (
+        <div class="w-full text-center py-1 text-slate-300">
+          <span>{counterflow.activeConfiguration}</span>
+        </div>
+      )}
+    </div>
+
+    <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1">
+      <span>Current allocation: <strong>{counterflow.activeConfiguration}</strong></span>
+      <span>🟢 Dynamic Gate Active</span>
+    </div>
+  </div>
+) : null}

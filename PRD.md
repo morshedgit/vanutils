@@ -156,6 +156,26 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #6: Vancouver Bridges & Tunnel Bottleneck Radar (`/bridges`) — Active Live
+- **Module Identifier**: `bridge-traffic` (internal route `/bridges` and `/bridges/[crossing]`)
+- **Strict Real-Data Mandate**: All bridge travel times, delay indices, counterflow lane configurations, speed telemetry, active accident notices, and webcam stills are 100% real-world data ingested directly from the official DriveBC Open511 API, Ministry of Transportation and Infrastructure (MOTI) ITS Sensor Feeds, and City of Vancouver Traffic Operations API. Generating, simulating, or displaying any synthetic, mock, or fake traffic figures is strictly prohibited.
+- **Problem Solved**: Unifies 10+ major marine crossings across the North Shore, Downtown, Richmond, Delta, and Surrey into a single real-time dashboard tracking counterflow lane shifts, sudden stall closures, and live multi-camera feeds.
+- **Velocity & Delay Metrics**:
+  - 🟢 **Flowing Fast**: Average speed $> 50$ km/h, minimal delay ($< 3$ min).
+  - 🟡 **Moderate Delay**: Average speed $20 - 50$ km/h, moderate delay ($3 - 10$ min).
+  - 🔴 **Heavy Congestion / Gridlock**: Average speed $< 20$ km/h or active lane blockage ($> 10$ min delay).
+- **Comprehensive Crossing Network**:
+  - **Burrard Inlet Crossings**: Lions Gate Bridge (Hwy 99), Ironworkers Memorial Bridge (Second Narrows / Hwy 1).
+  - **False Creek Crossings**: Burrard Street Bridge, Granville Street Bridge, Cambie Street Bridge.
+  - **Fraser River Crossings**: Oak Street Bridge (Hwy 99), Knight Street Bridge, Arthur Laing Bridge, Alex Fraser Bridge (Hwy 91), George Massey Tunnel (Hwy 99), Port Mann Bridge (Hwy 1), Pattullo Bridge (Hwy 1A).
+- **Core Features**:
+  - **Live Dynamic Counterflow Lane Visualizer**: Real-time 3-lane / 4-lane diagrams for Lions Gate Bridge (2 NB vs 2 SB), Alex Fraser Road Zipper barrier, and George Massey Tunnel tube configurations.
+  - **Synchronized Bridge Approach Webcams**: Live DriveBC & City of Vancouver camera stills (Stanley Park Causeway, Cassiar Tunnel, Steveston Hwy, Sea Island Way).
+  - **DriveBC Open511 Active Incident Banner**: Real-time alerts for stalled vehicles, lane closures, and accidents.
+  - **High-Density Dashboard Card**: Shows 6+ critical crossings with live delay minutes, speed indicators, and dynamic ⭐ pinning synchronization.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
