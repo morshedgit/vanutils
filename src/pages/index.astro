@@ -11,30 +11,12 @@ const allTools = TOOLS_REGISTRY;
   description="Fast, single-purpose local tools for Metro Vancouver. Beach water quality, ferry radar, snow levels, and city tools."
   currentPath="/"
 >
-  <div class="space-y-8 max-w-5xl mx-auto">
-    <!-- Clean Minimalist Header -->
-    <header class="text-center py-4 sm:py-6 space-y-2">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300 text-xs font-semibold">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>Metro Vancouver Micro-Utilities</span>
-      </div>
-
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-        VanUtils Dashboard
-      </h1>
-
-      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-        Single-purpose hyper-local tools with sub-second speed. No ads, no tracking.
-      </p>
-    </header>
-
+  <div class="max-w-5xl mx-auto py-2">
     <!-- Main Dashboard: One Card Per Utility -->
-    <section>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="utilities-grid">
-        {allTools.map((tool) => (
-          <ToolCard tool={tool} />
-        ))}
-      </div>
-    </section>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="utilities-grid">
+      {allTools.map((tool) => (
+        <ToolCard tool={tool} />
+      ))}
+    </div>
   </div>
 </PlatformLayout>

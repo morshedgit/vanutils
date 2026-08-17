@@ -2,10 +2,9 @@
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import BeachCard from '../../tools/can-i-swim/components/BeachCard.astro';
 import FilterBar from '../../tools/can-i-swim/components/FilterBar.astro';
-import { getAllBeaches, getBeachStats } from '../../tools/can-i-swim/services/vchScraper';
+import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
 
 const beaches = getAllBeaches();
-const stats = getBeachStats(beaches);
 ---
 
 <ToolLayout
@@ -16,90 +15,47 @@ const stats = getBeachStats(beaches);
   badgeText="Live Water Radar"
   status="active"
 >
-  <div class="space-y-6">
-    <!-- Big, Calm Status Hero -->
-    <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>{stats.safe} of {stats.total} Beaches Safe ({stats.cleanPercentage}%)</span>
-        </div>
-        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white">
-          Vancouver Beach Water Quality
-        </h2>
-        <p class="text-xs text-slate-300">
-          Nearest safe beach: <strong id="nearest-beach-name" class="text-white">Kitsilano Beach</strong> (<span id="nearest-beach-dist">1.4 km</span>)
-        </p>
-      </div>
-
-      <a
-        id="nearest-beach-link"
-        href="/swim/kitsilano-beach"
-        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold transition-all shrink-0 active:scale-95"
-      >
-        <span>Nearest Beach →</span>
-      </a>
-    </section>
-
-    <!-- Pinned Main Beaches Quick Bar -->
-    <section id="pinned-beaches-section" class="p-4 rounded-2xl bg-sky-50/60 dark:bg-slate-900/60 border border-sky-200/60 dark:border-slate-800 space-y-2.5">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200">
-          <span class="text-amber-500">⭐</span>
-          <span>My Main Beaches (Shown on Home Dashboard)</span>
-        </div>
-        <span class="text-[11px] text-slate-500 dark:text-slate-400">
+  <div class="space-y-4 max-w-4xl mx-auto">
+    <!-- Pinned Main Beaches Quick Bar (Customizable for Home Card) -->
+    <div id="pinned-beaches-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+          <span class="text-amber-500">⭐</span> Main Beaches (Shown on Home Dashboard)
+        </span>
+        <span class="text-[11px] text-slate-400">
           Click ⭐ on any beach to add/remove
         </span>
       </div>
 
-      <div id="pinned-chips-container" class="flex flex-wrap gap-2">
-        <!-- Dynamically rendered via client script -->
+      <div id="pinned-chips-container" class="flex flex-wrap gap-1.5">
+        <!-- Dynamically populated via client script -->
       </div>
-    </section>
+    </div>
 
-    <!-- Minimal Filter & Search Bar -->
+    <!-- Filter & Search Controls -->
     <FilterBar />
 
-    <!-- Beach Cards Section -->
-    <section class="space-y-3">
-      <div class="flex items-center justify-between px-1">
-        <span id="beach-count-display" class="text-xs font-semibold text-slate-500 dark:text-slate-400">
-          Showing {beaches.length} beaches
-        </span>
-        <span class="text-xs text-slate-400">
-          Tap any beach for 30-day report
-        </span>
+    <!-- Beaches List Grid -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
+        <span id="beach-count-display">All Metro Beaches ({beaches.length})</span>
+        <span>Tap any beach for historical chart</span>
       </div>
 
-      <!-- Clean Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="beaches-grid">
+      <!-- High Density 2-Column Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="beaches-grid">
         {beaches.map((beach) => (
           <BeachCard beach={beach} />
         ))}
       </div>
 
       <!-- Empty State -->
-      <div id="no-beaches-empty-state" class="hidden rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 p-8 text-center space-y-2">
-        <span class="text-3xl">🏖️</span>
-        <h3 class="text-sm font-bold text-slate-900 dark:text-white">No beaches found</h3>
-        <p class="text-xs text-slate-500 dark:text-slate-400">
-          Try changing your search terms or clearing the region filter.
-        </p>
+      <div id="no-beaches-empty-state" class="hidden rounded-xl border border-dashed border-slate-300 dark:border-slate-800 p-8 text-center space-y-1">
+        <span class="text-2xl">🏖️</span>
+        <h3 class="text-xs font-bold text-slate-900 dark:text-white">No matching beaches</h3>
+        <p class="text-[11px] text-slate-400">Try changing your search query or region filter.</p>
       </div>
-    </section>
-
-    <!-- Simple, Clean Safety Guidelines Pill -->
-    <footer class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
-      <div class="flex items-center gap-3.5">
-        <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Safe (&le;200 CFU)</span>
-        <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Caution (235–400 CFU)</span>
-        <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Advisory (&gt;200 Geo)</span>
-      </div>
-      <a href="https://www.vch.ca/en/service/public-beach-water-quality" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">
-        Official VCH Data ↗
-      </a>
-    </footer>
+    </div>
   </div>
 </ToolLayout>
 
@@ -152,7 +108,7 @@ const stats = getBeachStats(beaches);
     const cards = Array.from(document.querySelectorAll('.beach-card')) as HTMLElement[];
 
     if (pinned.length === 0) {
-      container.innerHTML = `<span class="text-xs text-slate-400 italic">No pinned beaches. Click ⭐ on any beach below to add it to your dashboard.</span>`;
+      container.innerHTML = `<span class="text-xs text-slate-400 italic">No beaches pinned. Click ⭐ on any beach to show it on your dashboard.</span>`;
       return;
     }
 
@@ -163,7 +119,7 @@ const stats = getBeachStats(beaches);
       const statusColor = status === 'safe' ? 'bg-emerald-500' : status === 'caution' ? 'bg-amber-500' : 'bg-rose-500';
 
       return `
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs">
           <span class="w-2 h-2 rounded-full ${statusColor}"></span>
           <a href="/swim/${id}" class="hover:text-sky-500">${name}</a>
           <button type="button" class="unpin-chip-btn ml-1 text-slate-400 hover:text-rose-500 font-bold" data-id="${id}" title="Remove from main">×</button>
@@ -171,7 +127,6 @@ const stats = getBeachStats(beaches);
       `;
     }).join('');
 
-    // Attach unpin handlers
     container.querySelectorAll('.unpin-chip-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -182,11 +137,9 @@ const stats = getBeachStats(beaches);
   }
 
   function setupSwimPage() {
-    // Initial pin state setup
     updatePinButtonStates();
     renderPinnedSection();
 
-    // Attach pin click handlers
     document.querySelectorAll('.pin-beach-toggle').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -196,7 +149,7 @@ const stats = getBeachStats(beaches);
       });
     });
 
-    // Setup distance calculation
+    // Update GPS distances
     const savedLoc = localStorage.getItem('vanutils_user_location');
     let userLat = 49.2827; // Downtown Vancouver default
     let userLng = -123.1207;
@@ -210,8 +163,6 @@ const stats = getBeachStats(beaches);
     }
 
     const cards = Array.from(document.querySelectorAll('.beach-card')) as HTMLElement[];
-    let nearestBeach: { name: string; id: string; dist: number } | null = null;
-
     cards.forEach((card) => {
       const bLat = parseFloat(card.dataset.beachLat || '0');
       const bLng = parseFloat(card.dataset.beachLng || '0');
@@ -223,28 +174,8 @@ const stats = getBeachStats(beaches);
         card.dataset.distanceKm = d.toString();
         const distEl = card.querySelector('.distance-text');
         if (distEl) distEl.textContent = formatDistance(d);
-
-        if (card.dataset.beachStatus === 'safe') {
-          if (!nearestBeach || d < (nearestBeach as { dist: number }).dist) {
-            nearestBeach = {
-              name: card.dataset.beachName || '',
-              id: card.dataset.beachId || '',
-              dist: d,
-            };
-          }
-        }
       }
     });
-
-    if (nearestBeach) {
-      const nearest = nearestBeach as { name: string; id: string; dist: number };
-      const nearestName = document.getElementById('nearest-beach-name');
-      const nearestDist = document.getElementById('nearest-beach-dist');
-      const nearestLink = document.getElementById('nearest-beach-link') as HTMLAnchorElement | null;
-      if (nearestName) nearestName.textContent = nearest.name;
-      if (nearestDist) nearestDist.textContent = formatDistance(nearest.dist);
-      if (nearestLink) nearestLink.href = `/swim/${nearest.id}`;
-    }
   }
 
   if (document.readyState === 'loading') {

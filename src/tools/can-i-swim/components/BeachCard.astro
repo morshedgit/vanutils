@@ -1,6 +1,5 @@
 ---
 import type { Beach } from '../types';
-import StatusBadge from '../../../components/shared/StatusBadge.astro';
 
 interface Props {
   beach: Beach;
@@ -11,7 +10,7 @@ const { beach, distanceKm } = Astro.props;
 ---
 
 <div
-  class="beach-card group relative flex flex-col justify-between p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-sky-500/60 dark:hover:border-sky-500/60 hover:shadow-lg transition-all duration-200"
+  class="beach-card relative flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-sky-500/60 hover:shadow-xs transition-all duration-150"
   data-beach-id={beach.id}
   data-beach-name={beach.name}
   data-beach-municipality={beach.municipality}
@@ -25,74 +24,55 @@ const { beach, distanceKm } = Astro.props;
   data-beach-lat={beach.latitude}
   data-beach-lng={beach.longitude}
 >
-  <div>
-    <!-- Top Row: Municipality + Status Badge + Pin Button -->
-    <div class="flex items-center justify-between gap-2 mb-2">
-      <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
-        {beach.municipality}
+  <!-- Left Side: Beach Name, Municipality & Distance (Clickable) -->
+  <a href={`/swim/${beach.id}`} class="flex-1 pr-3 focus:outline-none min-w-0">
+    <div class="flex items-center gap-1.5 mb-0.5">
+      <span class="text-xs font-bold text-slate-900 dark:text-white hover:text-sky-500 transition-colors truncate">
+        {beach.name.replace(/ \(.*\)/, '')}
       </span>
-      <div class="flex items-center gap-2">
-        <StatusBadge status={beach.currentStatus} size="sm" />
-        <button
-          type="button"
-          class="pin-beach-toggle p-1 rounded-lg text-slate-300 dark:text-slate-600 hover:text-amber-400 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          data-beach-id={beach.id}
-          title="Pin to Main Dashboard"
-          aria-label={`Pin ${beach.name} to main dashboard`}
-        >
-          <svg class="w-4 h-4 fill-current star-icon" viewBox="0 0 24 24">
-            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-          </svg>
-        </button>
-      </div>
+      {beach.dogFriendly && <span class="text-[10px]" title="Dog friendly">🐾</span>}
+      {beach.lifeguards && <span class="text-[10px]" title="Lifeguard on duty">🏊</span>}
     </div>
-
-    <!-- Beach Title -->
-    <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors line-clamp-1 mb-1">
-      <a href={`/swim/${beach.id}`} class="focus:outline-none hover:underline">
-        {beach.name}
-      </a>
-    </h3>
-
-    <!-- Distance & Status Note -->
-    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-3">
-      <span class="inline-flex items-center gap-1 font-medium text-slate-700 dark:text-slate-300">
-        <svg class="w-3.5 h-3.5 text-sky-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-        <span class="distance-text">{distanceKm ? `${distanceKm.toFixed(1)} km away` : 'Calculating...'}</span>
-      </span>
+    <div class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2">
+      <span>{beach.municipality}</span>
+      <span>•</span>
+      <span class="distance-text">{distanceKm ? `${distanceKm.toFixed(1)} km` : 'Calculating...'}</span>
       <span>•</span>
       <span>{beach.latestSample.eColiCount} CFU</span>
     </div>
-  </div>
+  </a>
 
-  <!-- Bottom Row: Clean Amenity Icons + Quick Arrow -->
-  <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-    <div class="flex items-center gap-2.5">
-      {beach.dogFriendly && (
-        <span class="inline-flex items-center gap-1 text-[11px] text-amber-700 dark:text-amber-300 font-medium" title="Dog-friendly / Off-leash">
-          🐾 Dogs
+  <!-- Right Side: Status Indicator + Star Toggle -->
+  <div class="flex items-center gap-2.5 shrink-0">
+    <a href={`/swim/${beach.id}`} class="focus:outline-none">
+      {beach.currentStatus === 'safe' && (
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe
         </span>
       )}
-      {beach.lifeguards && (
-        <span class="inline-flex items-center gap-1 text-[11px] text-sky-700 dark:text-sky-300 font-medium" title="Lifeguards on duty">
-          🏊 Lifeguard
+      {beach.currentStatus === 'caution' && (
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution
         </span>
       )}
-      {beach.wheelchairAccessible && (
-        <span class="inline-flex items-center gap-1 text-[11px] text-teal-700 dark:text-teal-300 font-medium" title="Accessible beach mat">
-          ♿ Mat
+      {beach.currentStatus === 'advisory' && (
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory
         </span>
       )}
-      {!beach.dogFriendly && !beach.lifeguards && !beach.wheelchairAccessible && (
-        <span class="text-[11px] text-slate-400">Natural shoreline</span>
-      )}
-    </div>
-
-    <a href={`/swim/${beach.id}`} class="text-xs font-semibold text-sky-600 dark:text-sky-400 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5">
-      Details →
     </a>
+
+    <!-- Pin to Main Dashboard Toggle Button -->
+    <button
+      type="button"
+      class="pin-beach-toggle p-1 rounded-lg text-slate-300 dark:text-slate-600 hover:text-amber-400 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      data-beach-id={beach.id}
+      title="Pin/Unpin from Main Dashboard"
+      aria-label={`Pin ${beach.name}`}
+    >
+      <svg class="w-4 h-4 fill-current star-icon" viewBox="0 0 24 24">
+        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      </svg>
+    </button>
   </div>
 </div>
