@@ -1,0 +1,55 @@
+---
+import type { ElevationPoint } from '../types';
+import { getPrecipitationMeta } from '../services/snowService';
+
+interface Props {
+  elevationBands: ElevationPoint[];
+  freezingLevelMeters: number;
+}
+
+const { elevationBands, freezingLevelMeters } = Astro.props;
+---
+
+<div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3">
+  <div class="flex items-center justify-between text-xs">
+    <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+      <span>🏔️</span> Elevation Bands & Freezing Level
+    </span>
+    <span class="px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 font-bold border border-sky-500/20">
+      0°C Level: {freezingLevelMeters}m
+    </span>
+  </div>
+
+  <!-- Elevation Steps -->
+  <div class="space-y-1.5">
+    {elevationBands.map((band) => {
+      const precipMeta = getPrecipitationMeta(band.precipitation);
+      const isAboveFreezing = band.elevationMeters >= freezingLevelMeters;
+
+      return (
+        <div class="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 text-xs">
+          <!-- Elevation & Label -->
+          <div class="flex items-center gap-2 min-w-0 pr-2">
+            <span class="font-mono font-bold text-slate-900 dark:text-white shrink-0">
+              {band.elevationMeters}m
+            </span>
+            <span class="text-slate-500 dark:text-slate-400 truncate text-[11px]">
+              {band.label}
+            </span>
+          </div>
+
+          <!-- Temperature & Precipitation -->
+          <div class="flex items-center gap-2 shrink-0">
+            <span class={`font-mono font-bold ${band.temperatureCelsius <= 0 ? 'text-sky-500' : 'text-amber-500'}`}>
+              {band.temperatureCelsius > 0 ? `+${band.temperatureCelsius.toFixed(1)}` : band.temperatureCelsius.toFixed(1)}°C
+            </span>
+            <span class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold border ${precipMeta.badgeBg}`}>
+              <span>{precipMeta.icon}</span>
+              <span>{precipMeta.label}</span>
+            </span>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>

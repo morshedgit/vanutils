@@ -2,6 +2,7 @@
 import type { ToolMeta } from '../../types/shared';
 import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
 import { getAllRoutes } from '../../tools/bc-ferries/services/ferryService';
+import { getAllMountains } from '../../tools/mountain-snow/services/snowService';
 
 interface Props {
   tool: ToolMeta;
@@ -15,6 +16,9 @@ const initialBeaches = allBeaches.slice(0, 10);
 
 const allFerryRoutes = tool.id === 'bc-ferries' ? getAllRoutes() : [];
 const initialFerryRoutes = allFerryRoutes.slice(0, 6);
+
+const allMountains = tool.id === 'mountain-snow' ? getAllMountains() : [];
+const initialMountains = allMountains.slice(0, 4);
 ---
 
 <a
@@ -30,7 +34,8 @@ const initialFerryRoutes = allFerryRoutes.slice(0, 6);
     <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
       {tool.id === 'can-i-swim' && '30/31 Safe'}
       {tool.id === 'bc-ferries' && 'Live Deck %'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'mountain-snow' && '1,100m FZ'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -56,6 +61,11 @@ const initialFerryRoutes = allFerryRoutes.slice(0, 6);
             {b.currentStatus === 'advisory' && (
               <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory
+              </span>
+            )}
+            {b.currentStatus === 'unmonitored' && (
+              <span class="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-slate-400"></span> Off-Season
               </span>
             )}
           </span>
@@ -112,8 +122,33 @@ const initialFerryRoutes = allFerryRoutes.slice(0, 6);
     </div>
   )}
 
+  <!-- MOUNTAIN SNOW: High-Density Mountain List -->
+  {tool.id === 'mountain-snow' && (
+    <div id="main-card-snow-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialMountains.map((m) => (
+        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id={m.id}>
+          <div class="truncate pr-2 font-medium">
+            <span>{m.name}</span>
+            <span class="text-[11px] text-slate-400 ml-1">({m.elevationBands[m.elevationBands.length - 1].elevationMeters}m)</span>
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+            <span class="text-sky-600 dark:text-sky-400 font-bold">
+              {m.snowfall.last24HoursCm}cm 24h
+            </span>
+            <span class="text-slate-500 dark:text-slate-400">
+              0°C @ {m.currentFreezingLevelMeters}m
+            </span>
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300">
+              ❄️ Snow
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -155,7 +190,9 @@ const initialFerryRoutes = allFerryRoutes.slice(0, 6);
           ? '<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe</span>'
           : b.currentStatus === 'caution'
           ? '<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution</span>'
-          : '<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory</span>';
+          : b.currentStatus === 'advisory'
+          ? '<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory</span>'
+          : '<span class="text-slate-500 dark:text-slate-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400"></span> Off-Season</span>';
 
         return `
           <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60">
@@ -245,5 +282,64 @@ const initialFerryRoutes = allFerryRoutes.slice(0, 6);
     }
 
     window.addEventListener('vanutils:pinned-ferries-changed', syncMainCardFerries);
+  </script>
+)}
+
+{tool.id === 'mountain-snow' && (
+  <script is:inline define:vars={{ allMountainsJson: JSON.stringify(allMountains) }}>
+    function syncMainCardSnow() {
+      const grid = document.getElementById('main-card-snow-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_snow');
+      const allMountains = JSON.parse(allMountainsJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinnedMountains = allMountains.filter((m) => pinnedIds.includes(m.id));
+          const unpinnedMountains = allMountains.filter((m) => !pinnedIds.includes(m.id));
+          displayList = [...pinnedMountains, ...unpinnedMountains].slice(0, 4);
+        } catch (e) {
+          displayList = allMountains.slice(0, 4);
+        }
+      } else {
+        displayList = allMountains.slice(0, 4);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((m) => {
+        const topElevation = m.elevationBands[m.elevationBands.length - 1].elevationMeters;
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id="${m.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${m.name}</span>
+              <span class="text-[11px] text-slate-400 ml-1">(${topElevation}m)</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-sky-600 dark:text-sky-400 font-bold">
+                ${m.snowfall.last24HoursCm}cm 24h
+              </span>
+              <span class="text-slate-500 dark:text-slate-400">
+                0°C @ ${m.currentFreezingLevelMeters}m
+              </span>
+              <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300">
+                ❄️ Snow
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardSnow);
+    } else {
+      syncMainCardSnow();
+    }
+
+    window.addEventListener('vanutils:pinned-snow-changed', syncMainCardSnow);
   </script>
 )}

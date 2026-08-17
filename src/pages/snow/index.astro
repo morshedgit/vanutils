@@ -1,120 +1,181 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import FilterTabs from '../../tools/mountain-snow/components/FilterTabs.astro';
+import MountainCard from '../../tools/mountain-snow/components/MountainCard.astro';
+import WebcamMatrix from '../../tools/mountain-snow/components/WebcamMatrix.astro';
+import { getAllMountains, getSnowOverviewStats } from '../../tools/mountain-snow/services/snowService';
+
+const mountains = getAllMountains();
+const stats = getSnowOverviewStats(mountains);
+const allWebcams = mountains.flatMap((m) => m.webcams);
 ---
 
 <ToolLayout
   toolId="mountain-snow"
-  title="North Shore Mountain Snow Line"
-  description="Real-time freezing level elevation, Cypress, Seymour & Grouse conditions, road chain advisories, and synchronized summit webcams."
+  title="Mountain Snow Line & Elevation Matrix"
+  description="Real-time coastal rain/snow line, freezing level elevation matrix, DriveBC road conditions, and live webcams for Cypress, Grouse, Seymour, and Whistler."
   currentPath="/snow"
-  badgeText="Roadmap v1.2"
-  status="planned"
+  badgeText="Live Snow Radar"
+  status="active"
 >
-  <!-- Header Aside Widget -->
-  <div slot="header-aside" class="flex items-center gap-3 bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-    <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-black text-lg border border-sky-500/20">
-      1,100m
-    </div>
-    <div>
-      <div class="text-xs font-extrabold text-slate-900 dark:text-white">
-        Freezing Level Today
-      </div>
-      <div class="text-[11px] text-slate-500 dark:text-slate-400">
-        Snow line above Cypress base
-      </div>
-    </div>
-  </div>
-
-  <div class="space-y-8">
-    <!-- Roadmap Banner -->
-    <div class="p-6 rounded-3xl bg-sky-500/10 border border-sky-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">❄️</span>
-        <div>
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Tool In Active Development (Release v1.2)</h3>
-          <p class="text-xs text-slate-600 dark:text-slate-400">
-            Unified snow matrix and tire chain requirements for North Shore mountains and the Sea to Sky corridor.
-          </p>
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Freezing Level & Snow Hero -->
+    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+          <span>Coastal 0°C Freezing Level: {stats.avgFreezingLevel}m</span>
         </div>
-      </div>
-      <a
-        href="/swim"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shrink-0"
-      >
-        Try Live Swim Tool →
-      </a>
-    </div>
-
-    <!-- 3 North Shore Mountains Matrix Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Cypress Mountain -->
-      <div class="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">West Vancouver</span>
-          <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Winter Tires M+S</span>
-        </div>
-        <h3 class="text-xl font-black text-slate-900 dark:text-white">Cypress Mountain</h3>
-        <div class="space-y-2 text-xs">
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Base Elevation:</span>
-            <span class="font-bold text-slate-800 dark:text-slate-200">910 m (3,000 ft)</span>
-          </div>
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Peak Elevation:</span>
-            <span class="font-bold text-slate-800 dark:text-slate-200">1,440 m (4,720 ft)</span>
-          </div>
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Road Status:</span>
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">Bare & Dry to High View</span>
-          </div>
-        </div>
+        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+          Vancouver Mountain Snow Line Matrix
+        </h2>
+        <p class="text-xs text-slate-300">
+          Average {stats.avgFresh24hCm}cm fresh snow in last 24h • {stats.totalOpenLifts}/{stats.totalLifts} Lifts Operating
+        </p>
       </div>
 
-      <!-- Grouse Mountain -->
-      <div class="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">North Vancouver</span>
-          <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">Skyride Open</span>
-        </div>
-        <h3 class="text-xl font-black text-slate-900 dark:text-white">Grouse Mountain</h3>
-        <div class="space-y-2 text-xs">
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Chalet Elevation:</span>
-            <span class="font-bold text-slate-800 dark:text-slate-200">1,127 m (3,700 ft)</span>
-          </div>
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Peak Elevation:</span>
-            <span class="font-bold text-slate-800 dark:text-slate-200">1,231 m (4,039 ft)</span>
-          </div>
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Grouse Grind:</span>
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">Open (Seasonal)</span>
-          </div>
-        </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700">
+          ❄️ Powder at Mid/Peak
+        </span>
+      </div>
+    </section>
+
+    <!-- Pinned Mountains Bar (Mirrors Home Dashboard Card) -->
+    <div id="pinned-snow-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+          <span class="text-amber-500">⭐</span> My Mountains (Shown on Home Dashboard)
+        </span>
+        <span class="text-[11px] text-slate-400">
+          Click ⭐ on any mountain to customize
+        </span>
       </div>
 
-      <!-- Mount Seymour -->
-      <div class="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">North Vancouver</span>
-          <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Winter Tires M+S</span>
-        </div>
-        <h3 class="text-xl font-black text-slate-900 dark:text-white">Mount Seymour</h3>
-        <div class="space-y-2 text-xs">
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Base Elevation:</span>
-            <span class="font-bold text-slate-800 dark:text-slate-200">1,020 m (3,350 ft)</span>
-          </div>
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Peak Elevation:</span>
-            <span class="font-bold text-slate-800 dark:text-slate-200">1,449 m (4,754 ft)</span>
-          </div>
-          <div class="flex justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-            <span class="text-slate-500">Road Status:</span>
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">Clear to P1 Lot</span>
-          </div>
-        </div>
+      <div id="pinned-snow-container" class="flex flex-wrap gap-1.5">
+        <!-- Dynamically populated via client script -->
       </div>
     </div>
+
+    <!-- Filter & Search Controls -->
+    <FilterTabs />
+
+    <!-- Mountain Cards Grid -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
+        <span id="mountain-count-display">Showing all {mountains.length} mountain resorts</span>
+        <span>Tap any mountain for full report</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="mountains-grid">
+        {mountains.map((mountain) => (
+          <MountainCard mountain={mountain} />
+        ))}
+      </div>
+    </div>
+
+    <!-- Live Multi-Mountain Webcam Matrix -->
+    <section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3 shadow-xs">
+      <WebcamMatrix webcams={allWebcams.slice(0, 4)} mountainName="All Mountains" />
+    </section>
   </div>
 </ToolLayout>
+
+<script>
+  const DEFAULT_PINNED_SNOW = ['cypress', 'grouse', 'seymour', 'whistler'];
+
+  function getPinnedSnowIds(): string[] {
+    const saved = localStorage.getItem('vanutils_pinned_snow');
+    return saved ? JSON.parse(saved) : DEFAULT_PINNED_SNOW;
+  }
+
+  function setPinnedSnowIds(ids: string[]) {
+    localStorage.setItem('vanutils_pinned_snow', JSON.stringify(ids));
+    window.dispatchEvent(new CustomEvent('vanutils:pinned-snow-changed'));
+    renderPinnedSnow();
+    updateSnowPinButtonStates();
+  }
+
+  function toggleSnowPin(mountainId: string) {
+    let current = getPinnedSnowIds();
+    if (current.includes(mountainId)) {
+      current = current.filter(id => id !== mountainId);
+    } else {
+      current = [...current, mountainId];
+    }
+    setPinnedSnowIds(current);
+  }
+
+  function updateSnowPinButtonStates() {
+    const pinned = getPinnedSnowIds();
+    const pinBtns = document.querySelectorAll('.pin-snow-toggle') as NodeListOf<HTMLButtonElement>;
+
+    pinBtns.forEach(btn => {
+      const id = btn.dataset.mountainId || '';
+      const isPinned = pinned.includes(id);
+      btn.classList.toggle('text-amber-500', isPinned);
+      btn.classList.toggle('text-slate-300', !isPinned);
+      btn.classList.toggle('dark:text-slate-600', !isPinned);
+      btn.title = isPinned ? 'Remove from Main Dashboard' : 'Pin to Main Dashboard';
+    });
+  }
+
+  function renderPinnedSnow() {
+    const container = document.getElementById('pinned-snow-container');
+    if (!container) return;
+
+    const pinned = getPinnedSnowIds();
+    const cards = Array.from(document.querySelectorAll('.mountain-card')) as HTMLElement[];
+
+    if (pinned.length === 0) {
+      container.innerHTML = `<span class="text-xs text-slate-400 italic">No mountains pinned. Click ⭐ on any mountain below to show it on your dashboard.</span>`;
+      return;
+    }
+
+    container.innerHTML = pinned.map(id => {
+      const match = cards.find(c => c.dataset.mountainId === id);
+      const name = match ? match.dataset.mountainName || id : id;
+
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+          <a href="/snow/${id}" class="hover:text-sky-500">${name}</a>
+          <button type="button" class="unpin-snow-btn ml-1 text-slate-400 hover:text-rose-500 font-bold" data-id="${id}" title="Remove from main">×</button>
+        </span>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.unpin-snow-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id;
+        if (id) toggleSnowPin(id);
+      });
+    });
+  }
+
+  function setupSnowDashboard() {
+    updateSnowPinButtonStates();
+    renderPinnedSnow();
+
+    document.querySelectorAll('.pin-snow-toggle').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.mountainId;
+        if (id) toggleSnowPin(id);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSnowDashboard);
+  } else {
+    setupSnowDashboard();
+  }
+
+  window.addEventListener('vanutils:pinned-snow-changed', () => {
+    updateSnowPinButtonStates();
+    renderPinnedSnow();
+  });
+</script>

@@ -1,0 +1,39 @@
+---
+import type { SnowfallReport } from '../types';
+
+interface Props {
+  snowfall: SnowfallReport;
+}
+
+const { snowfall } = Astro.props;
+---
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+  <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+    <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Fresh 24h</span>
+    <span class="text-base font-black text-sky-600 dark:text-sky-400">
+      {snowfall.last24HoursCm} cm
+    </span>
+  </div>
+
+  <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+    <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Last 48h</span>
+    <span class="text-base font-bold text-slate-800 dark:text-slate-200">
+      {snowfall.last48HoursCm} cm
+    </span>
+  </div>
+
+  <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+    <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Base Depth</span>
+    <span class="text-base font-bold text-slate-800 dark:text-slate-200">
+      {snowfall.baseDepthCm} cm
+    </span>
+  </div>
+
+  <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+    <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Lifts Open</span>
+    <span class="text-base font-bold text-emerald-600 dark:text-emerald-400">
+      {snowfall.openLifts}/{snowfall.totalLifts}
+    </span>
+  </div>
+</div>

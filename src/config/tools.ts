@@ -50,17 +50,18 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     path: '/snow',
     icon: 'mountain-snow',
     category: 'outdoors',
-    status: 'planned',
-    badgeText: 'Roadmap v1.2',
+    status: 'active',
+    badgeText: 'Live Snow Radar',
     previewStat: {
-      value: '1,100 m',
+      value: '1,100m FZ',
       label: 'Freezing level today',
-      statusType: 'info',
+      statusType: 'safe',
     },
     features: [
       'Elevation freezing line tracker',
       'Unified mountain webcams matrix',
       'Tire chain requirement radar',
+      '12h/24h snow stake accumulations',
     ],
   },
   {

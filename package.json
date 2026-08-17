@@ -12,6 +12,7 @@
     "data:sync": "node scripts/sync-data.js",
     "data:scrape": "node scripts/scrape-official-data.js",
     "ferries:sync": "node scripts/sync-live-ferries.js",
+    "snow:sync": "node scripts/sync-live-snow.js",
     "deploy": "wrangler deploy"
   },
   "repository": {

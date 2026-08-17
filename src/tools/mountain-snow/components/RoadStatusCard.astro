@@ -1,0 +1,44 @@
+---
+import type { RoadStatus } from '../types';
+import { getRoadConditionMeta } from '../services/snowService';
+
+interface Props {
+  road: RoadStatus;
+}
+
+const { road } = Astro.props;
+const meta = getRoadConditionMeta(road.surfaceCondition);
+---
+
+<div class={`p-4 rounded-2xl border ${meta.badgeBg} space-y-2`}>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+      <span class={`w-2 h-2 rounded-full ${meta.dotColor}`}></span>
+      <span>🚗 {road.roadName}</span>
+    </div>
+    <span class="text-xs font-black uppercase tracking-wider">
+      {meta.label}
+    </span>
+  </div>
+
+  <p class="text-xs text-slate-600 dark:text-slate-300">
+    {meta.description} (Road temp: {road.temperatureCelsius > 0 ? `+${road.temperatureCelsius}` : road.temperatureCelsius}°C)
+  </p>
+
+  <div class="flex flex-wrap gap-2 text-[11px] font-semibold pt-1 border-t border-slate-200/40 dark:border-slate-700/40">
+    {road.winterTiresMandatory && (
+      <span class="inline-flex items-center gap-1 text-slate-800 dark:text-slate-200">
+        ❄️ Winter Tires (M+S / 3PMSF) Mandatory
+      </span>
+    )}
+    {road.chainsEnforced ? (
+      <span class="text-rose-600 dark:text-rose-400 font-bold">
+        ⛓️ Chains Required
+      </span>
+    ) : (
+      <span class="text-slate-500 dark:text-slate-400">
+        Chains optional
+      </span>
+    )}
+  </div>
+</div>

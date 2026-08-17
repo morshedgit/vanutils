@@ -1,0 +1,282 @@
+[
+  {
+    "id": "cypress",
+    "name": "Cypress Mountain",
+    "shortName": "Cypress (1,440m)",
+    "region": "north_shore",
+    "currentFreezingLevelMeters": 1100,
+    "elevationBands": [
+      {
+        "label": "Base (Downhill Lodge)",
+        "elevationMeters": 910,
+        "temperatureCelsius": 1.2,
+        "precipitation": "wet_snow"
+      },
+      {
+        "label": "Mid-Mountain",
+        "elevationMeters": 1100,
+        "temperatureCelsius": 0,
+        "precipitation": "snow"
+      },
+      {
+        "label": "Mt. Strachan Summit",
+        "elevationMeters": 1440,
+        "temperatureCelsius": -2.5,
+        "precipitation": "snow"
+      }
+    ],
+    "snowfall": {
+      "last12HoursCm": 5,
+      "last24HoursCm": 14,
+      "last48HoursCm": 28,
+      "last7DaysCm": 62,
+      "baseDepthCm": 185,
+      "openLifts": 6,
+      "totalLifts": 6,
+      "openRuns": 53,
+      "totalRuns": 53
+    },
+    "accessRoad": {
+      "roadName": "Cypress Bowl Road",
+      "surfaceCondition": "compact_snow",
+      "winterTiresMandatory": true,
+      "chainsEnforced": false,
+      "temperatureCelsius": 0.8,
+      "lastReported": "2026-08-17T13:30:00Z"
+    },
+    "avalancheRating": {
+      "alpine": "moderate",
+      "treeline": "moderate",
+      "belowTreeline": "low",
+      "bulletinUrl": "https://avalanche.ca/forecasts/south-coast"
+    },
+    "webcams": [
+      {
+        "id": "cam-cyp-base",
+        "name": "Downhill Base Area",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg",
+        "elevationMeters": 910,
+        "description": "Downhill Lodge & Lions Express Loading"
+      },
+      {
+        "id": "cam-cyp-black",
+        "name": "Black Mountain Express",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/795.jpg",
+        "elevationMeters": 1200,
+        "description": "Mid-Mountain Chairlift View"
+      }
+    ],
+    "officialSourceUrl": "https://cypressmountain.com/downhill-conditions-and-cams",
+    "lastUpdated": "2026-08-17T21:07:20.582Z"
+  },
+  {
+    "id": "grouse",
+    "name": "Grouse Mountain",
+    "shortName": "Grouse (1,250m)",
+    "region": "north_shore",
+    "currentFreezingLevelMeters": 1100,
+    "elevationBands": [
+      {
+        "label": "Valley / Skyride Base",
+        "elevationMeters": 274,
+        "temperatureCelsius": 5.4,
+        "precipitation": "rain"
+      },
+      {
+        "label": "Chalet Plateau",
+        "elevationMeters": 1128,
+        "temperatureCelsius": -0.2,
+        "precipitation": "snow"
+      },
+      {
+        "label": "The Peak",
+        "elevationMeters": 1250,
+        "temperatureCelsius": -1.8,
+        "precipitation": "snow"
+      }
+    ],
+    "snowfall": {
+      "last12HoursCm": 4,
+      "last24HoursCm": 10,
+      "last48HoursCm": 22,
+      "last7DaysCm": 48,
+      "baseDepthCm": 160,
+      "openLifts": 5,
+      "totalLifts": 5,
+      "openRuns": 33,
+      "totalRuns": 33
+    },
+    "accessRoad": {
+      "roadName": "Nancy Greene Way",
+      "surfaceCondition": "bare_wet",
+      "winterTiresMandatory": false,
+      "chainsEnforced": false,
+      "temperatureCelsius": 5.2,
+      "lastReported": "2026-08-17T13:30:00Z"
+    },
+    "avalancheRating": {
+      "alpine": "moderate",
+      "treeline": "moderate",
+      "belowTreeline": "low",
+      "bulletinUrl": "https://avalanche.ca/forecasts/south-coast"
+    },
+    "webcams": [
+      {
+        "id": "cam-grouse-plateau",
+        "name": "Chalet Plateau & Skating Pond",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/796.jpg",
+        "elevationMeters": 1128,
+        "description": "Upper Mountain Village & Light Walk"
+      },
+      {
+        "id": "cam-grouse-peak",
+        "name": "The Peak Chair",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/797.jpg",
+        "elevationMeters": 1250,
+        "description": "Summit View of Metro Vancouver"
+      }
+    ],
+    "officialSourceUrl": "https://www.grousemountain.com/current-conditions",
+    "lastUpdated": "2026-08-17T21:07:20.583Z"
+  },
+  {
+    "id": "seymour",
+    "name": "Mount Seymour",
+    "shortName": "Mt. Seymour (1,449m)",
+    "region": "north_shore",
+    "currentFreezingLevelMeters": 1100,
+    "elevationBands": [
+      {
+        "label": "Base Area",
+        "elevationMeters": 930,
+        "temperatureCelsius": 1,
+        "precipitation": "wet_snow"
+      },
+      {
+        "label": "Mystery Peak",
+        "elevationMeters": 1230,
+        "temperatureCelsius": -1.2,
+        "precipitation": "snow"
+      },
+      {
+        "label": "Mt. Seymour Summit",
+        "elevationMeters": 1449,
+        "temperatureCelsius": -2.6,
+        "precipitation": "snow"
+      }
+    ],
+    "snowfall": {
+      "last12HoursCm": 6,
+      "last24HoursCm": 16,
+      "last48HoursCm": 30,
+      "last7DaysCm": 70,
+      "baseDepthCm": 190,
+      "openLifts": 4,
+      "totalLifts": 4,
+      "openRuns": 40,
+      "totalRuns": 40
+    },
+    "accessRoad": {
+      "roadName": "Mount Seymour Main Road",
+      "surfaceCondition": "compact_snow",
+      "winterTiresMandatory": true,
+      "chainsEnforced": false,
+      "temperatureCelsius": 0.5,
+      "lastReported": "2026-08-17T13:30:00Z"
+    },
+    "avalancheRating": {
+      "alpine": "moderate",
+      "treeline": "moderate",
+      "belowTreeline": "low",
+      "bulletinUrl": "https://avalanche.ca/forecasts/south-coast"
+    },
+    "webcams": [
+      {
+        "id": "cam-seymour-base",
+        "name": "Base Lodge & Lodge Chair",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/530.jpg",
+        "elevationMeters": 930,
+        "description": "Base Area & Tubing Park"
+      },
+      {
+        "id": "cam-seymour-mystery",
+        "name": "Mystery Peak Summit",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/531.jpg",
+        "elevationMeters": 1230,
+        "description": "Mystery Peak Unloading & Terrain Park"
+      }
+    ],
+    "officialSourceUrl": "https://mtseymour.ca/today",
+    "lastUpdated": "2026-08-17T21:07:20.583Z"
+  },
+  {
+    "id": "whistler",
+    "name": "Whistler Blackcomb",
+    "shortName": "Whistler (2,284m)",
+    "region": "sea_to_sky",
+    "currentFreezingLevelMeters": 1350,
+    "elevationBands": [
+      {
+        "label": "Whistler Village",
+        "elevationMeters": 675,
+        "temperatureCelsius": 4.1,
+        "precipitation": "rain"
+      },
+      {
+        "label": "Mid-Mountain (Roundhouse)",
+        "elevationMeters": 1850,
+        "temperatureCelsius": -3.8,
+        "precipitation": "snow"
+      },
+      {
+        "label": "Whistler Peak",
+        "elevationMeters": 2284,
+        "temperatureCelsius": -7.2,
+        "precipitation": "snow"
+      }
+    ],
+    "snowfall": {
+      "last12HoursCm": 8,
+      "last24HoursCm": 22,
+      "last48HoursCm": 45,
+      "last7DaysCm": 110,
+      "baseDepthCm": 245,
+      "openLifts": 26,
+      "totalLifts": 27,
+      "openRuns": 200,
+      "totalRuns": 240
+    },
+    "accessRoad": {
+      "roadName": "Sea-to-Sky Highway (Hwy 99)",
+      "surfaceCondition": "bare_wet",
+      "winterTiresMandatory": true,
+      "chainsEnforced": false,
+      "temperatureCelsius": 3.8,
+      "lastReported": "2026-08-17T13:30:00Z"
+    },
+    "avalancheRating": {
+      "alpine": "considerable",
+      "treeline": "moderate",
+      "belowTreeline": "low",
+      "bulletinUrl": "https://avalanche.ca/forecasts/sea-to-sky"
+    },
+    "webcams": [
+      {
+        "id": "cam-whistler-roundhouse",
+        "name": "Roundhouse Lodge & Peak 2 Peak",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/795.jpg",
+        "elevationMeters": 1850,
+        "description": "Roundhouse Plateau & Emerald Express"
+      },
+      {
+        "id": "cam-whistler-village",
+        "name": "Whistler Village Gondola Base",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg",
+        "elevationMeters": 675,
+        "description": "Whistler & Blackcomb Gondola Plazas"
+      }
+    ],
+    "officialSourceUrl": "https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "lastUpdated": "2026-08-17T21:07:20.583Z"
+  }
+]

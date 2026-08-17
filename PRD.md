@@ -4,6 +4,7 @@
 - **Product Name**: VanUtils (`vancouver.tools` / `vanutils.ca`)
 - **Target Platform**: Web / Mobile-First PWA (Astro on Cloudflare Pages)
 - **Product Vision**: A unified, ultra-lightweight suite of hyper-local micro-utilities designed specifically for Metro Vancouver residents. VanUtils provides single-purpose, sub-second tools accessible from one cohesive hub with zero bloat, zero tracking, and zero ads.
+- **Real-Data Mandate**: All metrics, temperatures, bacterial counts, freezing levels, vehicle deck capacities, road conditions, and camera frames are 100% real-world data ingested directly from official government, transport, and meteorological telemetry feeds. No synthetic, mock, or fake data is permitted. If an upstream endpoint is unmonitored or awaiting a lab report, it is reported transparently as such.
 
 ---
 
@@ -19,17 +20,17 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 2. **Maximum Data Density (80%+ Card Real Estate)**:
    - Dedicated card real estate must be maximized to present direct, actionable live data rather than marketing fluff or decorative empty space.
    - **Can I Swim?**: Displays 8–12+ live beach statuses in a high-density 2-column list (`English Bay 🟢 Safe`, `Kits Beach 🟢 Safe`, `Sunset 🟡 Caution`, etc.).
-   - **Ferry Standby Radar**: Displays real-time deck capacity & standby clearance odds for top routes (*Tsawwassen ➔ Swartz Bay*, *Horseshoe Bay ➔ Departure Bay*).
-   - **Mountain Snow Line**: Displays summit elevations, current freezing levels, and webcam alerts for *Cypress, Grouse, and Seymour*.
+   - **Ferry Standby Radar**: Displays real-time deck capacity & standby clearance odds for top routes (*Tsawwassen ➔ Swartz Bay*, *Horseshoe Bay ➔ Departure Bay*, *Hullo Catamaran*, *TransLink SeaBus*).
+   - **Mountain Snow Line**: Displays summit elevations, current freezing levels, and snow/road alerts for *Cypress, Grouse, Seymour, and Whistler*.
    - **Evo & Parking Radar**: Displays active street-sweeping warnings, tow clocks, and permit zone statuses.
 
 3. **Zero Visual Bloat & No Decorative Distractions**:
    - **Strictly Prohibited on Cards**: Large decorative icon containers, category labels (*"Outdoors & Nature"*), verbose sub-headers, promotional blurbs, and redundant footer buttons.
-   - **Required Header**: Clean Utility Title + Live Count Badge (e.g. `Can I Swim?` • `[30/31 Safe]`).
+   - **Required Header**: Clean Utility Title + Live Count Badge (e.g. `Mountain Snow Line` • `[1,100m FZ]`).
 
 4. **Home Card Customization Protocol**:
    - Every micro-utility must allow users to customize what items appear on their home dashboard card.
-   - In `/swim`, users click the ⭐ star icon next to any beach to add/remove it from their **"Main Beaches"** list.
+   - Users click the ⭐ star icon next to any item to add/remove it from their pinned list.
    - Pinned selections are persisted locally in `localStorage` (`vanutils_pinned_<tool-id>`) and automatically synchronize across the utility page and the main dashboard card without requiring account creation.
 
 ---
@@ -46,8 +47,8 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 +───────────────────+      +───────────────────+    +──────────────────+
 |  CAN I SWIM?      |      |  FERRY RADAR      |    |  MOUNTAIN SNOW   |
 |  (/swim)          |      |  (/ferries)       |    |  (/snow)         |
-|  - 31 Real Beaches|      |  - Deck Space %   |    |  - Freezing line |
-|  - ⭐ Pin to Home |      |  - Standby Odds   |    |  - Webcams       |
+|  - 31 Real Beaches|      |  - 11 Marine Rts  |    |  - 4 Mountain Rst|
+|  - ⭐ Pin to Home |      |  - Live Deck %    |    |  - Freezing line |
 +───────────────────+      +───────────────────+    +──────────────────+
 ```
 
@@ -62,24 +63,59 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 ## 4. Micro-Utility Specifications
 
 ### Tool #1: "Can I Swim Today?" (`/swim`) — Flagship Live Utility
-- **Official Data Ingestion**: Direct integration with Metro Vancouver GIS Enterprise Feature Server (`gis.metrovancouver.org`) and Vancouver Coastal Health / Fraser Health weekly surveillance.
+- **Official Data Ingestion**: Direct integration with Metro Vancouver GIS Enterprise Feature Server (`gis.metrovancouver.org`) and Vancouver Coastal Health / Fraser Health surveillance.
 - **Safety Standard**:
   - 🟢 **Safe**: 30-day geometric mean $\le 200$ CFU/100mL & single sample $\le 235$ CFU/100mL.
   - 🟡 **Caution**: Single sample $235 - 400$ CFU/100mL (resampling triggered).
   - 🔴 **Advisory**: Geometric mean $> 200$ CFU/100mL or single sample $> 400$ CFU/100mL.
-- **Swim Page UX**:
+  - ⚪ **Unmonitored / Off-Season**: October–April or awaiting weekly sample.
+- **Features**:
   - Pinned "Main Beaches" quick bar with 1-click `×` unpin.
   - Minimal search bar + 5 region pills (*All Metro, Vancouver, North Shore, Burnaby/Belcarra, White Rock/Delta*).
   - High-density beach rows with name, municipality, GPS distance, CFU, status indicator, and ⭐ pin button.
   - Dedicated beach detail pages (`/swim/[slug]`) for full 30-day historical SVG charts and transit links.
 
-### Tool #2: BC Ferries Standby Radar (`/ferries`) — Planned Roadmap
-- Live drive-up standby odds for Tsawwassen and Horseshoe Bay terminals.
-- Car deck capacity percentages and queue cam feeds.
+---
 
-### Tool #3: Mountain Snow Line (`/snow`) — Planned Roadmap
-- Freezing level elevation tracker for North Shore mountains (Cypress, Grouse, Seymour).
-- Road chain advisories and summit webcam matrix.
+### Tool #2: Metro Vancouver Ferry & Marine Transit Radar (`/ferries`) — Flagship Live Utility
+- **Multi-Provider Scope**:
+  - **BC Ferries**: TSA-SWB, HSB-NAN, HSB-LNG, TSA-DUK, HSB-BOW, TSA-SGI, EAR-SAL.
+  - **Hullo Fast Catamaran**: Downtown Vancouver (Coal Harbour) ⇄ Nanaimo Port Drive.
+  - **TransLink SeaBus**: Waterfront Station ⇄ Lonsdale Quay (10-12 min headway).
+  - **Water Taxis & Local Marine**: Howe Sound Water Taxi (Keats & Gambier), False Creek Ferries, Barnston Island Barge.
+- **Standby Risk Engine**:
+  - 🟢 **Low Risk (>35% Deck Space)**: Favourable standby clearance. Arrive 45–60 min prior.
+  - 🟡 **Moderate Risk (15%–35% Deck Space)**: Standby queue filling. Arrive 60–90 min prior; 1-sailing wait possible.
+  - 🔴 **High Risk / Full (<15% or 0%)**: Standby cutoff likely. Plan for subsequent sailing.
+- **DriveBC Highway Cams**: Live camera streams for Hwy 17 (Tsawwassen Approach) and Hwy 1 (Horseshoe Bay Approach).
+- **Edge Sync & API**: `npm run ferries:sync` directly updates authentic capacity feeds; `GET /api/ferries` endpoint available.
+
+---
+
+### Tool #3: Mountain Snow Line & Elevation Matrix (`/snow`) — Flagship Live Utility
+- **Module Identifier**: `mountain-snow` (routes: `/snow` and `/snow/[mountain]`).
+- **Supported Mountain Zones & Real Elevation Specifications**:
+  - **Cypress Mountain**: Base 910m, Mid (Lodge) 1,100m, Mt. Strachan Summit 1,440m.
+  - **Grouse Mountain**: Valley 274m, Chalet Plateau 1,128m, Peak 1,250m.
+  - **Mount Seymour**: Base 930m, Mystery Peak 1,230m, Mt. Seymour Summit 1,449m.
+  - **Whistler Blackcomb**: Village 675m, Mid-Mountain 1,850m, Peak 2,284m.
+- **Live Data Ingestion Pipeline**:
+  - **Environment Canada**: Real-time atmospheric soundings and high-elevation automatic weather stations (AWS).
+  - **DriveBC RWIS**: Real-time road surface telemetry and mandatory winter tire (M+S / 3PMSF) / chain enforcement for Cypress Bowl Rd, Mount Seymour Rd, and Sea-to-Sky Hwy 99.
+  - **Avalanche Canada**: Public danger rating REST API (`avalanche.ca/api/forecasts/...`) for South Coast and Sea-to-Sky alpine, treeline, and below-treeline bands.
+  - **Resort Webcams**: Live high-resolution camera feeds with lightbox previews.
+- **Precipitation Classification by Elevation Band**:
+  - ❄️ **Dry Powder / Snow**: Temperature $\le -1.5^\circ\text{C}$.
+  - 🌨️ **Wet Snow / Mixed**: Temperature between $-1.5^\circ\text{C}$ and $+1.5^\circ\text{C}$.
+  - 🌧️ **Rain**: Temperature $> +1.5^\circ\text{C}$.
+- **Snow Page UX**:
+  - Filter tabs (*All Mountains, 🌲 North Shore, 🏔️ Sea-to-Sky, 📷 Webcams Only*).
+  - Elevation cross-section visualizer displaying current 0°C freezing level.
+  - DriveBC mountain road alerts and chain requirement indicators.
+  - 12h / 24h / 48h snow stake accumulation and settled base depth metrics.
+  - Dedicated mountain detail pages (`/snow/[mountain]`) with full webcam matrix and avalanche safety bulletin.
+
+---
 
 ### Tool #4: Evo & Street Sweeping Radar (`/parking`) — Planned Roadmap
 - Vancouver street-sweeping calendar sync and tow-away warning clocks.
@@ -87,11 +123,13 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
-## 5. Multi-Tool Expansion Protocol for Future Modules
-When adding a new utility module to VanUtils:
-1. **Scaffold Directory**: Create `src/tools/<tool-id>/` with types and services.
-2. **Register in Config**: Add entry to `src/config/tools.ts`.
-3. **Build High-Density Card**: Implement in `src/components/shared/ToolCard.astro` following Section 2 rules (clickable container, maximum live data items, zero fluff).
-4. **Implement Tool Route**: Create `src/pages/<tool-id>/index.astro` using `ToolLayout`.
-5. **Add Pinning Support**: Store user favorite items in `localStorage.getItem('vanutils_pinned_<tool-id>')` and broadcast changes via CustomEvent.
-6. **Verify Build**: Run `npm run check` (0 errors) and `npm run build`.
+## 5. Multi-Tool Expansion Protocol
+When expanding the platform with a new utility:
+1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
+2. **Registry Declaration**: Register in `src/config/tools.ts`.
+3. **High-Density Card Implementation**: Implement in `src/components/shared/ToolCard.astro` ensuring:
+   - 100% Clickable container (`<a>`).
+   - Maximize live data capacity (80%+ card space).
+   - Zero decorative icons, category pills, or nested buttons.
+4. **Route Implementation**: Create `src/pages/<tool-id>/index.astro` and `src/pages/<tool-id>/[slug].astro` using `ToolLayout` with ⭐ pinning support.
+5. **Validation**: Ensure zero cross-tool dependencies and verify `npm run check` & `npm run build`.

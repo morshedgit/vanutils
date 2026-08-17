@@ -1,0 +1,81 @@
+---
+import type { MountainResort } from '../types';
+import ElevationVisualizer from './ElevationVisualizer.astro';
+import RoadStatusCard from './RoadStatusCard.astro';
+import SnowfallBar from './SnowfallBar.astro';
+
+interface Props {
+  mountain: MountainResort;
+}
+
+const { mountain } = Astro.props;
+---
+
+<div
+  class="mountain-card group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-sky-500/60 hover:shadow-md transition-all duration-150 space-y-4"
+  data-mountain-id={mountain.id}
+  data-mountain-name={mountain.name}
+  data-mountain-region={mountain.region}
+>
+  <div>
+    <!-- Top Row: Region + Pin -->
+    <div class="flex items-center justify-between gap-2 mb-2">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+        {mountain.region === 'north_shore' ? '🌲 North Shore Mountains' : '🏔️ Sea-to-Sky Corridor'}
+      </span>
+
+      <div class="flex items-center gap-1.5">
+        <button
+          type="button"
+          class="pin-snow-toggle p-1 rounded-lg text-slate-300 dark:text-slate-600 hover:text-amber-400 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          data-mountain-id={mountain.id}
+          title="Pin to Main Dashboard"
+          aria-label={`Pin ${mountain.name}`}
+        >
+          <svg class="w-4 h-4 fill-current star-icon" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mountain Title -->
+    <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors mb-3">
+      <a href={`/snow/${mountain.id}`} class="focus:outline-none hover:underline">
+        {mountain.name}
+      </a>
+    </h3>
+
+    <!-- Snowfall Metric Pills -->
+    <div class="mb-3">
+      <SnowfallBar snowfall={mountain.snowfall} />
+    </div>
+
+    <!-- Elevation Bands & Freezing Level -->
+    <div class="mb-3">
+      <ElevationVisualizer
+        elevationBands={mountain.elevationBands}
+        freezingLevelMeters={mountain.currentFreezingLevelMeters}
+      />
+    </div>
+
+    <!-- Road Access Condition -->
+    <div>
+      <RoadStatusCard road={mountain.accessRoad} />
+    </div>
+  </div>
+
+  <!-- Bottom Row: Detail Link -->
+  <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+    <span>
+      Avalanche: <strong class="text-slate-800 dark:text-slate-200 capitalize">{mountain.avalancheRating.alpine}</strong> (Alpine)
+    </span>
+
+    <a
+      href={`/snow/${mountain.id}`}
+      class="text-xs font-bold text-sky-600 dark:text-sky-400 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5"
+    >
+      Full Mountain Cams →
+    </a>
+  </div>
+</div>
