@@ -1,5 +1,6 @@
 ---
 import type { ToolMeta } from '../../types/shared';
+import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
 
 interface Props {
   tool: ToolMeta;
@@ -13,6 +14,11 @@ const categoryLabels: Record<string, string> = {
   daily_living: 'Daily Living',
   civic: 'Civic & City',
 };
+
+// Default top beaches for the swim card
+const allBeaches = tool.id === 'can-i-swim' ? getAllBeaches() : [];
+const defaultPinnedSlugs = ['english-bay-beach', 'kitsilano-beach', 'sunset-beach', 'jericho-beach', 'ambleside-beach'];
+const initialMainBeaches = allBeaches.filter((b) => defaultPinnedSlugs.includes(b.id));
 ---
 
 <a
@@ -22,7 +28,7 @@ const categoryLabels: Record<string, string> = {
 >
   <div>
     <!-- Top Row: Icon + Category + Status Badge -->
-    <div class="flex items-start justify-between gap-3 mb-4">
+    <div class="flex items-start justify-between gap-3 mb-3">
       <div class="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform">
         {tool.icon === 'waves' && '🌊'}
         {tool.icon === 'ship' && '⛴️'}
@@ -50,7 +56,7 @@ const categoryLabels: Record<string, string> = {
     </div>
 
     <!-- Tool Title -->
-    <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors mb-2">
+    <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors mb-1.5">
       {tool.name}
     </h3>
 
@@ -58,17 +64,101 @@ const categoryLabels: Record<string, string> = {
     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
       {tool.shortDescription}
     </p>
+
+    <!-- For Can I Swim: Live Main Beaches Status List -->
+    {tool.id === 'can-i-swim' && (
+      <div class="mb-4 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-2">
+        <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 pb-1 border-b border-slate-200/60 dark:border-slate-700/40">
+          <span>Main Beaches Status</span>
+          <span class="text-[10px] lowercase font-normal text-sky-600 dark:text-sky-400">customize in tool ↗</span>
+        </div>
+
+        <div id="main-card-beaches-list" class="space-y-1.5">
+          {initialMainBeaches.map((b) => (
+            <div class="flex items-center justify-between text-xs" data-beach-slug={b.id}>
+              <span class="font-medium text-slate-800 dark:text-slate-200 truncate pr-2">
+                {b.name.replace(/ \(.*\)/, '')}
+              </span>
+              <span class="inline-flex items-center gap-1 font-semibold text-[11px] shrink-0">
+                {b.currentStatus === 'safe' && (
+                  <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe
+                  </span>
+                )}
+                {b.currentStatus === 'caution' && (
+                  <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution
+                  </span>
+                )}
+                {b.currentStatus === 'advisory' && (
+                  <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory
+                  </span>
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 
   <!-- Bottom Action Row -->
-  <div class="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+  <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
     <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
-      {tool.previewStat ? tool.previewStat.value : 'Fast edge tool'}
+      {tool.id === 'can-i-swim' ? '30/31 Beaches Safe Today' : tool.previewStat?.value}
     </span>
 
     <span class="inline-flex items-center gap-1 text-xs font-bold text-sky-600 dark:text-sky-400 group-hover:translate-x-1 transition-transform">
-      <span>{tool.status === 'active' ? 'Launch Tool' : 'View Preview'}</span>
+      <span>{tool.status === 'active' ? 'Open Tool' : 'View Preview'}</span>
       <span>→</span>
     </span>
   </div>
 </a>
+
+{tool.id === 'can-i-swim' && (
+  <script is:inline define:vars={{ allBeachesJson: JSON.stringify(allBeaches) }}>
+    function syncMainCardBeaches() {
+      const listContainer = document.getElementById('main-card-beaches-list');
+      if (!listContainer) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_beaches');
+      const allBeaches = JSON.parse(allBeachesJson || '[]');
+      
+      const defaultSlugs = ['english-bay-beach', 'kitsilano-beach', 'sunset-beach', 'jericho-beach', 'ambleside-beach'];
+      const activeSlugs = saved ? JSON.parse(saved) : defaultSlugs;
+
+      if (!activeSlugs || activeSlugs.length === 0) return;
+
+      const selected = allBeaches.filter((b) => activeSlugs.includes(b.id));
+      if (selected.length === 0) return;
+
+      listContainer.innerHTML = selected.slice(0, 5).map((b) => {
+        const statusBadge = b.currentStatus === 'safe'
+          ? '<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe</span>'
+          : b.currentStatus === 'caution'
+          ? '<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution</span>'
+          : '<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory</span>';
+
+        return `
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-medium text-slate-800 dark:text-slate-200 truncate pr-2">
+              ${b.name.replace(/ \(.*\)/, '')}
+            </span>
+            <span class="inline-flex items-center gap-1 font-semibold text-[11px] shrink-0">
+              ${statusBadge}
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardBeaches);
+    } else {
+      syncMainCardBeaches();
+    }
+
+    window.addEventListener('vanutils:pinned-beaches-changed', syncMainCardBeaches);
+  </script>
+)}
