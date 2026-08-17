@@ -125,25 +125,29 @@ const initialMountains = allMountains.slice(0, 4);
   <!-- MOUNTAIN SNOW: High-Density Mountain List -->
   {tool.id === 'mountain-snow' && (
     <div id="main-card-snow-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialMountains.map((m) => (
-        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id={m.id}>
-          <div class="truncate pr-2 font-medium">
-            <span>{m.name}</span>
-            <span class="text-[11px] text-slate-400 ml-1">({m.elevationBands[m.elevationBands.length - 1].elevationMeters}m)</span>
+      {initialMountains.map((m) => {
+        const topBand = m.elevationBands[m.elevationBands.length - 1];
+        const hasSnow = m.snowfall.last24HoursCm > 0;
+        return (
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id={m.id}>
+            <div class="truncate pr-2 font-medium">
+              <span>{m.name}</span>
+              <span class="text-[11px] text-slate-400 ml-1">({topBand.elevationMeters}m)</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class={hasSnow ? 'text-sky-600 dark:text-sky-400 font-bold' : 'text-amber-600 dark:text-amber-400 font-bold'}>
+                {hasSnow ? `${m.snowfall.last24HoursCm}cm 24h` : `+${topBand.temperatureCelsius}°C Summit`}
+              </span>
+              <span class="text-slate-500 dark:text-slate-400">
+                0°C @ {m.currentFreezingLevelMeters}m
+              </span>
+              <span class={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${hasSnow ? 'bg-sky-500/15 text-sky-700 dark:text-sky-300' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'}`}>
+                {hasSnow ? '❄️ Snow' : '☀️ Hiking'}
+              </span>
+            </div>
           </div>
-          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-            <span class="text-sky-600 dark:text-sky-400 font-bold">
-              {m.snowfall.last24HoursCm}cm 24h
-            </span>
-            <span class="text-slate-500 dark:text-slate-400">
-              0°C @ {m.currentFreezingLevelMeters}m
-            </span>
-            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300">
-              ❄️ Snow
-            </span>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   )}
 
@@ -311,23 +315,27 @@ const initialMountains = allMountains.slice(0, 4);
       if (displayList.length === 0) return;
 
       grid.innerHTML = displayList.map((m) => {
-        const topElevation = m.elevationBands[m.elevationBands.length - 1].elevationMeters;
+        const topBand = m.elevationBands[m.elevationBands.length - 1];
+        const hasSnow = m.snowfall.last24HoursCm > 0;
+        const tempText = hasSnow
+          ? `<span class="text-sky-600 dark:text-sky-400 font-bold">${m.snowfall.last24HoursCm}cm 24h</span>`
+          : `<span class="text-amber-600 dark:text-amber-400 font-bold">+${topBand.temperatureCelsius}°C Summit</span>`;
+        const badgeText = hasSnow
+          ? '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300">❄️ Snow</span>'
+          : '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">☀️ Hiking</span>';
+
         return `
           <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id="${m.id}">
             <div class="truncate pr-2 font-medium">
               <span>${m.name}</span>
-              <span class="text-[11px] text-slate-400 ml-1">(${topElevation}m)</span>
+              <span class="text-[11px] text-slate-400 ml-1">(${topBand.elevationMeters}m)</span>
             </div>
             <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-sky-600 dark:text-sky-400 font-bold">
-                ${m.snowfall.last24HoursCm}cm 24h
-              </span>
+              ${tempText}
               <span class="text-slate-500 dark:text-slate-400">
                 0°C @ ${m.currentFreezingLevelMeters}m
               </span>
-              <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300">
-                ❄️ Snow
-              </span>
+              ${badgeText}
             </div>
           </div>
         `;

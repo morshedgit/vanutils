@@ -24,19 +24,19 @@ const allWebcams = mountains.flatMap((m) => m.webcams);
       <div class="space-y-1">
         <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-semibold">
           <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-          <span>Coastal 0°C Freezing Level: {stats.avgFreezingLevel}m</span>
+          <span>Coastal 0°C Freezing Level: ~{stats.avgFreezingLevel}m (Summer Alpine)</span>
         </div>
         <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Vancouver Mountain Snow Line Matrix
+          Vancouver Mountain Snow & Elevation Matrix
         </h2>
         <p class="text-xs text-slate-300">
-          Average {stats.avgFresh24hCm}cm fresh snow in last 24h • {stats.totalOpenLifts}/{stats.totalLifts} Lifts Operating
+          {stats.avgFresh24hCm > 0 ? `${stats.avgFresh24hCm}cm fresh snow in last 24h` : 'Summer Season • Hiking & Sightseeing Trails Open'} • {stats.totalOpenLifts} Sightseeing & Bike Lifts Active
         </p>
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
         <span class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700">
-          ❄️ Powder at Mid/Peak
+          {stats.avgFresh24hCm > 0 ? '❄️ Powder on Peak' : '☀️ Summer Trails Open'}
         </span>
       </div>
     </section>

@@ -53,7 +53,7 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     status: 'active',
     badgeText: 'Live Snow Radar',
     previewStat: {
-      value: '1,100m FZ',
+      value: '3,900m FZ (Summer)',
       label: 'Freezing level today',
       statusType: 'safe',
     },
