@@ -52,10 +52,12 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 +───────────────────+      +───────────────────+    +──────────────────+
 ```
 
-- **Framework**: Astro 5 (Static Site Generation + Cloudflare Edge Workers)
+- **Framework**: Astro 5 (Server-Side Edge Rendering `output: "server"` on Cloudflare Workers V8 Isolates)
+- **Edge Caching Policy**: Tiered `s-maxage` with `stale-while-revalidate` (60s–600s) on Cloudflare Vancouver Edge PoP (YVR)
+- **Live Data Ingestion**: Dynamic runtime edge fetching (`getLiveRoutes()`, `getLiveMountains()`, etc.) with 1.2s timeout fallback
 - **Styling**: Tailwind CSS with dark mode zero-flicker protection
 - **Deployment**: Cloudflare Pages / Workers Edge CDN (`wrangler.json` / `wrangler.toml`)
-- **Performance Budget**: Client JS $< 25\text{ KB}$, First Contentful Paint $< 0.8\text{s}$
+- **Performance Budget**: Client JS $< 25\text{ KB}$, First Contentful Paint $< 0.4\text{s}$, TTFB $< 50\text{ms}$
 - **Privacy Standard**: 100% Client-side state (`localStorage`), 0 telemetry, 0 cookies
 
 ---
@@ -126,10 +128,12 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
-2. **Registry Declaration**: Register in `src/config/tools.ts`.
-3. **High-Density Card Implementation**: Implement in `src/components/shared/ToolCard.astro` ensuring:
+2. **Dynamic Edge Loader**: Implement an async `getLive<ToolData>()` loader in `services/` that queries the official live API with a 1.2s timeout and fallback to verified snapshot.
+3. **Registry Declaration**: Register in `src/config/tools.ts`.
+4. **High-Density Card Implementation**: Implement in `src/components/shared/ToolCard.astro` ensuring:
    - 100% Clickable container (`<a>`).
    - Maximize live data capacity (80%+ card space).
    - Zero decorative icons, category pills, or nested buttons.
-4. **Route Implementation**: Create `src/pages/<tool-id>/index.astro` and `src/pages/<tool-id>/[slug].astro` using `ToolLayout` with ⭐ pinning support.
-5. **Validation**: Ensure zero cross-tool dependencies and verify `npm run check` & `npm run build`.
+   - Dynamic pinning synchronization with `localStorage.getItem('vanutils_pinned_<tool-id>')`.
+5. **Route Implementation**: Create `src/pages/<tool-id>/index.astro` and `src/pages/<tool-id>/[slug].astro` in Server-Side Edge Rendering mode (`output: "server"`), declaring appropriate `Astro.response.headers.set('Cache-Control', 'public, s-maxage=..., stale-while-revalidate=...')`.
+6. **Validation**: Ensure zero cross-tool dependencies and verify `npm run check` & `npm run build`.

@@ -41,14 +41,22 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 
 ---
 
-## 🗺️ Micro-Utilities Roadmap
+## 🗺️ Micro-Utilities Portfolio
 
 | Tool | Route | Status | Description |
 | :--- | :--- | :--- | :--- |
-| **Tool #1: Can I Swim?** | `/swim` | **Active MVP** | Live Metro Vancouver beach water quality, E. coli readings & advisories. |
-| **Tool #2: Ferry Standby Radar** | `/ferries` | *Roadmap v1.1* | Real-time deck space & drive-up standby odds for Tsawwassen & Horseshoe Bay. |
-| **Tool #3: Mountain Snow Line** | `/snow` | *Roadmap v1.2* | North Shore freezing levels, Cypress/Seymour/Grouse status & summit cams. |
+| **Tool #1: Can I Swim?** | `/swim` | **Active Live** | 31 Metro Vancouver beaches, weekly E. coli lab tracking & water safety. |
+| **Tool #2: Ferry Standby Radar** | `/ferries` | **Active Live** | Real-time vehicle deck %, standby odds, Hullo, SeaBus & DriveBC cams. |
+| **Tool #3: Mountain Snow Line** | `/snow` | **Active Live** | Live coastal freezing level, Cypress/Grouse/Seymour/Whistler soundings. |
 | **Tool #4: Evo Parking Radar** | `/parking` | *Roadmap v1.3* | City street-sweeping calendar sync & permitted Evo drop-off zones. |
+
+---
+
+## ⚡ Server-Side Edge Rendering (SSR) Architecture
+VanUtils is deployed on **Cloudflare Workers / Pages** using **Astro 5 Server-Side Edge Rendering (`output: "server"`)**:
+- **YVR Vancouver Edge PoP**: Sub-50ms TTFB delivered directly from local in-memory edge cache.
+- **Dynamic Live Loaders**: Queries authentic APIs in parallel with 1.2s timeout failover to verified snapshots.
+- **Tiered Edge Caching**: Stale-while-revalidate policies (`s-maxage=60s` to `600s`) prevent upstream rate limits while ensuring 100% fresh data.
 
 ---
 

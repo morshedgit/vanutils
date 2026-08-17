@@ -30,10 +30,13 @@ npm run preview
 - **Rule 3: Client JavaScript Budget**: Keep total client JS bundle strictly < 25KB. Use server-rendered Astro components by default. Use client islands only when real-time client state (filtering, geolocation distance sorting) is required.
 - **Rule 4: Cloudflare Edge Compatibility**: Do NOT import Node.js native libraries (`fs`, `path`, `child_process`) in runtime edge code. Use Web Standard APIs (`fetch`, `Request`, `Response`, `URLSearchParams`).
 - **Rule 5: Zero-Fluff, High-Density Dashboard Card Standard**: Main dashboard utility cards must be 100% clickable containers (`<a>`), allocate 80%+ of card space to direct live data points (e.g. 8-12+ live beaches or routes), and eliminate decorative icon boxes, category pills, verbose subheaders, and redundant buttons. Support ⭐ pinning synced via `localStorage`.
+- **Rule 6: 100% Real-Data Mandate**: Zero synthetic, mock, or fake data permitted in any tool or card. If data is unmonitored or awaiting lab testing, present this status transparently.
+- **Rule 7: Server-Side Edge Rendering (SSR) & Dynamic Caching**: Use `output: 'server'` on Cloudflare Edge with async loaders (`getLive*()`) and declare tiered caching headers (`Cache-Control: public, s-maxage=..., stale-while-revalidate=...`).
 
 ## 4. How to Add a New Micro-Utility
-1. **Create Module**: Add `src/tools/<new-tool>/` with `types.ts`, `services/`, and `components/`.
-2. **Register Tool**: Add metadata entry to `src/config/tools.ts`.
-3. **Build High-Density Card**: Implement in `src/components/shared/ToolCard.astro` following Rule 5.
-4. **Add Pages**: Create `src/pages/<new-tool>/index.astro` wrapping in `<ToolLayout>` with ⭐ item pinning support.
-5. **Test & Verify**: Run `npm run check` and `npm run build` to verify Cloudflare output.
+1. **Create Module**: Add `src/tools/<new-tool>/` with `types.ts`, `data/`, `services/`, and `components/`.
+2. **Implement Async Edge Loader**: Create `getLive<ToolData>()` in `services/` with a 1.2s timeout fallback.
+3. **Register Tool**: Add metadata entry to `src/config/tools.ts`.
+4. **Build High-Density Card**: Implement in `src/components/shared/ToolCard.astro` following Rule 5.
+5. **Add Pages**: Create `src/pages/<new-tool>/index.astro` and `src/pages/<new-tool>/[slug].astro` in Edge SSR mode with `Cache-Control` response headers.
+6. **Test & Verify**: Run `npm run check` and `npm run build` to verify Cloudflare output.
