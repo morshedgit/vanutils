@@ -19,6 +19,12 @@ const initialFerryRoutes = allFerryRoutes.slice(0, 6);
 
 const allMountains = tool.id === 'mountain-snow' ? await getLiveMountains() : [];
 const initialMountains = allMountains.slice(0, 4);
+
+const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
+const avgFreezingLevel = allMountains.length > 0
+  ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
+  : 4000;
+const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Summer)` : `${avgFreezingLevel}m FZ`;
 ---
 
 <a
@@ -32,9 +38,9 @@ const initialMountains = allMountains.slice(0, 4);
       {tool.name}
     </h2>
     <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
-      {tool.id === 'can-i-swim' && '30/31 Safe'}
+      {tool.id === 'can-i-swim' && `${safeBeachesCount}/${allBeaches.length} Safe`}
       {tool.id === 'bc-ferries' && 'Live Deck %'}
-      {tool.id === 'mountain-snow' && '1,100m FZ'}
+      {tool.id === 'mountain-snow' && snowBadgeText}
       {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
