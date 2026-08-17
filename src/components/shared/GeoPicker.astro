@@ -1,0 +1,289 @@
+---
+import { VANCOUVER_LOCATION_PRESETS } from '../../config/tools';
+---
+
+<div class="relative" id="geo-picker-container">
+  <!-- Trigger button -->
+  <button
+    id="geo-picker-trigger"
+    type="button"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500"
+  >
+    <svg class="w-3.5 h-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+    <span id="geo-current-label" class="truncate max-w-[130px] sm:max-w-[180px]">Downtown Van</span>
+    <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+
+  <!-- Modal / Popover Backdrop & Dialog -->
+  <div
+    id="geo-picker-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="geo-modal-title"
+  >
+    <div
+      id="geo-picker-card"
+      class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-5 sm:p-6 transform scale-95 transition-transform duration-200 overflow-hidden"
+    >
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/10 dark:bg-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="geo-modal-title" class="font-bold text-slate-900 dark:text-white text-base">Your Vancouver Location</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Used for calculating beach distances & nearest clean water</p>
+          </div>
+        </div>
+        <button
+          id="geo-modal-close"
+          type="button"
+          class="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+          aria-label="Close modal"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- GPS Option -->
+      <div class="mt-4">
+        <button
+          id="geo-use-gps-btn"
+          type="button"
+          class="w-full flex items-center justify-center gap-2.5 px-4 py-3 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm rounded-xl shadow-md shadow-sky-600/20 transition-all active:scale-[0.99]"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07 7.07l-1.41-1.41M6.34 6.34L4.93 4.93m14.14 0l-1.41 1.41M6.34 17.66l-1.41 1.41M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+          <span id="geo-gps-text">Use My Exact GPS Location</span>
+        </button>
+        <p id="geo-gps-status" class="text-xs text-center text-slate-400 dark:text-slate-500 mt-1.5 hidden"></p>
+      </div>
+
+      <!-- Divider -->
+      <div class="relative my-4">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-slate-200 dark:border-slate-800"></div>
+        </div>
+        <div class="relative flex justify-center text-xs uppercase">
+          <span class="bg-white dark:bg-slate-900 px-2 text-slate-400 font-medium tracking-wider">or choose neighborhood</span>
+        </div>
+      </div>
+
+      <!-- Presets Grid -->
+      <div class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1">
+        {VANCOUVER_LOCATION_PRESETS.map((preset) => (
+          <button
+            type="button"
+            data-preset-id={preset.id}
+            data-preset-name={preset.name}
+            data-preset-lat={preset.coords.latitude}
+            data-preset-lng={preset.coords.longitude}
+            class="geo-preset-option text-left p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-500 hover:bg-sky-50/50 dark:hover:bg-sky-950/30 transition-all group"
+          >
+            <div class="text-xs font-semibold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 truncate">
+              {preset.name}
+            </div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+              {preset.neighborhood}
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+        <span class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          100% Client-side. Never shared.
+        </span>
+        <button id="geo-reset-btn" type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 underline">
+          Reset to default
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface UserLocationState {
+    type: 'gps' | 'preset';
+    id: string;
+    name: string;
+    coords: {
+      latitude: number;
+      longitude: number;
+    };
+  }
+
+  const DEFAULT_LOCATION: UserLocationState = {
+    type: 'preset',
+    id: 'downtown',
+    name: 'Downtown Vancouver',
+    coords: { latitude: 49.2827, longitude: -123.1207 },
+  };
+
+  function getStoredLocation(): UserLocationState {
+    try {
+      const stored = localStorage.getItem('vanutils_user_location');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {}
+    return DEFAULT_LOCATION;
+  }
+
+  function setStoredLocation(loc: UserLocationState) {
+    try {
+      localStorage.setItem('vanutils_user_location', JSON.stringify(loc));
+    } catch (e) {}
+
+    // Update Header trigger label
+    const labelEl = document.getElementById('geo-current-label');
+    if (labelEl) {
+      labelEl.textContent = loc.name;
+    }
+
+    // Broadcast custom event for tools to re-render or re-sort
+    window.dispatchEvent(
+      new CustomEvent('vanutils:location-changed', {
+        detail: loc,
+      })
+    );
+  }
+
+  function setupGeoPicker() {
+    const trigger = document.getElementById('geo-picker-trigger');
+    const modal = document.getElementById('geo-picker-modal');
+    const card = document.getElementById('geo-picker-card');
+    const closeBtn = document.getElementById('geo-modal-close');
+    const gpsBtn = document.getElementById('geo-use-gps-btn');
+    const gpsText = document.getElementById('geo-gps-text');
+    const gpsStatus = document.getElementById('geo-gps-status');
+    const resetBtn = document.getElementById('geo-reset-btn');
+    const presetBtns = document.querySelectorAll('.geo-preset-option');
+
+    if (!trigger || !modal) return;
+
+    // Set initial label
+    const initialLoc = getStoredLocation();
+    const labelEl = document.getElementById('geo-current-label');
+    if (labelEl) {
+      labelEl.textContent = initialLoc.name;
+    }
+
+    function openModal() {
+      if (!modal || !trigger) return;
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        if (!modal) return;
+        modal.classList.remove('opacity-0');
+        if (card) card.classList.remove('scale-95');
+      });
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeModal() {
+      if (!modal || !trigger) return;
+      modal.classList.add('opacity-0');
+      if (card) card.classList.add('scale-95');
+      setTimeout(() => {
+        if (modal) modal.classList.add('hidden');
+      }, 200);
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Preset selection
+    presetBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-preset-id') || 'downtown';
+        const name = btn.getAttribute('data-preset-name') || 'Vancouver';
+        const lat = parseFloat(btn.getAttribute('data-preset-lat') || '49.2827');
+        const lng = parseFloat(btn.getAttribute('data-preset-lng') || '-123.1207');
+
+        const newLoc: UserLocationState = {
+          type: 'preset',
+          id,
+          name,
+          coords: { latitude: lat, longitude: lng },
+        };
+        setStoredLocation(newLoc);
+        closeModal();
+      });
+    });
+
+    // GPS button click
+    gpsBtn?.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        if (gpsStatus) {
+          gpsStatus.textContent = 'Geolocation is not supported by your browser.';
+          gpsStatus.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (gpsText) gpsText.textContent = 'Detecting location...';
+      if (gpsStatus) {
+        gpsStatus.textContent = 'Requesting browser location permission...';
+        gpsStatus.classList.remove('hidden');
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const newLoc: UserLocationState = {
+            type: 'gps',
+            id: 'current-gps',
+            name: 'GPS Location',
+            coords: { latitude: lat, longitude: lng },
+          };
+          setStoredLocation(newLoc);
+          if (gpsText) gpsText.textContent = 'Use My Exact GPS Location';
+          if (gpsStatus) gpsStatus.classList.add('hidden');
+          closeModal();
+        },
+        (error) => {
+          if (gpsText) gpsText.textContent = 'Use My Exact GPS Location';
+          if (gpsStatus) {
+            gpsStatus.textContent = error.message || 'Unable to retrieve your location.';
+            gpsStatus.classList.remove('hidden');
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
+    });
+
+    // Reset button
+    resetBtn?.addEventListener('click', () => {
+      setStoredLocation(DEFAULT_LOCATION);
+      closeModal();
+    });
+  }
+
+  setupGeoPicker();
+  document.addEventListener('astro:page-load', setupGeoPicker);
+</script>

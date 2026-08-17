@@ -1,0 +1,459 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import BeachCard from '../../tools/can-i-swim/components/BeachCard.astro';
+import FilterBar from '../../tools/can-i-swim/components/FilterBar.astro';
+import SafetyLegend from '../../tools/can-i-swim/components/SafetyLegend.astro';
+import { getAllBeaches, getBeachStats } from '../../tools/can-i-swim/services/vchScraper';
+
+const beaches = getAllBeaches();
+const stats = getBeachStats(beaches);
+---
+
+<ToolLayout
+  toolId="can-i-swim"
+  title="Can I Swim Today?"
+  description="Real-time Metro Vancouver beach water quality, 30-day E. coli geometric trends, and safety advisories based on Vancouver Coastal Health & Fraser Health surveillance."
+  currentPath="/swim"
+  badgeText="Live Surveillance"
+  status="active"
+>
+  <!-- Header Aside Widget: Clean ratio -->
+  <div slot="header-aside" class="flex items-center gap-3 bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-lg border border-emerald-500/20">
+      {stats.cleanPercentage}%
+    </div>
+    <div>
+      <div class="text-xs font-extrabold text-slate-900 dark:text-white">
+        {stats.safe} of {stats.total} Beaches Safe
+      </div>
+      <div class="text-[11px] text-slate-500 dark:text-slate-400">
+        {stats.advisory > 0 ? `${stats.advisory} active advisory` : 'All major beaches open'}
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-8">
+    <!-- Nearest Safe Beach Quick Banner (Dynamically computed on client) -->
+    <section id="nearest-safe-banner" class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 sm:p-7 shadow-lg shadow-emerald-900/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+      <div class="space-y-1 z-10">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-bold tracking-wide uppercase">
+            ⚡ Quick Recommendation
+          </span>
+          <span id="nearest-location-source" class="text-xs text-white/80">for Downtown Vancouver</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black tracking-tight flex items-center gap-2">
+          <span>Nearest Safe Beach:</span>
+          <span id="nearest-beach-name" class="underline decoration-emerald-300 underline-offset-4">Kitsilano Beach</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-emerald-50 max-w-xl">
+          Water is pristine (<span id="nearest-beach-ecoli" class="font-bold">26 CFU/100mL</span>) and approximately <span id="nearest-beach-dist" class="font-bold">1.4 km away</span>.
+        </p>
+      </div>
+
+      <a
+        id="nearest-beach-link"
+        href="/swim/kitsilano-beach"
+        class="z-10 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-emerald-800 hover:bg-emerald-50 font-extrabold text-xs shadow-md transition-all shrink-0 active:scale-95"
+      >
+        <span>View Beach Details</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+
+      <!-- Background wave accent -->
+      <div class="absolute -right-8 -bottom-8 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+    </section>
+
+    <!-- Filter & Search Controls -->
+    <FilterBar />
+
+    <!-- Beaches Grid Section -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Metro Vancouver Beaches & Lakes
+        </h2>
+        <span class="text-xs text-slate-500 dark:text-slate-400">
+          Click any beach for 30-day historical chart
+        </span>
+      </div>
+
+      <!-- Grid of Beach Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="beaches-grid">
+        {beaches.map((beach) => (
+          <BeachCard beach={beach} />
+        ))}
+      </div>
+
+      <!-- Empty State -->
+      <div id="beaches-empty-state" class="hidden rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 p-12 text-center space-y-3">
+        <span class="text-4xl">🏖️</span>
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">No beaches match your selected filters</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+          Try expanding your search query or toggling off some amenity filters.
+        </p>
+        <button
+          id="empty-reset-btn"
+          type="button"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-xs"
+        >
+          Reset All Filters
+        </button>
+      </div>
+    </section>
+
+    <!-- Safety Standards Legend -->
+    <SafetyLegend />
+  </div>
+</ToolLayout>
+
+<script>
+  import { calculateDistanceKm, formatDistance } from '../../services/shared/geo';
+
+  function setupSwimDashboard() {
+    const searchInput = document.getElementById('beach-search-input') as HTMLInputElement;
+    const searchClear = document.getElementById('beach-search-clear');
+    const sortSelect = document.getElementById('beach-sort-select') as HTMLSelectElement;
+    const muniChips = document.querySelectorAll('.muni-chip');
+    const statusChips = document.querySelectorAll('.status-chip');
+    const filterDog = document.getElementById('filter-dog');
+    const filterLifeguard = document.getElementById('filter-lifeguard');
+    const filterMat = document.getElementById('filter-mat');
+    const filterLake = document.getElementById('filter-lake');
+    const resetFiltersBtn = document.getElementById('reset-filters-btn');
+    const emptyResetBtn = document.getElementById('empty-reset-btn');
+    const emptyState = document.getElementById('beaches-empty-state');
+    const countEl = document.getElementById('visible-beaches-count');
+    const grid = document.getElementById('beaches-grid');
+    const cards = Array.from(document.querySelectorAll('.beach-card')) as HTMLElement[];
+
+    // Nearest safe beach elements
+    const nearestNameEl = document.getElementById('nearest-beach-name');
+    const nearestEcoliEl = document.getElementById('nearest-beach-ecoli');
+    const nearestDistEl = document.getElementById('nearest-beach-dist');
+    const nearestLinkEl = document.getElementById('nearest-beach-link') as HTMLAnchorElement;
+    const nearestLocationSource = document.getElementById('nearest-location-source');
+
+    // Filter states
+    let query = '';
+    let selectedMuni = 'all';
+    let selectedStatus = 'all';
+    let dogOnly = false;
+    let lifeguardOnly = false;
+    let matOnly = false;
+    let lakeOnly = false;
+    let currentSort = sortSelect?.value || 'cleanest';
+
+    // User location state
+    let userCoords = { latitude: 49.2827, longitude: -123.1207 }; // Downtown default
+    let userLocationName = 'Downtown Vancouver';
+
+    function loadUserLocation() {
+      try {
+        const stored = localStorage.getItem('vanutils_user_location');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          userCoords = parsed.coords;
+          userLocationName = parsed.name;
+        }
+      } catch (e) {}
+    }
+
+    function updateDistancesAndNearest() {
+      loadUserLocation();
+
+      if (nearestLocationSource) {
+        nearestLocationSource.textContent = `from ${userLocationName}`;
+      }
+
+      interface SafeBeachMatch {
+        card: HTMLElement;
+        dist: number;
+        ecoli: number;
+        name: string;
+        id: string;
+      }
+      let nearestSafeBeach: SafeBeachMatch | null = null;
+
+      cards.forEach((card) => {
+        const lat = parseFloat(card.getAttribute('data-beach-lat') || '0');
+        const lng = parseFloat(card.getAttribute('data-beach-lng') || '0');
+        const status = card.getAttribute('data-beach-status') || 'safe';
+        const ecoli = parseInt(card.getAttribute('data-beach-ecoli') || '0', 10);
+        const name = card.getAttribute('data-beach-name') || '';
+        const id = card.getAttribute('data-beach-id') || '';
+
+        const distKm = calculateDistanceKm(userCoords, { latitude: lat, longitude: lng });
+        card.setAttribute('data-distance-km', distKm.toString());
+
+        // Update card distance text
+        const distSpan = card.querySelector('.distance-text');
+        if (distSpan) {
+          distSpan.textContent = `${formatDistance(distKm)} away`;
+        }
+
+        // Track closest safe beach
+        if (status === 'safe') {
+          if (!nearestSafeBeach || distKm < nearestSafeBeach.dist) {
+            nearestSafeBeach = { card, dist: distKm, ecoli, name, id };
+          }
+        }
+      });
+
+      // Update Nearest Safe Banner
+      if (nearestSafeBeach !== null) {
+        const safeMatch: SafeBeachMatch = nearestSafeBeach;
+        if (nearestNameEl) nearestNameEl.textContent = safeMatch.name;
+        if (nearestEcoliEl) nearestEcoliEl.textContent = `${safeMatch.ecoli} CFU/100mL`;
+        if (nearestDistEl) nearestDistEl.textContent = `${formatDistance(safeMatch.dist)} away`;
+        if (nearestLinkEl) nearestLinkEl.href = `/swim/${safeMatch.id}`;
+      }
+    }
+
+    function applyFiltersAndSort() {
+      let visibleCount = 0;
+
+      // 1. Filter
+      cards.forEach((card) => {
+        const name = (card.getAttribute('data-beach-name') || '').toLowerCase();
+        const muni = (card.getAttribute('data-beach-municipality') || '').toLowerCase();
+        const waterType = card.getAttribute('data-beach-watertype') || '';
+        const status = card.getAttribute('data-beach-status') || '';
+        const isDog = card.getAttribute('data-beach-dog') === 'true';
+        const isLifeguard = card.getAttribute('data-beach-lifeguards') === 'true';
+        const isWheelchair = card.getAttribute('data-beach-wheelchair') === 'true';
+
+        let matchesSearch = true;
+        if (query) {
+          matchesSearch = name.includes(query) || muni.includes(query);
+        }
+
+        let matchesMuni = true;
+        if (selectedMuni !== 'all') {
+          matchesMuni = muni === selectedMuni.toLowerCase();
+        }
+
+        let matchesStatus = true;
+        if (selectedStatus !== 'all') {
+          matchesStatus = status === selectedStatus;
+        }
+
+        let matchesDog = !dogOnly || isDog;
+        let matchesLifeguard = !lifeguardOnly || isLifeguard;
+        let matchesMat = !matOnly || isWheelchair;
+        let matchesLake = !lakeOnly || waterType === 'freshwater_lake';
+
+        if (
+          matchesSearch &&
+          matchesMuni &&
+          matchesStatus &&
+          matchesDog &&
+          matchesLifeguard &&
+          matchesMat &&
+          matchesLake
+        ) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // 2. Sort visible cards in DOM
+      const sortedCards = [...cards].sort((a, b) => {
+        if (currentSort === 'distance') {
+          const distA = parseFloat(a.getAttribute('data-distance-km') || '999');
+          const distB = parseFloat(b.getAttribute('data-distance-km') || '999');
+          return distA - distB;
+        } else if (currentSort === 'cleanest') {
+          const ecoliA = parseInt(a.getAttribute('data-beach-ecoli') || '0', 10);
+          const ecoliB = parseInt(b.getAttribute('data-beach-ecoli') || '0', 10);
+          return ecoliA - ecoliB;
+        } else if (currentSort === 'name') {
+          const nameA = a.getAttribute('data-beach-name') || '';
+          const nameB = b.getAttribute('data-beach-name') || '';
+          return nameA.localeCompare(nameB);
+        } else {
+          // Status order: safe -> caution -> advisory
+          const statusOrder: Record<string, number> = { safe: 1, caution: 2, advisory: 3, unmonitored: 4 };
+          const statA = statusOrder[a.getAttribute('data-beach-status') || 'safe'] || 99;
+          const statB = statusOrder[b.getAttribute('data-beach-status') || 'safe'] || 99;
+          return statA - statB;
+        }
+      });
+
+      sortedCards.forEach((c) => grid?.appendChild(c));
+
+      // 3. Update count & empty state
+      if (countEl) countEl.textContent = visibleCount.toString();
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+        } else {
+          emptyState.classList.add('hidden');
+        }
+      }
+
+      // 4. Update Reset button visibility
+      const hasActiveFilters =
+        query !== '' ||
+        selectedMuni !== 'all' ||
+        selectedStatus !== 'all' ||
+        dogOnly ||
+        lifeguardOnly ||
+        matOnly ||
+        lakeOnly;
+
+      if (resetFiltersBtn) {
+        if (hasActiveFilters) {
+          resetFiltersBtn.classList.remove('hidden');
+        } else {
+          resetFiltersBtn.classList.add('hidden');
+        }
+      }
+    }
+
+    // Search input handlers
+    searchInput?.addEventListener('input', (e) => {
+      query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      if (searchClear) {
+        if (query) {
+          searchClear.classList.remove('hidden');
+        } else {
+          searchClear.classList.add('hidden');
+        }
+      }
+      applyFiltersAndSort();
+    });
+
+    searchClear?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      query = '';
+      searchClear.classList.add('hidden');
+      applyFiltersAndSort();
+    });
+
+    // Sort select handler
+    sortSelect?.addEventListener('change', (e) => {
+      currentSort = (e.target as HTMLSelectElement).value;
+      applyFiltersAndSort();
+    });
+
+    // Municipality chips
+    muniChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        muniChips.forEach((c) => {
+          c.classList.remove('bg-sky-600', 'text-white', 'font-semibold');
+          c.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'font-medium');
+        });
+        chip.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'font-medium');
+        chip.classList.add('bg-sky-600', 'text-white', 'font-semibold');
+
+        selectedMuni = chip.getAttribute('data-muni') || 'all';
+        applyFiltersAndSort();
+      });
+    });
+
+    // Status chips
+    statusChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        statusChips.forEach((c) => {
+          c.classList.remove('ring-2', 'ring-sky-500', 'scale-105');
+        });
+        chip.classList.add('ring-2', 'ring-sky-500', 'scale-105');
+
+        selectedStatus = chip.getAttribute('data-status') || 'all';
+        applyFiltersAndSort();
+      });
+    });
+
+    // Amenity buttons helper
+    function toggleAmenityBtn(btn: HTMLElement | null, active: boolean) {
+      if (!btn) return;
+      if (active) {
+        btn.classList.add('bg-sky-600', 'text-white', 'border-sky-600', 'shadow-xs');
+        btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+      } else {
+        btn.classList.remove('bg-sky-600', 'text-white', 'border-sky-600', 'shadow-xs');
+        btn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+      }
+    }
+
+    filterDog?.addEventListener('click', () => {
+      dogOnly = !dogOnly;
+      toggleAmenityBtn(filterDog, dogOnly);
+      applyFiltersAndSort();
+    });
+
+    filterLifeguard?.addEventListener('click', () => {
+      lifeguardOnly = !lifeguardOnly;
+      toggleAmenityBtn(filterLifeguard, lifeguardOnly);
+      applyFiltersAndSort();
+    });
+
+    filterMat?.addEventListener('click', () => {
+      matOnly = !matOnly;
+      toggleAmenityBtn(filterMat, matOnly);
+      applyFiltersAndSort();
+    });
+
+    filterLake?.addEventListener('click', () => {
+      lakeOnly = !lakeOnly;
+      toggleAmenityBtn(filterLake, lakeOnly);
+      applyFiltersAndSort();
+    });
+
+    // Reset handlers
+    function resetAll() {
+      if (searchInput) searchInput.value = '';
+      query = '';
+      if (searchClear) searchClear.classList.add('hidden');
+
+      selectedMuni = 'all';
+      muniChips.forEach((c, idx) => {
+        if (idx === 0) {
+          c.classList.add('bg-sky-600', 'text-white', 'font-semibold');
+          c.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+        } else {
+          c.classList.remove('bg-sky-600', 'text-white', 'font-semibold');
+          c.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+        }
+      });
+
+      selectedStatus = 'all';
+      statusChips.forEach((c) => c.classList.remove('ring-2', 'ring-sky-500', 'scale-105'));
+
+      dogOnly = false;
+      toggleAmenityBtn(filterDog, false);
+
+      lifeguardOnly = false;
+      toggleAmenityBtn(filterLifeguard, false);
+
+      matOnly = false;
+      toggleAmenityBtn(filterMat, false);
+
+      lakeOnly = false;
+      toggleAmenityBtn(filterLake, false);
+
+      applyFiltersAndSort();
+    }
+
+    resetFiltersBtn?.addEventListener('click', resetAll);
+    emptyResetBtn?.addEventListener('click', resetAll);
+
+    // Listen to shared location changes from GeoPicker
+    window.addEventListener('vanutils:location-changed', () => {
+      updateDistancesAndNearest();
+      applyFiltersAndSort();
+    });
+
+    // Initial setup
+    updateDistancesAndNearest();
+    applyFiltersAndSort();
+  }
+
+  setupSwimDashboard();
+  document.addEventListener('astro:page-load', setupSwimDashboard);
+</script>

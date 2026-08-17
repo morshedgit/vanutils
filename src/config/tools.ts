@@ -1,0 +1,148 @@
+import type { ToolMeta, VancouverLocationPreset } from '../types/shared';
+
+export const TOOLS_REGISTRY: ToolMeta[] = [
+  {
+    id: 'can-i-swim',
+    name: 'Can I Swim?',
+    shortDescription: 'Real-time Metro Vancouver beach water quality, E. coli readings & safety advisories.',
+    path: '/swim',
+    icon: 'waves',
+    category: 'outdoors',
+    status: 'active',
+    badgeText: 'Summer Favorite',
+    previewStat: {
+      value: '33/36 Clean',
+      label: 'Beaches Safe Today',
+      statusType: 'safe',
+    },
+    features: [
+      'Traffic light safety badges',
+      '30-day E. coli geometric trends',
+      'Dog-friendly & lifeguard filters',
+      'Nearest clean beach sorting',
+    ],
+  },
+  {
+    id: 'bc-ferries',
+    name: 'Ferry Standby Radar',
+    shortDescription: 'Real-time deck capacity, sailing wait times & standby odds for Tsawwassen & Horseshoe Bay.',
+    path: '/ferries',
+    icon: 'ship',
+    category: 'transit',
+    status: 'planned',
+    badgeText: 'Roadmap v1.1',
+    previewStat: {
+      value: 'Live Odds',
+      label: 'Standby deck space',
+      statusType: 'info',
+    },
+    features: [
+      'Historical drive-up standby clearance %',
+      'Highway 17 & 99 queue cam feeds',
+      'Terminal departure tracking',
+    ],
+  },
+  {
+    id: 'mountain-snow',
+    name: 'Mountain Snow Line',
+    shortDescription: 'North Shore freezing levels, Cypress/Seymour/Grouse status & synchronized summit webcams.',
+    path: '/snow',
+    icon: 'mountain-snow',
+    category: 'outdoors',
+    status: 'planned',
+    badgeText: 'Roadmap v1.2',
+    previewStat: {
+      value: '1,100 m',
+      label: 'Freezing level today',
+      statusType: 'info',
+    },
+    features: [
+      'Elevation freezing line tracker',
+      'Unified mountain webcams matrix',
+      'Tire chain requirement radar',
+    ],
+  },
+  {
+    id: 'evo-parking',
+    name: 'Evo & Street Sweeping Radar',
+    shortDescription: 'Drop-zone parking safety, upcoming city street-cleaning bans, and permitted spaces.',
+    path: '/parking',
+    icon: 'car',
+    category: 'daily_living',
+    status: 'planned',
+    badgeText: 'Roadmap v1.3',
+    previewStat: {
+      value: 'Safe Zone',
+      label: 'No street sweep alerts',
+      statusType: 'info',
+    },
+    features: [
+      'Vancouver street-sweeping calendar sync',
+      'Evo drop-off permitted map layer',
+      'Tow-away hour warning timers',
+    ],
+  },
+];
+
+export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [
+  {
+    id: 'downtown',
+    name: 'Downtown Vancouver',
+    neighborhood: 'Granville / Robson',
+    coords: { latitude: 49.2827, longitude: -123.1207 },
+  },
+  {
+    id: 'west-end',
+    name: 'West End',
+    neighborhood: 'Denman / Davie',
+    coords: { latitude: 49.2861, longitude: -123.1362 },
+  },
+  {
+    id: 'kitsilano',
+    name: 'Kitsilano',
+    neighborhood: 'West 4th / Yew',
+    coords: { latitude: 49.2684, longitude: -123.1558 },
+  },
+  {
+    id: 'mount-pleasant',
+    name: 'Mount Pleasant',
+    neighborhood: 'Main & Broadway',
+    coords: { latitude: 49.2632, longitude: -123.1009 },
+  },
+  {
+    id: 'commercial-drive',
+    name: 'Commercial Drive',
+    neighborhood: 'Grandview-Woodland',
+    coords: { latitude: 49.2738, longitude: -123.0694 },
+  },
+  {
+    id: 'north-van-lonsdale',
+    name: 'North Vancouver',
+    neighborhood: 'Lower Lonsdale / Shipyards',
+    coords: { latitude: 49.3134, longitude: -123.0789 },
+  },
+  {
+    id: 'west-van-ambleside',
+    name: 'West Vancouver',
+    neighborhood: 'Ambleside Park',
+    coords: { latitude: 49.3275, longitude: -123.1582 },
+  },
+  {
+    id: 'burnaby-metrotown',
+    name: 'Burnaby',
+    neighborhood: 'Metrotown / Central Park',
+    coords: { latitude: 49.2276, longitude: -123.0076 },
+  },
+  {
+    id: 'richmond-centre',
+    name: 'Richmond',
+    neighborhood: 'Minoru / City Centre',
+    coords: { latitude: 49.1666, longitude: -123.1336 },
+  },
+  {
+    id: 'white-rock-pier',
+    name: 'White Rock',
+    neighborhood: 'Marine Drive / Pier',
+    coords: { latitude: 49.0205, longitude: -122.8028 },
+  },
+];

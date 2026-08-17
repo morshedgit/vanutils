@@ -1,0 +1,42 @@
+---
+import type { WaterQualityStatus } from '../../tools/can-i-swim/types';
+import { getStatusMeta } from '../../tools/can-i-swim/services/healthCalc';
+
+interface Props {
+  status: WaterQualityStatus;
+  size?: 'sm' | 'md' | 'lg';
+  showDot?: boolean;
+  customLabel?: string;
+}
+
+const { status, size = 'md', showDot = true, customLabel } = Astro.props;
+const meta = getStatusMeta(status);
+
+const sizeClasses = {
+  sm: 'text-xs px-2 py-0.5 gap-1.5',
+  md: 'text-xs font-semibold px-2.5 py-1 gap-2',
+  lg: 'text-sm font-bold px-3.5 py-1.5 gap-2.5',
+};
+
+const dotSizes = {
+  sm: 'w-1.5 h-1.5',
+  md: 'w-2 h-2',
+  lg: 'w-2.5 h-2.5',
+};
+---
+
+<span
+  class={`inline-flex items-center rounded-full border font-medium transition-colors ${meta.badgeBg} ${meta.badgeText} ${meta.badgeBorder} ${sizeClasses[size]}`}
+  role="status"
+  aria-label={`Status: ${customLabel || meta.label}`}
+>
+  {showDot && (
+    <span class="relative flex">
+      {status === 'safe' || status === 'caution' || status === 'advisory' ? (
+        <span class={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${meta.dotColor}`} />
+      ) : null}
+      <span class={`relative inline-flex rounded-full ${meta.dotColor} ${dotSizes[size]}`} />
+    </span>
+  )}
+  <span>{customLabel || meta.label}</span>
+</span>

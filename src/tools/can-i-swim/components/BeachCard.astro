@@ -1,0 +1,133 @@
+---
+import type { Beach } from '../types';
+import StatusBadge from '../../../components/shared/StatusBadge.astro';
+import Sparkline from './Sparkline.astro';
+import { getStatusMeta } from '../services/healthCalc';
+
+interface Props {
+  beach: Beach;
+  distanceKm?: number;
+}
+
+const { beach, distanceKm } = Astro.props;
+const meta = getStatusMeta(beach.currentStatus);
+---
+
+<article
+  class={`beach-card group relative flex flex-col justify-between p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900/90 border transition-all duration-300 shadow-sm hover:shadow-xl ${meta.cardBorder} transform hover:-translate-y-1`}
+  data-beach-id={beach.id}
+  data-beach-name={beach.name}
+  data-beach-municipality={beach.municipality}
+  data-beach-watertype={beach.waterType}
+  data-beach-status={beach.currentStatus}
+  data-beach-ecoli={beach.latestSample.eColiCount}
+  data-beach-dog={beach.dogFriendly ? 'true' : 'false'}
+  data-beach-lifeguards={beach.lifeguards ? 'true' : 'false'}
+  data-beach-wheelchair={beach.wheelchairAccessible ? 'true' : 'false'}
+  data-beach-washrooms={beach.washrooms ? 'true' : 'false'}
+  data-beach-lat={beach.latitude}
+  data-beach-lng={beach.longitude}
+>
+  <div>
+    <!-- Top Meta Row: Location & Status -->
+    <div class="flex items-start justify-between gap-3 mb-3">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            {beach.municipality}
+          </span>
+          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <span class="text-[11px] font-medium text-sky-600 dark:text-sky-400">
+            {beach.waterType === 'ocean' ? '🌊 Ocean' : '🏞️ Lake'}
+          </span>
+        </div>
+        <h3 class="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug group-hover:text-sky-500 transition-colors">
+          <a href={`/swim/${beach.id}`} class="focus:outline-none">
+            {beach.name}
+          </a>
+        </h3>
+      </div>
+
+      <StatusBadge status={beach.currentStatus} size="sm" />
+    </div>
+
+    <!-- Distance & Water Temp Bar -->
+    <div class="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4">
+      <span class="beach-distance-indicator inline-flex items-center gap-1 font-medium text-slate-700 dark:text-slate-300">
+        <svg class="w-3.5 h-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="distance-text">{distanceKm ? `${distanceKm.toFixed(1)} km away` : 'Calculating...'}</span>
+      </span>
+
+      {beach.waterTempC && (
+        <span class="inline-flex items-center gap-1">
+          <span>🌡️</span>
+          <span>{beach.waterTempC}°C</span>
+        </span>
+      )}
+    </div>
+
+    <!-- E. coli Metric & Sparkline Box -->
+    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 mb-4">
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">30-Day Geometric Mean</div>
+          <div class="text-lg font-black text-slate-900 dark:text-white flex items-baseline gap-1">
+            <span>{beach.latestSample.eColiCount}</span>
+            <span class="text-[10px] font-semibold text-slate-400">CFU/100mL</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] text-slate-400">Latest Test: {beach.latestSample.date}</div>
+          {beach.latestSample.singleSampleCount && (
+            <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">
+              Single: {beach.latestSample.singleSampleCount} CFU
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Sparkline Graphic -->
+      <div class="mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/50">
+        <Sparkline samples={beach.historicalSamples} status={beach.currentStatus} height={40} />
+      </div>
+    </div>
+
+    <!-- Amenity Badges -->
+    <div class="flex flex-wrap gap-1.5 mb-5">
+      {beach.dogFriendly && (
+        <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+          🐾 Dog Beach
+        </span>
+      )}
+      {beach.lifeguards && (
+        <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-500/20">
+          🏊 Lifeguards
+        </span>
+      )}
+      {beach.wheelchairAccessible && (
+        <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20">
+          ♿ Mat Access
+        </span>
+      )}
+      {beach.washrooms && (
+        <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          🚻 Washrooms
+        </span>
+      )}
+    </div>
+  </div>
+
+  <!-- Card Action Button -->
+  <a
+    href={`/swim/${beach.id}`}
+    class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-sky-50 dark:hover:bg-sky-950/40 text-slate-800 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 font-semibold text-xs transition-colors border border-slate-200/60 dark:border-slate-700/60"
+  >
+    <span>Full Report & 30-Day Trend</span>
+    <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+    </svg>
+  </a>
+</article>

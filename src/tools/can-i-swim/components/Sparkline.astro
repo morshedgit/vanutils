@@ -1,0 +1,134 @@
+---
+import type { SamplingRecord, WaterQualityStatus } from '../types';
+
+interface Props {
+  samples: SamplingRecord[];
+  status: WaterQualityStatus;
+  width?: number;
+  height?: number;
+  showThresholds?: boolean;
+}
+
+const {
+  samples = [],
+  status = 'safe',
+  width = 240,
+  height = 50,
+  showThresholds = false,
+} = Astro.props;
+
+// Sort samples chronologically
+const sorted = [...samples].sort(
+  (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+);
+
+const values = sorted.map((s) => s.eColiCount);
+const maxVal = Math.max(250, ...values, 50);
+const minVal = 0;
+
+// Generate SVG points
+const paddingX = 8;
+const paddingY = 8;
+const usableWidth = width - paddingX * 2;
+const usableHeight = height - paddingY * 2;
+
+const points = sorted.map((sample, idx) => {
+  const x =
+    sorted.length > 1
+      ? paddingX + (idx / (sorted.length - 1)) * usableWidth
+      : width / 2;
+  const normalizedY = (sample.eColiCount - minVal) / (maxVal - minVal);
+  const y = height - paddingY - normalizedY * usableHeight;
+  return { x, y, val: sample.eColiCount, date: sample.date };
+});
+
+const polylinePoints = points.map((p) => `${p.x},${p.y}`).join(' ');
+
+// SVG Path with area fill
+const areaPath =
+  points.length > 0
+    ? `M ${points[0].x},${height - paddingY} L ${polylinePoints} L ${points[points.length - 1].x},${height - paddingY} Z`
+    : '';
+
+// Threshold lines Y positions (200 geometric mean safe threshold)
+const threshold200Y = height - paddingY - (200 / maxVal) * usableHeight;
+
+const strokeColors: Record<string, string> = {
+  safe: '#10b981',
+  caution: '#f59e0b',
+  advisory: '#ef4444',
+  unmonitored: '#94a3b8',
+};
+
+const gradientColors: Record<string, [string, string]> = {
+  safe: ['rgba(16, 185, 129, 0.35)', 'rgba(16, 185, 129, 0.0)'],
+  caution: ['rgba(245, 158, 11, 0.35)', 'rgba(245, 158, 11, 0.0)'],
+  advisory: ['rgba(239, 68, 68, 0.35)', 'rgba(239, 68, 68, 0.0)'],
+  unmonitored: ['rgba(148, 163, 184, 0.25)', 'rgba(148, 163, 184, 0.0)'],
+};
+
+const strokeColor = strokeColors[status] || strokeColors.safe;
+const [gradStart, gradEnd] = gradientColors[status] || gradientColors.safe;
+const gradientId = `spark-grad-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div class="relative w-full flex flex-col justify-end" style={`max-width: ${width}px;`}>
+  <svg
+    viewBox={`0 0 ${width} ${height}`}
+    class="w-full overflow-visible"
+    style={`height: ${height}px;`}
+    role="img"
+    aria-label="30-day E. coli trend sparkline"
+  >
+    <defs>
+      <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color={gradStart} />
+        <stop offset="100%" stop-color={gradEnd} />
+      </linearGradient>
+    </defs>
+
+    {showThresholds && threshold200Y >= paddingY && threshold200Y <= height - paddingY && (
+      <!-- Safe 200 CFU Threshold dashed line -->
+      <line
+        x1={paddingX}
+        y1={threshold200Y}
+        x2={width - paddingX}
+        y2={threshold200Y}
+        stroke="#ef4444"
+        stroke-dasharray="3,3"
+        stroke-width="1"
+        opacity="0.6"
+      />
+    )}
+
+    <!-- Area Fill -->
+    {areaPath && (
+      <path d={areaPath} fill={`url(#${gradientId})`} />
+    )}
+
+    <!-- Line Path -->
+    {polylinePoints && (
+      <polyline
+        fill="none"
+        stroke={strokeColor}
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        points={polylinePoints}
+      />
+    )}
+
+    <!-- Data points -->
+    {points.map((p, idx) => (
+      <circle
+        cx={p.x}
+        cy={p.y}
+        r={idx === points.length - 1 ? 3.5 : 2.5}
+        fill={strokeColor}
+        class="transition-all hover:r-4 cursor-pointer"
+      >
+        <title>{`${p.date}: ${p.val} CFU/100mL`}</title>
+      </circle>
+    ))}
+  </svg>
+</div>

@@ -1,0 +1,144 @@
+---
+// FilterBar.astro
+---
+
+<div class="rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-5 sm:p-6 shadow-sm backdrop-blur-md space-y-5">
+  <!-- Top Bar: Search Input & Sort Selector -->
+  <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+    <!-- Search Input -->
+    <div class="relative flex-1">
+      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <input
+        type="search"
+        id="beach-search-input"
+        placeholder="Search 35+ beaches by name, region (e.g. Kits, English Bay, Belcarra)..."
+        class="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+      />
+      <button
+        id="beach-search-clear"
+        type="button"
+        class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hidden"
+        aria-label="Clear search"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Sort Dropdown -->
+    <div class="flex items-center gap-2">
+      <label for="beach-sort-select" class="text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0">
+        Sort by:
+      </label>
+      <select
+        id="beach-sort-select"
+        class="px-3 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+      >
+        <option value="distance">📍 Distance (Nearest First)</option>
+        <option value="cleanest" selected>✨ Cleanest (Lowest E. coli)</option>
+        <option value="name">🔤 Beach Name (A-Z)</option>
+        <option value="status">🚦 Status (Safe First)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Middle Row: Municipality & Water Type Pills -->
+  <div class="space-y-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+    <div class="flex items-center justify-between">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Municipality / Region</span>
+      <span class="text-[11px] text-slate-400">Metro Vancouver</span>
+    </div>
+    <div class="flex flex-wrap gap-1.5" id="muni-filter-group">
+      <button type="button" data-muni="all" class="muni-chip px-3 py-1 rounded-full text-xs font-semibold bg-sky-600 text-white shadow-xs transition-all">
+        All Regions
+      </button>
+      <button type="button" data-muni="Vancouver" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        Vancouver
+      </button>
+      <button type="button" data-muni="West Vancouver" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        West Van
+      </button>
+      <button type="button" data-muni="North Vancouver" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        North Van
+      </button>
+      <button type="button" data-muni="Burnaby" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        Burnaby
+      </button>
+      <button type="button" data-muni="Richmond" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        Richmond
+      </button>
+      <button type="button" data-muni="Belcarra" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        Belcarra / Tri-Cities
+      </button>
+      <button type="button" data-muni="White Rock" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        White Rock / South Delta
+      </button>
+      <button type="button" data-muni="Bowen Island" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        Bowen Island
+      </button>
+      <button type="button" data-muni="Lions Bay" class="muni-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+        Lions Bay
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom Row: Status & Amenity Toggle Buttons -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+    <!-- Status Filter Buttons -->
+    <div>
+      <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Safety Status</span>
+      <div class="flex flex-wrap gap-1.5" id="status-filter-group">
+        <button type="button" data-status="all" class="status-chip px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 shadow-xs transition-all">
+          All (35)
+        </button>
+        <button type="button" data-status="safe" class="status-chip px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+          🟢 Safe
+        </button>
+        <button type="button" data-status="caution" class="status-chip px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition-all">
+          🟡 Caution
+        </button>
+        <button type="button" data-status="advisory" class="status-chip px-3 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20 hover:bg-rose-500/20 transition-all">
+          🔴 Advisory
+        </button>
+      </div>
+    </div>
+
+    <!-- Amenity Filter Buttons -->
+    <div>
+      <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Amenities & Features</span>
+      <div class="flex flex-wrap gap-1.5" id="amenity-filter-group">
+        <button type="button" id="filter-dog" class="amenity-toggle-btn px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all">
+          🐾 Dog-Friendly
+        </button>
+        <button type="button" id="filter-lifeguard" class="amenity-toggle-btn px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all">
+          🏊 Lifeguards
+        </button>
+        <button type="button" id="filter-mat" class="amenity-toggle-btn px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all">
+          ♿ Mat Access
+        </button>
+        <button type="button" id="filter-lake" class="amenity-toggle-btn px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all">
+          🏞️ Freshwater
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Results & Clear Bar -->
+  <div class="pt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+    <div>
+      Showing <span id="visible-beaches-count" class="font-bold text-slate-900 dark:text-white">35</span> beaches
+    </div>
+    <button
+      id="reset-filters-btn"
+      type="button"
+      class="text-sky-600 dark:text-sky-400 hover:underline font-medium hidden"
+    >
+      Reset all filters
+    </button>
+  </div>
+</div>

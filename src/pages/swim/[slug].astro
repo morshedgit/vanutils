@@ -1,0 +1,331 @@
+---
+import PlatformLayout from '../../layouts/PlatformLayout.astro';
+import StatusBadge from '../../components/shared/StatusBadge.astro';
+import Sparkline from '../../tools/can-i-swim/components/Sparkline.astro';
+import SafetyLegend from '../../tools/can-i-swim/components/SafetyLegend.astro';
+import { getAllBeaches, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
+import { getStatusMeta } from '../../tools/can-i-swim/services/healthCalc';
+
+export function getStaticPaths() {
+  const beaches = getAllBeaches();
+  return beaches.map((beach) => ({
+    params: { slug: beach.id },
+    props: { beach },
+  }));
+}
+
+const { beach } = Astro.props;
+if (!beach) {
+  return Astro.redirect('/swim');
+}
+
+const meta = getStatusMeta(beach.currentStatus);
+const nearbyClean = getNearbyCleanBeaches(beach.id, 3);
+---
+
+<PlatformLayout
+  title={`${beach.name} Water Quality — Can I Swim?`}
+  description={`Live E. coli bacteria levels, 30-day water quality trend, safety status and amenities for ${beach.name}, ${beach.municipality}.`}
+  currentPath={`/swim/${beach.id}`}
+>
+  <div class="space-y-8 max-w-5xl mx-auto">
+    <!-- Top Breadcrumb & Actions -->
+    <div class="flex items-center justify-between gap-4">
+      <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanUtils</a>
+        <span>/</span>
+        <a href="/swim" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Can I Swim</a>
+        <span>/</span>
+        <span class="text-slate-900 dark:text-white truncate max-w-[180px] sm:max-w-none">{beach.name}</span>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="/swim"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-xs"
+        >
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>All Beaches</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Safety Status Hero Banner -->
+    <section class={`rounded-3xl border p-6 sm:p-8 shadow-sm ${meta.bannerBg} ${meta.cardBorder}`}>
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2.5">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              {beach.municipality} • {beach.waterType === 'ocean' ? 'Ocean Beach' : 'Freshwater Lake'}
+            </span>
+            <StatusBadge status={beach.currentStatus} size="md" />
+          </div>
+
+          <h1 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+            {beach.name}
+          </h1>
+
+          <p class="text-sm font-medium text-slate-700 dark:text-slate-200 max-w-2xl leading-relaxed">
+            {meta.headline}. {beach.advisoryReason || meta.summary}
+          </p>
+
+          <div class="pt-2 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2">
+            <span>💡 <strong>Recommendation:</strong> {meta.recommendation}</span>
+          </div>
+        </div>
+
+        <!-- Latest Numbers Card -->
+        <div class="bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-5 rounded-2xl shrink-0 min-w-[240px] shadow-sm space-y-3">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Latest Laboratory Test
+          </div>
+          <div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">
+              {beach.latestSample.eColiCount} <span class="text-xs font-bold text-slate-400">CFU/100mL</span>
+            </div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400">
+              30-Day Geometric Mean (Threshold: ≤ 200)
+            </div>
+          </div>
+          {beach.latestSample.singleSampleCount && (
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800 text-xs flex justify-between">
+              <span class="text-slate-500 dark:text-slate-400">Single Sample:</span>
+              <span class="font-bold text-slate-800 dark:text-slate-200">{beach.latestSample.singleSampleCount} CFU (Limit: 400)</span>
+            </div>
+          )}
+          <div class="text-[10px] text-slate-400">
+            Tested on: {beach.latestSample.date}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical 30-Day Sparkline Trend & Data Table Grid -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- 30-Day Chart Card -->
+      <div class="lg:col-span-2 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white">30-Day E. coli Historical Trend</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Weekly sampling results & regulatory threshold limits</p>
+          </div>
+          <div class="flex items-center gap-3 text-[11px]">
+            <span class="flex items-center gap-1 text-rose-500 font-medium">
+              <span class="w-3 border-t-2 border-dashed border-rose-500"></span> 200 Advisory Limit
+            </span>
+          </div>
+        </div>
+
+        <!-- Trend Graph Container -->
+        <div class="pt-4 pb-2">
+          <Sparkline
+            samples={beach.historicalSamples}
+            status={beach.currentStatus}
+            width={640}
+            height={160}
+            showThresholds={true}
+          />
+        </div>
+
+        <!-- Sampling History Table -->
+        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 uppercase text-[10px] font-bold border-b border-slate-100 dark:border-slate-800">
+                <th class="pb-2">Sample Date</th>
+                <th class="pb-2">30-Day Geo Mean</th>
+                <th class="pb-2">Single Sample</th>
+                <th class="pb-2">Water Quality</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              {beach.historicalSamples.map((rec) => (
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                  <td class="py-2.5 font-medium text-slate-800 dark:text-slate-200">{rec.date}</td>
+                  <td class="py-2.5 font-bold text-slate-900 dark:text-white">{rec.eColiCount} CFU</td>
+                  <td class="py-2.5 text-slate-600 dark:text-slate-300">{rec.singleSampleCount || '-'} CFU</td>
+                  <td class="py-2.5">
+                    <StatusBadge status={rec.status} size="sm" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Beach Amenities & Info Card -->
+      <div class="rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm flex flex-col justify-between space-y-6">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 dark:text-white mb-1">Beach Amenities & Details</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">{beach.description}</p>
+
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+              <span class="flex items-center gap-2 font-medium text-slate-700 dark:text-slate-300">
+                <span>🐾</span> Dog-Friendly / Off-Leash
+              </span>
+              <span class={`font-bold ${beach.dogFriendly ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
+                {beach.dogFriendly ? 'Yes' : 'No (No Dogs on Sand)'}
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+              <span class="flex items-center gap-2 font-medium text-slate-700 dark:text-slate-300">
+                <span>🏊</span> Lifeguards On Duty
+              </span>
+              <span class={`font-bold ${beach.lifeguards ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
+                {beach.lifeguards ? 'Seasonal (May–Sept)' : 'Unsupervised'}
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+              <span class="flex items-center gap-2 font-medium text-slate-700 dark:text-slate-300">
+                <span>♿</span> Wheelchair Access Mat
+              </span>
+              <span class={`font-bold ${beach.wheelchairAccessible ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
+                {beach.wheelchairAccessible ? 'Accessible Mat Installed' : 'Natural Terrain'}
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+              <span class="flex items-center gap-2 font-medium text-slate-700 dark:text-slate-300">
+                <span>🚻</span> Public Washrooms & Showers
+              </span>
+              <span class={`font-bold ${beach.washrooms ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
+                {beach.washrooms ? 'Available' : 'None on site'}
+              </span>
+            </div>
+          </div>
+
+          <!-- Best For Tags -->
+          {beach.bestFor && beach.bestFor.length > 0 && (
+            <div class="mt-4">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">Great For:</span>
+              <div class="flex flex-wrap gap-1.5">
+                {beach.bestFor.map((item) => (
+                  <span class="text-xs px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <!-- Official Health Link -->
+        <a
+          href={beach.officialSourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors border border-slate-200 dark:border-slate-700"
+        >
+          <span>Verify on Official VCH / Health Agency</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Getting There: Transit & Parking Guidance -->
+    <section class="rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 shadow-sm">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xl">📍</span>
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white">Getting to {beach.name}</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Transit connections, parking access, and GPS coordinates</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+          <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mb-1.5">
+            <span>🚌</span> Public Transit
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            {beach.transitInfo}
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+          <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mb-1.5">
+            <span>🚗</span> Parking & Access
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            {beach.parkingInfo}
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mb-1.5">
+              <span>🗺️</span> Navigation
+            </div>
+            <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
+              {beach.latitude.toFixed(4)}° N, {Math.abs(beach.longitude).toFixed(4)}° W
+            </div>
+          </div>
+          <div class="pt-3 flex gap-2">
+            <a
+              href={`https://maps.google.com/?q=${beach.latitude},${beach.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 text-center py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors"
+            >
+              Google Maps
+            </a>
+            <a
+              href={`https://maps.apple.com/?ll=${beach.latitude},${beach.longitude}&q=${encodeURIComponent(beach.name)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 text-center py-2 px-3 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold transition-colors"
+            >
+              Apple Maps
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nearby Clean Alternatives (FR-SWIM-04) -->
+    {nearbyClean.length > 0 && (
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Nearby Clean Safe Beaches</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Verified safe waters within quick travel distance</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {nearbyClean.map((cleanBeach) => (
+            <a
+              href={`/swim/${cleanBeach.id}`}
+              class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 hover:shadow-md transition-all flex flex-col justify-between group"
+            >
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <span class="text-[10px] font-bold uppercase text-slate-400">{cleanBeach.municipality}</span>
+                  <StatusBadge status="safe" size="sm" />
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  {cleanBeach.name}
+                </h3>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                <span>{cleanBeach.distanceKm.toFixed(1)} km away</span>
+                <span class="font-bold text-emerald-600 dark:text-emerald-400">{cleanBeach.latestSample.eColiCount} CFU</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Safety Legend -->
+    <SafetyLegend />
+  </div>
+</PlatformLayout>
