@@ -136,6 +136,26 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #5: Metro Vancouver ER & Urgent Care Radar (`/health`) — Active Live
+- **Module Identifier**: `health-wait-times` (internal route `/health` and `/health/[facility]`)
+- **Strict Real-Data Mandate**: All hospital emergency department wait times, triage estimates, Urgent and Primary Care Centre (UPCC) operating hours, and same-day clinic capacity indicators are 100% real-world data ingested directly from official Vancouver Coastal Health (VCH), Fraser Health, and HealthLink BC live endpoints. Zero synthetic or simulated wait-time figures are permitted.
+- **Medical Emergency Disclaimer**: Unambiguous, high-contrast banner stating that in life-threatening situations (chest pain, stroke symptoms, severe bleeding, loss of consciousness), users must call 911 immediately or go to the nearest Emergency Department regardless of posted wait times.
+- **Triage & Wait-Time Calculation**:
+  - 🟢 **Low Wait**: $< 1.5$ hours estimated time to physician.
+  - 🟡 **Moderate Wait**: $1.5 - 3.5$ hours estimated wait.
+  - 🔴 **High Wait**: $> 3.5$ hours estimated wait.
+  - ⚪ **Closed / Walk-ins Full**: UPCC outside operating hours or reached daily clinic intake capacity.
+- **Comprehensive Facility Scope**:
+  - **11 Hospital Emergency Departments**: Vancouver General Hospital (VGH), St. Paul's, Mount Saint Joseph, BC Children's (Pediatric Trauma), Lions Gate, Richmond, Burnaby, Royal Columbian, Surrey Memorial, Eagle Ridge, Delta.
+  - **9 Urgent and Primary Care Centres (UPCCs)**: UBC Urgent Care, City Centre UPCC, REACH UPCC, Southeast UPCC, Northeast UPCC, North Vancouver UPCC, Richmond UPCC, Burnaby Edmonds UPCC, Burnaby Metrotown UPCC.
+- **Core Features**:
+  - **Total Time to Care (Distance + Wait)**: 1-tap browser geolocation to sort facilities by combined drive/transit duration plus live triage wait time.
+  - **Smart ER vs. UPCC Acuity Selector**: Clear clinical guidance helping patients choose between an ER and an Urgent Care Centre for non-life-threatening conditions.
+  - **Dedicated Facility Pages (`/health/[facility]`)**: Real-world addresses, verified phone numbers, transit links, on-site diagnostics (X-ray, CT, Lab), and official citations.
+  - **High-Density Dashboard Card**: Shows 6+ primary ERs and UPCCs with real-time wait badges and dynamic ⭐ pinning synchronization.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.

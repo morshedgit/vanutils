@@ -9,19 +9,19 @@
       {
         "label": "Base (Downhill Lodge)",
         "elevationMeters": 910,
-        "temperatureCelsius": 19.9,
+        "temperatureCelsius": 20,
         "precipitation": "clear"
       },
       {
         "label": "Mid-Mountain",
         "elevationMeters": 1100,
-        "temperatureCelsius": 18.7,
+        "temperatureCelsius": 18.8,
         "precipitation": "clear"
       },
       {
         "label": "Mt. Strachan Summit",
         "elevationMeters": 1440,
-        "temperatureCelsius": 16.5,
+        "temperatureCelsius": 16.6,
         "precipitation": "clear"
       }
     ],
@@ -67,7 +67,7 @@
       }
     ],
     "officialSourceUrl": "https://cypressmountain.com/downhill-conditions-and-cams",
-    "lastUpdated": "2026-08-17T21:58:33.992Z"
+    "lastUpdated": "2026-08-17T22:08:37.542Z"
   },
   {
     "id": "grouse",
@@ -137,7 +137,7 @@
       }
     ],
     "officialSourceUrl": "https://www.grousemountain.com/current-conditions",
-    "lastUpdated": "2026-08-17T21:58:33.994Z"
+    "lastUpdated": "2026-08-17T22:08:37.545Z"
   },
   {
     "id": "seymour",
@@ -149,19 +149,19 @@
       {
         "label": "Base Area",
         "elevationMeters": 930,
-        "temperatureCelsius": 19.1,
+        "temperatureCelsius": 19.2,
         "precipitation": "clear"
       },
       {
         "label": "Mystery Peak",
         "elevationMeters": 1230,
-        "temperatureCelsius": 17.1,
+        "temperatureCelsius": 17.2,
         "precipitation": "clear"
       },
       {
         "label": "Mt. Seymour Summit",
         "elevationMeters": 1449,
-        "temperatureCelsius": 15.7,
+        "temperatureCelsius": 15.8,
         "precipitation": "clear"
       }
     ],
@@ -207,7 +207,7 @@
       }
     ],
     "officialSourceUrl": "https://mtseymour.ca/today",
-    "lastUpdated": "2026-08-17T21:58:33.993Z"
+    "lastUpdated": "2026-08-17T22:08:37.545Z"
   },
   {
     "id": "whistler",
@@ -277,6 +277,6 @@
       }
     ],
     "officialSourceUrl": "https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
-    "lastUpdated": "2026-08-17T21:58:33.994Z"
+    "lastUpdated": "2026-08-17T22:08:37.540Z"
   }
 ]

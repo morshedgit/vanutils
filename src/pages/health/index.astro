@@ -1,0 +1,238 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import EmergencyDisclaimer from '../../tools/health-wait-times/components/EmergencyDisclaimer.astro';
+import WaitTimeBadge from '../../tools/health-wait-times/components/WaitTimeBadge.astro';
+import TriageGuide from '../../tools/health-wait-times/components/TriageGuide.astro';
+import FilterTabs from '../../tools/health-wait-times/components/FilterTabs.astro';
+import FacilityCard from '../../tools/health-wait-times/components/FacilityCard.astro';
+import { getLiveFacilities, getHealthOverviewStats } from '../../tools/health-wait-times/services/healthService';
+
+// Set Edge Cache header: 5 min max age, 10 min background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const facilities = await getLiveFacilities();
+const stats = getHealthOverviewStats(facilities);
+---
+
+<ToolLayout
+  toolId="health-wait-times"
+  title="Metro Vancouver ER & Urgent Care Radar"
+  description="Real-time emergency department wait times and Urgent & Primary Care Centre (UPCC) capacity for VGH, St. Paul's, Mount Saint Joseph, and Fraser Health."
+  currentPath="/health"
+  badgeText="Live ER Radar"
+  status="active"
+>
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Mandatory Medical Emergency Disclaimer -->
+    <EmergencyDisclaimer />
+
+    <!-- Live Wait Time Hero Snapshot -->
+    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Shortest ER Wait: {stats.shortestERName} ({stats.minERWaitFormatted})</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+          Vancouver Hospital ER & Urgent Care Triage
+        </h2>
+        <p class="text-xs text-slate-300">
+          Tracking {stats.totalERs} Hospital Emergency Departments & {stats.openUPCCsCount} Open Urgent Care (UPCC) clinics.
+        </p>
+      </div>
+
+      <!-- 1-Tap Geolocation Sorting Button -->
+      <button
+        type="button"
+        id="geo-sort-health-btn"
+        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
+      >
+        <span>📍</span>
+        <span id="geo-health-label">Sort by Nearest Hospital</span>
+      </button>
+    </section>
+
+    <!-- Pinned Facilities Section (Mirrors Home Dashboard Card) -->
+    <div id="pinned-health-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+          <span>⭐</span>
+          <span>Pinned Facilities (Shown on Main Dashboard)</span>
+        </span>
+        <span class="text-[11px] text-slate-400">Click star on any facility to customize</span>
+      </div>
+      <div id="pinned-health-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <!-- Dynamically populated via client JS -->
+      </div>
+    </div>
+
+    <!-- Clinical Triage Guide: ER vs UPCC -->
+    <TriageGuide />
+
+    <!-- Filter Tabs -->
+    <FilterTabs activeTab="all" />
+
+    <!-- Facilities Grid -->
+    <div id="facilities-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {facilities.map((facility) => (
+        <FacilityCard facility={facility} />
+      ))}
+    </div>
+  </div>
+</ToolLayout>
+
+<script is:inline define:vars={{ facilitiesJson: JSON.stringify(facilities) }}>
+  // Pinned Facilities Management
+  const STORAGE_KEY = 'vanutils_pinned_health';
+  const DEFAULT_PINNED = ['mount-saint-joseph', 'st-pauls', 'vgh', 'bc-childrens', 'city-centre-upcc', 'lions-gate'];
+
+  function getPinnedIds() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return DEFAULT_PINNED;
+  }
+
+  function savePinnedIds(ids) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    window.dispatchEvent(new CustomEvent('vanutils:pinned-health-changed', { detail: ids }));
+  }
+
+  function renderPinnedGrid() {
+    const grid = document.getElementById('pinned-health-grid');
+    if (!grid) return;
+
+    const pinnedIds = getPinnedIds();
+    const allFacilities = JSON.parse(facilitiesJson || '[]');
+    const pinnedFacilities = allFacilities.filter((f) => pinnedIds.includes(f.id));
+
+    if (pinnedFacilities.length === 0) {
+      grid.innerHTML = '<p class="text-xs text-slate-400 py-1">No pinned facilities yet. Star any hospital or UPCC below!</p>';
+      return;
+    }
+
+    grid.innerHTML = pinnedFacilities.map((f) => {
+      const wait = f.triageData?.waitTimeMinutes;
+      const waitStr = wait !== undefined ? (wait < 60 ? `${wait}m` : `${Math.floor(wait / 60)}h ${wait % 60}m`) : 'Active';
+      const waitClass = wait && wait < 90 ? 'text-emerald-600 dark:text-emerald-400' : (wait && wait <= 210 ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400');
+
+      return `
+        <div class="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-xs">
+          <div class="truncate pr-2 font-bold text-slate-900 dark:text-white">
+            <a href="/health/${f.id}" class="hover:text-sky-500">${f.shortName}</a>
+          </div>
+          <span class="shrink-0 flex items-center gap-1 font-semibold text-[11px] ${waitClass}">
+            <span class="w-1.5 h-1.5 rounded-full bg-current"></span> ${waitStr} wait
+          </span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateStarButtons() {
+    const pinnedIds = getPinnedIds();
+    document.querySelectorAll('.star-btn[data-facility-star-id]').forEach((btn) => {
+      const id = btn.getAttribute('data-facility-star-id');
+      if (pinnedIds.includes(id)) {
+        btn.classList.add('text-amber-400', 'dark:text-amber-400');
+        btn.classList.remove('text-slate-300', 'dark:text-slate-600');
+      } else {
+        btn.classList.remove('text-amber-400', 'dark:text-amber-400');
+        btn.classList.add('text-slate-300', 'dark:text-slate-600');
+      }
+    });
+  }
+
+  function setupStarClicks() {
+    document.querySelectorAll('.star-btn[data-facility-star-id]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = btn.getAttribute('data-facility-star-id');
+        let pinned = getPinnedIds();
+        if (pinned.includes(id)) {
+          pinned = pinned.filter((p) => p !== id);
+        } else {
+          pinned.push(id);
+        }
+        savePinnedIds(pinned);
+        updateStarButtons();
+        renderPinnedGrid();
+      });
+    });
+  }
+
+  // Haversine Distance Calculation
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function setupGeoSort() {
+    const btn = document.getElementById('geo-sort-health-btn');
+    const label = document.getElementById('geo-health-label');
+    const grid = document.getElementById('facilities-grid');
+
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+
+      label.textContent = 'Calculating Distances...';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const userLat = pos.coords.latitude;
+          const userLng = pos.coords.longitude;
+          label.textContent = 'Sorted by Distance ✅';
+
+          const cards = Array.from(document.querySelectorAll('.facility-card'));
+          cards.forEach((card) => {
+            const lat = parseFloat(card.getAttribute('data-lat') || '0');
+            const lng = parseFloat(card.getAttribute('data-lng') || '0');
+            const km = haversineKm(userLat, userLng, lat, lng);
+            card.setAttribute('data-distance', km.toFixed(2));
+            const distLabel = card.querySelector('.facility-distance-label');
+            if (distLabel) distLabel.textContent = `📍 ${km.toFixed(1)} km away`;
+          });
+
+          cards.sort((a, b) => {
+            const distA = parseFloat(a.getAttribute('data-distance') || '0');
+            const distB = parseFloat(b.getAttribute('data-distance') || '0');
+            return distA - distB;
+          });
+
+          if (grid) {
+            cards.forEach((card) => grid.appendChild(card));
+          }
+        },
+        () => {
+          label.textContent = 'Location Access Denied';
+        }
+      );
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPinnedGrid();
+      updateStarButtons();
+      setupStarClicks();
+      setupGeoSort();
+    });
+  } else {
+    renderPinnedGrid();
+    updateStarButtons();
+    setupStarClicks();
+    setupGeoSort();
+  }
+</script>

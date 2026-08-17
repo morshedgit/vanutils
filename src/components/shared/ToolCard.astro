@@ -4,6 +4,7 @@ import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
 import { getLiveRoutes } from '../../tools/bc-ferries/services/ferryService';
 import { getLiveMountains } from '../../tools/mountain-snow/services/snowService';
 import { getAllNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/carshare-parking/services/parkingEvaluator';
+import { getLiveFacilities, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
 
 interface Props {
   tool: ToolMeta;
@@ -23,6 +24,9 @@ const initialMountains = allMountains.slice(0, 4);
 
 const allNeighbourhoods = tool.id === 'evo-parking' ? getAllNeighbourhoods() : [];
 const initialNeighbourhoods = allNeighbourhoods.slice(0, 6);
+
+const allFacilities = tool.id === 'health-wait-times' ? await getLiveFacilities() : [];
+const initialFacilities = allFacilities.slice(0, 6);
 
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const avgFreezingLevel = allMountains.length > 0
@@ -46,7 +50,8 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
       {tool.id === 'bc-ferries' && 'Live Deck %'}
       {tool.id === 'mountain-snow' && snowBadgeText}
       {tool.id === 'evo-parking' && '8/8 Home Zones'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'health-wait-times' && '1h 15m Shortest ER'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -199,8 +204,48 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     </div>
   )}
 
+  <!-- ER & URGENT CARE: High-Density Hospital & UPCC List -->
+  {tool.id === 'health-wait-times' && (
+    <div id="main-card-health-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialFacilities.map((f) => {
+        const wait = f.triageData?.waitTimeMinutes;
+        const waitStr = formatWaitTime(wait);
+        const isLow = wait !== undefined && wait < 90;
+        const isMod = wait !== undefined && !isLow && !(wait > 210);
+        return (
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id={f.id}>
+            <div class="truncate pr-2 font-medium">
+              <span>{f.shortName}</span>
+              <span class="text-[11px] text-slate-400 ml-1">({f.municipality})</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                {f.triageData?.patientCountWaiting !== undefined ? `${f.triageData.patientCountWaiting} waiting` : 'Triage Open'}
+              </span>
+              {isLow && (
+                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> {waitStr} Wait
+                </span>
+              )}
+              {isMod && (
+                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> {waitStr} Wait
+                </span>
+              )}
+              {!isLow && !isMod && (
+                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> {waitStr} Wait
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -452,5 +497,69 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     }
 
     window.addEventListener('vanutils:pinned-parking-changed', syncMainCardParking);
+  </script>
+)}
+
+{tool.id === 'health-wait-times' && (
+  <script is:inline define:vars={{ allFacilitiesJson: JSON.stringify(allFacilities) }}>
+    function syncMainCardHealth() {
+      const grid = document.getElementById('main-card-health-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_health');
+      const allFacilities = JSON.parse(allFacilitiesJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinnedFacilities = allFacilities.filter((f) => pinnedIds.includes(f.id));
+          const unpinnedFacilities = allFacilities.filter((f) => !pinnedIds.includes(f.id));
+          displayList = [...pinnedFacilities, ...unpinnedFacilities].slice(0, 6);
+        } catch (e) {
+          displayList = allFacilities.slice(0, 6);
+        }
+      } else {
+        displayList = allFacilities.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((f) => {
+        const wait = f.triageData?.waitTimeMinutes;
+        const waitStr = wait !== undefined ? (wait < 60 ? `${wait}m` : `${Math.floor(wait / 60)}h ${wait % 60}m`) : 'Active';
+        const isLow = wait !== undefined && wait < 90;
+        const isMod = wait !== undefined && wait >= 90 && wait <= 210;
+
+        const waitBadge = isLow
+          ? `<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> ${waitStr} Wait</span>`
+          : isMod
+          ? `<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> ${waitStr} Wait</span>`
+          : `<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> ${waitStr} Wait</span>`;
+
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id="${f.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${f.shortName}</span>
+              <span class="text-[11px] text-slate-400 ml-1">(${f.municipality})</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                ${f.triageData?.patientCountWaiting !== undefined ? `${f.triageData.patientCountWaiting} waiting` : 'Triage Open'}
+              </span>
+              ${waitBadge}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardHealth);
+    } else {
+      syncMainCardHealth();
+    }
+
+    window.addEventListener('vanutils:pinned-health-changed', syncMainCardHealth);
   </script>
 )}

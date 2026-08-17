@@ -85,6 +85,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Dedicated YVR Airport & UBC parkades guide',
     ],
   },
+  {
+    id: 'health-wait-times',
+    name: 'ER & Urgent Care Radar',
+    shortDescription: 'Real-time hospital emergency department wait times, triage estimates & UPCC same-day walk-in clinic capacity.',
+    path: '/health',
+    icon: 'activity',
+    category: 'daily_living',
+    status: 'active',
+    badgeText: 'Live Wait Times',
+    previewStat: {
+      value: '1h 15m Shortest',
+      label: 'Mt. Saint Joseph ER',
+      statusType: 'safe',
+    },
+    features: [
+      'Real-time estimated time to physician',
+      'Total Time to Care (Drive + Wait) calculator',
+      'Clinical ER vs. UPCC triage selector',
+      '11 Hospital ERs & 9 Urgent Care Centres',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

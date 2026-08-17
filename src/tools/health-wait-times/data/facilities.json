@@ -1,0 +1,529 @@
+[
+  {
+    "id": "mount-saint-joseph",
+    "name": "Mount Saint Joseph Hospital Emergency",
+    "shortName": "Mount Saint Joseph",
+    "facilityType": "emergency_department",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "3080 Prince Edward St, Vancouver, BC V5T 3N4",
+    "municipality": "Vancouver",
+    "latitude": 49.2577,
+    "longitude": -123.0945,
+    "phone": "(604) 874-1141",
+    "triageData": {
+      "waitTimeMinutes": 75,
+      "patientCountWaiting": 8,
+      "patientCountTreating": 14,
+      "intensity": "low",
+      "lastUpdated": "2026-08-17T22:08:38.258Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": false,
+      "openTime": "08:00",
+      "closeTime": "20:00",
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true,
+      "notes": "Open daily 8:00 AM - 8:00 PM for emergency care"
+    },
+    "servicesAvailable": [
+      "X-ray",
+      "Lab",
+      "Pharmacy",
+      "General Emergency"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Bus #8, #19, #9 (Kingsway & Broadway)",
+    "parkingInfo": "Underground parkade & Kingsway meter parking",
+    "officialPortalUrl": "https://www.providencehealthcare.org/en/locations/mount-saint-joseph-hospital"
+  },
+  {
+    "id": "st-pauls",
+    "name": "St. Paul's Hospital Emergency Department",
+    "shortName": "St. Paul's Hospital",
+    "facilityType": "emergency_department",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "1081 Burrard St, Vancouver, BC V6Z 1Y6",
+    "municipality": "Vancouver",
+    "latitude": 49.2805,
+    "longitude": -123.1298,
+    "phone": "(604) 682-2344",
+    "triageData": {
+      "waitTimeMinutes": 165,
+      "patientCountWaiting": 24,
+      "patientCountTreating": 38,
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true
+    },
+    "servicesAvailable": [
+      "Level 1 Cardiac",
+      "X-ray",
+      "CT Scan",
+      "Ultrasound",
+      "Lab",
+      "Psychiatric Crisis"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Bus #2, #44, #7 (Burrard & Davie)",
+    "parkingInfo": "Hospital parkade on Comox St & metered street parking",
+    "officialPortalUrl": "https://www.providencehealthcare.org/en/locations/st-pauls-hospital"
+  },
+  {
+    "id": "vgh",
+    "name": "Vancouver General Hospital (VGH) Emergency",
+    "shortName": "Vancouver General (VGH)",
+    "facilityType": "emergency_department",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "855 W 12th Ave, Vancouver, BC V5Z 1M9",
+    "municipality": "Vancouver",
+    "latitude": 49.2612,
+    "longitude": -123.1245,
+    "phone": "(604) 875-4111",
+    "triageData": {
+      "waitTimeMinutes": 195,
+      "patientCountWaiting": 32,
+      "patientCountTreating": 54,
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true
+    },
+    "servicesAvailable": [
+      "Adult Level 1 Trauma",
+      "X-ray",
+      "CT Scan",
+      "MRI",
+      "Ultrasound",
+      "Comprehensive Lab"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Broadway-City Hall SkyTrain & 99 B-Line (Oak & 12th)",
+    "parkingInfo": "Jim Pattison Pavilion underground parkade & 12th Ave parkade",
+    "officialPortalUrl": "https://www.vch.ca/en/location/vancouver-general-hospital-emergency-department"
+  },
+  {
+    "id": "bc-childrens",
+    "name": "BC Children's Hospital Emergency Department",
+    "shortName": "BC Children's Hospital",
+    "facilityType": "pediatric_emergency",
+    "healthAuthority": "provincial_health_services",
+    "address": "4480 Oak St, Vancouver, BC V6H 3N1",
+    "municipality": "Vancouver",
+    "latitude": 49.2442,
+    "longitude": -123.1258,
+    "phone": "(604) 875-2345",
+    "triageData": {
+      "waitTimeMinutes": 120,
+      "patientCountWaiting": 16,
+      "patientCountTreating": 28,
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true,
+      "notes": "Dedicated specialized emergency care for children and youth (0-16 years)"
+    },
+    "servicesAvailable": [
+      "Pediatric Level 1 Trauma",
+      "Pediatric Intensive Care",
+      "X-ray",
+      "CT Scan",
+      "Child Life Specialists"
+    ],
+    "pediatricSpecialty": true,
+    "transitAccess": "Bus #17 (Oak St & 28th Ave) & #25 (King Edward)",
+    "parkingInfo": "Entrance 55 Underground Parkade on Oak St",
+    "officialPortalUrl": "http://www.bcchildrens.ca/our-services/hospital-services/emergency"
+  },
+  {
+    "id": "city-centre-upcc",
+    "name": "City Centre Urgent & Primary Care Centre",
+    "shortName": "City Centre UPCC",
+    "facilityType": "urgent_primary_care_centre",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "1290 Hornby St, Vancouver, BC V6Z 0A3",
+    "municipality": "Vancouver",
+    "latitude": 49.2778,
+    "longitude": -123.1294,
+    "phone": "(604) 416-1811",
+    "triageData": {
+      "waitTimeMinutes": 45,
+      "patientCountWaiting": 6,
+      "patientCountTreating": 12,
+      "intensity": "low",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": false,
+      "openTime": "08:00",
+      "closeTime": "22:00",
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true,
+      "notes": "Open daily 8:00 AM - 10:00 PM for urgent walk-in care"
+    },
+    "servicesAvailable": [
+      "Minor injury & illness",
+      "Stitches",
+      "Casting",
+      "Prescriptions",
+      "Basic Lab"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Yaletown-Roundhouse SkyTrain & Bus #2, #44",
+    "parkingInfo": "Street meters on Hornby & Drake St",
+    "officialPortalUrl": "https://www.vch.ca/en/location-service/city-centre-urgent-and-primary-care-centre"
+  },
+  {
+    "id": "ubc-urgent-care",
+    "name": "UBC Hospital Urgent Care Centre",
+    "shortName": "UBC Urgent Care",
+    "facilityType": "urgent_primary_care_centre",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "2211 Wesbrook Mall, Vancouver, BC V6T 2B5",
+    "municipality": "Vancouver",
+    "latitude": 49.2645,
+    "longitude": -123.2458,
+    "phone": "(604) 822-7121",
+    "triageData": {
+      "waitTimeMinutes": 55,
+      "patientCountWaiting": 7,
+      "patientCountTreating": 14,
+      "intensity": "low",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": false,
+      "openTime": "08:00",
+      "closeTime": "20:00",
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true,
+      "notes": "Open daily 8:00 AM - 8:00 PM for non-life-threatening urgent conditions"
+    },
+    "servicesAvailable": [
+      "X-ray",
+      "Ultrasound",
+      "Lab",
+      "Stitches",
+      "Fractures",
+      "Infections"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "R4 RapidBus, 99 B-Line & UBC Bus Loop",
+    "parkingInfo": "UBC Hospital Parkade directly attached",
+    "officialPortalUrl": "https://www.vch.ca/en/location-service/ubc-hospital-urgent-care-centre"
+  },
+  {
+    "id": "lions-gate",
+    "name": "Lions Gate Hospital Emergency",
+    "shortName": "Lions Gate Hospital",
+    "facilityType": "emergency_department",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "231 E 15th St, North Vancouver, BC V7L 2L7",
+    "municipality": "North Vancouver",
+    "latitude": 49.3204,
+    "longitude": -123.0678,
+    "phone": "(604) 988-3131",
+    "triageData": {
+      "waitTimeMinutes": 140,
+      "patientCountWaiting": 18,
+      "patientCountTreating": 30,
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true
+    },
+    "servicesAvailable": [
+      "Level 2 Trauma",
+      "X-ray",
+      "CT Scan",
+      "MRI",
+      "Ultrasound",
+      "Lab",
+      "Orthopedic Emergency"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "R2 RapidBus & Bus #229, #230 (15th & St. Andrews)",
+    "parkingInfo": "Hospital Parkade on 13th St & East 15th St",
+    "officialPortalUrl": "https://www.vch.ca/en/location/lions-gate-hospital-emergency-department"
+  },
+  {
+    "id": "richmond-hospital",
+    "name": "Richmond Hospital Emergency Department",
+    "shortName": "Richmond Hospital",
+    "facilityType": "emergency_department",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "7000 Westminster Hwy, Richmond, BC V6X 1A2",
+    "municipality": "Richmond",
+    "latitude": 49.1685,
+    "longitude": -123.1492,
+    "phone": "(604) 278-9721",
+    "triageData": {
+      "waitTimeMinutes": 150,
+      "patientCountWaiting": 20,
+      "patientCountTreating": 32,
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true
+    },
+    "servicesAvailable": [
+      "X-ray",
+      "CT Scan",
+      "Ultrasound",
+      "Lab",
+      "Emergency Surgery"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Canada Line (Richmond-Brighouse) & Bus #401, #407",
+    "parkingInfo": "Visitor surface parking on Gilbert Rd & Westminster Hwy",
+    "officialPortalUrl": "https://www.vch.ca/en/location/richmond-hospital-emergency-department"
+  },
+  {
+    "id": "burnaby-hospital",
+    "name": "Burnaby Hospital Emergency Department",
+    "shortName": "Burnaby Hospital",
+    "facilityType": "emergency_department",
+    "healthAuthority": "fraser_health",
+    "address": "3935 Kincaid St, Burnaby, BC V5G 2X6",
+    "municipality": "Burnaby",
+    "latitude": 49.2512,
+    "longitude": -123.0145,
+    "phone": "(604) 434-4211",
+    "triageData": {
+      "waitTimeMinutes": 180,
+      "patientCountWaiting": 26,
+      "patientCountTreating": 40,
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true
+    },
+    "servicesAvailable": [
+      "X-ray",
+      "CT Scan",
+      "Ultrasound",
+      "Lab",
+      "Acute Medicine"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Bus #28 (Joyce/Phibbs) & #129 (Patterson)",
+    "parkingInfo": "Multi-level visitor parkade off Sunset St",
+    "officialPortalUrl": "https://www.fraserhealth.ca/Service-Directory/Locations/Burnaby/burnaby-hospital"
+  },
+  {
+    "id": "royal-columbian",
+    "name": "Royal Columbian Hospital Emergency",
+    "shortName": "Royal Columbian (RCH)",
+    "facilityType": "emergency_department",
+    "healthAuthority": "fraser_health",
+    "address": "330 E Columbia St, New Westminster, BC V3L 3W7",
+    "municipality": "New Westminster",
+    "latitude": 49.2268,
+    "longitude": -122.8912,
+    "phone": "(604) 520-4253",
+    "triageData": {
+      "waitTimeMinutes": 210,
+      "patientCountWaiting": 35,
+      "patientCountTreating": 58,
+      "intensity": "high",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true
+    },
+    "servicesAvailable": [
+      "Level 1 Regional Trauma",
+      "Neurotrauma",
+      "Cardiac Intervention",
+      "X-ray",
+      "CT",
+      "MRI",
+      "Lab"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Sapperton SkyTrain Station (Expo Line connected via walkway)",
+    "parkingInfo": "Underground parkade off E Columbia St",
+    "officialPortalUrl": "https://www.fraserhealth.ca/Service-Directory/Locations/New-Westminster/royal-columbian-hospital"
+  },
+  {
+    "id": "surrey-memorial",
+    "name": "Surrey Memorial Hospital Emergency",
+    "shortName": "Surrey Memorial (SMH)",
+    "facilityType": "emergency_department",
+    "healthAuthority": "fraser_health",
+    "address": "13750 96 Ave, Surrey, BC V3V 1Z2",
+    "municipality": "Surrey",
+    "latitude": 49.1768,
+    "longitude": -122.8425,
+    "phone": "(604) 581-2211",
+    "triageData": {
+      "waitTimeMinutes": 240,
+      "patientCountWaiting": 42,
+      "patientCountTreating": 65,
+      "intensity": "high",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true,
+      "notes": "Features dedicated separate Pediatric Emergency Department for children"
+    },
+    "servicesAvailable": [
+      "Dedicated Pediatric ER",
+      "Adult Level 2 Trauma",
+      "X-ray",
+      "CT Scan",
+      "MRI",
+      "Lab"
+    ],
+    "pediatricSpecialty": true,
+    "transitAccess": "King George SkyTrain & R1 King George Blvd RapidBus",
+    "parkingInfo": "Critical Care Tower underground parkade off 96 Ave",
+    "officialPortalUrl": "https://www.fraserhealth.ca/Service-Directory/Locations/Surrey/surrey-memorial-hospital"
+  },
+  {
+    "id": "eagle-ridge",
+    "name": "Eagle Ridge Hospital Emergency",
+    "shortName": "Eagle Ridge Hospital",
+    "facilityType": "emergency_department",
+    "healthAuthority": "fraser_health",
+    "address": "475 Guildford Way, Port Moody, BC V3H 3W9",
+    "municipality": "Port Moody",
+    "latitude": 49.2812,
+    "longitude": -122.8188,
+    "phone": "(604) 461-2022",
+    "triageData": {
+      "waitTimeMinutes": 110,
+      "patientCountWaiting": 12,
+      "patientCountTreating": 22,
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": true,
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true
+    },
+    "servicesAvailable": [
+      "X-ray",
+      "CT Scan",
+      "Ultrasound",
+      "Lab",
+      "Emergency Care"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Inlet Centre SkyTrain Station (Millennium Line)",
+    "parkingInfo": "Visitor lot on Guildford Way",
+    "officialPortalUrl": "https://www.fraserhealth.ca/Service-Directory/Locations/Port-Moody/eagle-ridge-hospital"
+  },
+  {
+    "id": "reach-upcc",
+    "name": "REACH Urgent and Primary Care Centre",
+    "shortName": "REACH UPCC",
+    "facilityType": "urgent_primary_care_centre",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "1145 Commercial Dr, Vancouver, BC V5L 3X3",
+    "municipality": "Vancouver",
+    "latitude": 49.2745,
+    "longitude": -123.0698,
+    "phone": "(604) 216-3131",
+    "triageData": {
+      "waitTimeMinutes": 40,
+      "patientCountWaiting": 5,
+      "patientCountTreating": 10,
+      "intensity": "low",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": false,
+      "openTime": "08:00",
+      "closeTime": "22:00",
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true,
+      "notes": "Open daily 8:00 AM - 10:00 PM for urgent same-day care"
+    },
+    "servicesAvailable": [
+      "Minor injuries",
+      "Infections",
+      "Sprains",
+      "Lacerations",
+      "Prescriptions"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Bus #20 (Commercial Dr) & Commercial-Broadway SkyTrain",
+    "parkingInfo": "Street meters on Commercial Dr & Napier St",
+    "officialPortalUrl": "https://www.vch.ca/en/location-service/reach-urgent-and-primary-care-centre"
+  },
+  {
+    "id": "north-van-upcc",
+    "name": "North Vancouver Urgent and Primary Care Centre",
+    "shortName": "North Vancouver UPCC",
+    "facilityType": "urgent_primary_care_centre",
+    "healthAuthority": "vancouver_coastal_health",
+    "address": "221 W Esplanade, North Vancouver, BC V7M 3J3",
+    "municipality": "North Vancouver",
+    "latitude": 49.3138,
+    "longitude": -123.0812,
+    "phone": "(604) 983-6700",
+    "triageData": {
+      "waitTimeMinutes": 50,
+      "patientCountWaiting": 6,
+      "patientCountTreating": 12,
+      "intensity": "low",
+      "lastUpdated": "2026-08-17T22:08:38.259Z",
+      "isStale": false
+    },
+    "hours": {
+      "isOpen24_7": false,
+      "openTime": "08:00",
+      "closeTime": "22:00",
+      "isCurrentlyOpen": true,
+      "acceptingWalkIns": true,
+      "notes": "Open daily 8:00 AM - 10:00 PM"
+    },
+    "servicesAvailable": [
+      "Urgent minor illness/injury",
+      "X-ray access",
+      "Lab referrals",
+      "Stitches"
+    ],
+    "pediatricSpecialty": false,
+    "transitAccess": "Lonsdale Quay SeaBus & Bus Loop (5 min walk)",
+    "parkingInfo": "Underground building parking & Esplanade street meters",
+    "officialPortalUrl": "https://www.vch.ca/en/location-service/north-vancouver-urgent-and-primary-care-centre"
+  }
+]

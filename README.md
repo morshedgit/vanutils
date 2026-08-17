@@ -48,7 +48,8 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 | **Tool #1: Can I Swim?** | `/swim` | **Active Live** | 31 Metro Vancouver beaches, weekly E. coli lab tracking & water safety. |
 | **Tool #2: Ferry Standby Radar** | `/ferries` | **Active Live** | Real-time vehicle deck %, standby odds, Hullo, SeaBus & DriveBC cams. |
 | **Tool #3: Mountain Snow Line** | `/snow` | **Active Live** | Live coastal freezing level, Cypress/Grouse/Seymour/Whistler soundings. |
-| **Tool #4: Evo Parking Radar** | `/parking` | *Roadmap v1.3* | City street-sweeping calendar sync & permitted Evo drop-off zones. |
+| **Tool #4: Evo Parking Radar** | `/parking` | **Active Live** | 1-Tap GPS spot clearance, street sweeping countdown & YVR/UBC lots. |
+| **Tool #5: ER & Urgent Care** | `/health` | **Active Live** | 11 Hospital ERs & 9 UPCCs, real-time wait times & triage routing. |
 
 ---
 

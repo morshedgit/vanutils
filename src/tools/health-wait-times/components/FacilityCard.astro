@@ -1,0 +1,96 @@
+---
+import type { HealthcareFacility } from '../types';
+import WaitTimeBadge from './WaitTimeBadge.astro';
+
+interface Props {
+  facility: HealthcareFacility;
+}
+
+const { facility } = Astro.props;
+const waitMins = facility.triageData?.waitTimeMinutes;
+const isOpen = facility.hours.isCurrentlyOpen;
+---
+
+<div
+  class="facility-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-sky-500 transition-all flex flex-col justify-between"
+  data-facility-id={facility.id}
+  data-facility-type={facility.facilityType}
+  data-lat={facility.latitude}
+  data-lng={facility.longitude}
+>
+  <div>
+    <!-- Card Top Header -->
+    <div class="flex items-start justify-between gap-2 mb-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <a href={`/health/${facility.id}`} class="hover:text-sky-500 transition-colors">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+              {facility.name}
+            </h3>
+          </a>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          {facility.facilityType === 'emergency_department' && '🏥 24/7 Emergency Department'}
+          {facility.facilityType === 'urgent_primary_care_centre' && '🩺 Urgent & Primary Care Centre'}
+          {facility.facilityType === 'pediatric_emergency' && '👶 Specialized Pediatric Emergency'}
+          {' • '}{facility.municipality}
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <WaitTimeBadge waitTimeMinutes={waitMins} isOpen={isOpen} size="sm" />
+        <button
+          type="button"
+          class="star-btn p-1.5 rounded-lg text-slate-300 hover:text-amber-400 dark:text-slate-600 dark:hover:text-amber-400 transition-colors"
+          data-facility-star-id={facility.id}
+          title="Pin to Dashboard"
+        >
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Triage & Patient Load Snapshot -->
+    <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+      <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Patients Waiting:</span>
+        <span class="font-bold text-slate-900 dark:text-white">
+          {facility.triageData?.patientCountWaiting !== undefined ? `${facility.triageData.patientCountWaiting} in triage` : 'Live Triage'}
+        </span>
+      </div>
+      <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Operating Hours:</span>
+        <span class="font-bold text-slate-900 dark:text-white">
+          {facility.hours.isOpen24_7 ? 'Open 24/7' : `${facility.hours.openTime} – ${facility.hours.closeTime}`}
+        </span>
+      </div>
+    </div>
+
+    <!-- Available Diagnostic Services -->
+    <div class="flex flex-wrap gap-1 mb-4">
+      {facility.servicesAvailable.slice(0, 4).map((svc) => (
+        <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-medium text-slate-600 dark:text-slate-400">
+          ✓ {svc}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- Card Bottom: Distance Indicator & Direction Links -->
+  <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800/60 text-xs">
+    <span class="facility-distance-label text-slate-500 dark:text-slate-400 font-medium">
+      📍 {facility.address.split(',')[0]}
+    </span>
+    <a
+      href={`https://maps.google.com/?q=${facility.latitude},${facility.longitude}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-sky-600 dark:text-sky-400 hover:underline font-bold flex items-center gap-1"
+    >
+      <span>Google Maps</span>
+      <span>→</span>
+    </a>
+  </div>
+</div>
