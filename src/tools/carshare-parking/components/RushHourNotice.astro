@@ -1,0 +1,50 @@
+---
+import type { RushHourRestriction } from '../types';
+
+interface Props {
+  rushHour: RushHourRestriction;
+}
+
+const { rushHour } = Astro.props;
+---
+
+<div class={`p-3 sm:p-4 rounded-xl border ${rushHour.isCurrentlyActive ? 'bg-rose-500/10 border-rose-500/30' : rushHour.isWithin12Hours ? 'bg-amber-500/10 border-amber-500/30' : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700/60'}`}>
+  <div class="flex items-center justify-between gap-2 mb-2">
+    <div class="flex items-center gap-2">
+      <span class="text-lg">🚦</span>
+      <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+        Rush Lane No-Stopping Radar
+      </span>
+    </div>
+    {rushHour.isCurrentlyActive ? (
+      <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-600 text-white animate-pulse">
+        ⛔ Active Tow Lane
+      </span>
+    ) : rushHour.isWithin12Hours ? (
+      <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+        Overnight Caution
+      </span>
+    ) : (
+      <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+        Standard Hours
+      </span>
+    )}
+  </div>
+
+  <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+    <div class="flex justify-between">
+      <span class="text-slate-500 dark:text-slate-400">Restricted Hours:</span>
+      <span class="font-bold text-slate-900 dark:text-white">{rushHour.restrictedHoursText}</span>
+    </div>
+    {rushHour.restrictedCorridors.length > 0 && (
+      <div>
+        <span class="text-slate-500 dark:text-slate-400 block mb-1">Enforced Corridors:</span>
+        <ul class="space-y-0.5 pl-2 border-l-2 border-slate-300 dark:border-slate-700">
+          {rushHour.restrictedCorridors.map((c) => (
+            <li class="font-medium text-[11px]">{c}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</div>

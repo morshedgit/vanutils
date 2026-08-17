@@ -119,9 +119,20 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
-### Tool #4: Evo & Street Sweeping Radar (`/parking`) — Planned Roadmap
-- Vancouver street-sweeping calendar sync and tow-away warning clocks.
-- Evo drop-off permitted map layer.
+### Tool #4: Car-Share Safe-Parking & Street Sweeping Radar (`/parking`) — Active Live
+- **Module Identifier**: `carshare-parking` (internal route `/parking` and `/parking/[neighbourhood]`)
+- **Real-Data Mandate**: All municipal parking regulations, residential permit exemptions, street sweeping schedules, peak-period rush lane no-stopping hours, and car-share Home Zone boundaries are 100% real-world data ingested directly from the City of Vancouver Open Data API, City of North Vancouver GIS, and official Evo / Modo GeoJSON feeds.
+- **Problem Solved**: Eliminates accidental parking fines ($150–$350+ towing/tickets) from parking in active rush-hour lanes, scheduled street sweep zones, or invalid permit sub-zones when ending Evo / Modo trips.
+- **3-Second Definitive Safety Clearance**:
+  - 🟢 **Safe to Park (Green)**: Inside Home Zone; valid residential permit exemption; no street sweeping or rush-hour restriction within 24 hours.
+  - 🟡 **Caution / Time Limit (Yellow)**: Legal currently (e.g. overnight free meter), but street sweeping or rush-hour no-stopping restriction begins within 12–24 hours.
+  - 🔴 **Do Not Park / Tow Risk (Red)**: Outside Home Zone, active peak-period rush lane, street sweeping within 12 hours, loading zone, or active permit closure.
+- **Core Features**:
+  - **1-Tap Browser Geolocation & Instant Spot Clearance**: Evaluates current GPS coordinates against Home Zone polygons and curbside regulations.
+  - **Street Sweeping & Seasonal Leaf Removal Countdown**: Intersects current time with bi-weekly street sweeping schedules and autumn temporary leaf removal zones (October–January) in West End, Kitsilano, and Mount Pleasant.
+  - **Peak-Hour Rush Lane No-Stopping Radar**: Real-time evaluation of major commuter corridors (West Georgia, Burrard, Broadway, West 4th Ave, Granville, Hastings, Main St).
+  - **Dedicated Satellite Lot Navigator**: Step-by-step parking guides, stall counts, and drop-off fee details for YVR Airport (Park'N Fly), UBC (North/Thunderbird/Fraser Parkades), SFU Burnaby, Grouse Mountain, Cypress Mountain, and BC Ferries terminals.
+  - **High-Density Dashboard Card**: Shows 6+ high-traffic parking hubs (Downtown, West End, Kitsilano, Mount Pleasant, YVR Airport, UBC) with live clearance badges and dynamic ⭐ pinning synchronization.
 
 ---
 

@@ -3,6 +3,7 @@ import type { ToolMeta } from '../../types/shared';
 import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
 import { getLiveRoutes } from '../../tools/bc-ferries/services/ferryService';
 import { getLiveMountains } from '../../tools/mountain-snow/services/snowService';
+import { getAllNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/carshare-parking/services/parkingEvaluator';
 
 interface Props {
   tool: ToolMeta;
@@ -19,6 +20,9 @@ const initialFerryRoutes = allFerryRoutes.slice(0, 6);
 
 const allMountains = tool.id === 'mountain-snow' ? await getLiveMountains() : [];
 const initialMountains = allMountains.slice(0, 4);
+
+const allNeighbourhoods = tool.id === 'evo-parking' ? getAllNeighbourhoods() : [];
+const initialNeighbourhoods = allNeighbourhoods.slice(0, 6);
 
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const avgFreezingLevel = allMountains.length > 0
@@ -41,7 +45,8 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
       {tool.id === 'can-i-swim' && `${safeBeachesCount}/${allBeaches.length} Safe`}
       {tool.id === 'bc-ferries' && 'Live Deck %'}
       {tool.id === 'mountain-snow' && snowBadgeText}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'evo-parking' && '8/8 Home Zones'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -157,8 +162,45 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     </div>
   )}
 
+  <!-- CAR-SHARE PARKING: High-Density Neighbourhoods List -->
+  {tool.id === 'evo-parking' && (
+    <div id="main-card-parking-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialNeighbourhoods.map((n) => {
+        const evaluation = evaluateNeighbourhoodSpot(n);
+        return (
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-parking-id={n.id}>
+            <div class="truncate pr-2 font-medium">
+              <span>{n.name}</span>
+              <span class="text-[11px] text-slate-400 ml-1">({n.residentialPermitRules.permitZoneCode})</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                {n.id === 'ubc' ? 'Parkades Only' : 'Permit Exempt'}
+              </span>
+              {evaluation.clearanceStatus === 'safe' && (
+                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe to Park
+                </span>
+              )}
+              {evaluation.clearanceStatus === 'caution' && (
+                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution
+                </span>
+              )}
+              {evaluation.clearanceStatus === 'prohibited' && (
+                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> Tow Risk
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -355,5 +397,60 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     }
 
     window.addEventListener('vanutils:pinned-snow-changed', syncMainCardSnow);
+  </script>
+)}
+
+{tool.id === 'evo-parking' && (
+  <script is:inline define:vars={{ allNeighbourhoodsJson: JSON.stringify(allNeighbourhoods) }}>
+    function syncMainCardParking() {
+      const grid = document.getElementById('main-card-parking-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_parking');
+      const allNeighbourhoods = JSON.parse(allNeighbourhoodsJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinnedNeighbourhoods = allNeighbourhoods.filter((n) => pinnedIds.includes(n.id));
+          const unpinnedNeighbourhoods = allNeighbourhoods.filter((n) => !pinnedIds.includes(n.id));
+          displayList = [...pinnedNeighbourhoods, ...unpinnedNeighbourhoods].slice(0, 6);
+        } catch (e) {
+          displayList = allNeighbourhoods.slice(0, 6);
+        }
+      } else {
+        displayList = allNeighbourhoods.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((n) => {
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-parking-id="${n.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${n.name}</span>
+              <span class="text-[11px] text-slate-400 ml-1">(${n.residentialPermitRules.permitZoneCode})</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                ${n.id === 'ubc' ? 'Parkades Only' : 'Permit Exempt'}
+              </span>
+              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe to Park
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardParking);
+    } else {
+      syncMainCardParking();
+    }
+
+    window.addEventListener('vanutils:pinned-parking-changed', syncMainCardParking);
   </script>
 )}

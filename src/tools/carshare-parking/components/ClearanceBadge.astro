@@ -1,0 +1,50 @@
+---
+import type { ParkingClearanceStatus } from '../types';
+
+interface Props {
+  status: ParkingClearanceStatus;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { status, size = 'md' } = Astro.props;
+
+const config = {
+  safe: {
+    label: 'SAFE TO PARK',
+    icon: '🟢',
+    bg: 'bg-emerald-500/10 dark:bg-emerald-500/15',
+    text: 'text-emerald-700 dark:text-emerald-300',
+    border: 'border-emerald-500/30',
+    dot: 'bg-emerald-500',
+  },
+  caution: {
+    label: 'CAUTION / TIME LIMIT',
+    icon: '🟡',
+    bg: 'bg-amber-500/10 dark:bg-amber-500/15',
+    text: 'text-amber-700 dark:text-amber-300',
+    border: 'border-amber-500/30',
+    dot: 'bg-amber-500',
+  },
+  prohibited: {
+    label: 'TOW RISK / DO NOT PARK',
+    icon: '🔴',
+    bg: 'bg-rose-500/10 dark:bg-rose-500/15',
+    text: 'text-rose-700 dark:text-rose-300',
+    border: 'border-rose-500/30',
+    dot: 'bg-rose-500',
+  },
+}[status];
+
+const sizeClasses = {
+  sm: 'px-2 py-0.5 text-xs',
+  md: 'px-2.5 py-1 text-xs sm:text-sm font-bold',
+  lg: 'px-4 py-2 text-sm sm:text-base font-extrabold',
+}[size];
+---
+
+<span
+  class={`inline-flex items-center gap-1.5 rounded-full border ${config.bg} ${config.text} ${config.border} ${sizeClasses}`}
+>
+  <span class={`w-2 h-2 rounded-full ${config.dot} animate-pulse`}></span>
+  <span>{config.label}</span>
+</span>

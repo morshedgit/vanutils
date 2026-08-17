@@ -1,0 +1,79 @@
+---
+import type { NeighbourhoodParkingProfile } from '../types';
+import { evaluateNeighbourhoodSpot } from '../services/parkingEvaluator';
+import ClearanceBadge from './ClearanceBadge.astro';
+
+interface Props {
+  neighbourhood: NeighbourhoodParkingProfile;
+}
+
+const { neighbourhood } = Astro.props;
+const evaluation = evaluateNeighbourhoodSpot(neighbourhood);
+---
+
+<div
+  class="neighbourhood-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-sky-500 transition-all"
+  data-neighbourhood-id={neighbourhood.id}
+>
+  <!-- Card Header: Title, Clearance Badge & Star Pin -->
+  <div class="flex items-start justify-between gap-2 mb-3">
+    <div>
+      <div class="flex items-center gap-2">
+        <a href={`/parking/${neighbourhood.slug}`} class="hover:text-sky-500 transition-colors">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            {neighbourhood.name}
+          </h3>
+        </a>
+        <span class="text-xs text-slate-400">({neighbourhood.municipality})</span>
+      </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+        {neighbourhood.residentialPermitRules.permitZoneCode} • {neighbourhood.insideHomeZone ? '🚗 Home Zone Active' : '❌ Outside Home Zone'}
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 shrink-0">
+      <ClearanceBadge status={evaluation.clearanceStatus} size="sm" />
+      <button
+        type="button"
+        class="star-btn p-1.5 rounded-lg text-slate-300 hover:text-amber-400 dark:text-slate-600 dark:hover:text-amber-400 transition-colors"
+        data-parking-id={neighbourhood.id}
+        title="Pin to Dashboard"
+      >
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Primary Reason Banner -->
+  <div class={`p-2.5 rounded-xl text-xs mb-3 font-medium ${evaluation.clearanceStatus === 'safe' ? 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20' : evaluation.clearanceStatus === 'caution' ? 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20' : 'bg-rose-500/10 text-rose-800 dark:text-rose-300 border border-rose-500/20'}`}>
+    <span>{evaluation.primaryReason}</span>
+  </div>
+
+  <!-- Rules Matrix -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300 mb-3">
+    <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+      <span class="text-slate-500 dark:text-slate-400 block text-[11px] font-semibold">Residential Permit Exemption:</span>
+      <span class="font-medium">{neighbourhood.residentialPermitRules.evoExempt ? '✅ Evo/Modo 100% Exempt' : '❌ Not Exempt'}</span>
+    </div>
+    <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+      <span class="text-slate-500 dark:text-slate-400 block text-[11px] font-semibold">Street Sweeping Cadence:</span>
+      <span class="font-medium">{neighbourhood.sweepingSchedule.frequency}</span>
+    </div>
+  </div>
+
+  <!-- Bottom Details Link -->
+  <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/60 text-xs font-semibold">
+    <span class="text-slate-500 dark:text-slate-400">
+      Overnight Meters: {neighbourhood.meterRules.freeOvernightHours} (Free)
+    </span>
+    <a
+      href={`/parking/${neighbourhood.slug}`}
+      class="text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1"
+    >
+      <span>Full Rules & Corridors</span>
+      <span>→</span>
+    </a>
+  </div>
+</div>

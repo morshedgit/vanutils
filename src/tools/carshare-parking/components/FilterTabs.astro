@@ -1,0 +1,70 @@
+---
+interface Props {
+  activeTab?: string;
+}
+
+const { activeTab = 'all' } = Astro.props;
+
+const tabs = [
+  { id: 'all', label: 'All Zones', icon: '📍' },
+  { id: 'evo_homezone', label: 'Evo Home Zone', icon: '🚗' },
+  { id: 'modo_stalls', label: 'Modo Dedicated Stalls', icon: '🅿️' },
+  { id: 'street_sweeping', label: 'Street Sweeping Radar', icon: '🧹' },
+  { id: 'satellite_lots', label: 'Satellite Hubs (YVR/UBC)', icon: '✈️' },
+];
+---
+
+<div class="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none text-xs font-semibold">
+  {tabs.map((t) => (
+    <button
+      type="button"
+      data-filter-tab={t.id}
+      class={`parking-filter-btn px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1.5 ${
+        t.id === activeTab
+          ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xs'
+          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+      }`}
+    >
+      <span>{t.icon}</span>
+      <span>{t.label}</span>
+    </button>
+  ))}
+</div>
+
+<script>
+  function setupParkingFilterTabs() {
+    const buttons = document.querySelectorAll('.parking-filter-btn');
+    const neighbourhoodCards = document.querySelectorAll('.neighbourhood-card');
+    const satelliteSection = document.getElementById('satellite-hubs-grid');
+    const sweepingSection = document.getElementById('sweeping-calendar-section');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-filter-tab');
+
+        // Update button states
+        buttons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+          b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        });
+        btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        btn.classList.add('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+
+        // Toggle visibility
+        if (tabId === 'satellite_lots') {
+          if (satelliteSection) satelliteSection.classList.remove('hidden');
+          neighbourhoodCards.forEach((c) => (c as HTMLElement).classList.add('hidden'));
+        } else {
+          if (satelliteSection) satelliteSection.classList.add('hidden');
+          neighbourhoodCards.forEach((c) => (c as HTMLElement).classList.remove('hidden'));
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupParkingFilterTabs);
+  } else {
+    setupParkingFilterTabs();
+  }
+</script>

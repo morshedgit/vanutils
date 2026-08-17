@@ -1,0 +1,330 @@
+[
+  {
+    "id": "downtown",
+    "name": "Downtown Vancouver",
+    "slug": "downtown",
+    "municipality": "City of Vancouver",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": true,
+      "modoExempt": true,
+      "permitZoneCode": "Zone 1 / 2",
+      "description": "Evo and Modo are exempt from City of Vancouver Residential Permit limits on signed residential streets."
+    },
+    "meterRules": {
+      "freeOvernightHours": "22:00 - 09:00",
+      "daytimeRateRange": "$3.50 - $7.50/hr",
+      "maxTimeLimit": "2 Hours (09:00 - 22:00)"
+    },
+    "sweepingSchedule": {
+      "frequency": "Nightly Mechanical Sweeping",
+      "sweepDays": "Monday - Sunday",
+      "sweepHours": "02:00 - 06:00",
+      "seasonalLeafCleaning": false
+    },
+    "rushHourLanes": {
+      "corridors": [
+        "West Georgia St (Burrard to Stanley Park)",
+        "Burrard St (Pacific to Hastings)",
+        "Granville St (Drake to Hastings)",
+        "Seymour St / Howe St"
+      ],
+      "hoursText": "07:00-09:30 & 15:00-18:00 Mon-Fri"
+    },
+    "activeAlerts": [
+      "West Georgia peak no-stopping strictly enforced 07:00-09:30 (Eastbound) & 15:00-18:00 (Westbound).",
+      "Meters free overnight from 10:00 PM to 9:00 AM."
+    ],
+    "satelliteLotsNearby": [],
+    "popularDestinations": [
+      "Pacific Centre",
+      "Vancouver Public Library",
+      "Canada Place",
+      "Robson Street Shopping"
+    ]
+  },
+  {
+    "id": "west-end",
+    "name": "West End",
+    "slug": "west-end",
+    "municipality": "City of Vancouver",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": true,
+      "modoExempt": true,
+      "permitZoneCode": "Zone 2",
+      "description": "Evo exempt in Resident Only & Permit Excepted spaces. Must park on signed residential side streets."
+    },
+    "meterRules": {
+      "freeOvernightHours": "22:00 - 09:00",
+      "daytimeRateRange": "$2.50 - $5.00/hr",
+      "maxTimeLimit": "2 Hours on Robson/Denman/Davie"
+    },
+    "sweepingSchedule": {
+      "frequency": "Bi-weekly Schedule",
+      "sweepDays": "1st & 3rd Tuesday",
+      "sweepHours": "07:00 - 11:00",
+      "seasonalLeafCleaning": true
+    },
+    "rushHourLanes": {
+      "corridors": [
+        "Denman St (Georgia to Beach Ave)",
+        "Davie St (Burrard to Denman)"
+      ],
+      "hoursText": "Commercial loading 07:00-11:00 Mon-Sat"
+    },
+    "activeAlerts": [
+      "Bi-weekly street sweeping: 1st & 3rd Tuesday (07:00-11:00). Check block signs.",
+      "Autumn Leaf Cleaning active Oct-Jan: Watch for temporary bright orange tow signs."
+    ],
+    "satelliteLotsNearby": [],
+    "popularDestinations": [
+      "English Bay Beach",
+      "Stanley Park Seawall",
+      "Denman Street Dining"
+    ]
+  },
+  {
+    "id": "kitsilano",
+    "name": "Kitsilano",
+    "slug": "kitsilano",
+    "municipality": "City of Vancouver",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": true,
+      "modoExempt": true,
+      "permitZoneCode": "Zone 8 / 9",
+      "description": "Evo exempt on residential permit streets throughout Kitsilano north of 16th Ave."
+    },
+    "meterRules": {
+      "freeOvernightHours": "22:00 - 09:00",
+      "daytimeRateRange": "$2.00 - $4.00/hr",
+      "maxTimeLimit": "2 Hours on 4th Ave & Broadway"
+    },
+    "sweepingSchedule": {
+      "frequency": "Bi-weekly Schedule",
+      "sweepDays": "2nd & 4th Wednesday",
+      "sweepHours": "07:00 - 11:00",
+      "seasonalLeafCleaning": true
+    },
+    "rushHourLanes": {
+      "corridors": [
+        "West 4th Avenue (Balsam to Burrard)",
+        "West Broadway (Alma to Burrard)",
+        "Burrard St (16th Ave to Bridge)"
+      ],
+      "hoursText": "07:00-09:30 (Eastbound) & 15:00-18:00 (Westbound) Mon-Fri"
+    },
+    "activeAlerts": [
+      "West 4th Ave & Broadway rush hour no-stopping lanes active 07:00-09:30 & 15:00-18:00 Mon-Fri.",
+      "Subway construction zones on West Broadway: Watch for shifting temporary no-parking zones."
+    ],
+    "satelliteLotsNearby": [],
+    "popularDestinations": [
+      "Kitsilano Beach",
+      "West 4th Shopping District",
+      "Vanier Park & Museum of Vancouver"
+    ]
+  },
+  {
+    "id": "mount-pleasant",
+    "name": "Mount Pleasant",
+    "slug": "mount-pleasant",
+    "municipality": "City of Vancouver",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": true,
+      "modoExempt": true,
+      "permitZoneCode": "Zone 5 / 6",
+      "description": "Evo exempt in all residential permit zones between 2nd Ave and 16th Ave."
+    },
+    "meterRules": {
+      "freeOvernightHours": "22:00 - 09:00",
+      "daytimeRateRange": "$2.00 - $4.50/hr",
+      "maxTimeLimit": "2 Hours on Main St & Broadway"
+    },
+    "sweepingSchedule": {
+      "frequency": "Bi-weekly Schedule",
+      "sweepDays": "1st & 3rd Thursday",
+      "sweepHours": "07:00 - 11:00",
+      "seasonalLeafCleaning": true
+    },
+    "rushHourLanes": {
+      "corridors": [
+        "Main Street (Terminal to 16th Ave)",
+        "Broadway (Kingsway to Burrard)",
+        "Kingsway (Main to 12th Ave)"
+      ],
+      "hoursText": "07:00-09:30 (North/Westbound) & 15:00-18:00 (South/Eastbound) Mon-Fri"
+    },
+    "activeAlerts": [
+      "Main St rush hour tow lane active 07:00-09:30 & 15:00-18:00 Mon-Fri.",
+      "Bi-weekly sweeping 1st & 3rd Thursday."
+    ],
+    "satelliteLotsNearby": [],
+    "popularDestinations": [
+      "Main Street Breweries & Cafes",
+      "Dude Chilling Park",
+      "Olympic Village Seawall"
+    ]
+  },
+  {
+    "id": "commercial-drive",
+    "name": "Commercial Drive / Grandview",
+    "slug": "commercial-drive",
+    "municipality": "City of Vancouver",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": true,
+      "modoExempt": true,
+      "permitZoneCode": "Zone 12",
+      "description": "Evo exempt on East Van residential permit streets."
+    },
+    "meterRules": {
+      "freeOvernightHours": "22:00 - 09:00",
+      "daytimeRateRange": "$2.00 - $3.50/hr",
+      "maxTimeLimit": "2 Hours on The Drive"
+    },
+    "sweepingSchedule": {
+      "frequency": "Bi-weekly Schedule",
+      "sweepDays": "2nd & 4th Tuesday",
+      "sweepHours": "07:00 - 11:00",
+      "seasonalLeafCleaning": true
+    },
+    "rushHourLanes": {
+      "corridors": [
+        "Commercial Drive (Venables to Broadway)",
+        "Clark Drive (Hastings to 12th Ave)",
+        "Hastings St (Clark to Boundary)"
+      ],
+      "hoursText": "07:00-09:30 & 15:00-18:00 Mon-Fri"
+    },
+    "activeAlerts": [
+      "Clark Drive & Hastings St major arterial tow lanes during morning/evening commute."
+    ],
+    "satelliteLotsNearby": [],
+    "popularDestinations": [
+      "Commercial Drive Italian Quarter",
+      "Grandview Park",
+      "Trout Lake / John Hendry Park"
+    ]
+  },
+  {
+    "id": "olympic-village",
+    "name": "Olympic Village & Fairview",
+    "slug": "olympic-village",
+    "municipality": "City of Vancouver",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": true,
+      "modoExempt": true,
+      "permitZoneCode": "Zone 4 / 7",
+      "description": "Evo exempt on residential streets. Watch for private strata courtyard restrictions."
+    },
+    "meterRules": {
+      "freeOvernightHours": "22:00 - 09:00",
+      "daytimeRateRange": "$3.00 - $5.50/hr",
+      "maxTimeLimit": "2 Hours"
+    },
+    "sweepingSchedule": {
+      "frequency": "Bi-weekly Schedule",
+      "sweepDays": "1st & 3rd Friday",
+      "sweepHours": "07:00 - 11:00",
+      "seasonalLeafCleaning": false
+    },
+    "rushHourLanes": {
+      "corridors": [
+        "2nd Avenue (Cambie to Main)",
+        "Cambie St (Pacific to 16th Ave)"
+      ],
+      "hoursText": "07:00-09:30 & 15:00-18:00 Mon-Fri"
+    },
+    "activeAlerts": [
+      "Cambie Bridge & 2nd Ave corridors have active peak rush lanes."
+    ],
+    "satelliteLotsNearby": [],
+    "popularDestinations": [
+      "False Creek Seawall",
+      "Hinge Park & Habitat Island",
+      "Science World Plaza"
+    ]
+  },
+  {
+    "id": "ubc",
+    "name": "UBC Point Grey Campus",
+    "slug": "ubc",
+    "municipality": "University Endowment Lands / UBC",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": false,
+      "modoExempt": false,
+      "permitZoneCode": "UBC Campus Restricted",
+      "description": "Trips CANNOT be ended on general campus roads. Must park in dedicated parkades."
+    },
+    "meterRules": {
+      "freeOvernightHours": "None (Parkades 24/7)",
+      "daytimeRateRange": "Designated Parkades Only",
+      "maxTimeLimit": "Unlimited in designated stalls"
+    },
+    "sweepingSchedule": {
+      "frequency": "Campus Maintenance",
+      "sweepDays": "Monthly",
+      "sweepHours": "Overnight",
+      "seasonalLeafCleaning": false
+    },
+    "rushHourLanes": {
+      "corridors": ["SW Marine Dr & Chancellor Blvd (Approaches)"],
+      "hoursText": "No curbside stopping anytime"
+    },
+    "activeAlerts": [
+      "⚠️ STRICT: Ending trips on UBC campus streets is prohibited. You MUST park in North Parkade, Thunderbird Parkade, or Fraser Parkade."
+    ],
+    "satelliteLotsNearby": ["ubc-north-parkade", "ubc-thunderbird-parkade"],
+    "popularDestinations": [
+      "UBC Student Nest",
+      "Museum of Anthropology",
+      "Wreck Beach Trailhead",
+      "UBC Aquatic Centre"
+    ]
+  },
+  {
+    "id": "north-van",
+    "name": "City of North Vancouver",
+    "slug": "north-van",
+    "municipality": "City of North Vancouver",
+    "insideHomeZone": true,
+    "residentialPermitRules": {
+      "evoExempt": true,
+      "modoExempt": true,
+      "permitZoneCode": "CNV Residential",
+      "description": "Evo exempt in City of North Vancouver residential permit and 2-hour zones within Home Zone boundary."
+    },
+    "meterRules": {
+      "freeOvernightHours": "18:00 - 09:00",
+      "daytimeRateRange": "$1.50 - $3.00/hr",
+      "maxTimeLimit": "2 Hours on Lonsdale Ave"
+    },
+    "sweepingSchedule": {
+      "frequency": "Weekly Tuesdays",
+      "sweepDays": "Every Tuesday",
+      "sweepHours": "07:00 - 11:00",
+      "seasonalLeafCleaning": true
+    },
+    "rushHourLanes": {
+      "corridors": [
+        "Lonsdale Ave (Esplanade to 29th St)",
+        "Marine Drive (Capilano to Ironworkers)"
+      ],
+      "hoursText": "07:00-09:00 & 16:00-18:00 Mon-Fri"
+    },
+    "activeAlerts": [
+      "Home Zone covers City of North Vancouver (South of Highway 1 and Upper Lonsdale). Check app boundary."
+    ],
+    "satelliteLotsNearby": ["grouse-mountain-base"],
+    "popularDestinations": [
+      "The Shipyards & Lonsdale Quay",
+      "Lower Lonsdale (LoLo) Dining",
+      "Victoria Park"
+    ]
+  }
+]

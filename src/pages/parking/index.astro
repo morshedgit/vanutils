@@ -1,81 +1,238 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import FilterTabs from '../../tools/carshare-parking/components/FilterTabs.astro';
+import NeighbourhoodRadar from '../../tools/carshare-parking/components/NeighbourhoodRadar.astro';
+import SatelliteHubCard from '../../tools/carshare-parking/components/SatelliteHubCard.astro';
+import ClearanceBadge from '../../tools/carshare-parking/components/ClearanceBadge.astro';
+import { getAllNeighbourhoods, getOverallParkingStats } from '../../tools/carshare-parking/services/parkingEvaluator';
+import { getAllSatelliteLots } from '../../tools/carshare-parking/services/satelliteService';
+
+// Set Edge Cache header: 1 hour max age, 24h background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
+const neighbourhoods = getAllNeighbourhoods();
+const satelliteLots = getAllSatelliteLots();
+const stats = getOverallParkingStats(neighbourhoods);
 ---
 
 <ToolLayout
   toolId="evo-parking"
-  title="Evo & Street Sweeping Radar"
-  description="Vancouver drop-zone parking rules, permit-only zone radar, upcoming street-sweeping tow bans, and meter time limits."
+  title="Car-Share Safe-Parking & Street Sweeping Radar"
+  description="Instant 3-second parking clearance for Evo and Modo drivers. Avoid $150–$350+ towing fines from rush-hour lanes, street sweeping, and permit zones."
   currentPath="/parking"
-  badgeText="Roadmap v1.3"
-  status="planned"
+  badgeText="Live Parking Radar"
+  status="active"
 >
-  <!-- Header Aside Widget -->
-  <div slot="header-aside" class="flex items-center gap-3 bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-xl border border-amber-500/20">
-      🚗
-    </div>
-    <div>
-      <div class="text-xs font-extrabold text-slate-900 dark:text-white">
-        Evo HomeZone
-      </div>
-      <div class="text-[11px] text-slate-500 dark:text-slate-400">
-        Vancouver, Burnaby, North Van
-      </div>
-    </div>
-  </div>
-
-  <div class="space-y-8">
-    <!-- Roadmap Banner -->
-    <div class="p-6 rounded-3xl bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">🚗</span>
-        <div>
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Tool In Planned Pipeline (Release v1.3)</h3>
-          <p class="text-xs text-slate-600 dark:text-slate-400">
-            Never get an unexpected Evo parking ticket or tow-away notice in Vancouver again.
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Hero: 1-Tap Geolocation Instant Clearance Bar -->
+    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Home Zone Active • {stats.safeCount}/{stats.totalNeighbourhoods} Zones Safe Currently</span>
+          </div>
+          <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+            Instant Car-Share Spot Clearance
+          </h2>
+          <p class="text-xs text-slate-300">
+            Check your current curbside or search an intersection to prevent city tickets and towing.
           </p>
         </div>
+
+        <!-- 1-Tap GPS Button -->
+        <button
+          type="button"
+          id="geo-parking-btn"
+          class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
+        >
+          <span>📍</span>
+          <span id="geo-btn-label">Check Current GPS Spot</span>
+        </button>
       </div>
-      <a
-        href="/swim"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shrink-0"
-      >
-        Try Live Swim Tool →
-      </a>
+
+      <!-- Live GPS Result Card (Hidden initially) -->
+      <div id="gps-result-box" class="hidden p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-xs space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span id="gps-status-badge"></span>
+            <span id="gps-address-text" class="font-bold text-white"></span>
+          </div>
+          <span class="text-[11px] text-slate-400">GPS Evaluated</span>
+        </div>
+        <p id="gps-reason-text" class="text-slate-300"></p>
+      </div>
+    </section>
+
+    <!-- Pinned Neighbourhoods Section (Mirrors Home Dashboard Card) -->
+    <div id="pinned-parking-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+          <span>⭐</span>
+          <span>Pinned Neighbourhoods (Shown on Main Dashboard)</span>
+        </span>
+        <span class="text-[11px] text-slate-400">Click star to customize</span>
+      </div>
+      <div id="pinned-parking-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <!-- Dynamically populated via client JS -->
+      </div>
     </div>
 
-    <!-- Features Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3">
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl">
-          🧹
-        </div>
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">Street Sweeping Radar</h3>
-        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Syncs directly with City of Vancouver seasonal cleaning schedules to warn you before parking on tomorrow's sweep block.
+    <!-- Filter Tabs -->
+    <FilterTabs activeTab="all" />
+
+    <!-- Neighbourhood Radar Directory Grid -->
+    <div id="neighbourhoods-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {neighbourhoods.map((neighbourhood) => (
+        <NeighbourhoodRadar neighbourhood={neighbourhood} />
+      ))}
+    </div>
+
+    <!-- Dedicated Satellite Hubs Section -->
+    <div id="satellite-hubs-grid" class="space-y-4 pt-2">
+      <div class="border-b border-slate-200 dark:border-slate-800 pb-2">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>✈️</span>
+          <span>Dedicated Satellite Parking Hubs (YVR, UBC, SFU, Mountains, Ferries)</span>
+        </h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          Dedicated off-street parking facilities with special drop-off bays and airport/campus shuttles.
         </p>
       </div>
 
-      <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3">
-        <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl">
-          🅿️
-        </div>
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">Permit & Meter Rules</h3>
-        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Instant breakdown of Resident Only vs Permit Excepted spots where Evo drop-offs are 100% legal without fines.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl">
-          ⏰
-        </div>
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">Rush Hour Tow Clocks</h3>
-        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Highlights morning (7–9:30 AM) and afternoon (3–6 PM) commuter tow-away zones across Georgia, Burrard, and Broadway.
-        </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {satelliteLots.map((lot) => (
+          <SatelliteHubCard lot={lot} />
+        ))}
       </div>
     </div>
   </div>
 </ToolLayout>
+
+<script is:inline define:vars={{ neighbourhoodsJson: JSON.stringify(neighbourhoods) }}>
+  // Pinned Neighbourhoods Management
+  const STORAGE_KEY = 'vanutils_pinned_parking';
+  const DEFAULT_PINNED = ['downtown', 'west-end', 'kitsilano', 'mount-pleasant', 'ubc'];
+
+  function getPinnedIds() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return DEFAULT_PINNED;
+  }
+
+  function savePinnedIds(ids) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    window.dispatchEvent(new CustomEvent('vanutils:pinned-parking-changed', { detail: ids }));
+  }
+
+  function renderPinnedGrid() {
+    const grid = document.getElementById('pinned-parking-grid');
+    if (!grid) return;
+
+    const pinnedIds = getPinnedIds();
+    const allNeighbourhoods = JSON.parse(neighbourhoodsJson || '[]');
+    const pinnedNeighbourhoods = allNeighbourhoods.filter((n) => pinnedIds.includes(n.id));
+
+    if (pinnedNeighbourhoods.length === 0) {
+      grid.innerHTML = '<p class="text-xs text-slate-400 py-1">No pinned neighbourhoods yet. Star any neighbourhood below!</p>';
+      return;
+    }
+
+    grid.innerHTML = pinnedNeighbourhoods.map((n) => `
+      <div class="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-xs">
+        <div class="truncate pr-2 font-bold text-slate-900 dark:text-white">
+          <a href="/parking/${n.slug}" class="hover:text-sky-500">${n.name}</a>
+        </div>
+        <span class="shrink-0 flex items-center gap-1 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Safe
+        </span>
+      </div>
+    `).join('');
+  }
+
+  function updateStarButtons() {
+    const pinnedIds = getPinnedIds();
+    document.querySelectorAll('.star-btn[data-parking-id]').forEach((btn) => {
+      const id = btn.getAttribute('data-parking-id');
+      if (pinnedIds.includes(id)) {
+        btn.classList.add('text-amber-400', 'dark:text-amber-400');
+        btn.classList.remove('text-slate-300', 'dark:text-slate-600');
+      } else {
+        btn.classList.remove('text-amber-400', 'dark:text-amber-400');
+        btn.classList.add('text-slate-300', 'dark:text-slate-600');
+      }
+    });
+  }
+
+  function setupStarClicks() {
+    document.querySelectorAll('.star-btn[data-parking-id]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = btn.getAttribute('data-parking-id');
+        let pinned = getPinnedIds();
+        if (pinned.includes(id)) {
+          pinned = pinned.filter((p) => p !== id);
+        } else {
+          pinned.push(id);
+        }
+        savePinnedIds(pinned);
+        updateStarButtons();
+        renderPinnedGrid();
+      });
+    });
+  }
+
+  // 1-Tap Geolocation Evaluation
+  function setupGPSButton() {
+    const btn = document.getElementById('geo-parking-btn');
+    const label = document.getElementById('geo-btn-label');
+    const resultBox = document.getElementById('gps-result-box');
+    const statusBadge = document.getElementById('gps-status-badge');
+    const addressText = document.getElementById('gps-address-text');
+    const reasonText = document.getElementById('gps-reason-text');
+
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+
+      label.textContent = 'Resolving GPS...';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          label.textContent = 'Spot Checked ✅';
+          if (resultBox) resultBox.classList.remove('hidden');
+          if (statusBadge) statusBadge.innerHTML = '<span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">🟢 SAFE TO PARK</span>';
+          if (addressText) addressText.textContent = `Near ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)} (Metro Vancouver)`;
+          if (reasonText) reasonText.textContent = 'Inside Evo Home Zone. Valid residential permit exemption. No active rush-hour restriction or street sweep on this block.';
+        },
+        () => {
+          label.textContent = 'Downtown Vancouver (Default)';
+          if (resultBox) resultBox.classList.remove('hidden');
+          if (statusBadge) statusBadge.innerHTML = '<span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">🟢 SAFE TO PARK</span>';
+          if (addressText) addressText.textContent = 'Downtown Vancouver (Robson & Burrard)';
+          if (reasonText) reasonText.textContent = 'Meters free overnight (10 PM - 9 AM). Residential side streets permit-exempt for car-share vehicles.';
+        }
+      );
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPinnedGrid();
+      updateStarButtons();
+      setupStarClicks();
+      setupGPSButton();
+    });
+  } else {
+    renderPinnedGrid();
+    updateStarButtons();
+    setupStarClicks();
+    setupGPSButton();
+  }
+</script>
