@@ -3,175 +3,64 @@ import PlatformLayout from '../layouts/PlatformLayout.astro';
 import ToolCard from '../components/shared/ToolCard.astro';
 import { TOOLS_REGISTRY } from '../config/tools';
 import { getAllBeaches, getBeachStats } from '../tools/can-i-swim/services/vchScraper';
-import StatusBadge from '../components/shared/StatusBadge.astro';
 
 const allTools = TOOLS_REGISTRY;
 const allBeaches = getAllBeaches();
 const beachStats = getBeachStats(allBeaches);
-
-// Featured top beaches for quick widget
-const featuredBeachSlugs = ['english-bay-beach', 'kitsilano-beach', 'sasamat-lake-white-pine', 'sunset-beach'];
-const featuredBeaches = allBeaches.filter((b) => featuredBeachSlugs.includes(b.id));
 ---
 
 <PlatformLayout
   title="VanUtils — Vancouver Micro-Utilities Hub"
-  description="Ultra-fast, zero-friction local utilities for Metro Vancouver. Beach water safety, ferry standby radar, mountain snow lines, and city tools in sub-second speed."
+  description="Fast, single-purpose local tools for Metro Vancouver. Beach water quality, ferry radar, snow levels, and city tools."
   currentPath="/"
 >
-  <div class="space-y-12">
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-sky-500/10 via-teal-500/5 to-transparent border border-sky-500/20 p-6 sm:p-10 lg:p-12 text-center">
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-sky-500/30 text-sky-600 dark:text-sky-400 text-xs font-bold mb-6 shadow-xs animate-pulse-subtle">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span>Metro Vancouver Local Intelligence</span>
+  <div class="space-y-10">
+    <!-- Clean, Focused Hero -->
+    <section class="text-center py-6 sm:py-8 space-y-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300 text-xs font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Vancouver Local Intelligence</span>
       </div>
 
-      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-3xl mx-auto leading-tight">
-        Single-purpose local tools. <br class="hidden sm:inline" />
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-teal-500 to-emerald-500">
-          Sub-second speed.
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        Hyper-local tools for <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-emerald-500">
+          Metro Vancouver
         </span>
       </h1>
 
-      <p class="mt-4 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl mx-auto leading-relaxed">
-        No bulky app downloads. No medical tables. No banner ads. Just immediate answers for Vancouver beach water, ferries, mountain snow, and city life.
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-lg mx-auto">
+        Sub-second single-purpose utilities. No ads, no tracking, no bloat.
       </p>
 
-      <!-- Global Universal Search -->
-      <div class="mt-8 max-w-xl mx-auto relative">
-        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-        <input
-          type="search"
-          id="hub-search-input"
-          placeholder="Search utilities, beaches, or keywords (e.g. swim, kits, ferries, snow)..."
-          class="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm text-slate-900 dark:text-white placeholder-slate-400 shadow-lg shadow-sky-500/5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
-        />
-      </div>
-
-      <!-- Quick Metrics Ribbon -->
-      <div class="mt-8 flex flex-wrap justify-center items-center gap-3 sm:gap-6 text-xs text-slate-600 dark:text-slate-400">
-        <div class="flex items-center gap-2 bg-white/80 dark:bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-200/80 dark:border-slate-800">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="font-semibold text-slate-900 dark:text-white">{beachStats.safe}/{beachStats.total}</span>
-          <span>Clean Beaches</span>
-        </div>
-        <div class="flex items-center gap-2 bg-white/80 dark:bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-200/80 dark:border-slate-800">
-          <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-          <span class="font-semibold text-slate-900 dark:text-white">&lt; 0.8s</span>
-          <span>Edge CDN Speed</span>
-        </div>
-        <div class="flex items-center gap-2 bg-white/80 dark:bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-200/80 dark:border-slate-800">
-          <span class="w-2 h-2 rounded-full bg-teal-500"></span>
-          <span class="font-semibold text-slate-900 dark:text-white">100%</span>
-          <span>Private & Ad-Free</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Quick Live Beach Radar Widget -->
-    <section class="rounded-3xl bg-gradient-to-r from-sky-500/5 via-teal-500/5 to-emerald-500/5 border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-xl">🌊</span>
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Live Beach Water Quality Radar</h2>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              Live VCH Data
-            </span>
-          </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Current bacterial conditions at Metro Vancouver's most frequented beaches
-          </p>
-        </div>
+      <!-- Live Quick Status Pill -->
+      <div class="pt-2">
         <a
           href="/swim"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-md shadow-sky-600/20 transition-all group"
+          class="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-sky-500/50 hover:shadow-md transition-all text-xs"
         >
-          <span>Explore All 35+ Beaches</span>
-          <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
+          <span class="text-base">🌊</span>
+          <span class="font-bold text-slate-900 dark:text-white">Can I Swim Today?</span>
+          <span class="text-emerald-700 dark:text-emerald-300 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-md">
+            {beachStats.safe}/{beachStats.total} Beaches Safe
+          </span>
+          <span class="text-sky-600 dark:text-sky-400 font-bold">Open →</span>
         </a>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {featuredBeaches.map((beach) => (
-          <a
-            href={`/swim/${beach.id}`}
-            class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-sky-500/50 dark:hover:border-sky-500/50 hover:shadow-md transition-all flex flex-col justify-between group"
-          >
-            <div>
-              <div class="flex items-center justify-between gap-2 mb-2">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">
-                  {beach.municipality}
-                </span>
-                <StatusBadge status={beach.currentStatus} size="sm" />
-              </div>
-              <h3 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors leading-snug line-clamp-1">
-                {beach.name}
-              </h3>
-            </div>
-            <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-              <span class="text-slate-500 dark:text-slate-400 text-[11px]">30-Day Mean:</span>
-              <span class="font-extrabold text-slate-900 dark:text-white">{beach.latestSample.eColiCount} CFU</span>
-            </div>
-          </a>
-        ))}
       </div>
     </section>
 
-    <!-- Utilities Directory Section -->
-    <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            Micro-Utilities Directory
-          </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Dedicated single-purpose tools tailored for Greater Vancouver
-          </p>
-        </div>
-
-        <!-- Category Filter Chips -->
-        <div class="flex flex-wrap gap-1.5" id="hub-category-filters">
-          <button
-            type="button"
-            data-category="all"
-            class="hub-cat-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs transition-all"
-          >
-            All Categories
-          </button>
-          <button
-            type="button"
-            data-category="outdoors"
-            class="hub-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
-          >
-            🌲 Outdoors & Ocean
-          </button>
-          <button
-            type="button"
-            data-category="transit"
-            class="hub-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
-          >
-            ⛴️ Transit & Ferries
-          </button>
-          <button
-            type="button"
-            data-category="daily_living"
-            class="hub-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
-          >
-            🚗 Daily Living
-          </button>
-        </div>
+    <!-- Utilities Directory Grid -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+          All Utilities
+        </h2>
+        <span class="text-xs text-slate-500 dark:text-slate-400">
+          {allTools.length} tools available & planned
+        </span>
       </div>
 
-      <!-- Tools Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tools-grid">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="tools-grid">
         {allTools.map((tool) => (
           <ToolCard tool={tool} />
         ))}
@@ -179,102 +68,3 @@ const featuredBeaches = allBeaches.filter((b) => featuredBeachSlugs.includes(b.i
     </section>
   </div>
 </PlatformLayout>
-
-<script>
-  function setupHub() {
-    const searchInput = document.getElementById('hub-search-input') as HTMLInputElement;
-    const catButtons = document.querySelectorAll('.hub-cat-btn');
-    const toolCards = document.querySelectorAll('.tool-card');
-
-    let activeCategory = 'all';
-    let searchQuery = '';
-
-    function filterTools() {
-      toolCards.forEach((card) => {
-        const cat = card.getAttribute('data-tool-category') || '';
-        const name = (card.getAttribute('data-tool-name') || '').toLowerCase();
-        const text = card.textContent?.toLowerCase() || '';
-
-        const matchesCat = activeCategory === 'all' || cat === activeCategory;
-        const matchesSearch =
-          !searchQuery || name.includes(searchQuery) || text.includes(searchQuery);
-
-        if (matchesCat && matchesSearch) {
-          (card as HTMLElement).style.display = 'flex';
-        } else {
-          (card as HTMLElement).style.display = 'none';
-        }
-      });
-    }
-
-    searchInput?.addEventListener('input', (e) => {
-      searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
-      filterTools();
-    });
-
-    catButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        catButtons.forEach((b) => {
-          b.classList.remove('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-semibold');
-          b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'font-medium');
-        });
-        btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300', 'font-medium');
-        btn.classList.add('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-semibold');
-
-        activeCategory = btn.getAttribute('data-category') || 'all';
-        filterTools();
-      });
-    });
-
-    // Pinning / favorite toggle logic
-    const pinBtns = document.querySelectorAll('.pin-tool-btn');
-    const pinnedKey = 'vanutils_pinned_tools';
-
-    function getPinned(): string[] {
-      try {
-        return JSON.parse(localStorage.getItem(pinnedKey) || '[]');
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function updatePinUI() {
-      const pinned = getPinned();
-      pinBtns.forEach((btn) => {
-        const id = btn.getAttribute('data-tool-id');
-        if (id && pinned.includes(id)) {
-          btn.classList.add('text-amber-500', 'dark:text-amber-400');
-          btn.classList.remove('text-slate-300', 'dark:text-slate-600');
-          btn.setAttribute('title', 'Pinned to top');
-        } else {
-          btn.classList.remove('text-amber-500', 'dark:text-amber-400');
-          btn.classList.add('text-slate-300', 'dark:text-slate-600');
-          btn.setAttribute('title', 'Pin this utility to top');
-        }
-      });
-    }
-
-    pinBtns.forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = btn.getAttribute('data-tool-id');
-        if (!id) return;
-
-        let pinned = getPinned();
-        if (pinned.includes(id)) {
-          pinned = pinned.filter((p) => p !== id);
-        } else {
-          pinned.push(id);
-        }
-        localStorage.setItem(pinnedKey, JSON.stringify(pinned));
-        updatePinUI();
-      });
-    });
-
-    updatePinUI();
-  }
-
-  setupHub();
-  document.addEventListener('astro:page-load', setupHub);
-</script>

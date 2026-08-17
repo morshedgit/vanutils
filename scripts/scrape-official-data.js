@@ -14,7 +14,6 @@ const __dirname = path.dirname(__filename);
 const DATA_FILE = path.resolve(__dirname, '../src/tools/can-i-swim/data/beaches.json');
 
 const METRO_VAN_BEACH_SITE_URL = 'https://gis.metrovancouver.org/arcgis/rest/services/Hosted/Beach_Site/FeatureServer/8/query?where=1%3D1&outFields=*&f=json&outSR=4326';
-const METRO_VAN_SAMPLING_URL = 'https://gis.metrovancouver.org/arcgis/rest/services/Hosted/Beach_Sampling_Site/FeatureServer/2/query?where=1%3D1&outFields=*&f=json&outSR=4326';
 
 // Real-world verified amenities, transit & characteristics mapping for Metro Vancouver beaches
 const BEACH_METADATA = {
