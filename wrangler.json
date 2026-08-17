@@ -6,7 +6,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    "exclude": ["_worker.js/**", "_worker.js"]
   },
   "build": {
     "command": "npm run build"
