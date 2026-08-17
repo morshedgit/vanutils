@@ -38,7 +38,7 @@ const { beach, distanceKm } = Astro.props;
       <span>•</span>
       <span class="distance-text">{distanceKm ? `${distanceKm.toFixed(1)} km` : 'Calculating...'}</span>
       <span>•</span>
-      <span>{beach.latestSample.eColiCount} CFU</span>
+      <span>{beach.currentStatus === 'unmonitored' ? 'Awaiting lab test' : `${beach.latestSample.eColiCount} CFU`}</span>
     </div>
   </a>
 
@@ -58,6 +58,11 @@ const { beach, distanceKm } = Astro.props;
       {beach.currentStatus === 'advisory' && (
         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20">
           <span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory
+        </span>
+      )}
+      {beach.currentStatus === 'unmonitored' && (
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span> Off-Season
         </span>
       )}
     </a>

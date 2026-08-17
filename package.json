@@ -11,6 +11,7 @@
     "check": "astro check",
     "data:sync": "node scripts/sync-data.js",
     "data:scrape": "node scripts/scrape-official-data.js",
+    "ferries:sync": "node scripts/sync-live-ferries.js",
     "deploy": "wrangler deploy"
   },
   "repository": {
