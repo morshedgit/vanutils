@@ -19,15 +19,10 @@ export function getSatelliteLotsByCategory(category: string): SatelliteLot[] {
 export function getSatelliteStats() {
   const totalLots = SATELLITE_LOTS.length;
   const totalStalls = SATELLITE_LOTS.reduce((acc, lot) => acc + lot.totalStalls, 0);
-  const totalEstimatedAvailable = SATELLITE_LOTS.reduce(
-    (acc, lot) => acc + (lot.availableStallsEstimate || Math.round(lot.totalStalls * 0.7)),
-    0
-  );
 
   return {
     totalLots,
     totalStalls,
-    totalEstimatedAvailable,
     airportLotsCount: SATELLITE_LOTS.filter((l) => l.category === 'airport').length,
     universityLotsCount: SATELLITE_LOTS.filter((l) => l.category === 'university').length,
     mountainLotsCount: SATELLITE_LOTS.filter((l) => l.category === 'mountain').length,

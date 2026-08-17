@@ -55,7 +55,6 @@ export interface SatelliteLot {
   latitude: number;
   longitude: number;
   totalStalls: number;
-  availableStallsEstimate?: number;
   accessInstructions: string;
   feeDetails: string;
   operatingHours: string;
