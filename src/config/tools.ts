@@ -11,8 +11,8 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     status: 'active',
     badgeText: 'Summer Favorite',
     previewStat: {
-      value: '33/36 Clean',
-      label: 'Beaches Safe Today',
+      value: '31 Beaches',
+      label: 'Monitored Sites',
       statusType: 'safe',
     },
     features: [
