@@ -2,11 +2,8 @@
 import PlatformLayout from '../layouts/PlatformLayout.astro';
 import ToolCard from '../components/shared/ToolCard.astro';
 import { TOOLS_REGISTRY } from '../config/tools';
-import { getAllBeaches, getBeachStats } from '../tools/can-i-swim/services/vchScraper';
 
 const allTools = TOOLS_REGISTRY;
-const allBeaches = getAllBeaches();
-const beachStats = getBeachStats(allBeaches);
 ---
 
 <PlatformLayout
@@ -14,53 +11,26 @@ const beachStats = getBeachStats(allBeaches);
   description="Fast, single-purpose local tools for Metro Vancouver. Beach water quality, ferry radar, snow levels, and city tools."
   currentPath="/"
 >
-  <div class="space-y-10">
-    <!-- Clean, Focused Hero -->
-    <section class="text-center py-6 sm:py-8 space-y-4">
+  <div class="space-y-8 max-w-5xl mx-auto">
+    <!-- Clean Minimalist Header -->
+    <header class="text-center py-4 sm:py-6 space-y-2">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300 text-xs font-semibold">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>Vancouver Local Intelligence</span>
+        <span>Metro Vancouver Micro-Utilities</span>
       </div>
 
-      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
-        Hyper-local tools for <br class="hidden sm:inline" />
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-emerald-500">
-          Metro Vancouver
-        </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        VanUtils Dashboard
       </h1>
 
-      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-lg mx-auto">
-        Sub-second single-purpose utilities. No ads, no tracking, no bloat.
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+        Single-purpose hyper-local tools with sub-second speed. No ads, no tracking.
       </p>
+    </header>
 
-      <!-- Live Quick Status Pill -->
-      <div class="pt-2">
-        <a
-          href="/swim"
-          class="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-sky-500/50 hover:shadow-md transition-all text-xs"
-        >
-          <span class="text-base">🌊</span>
-          <span class="font-bold text-slate-900 dark:text-white">Can I Swim Today?</span>
-          <span class="text-emerald-700 dark:text-emerald-300 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-md">
-            {beachStats.safe}/{beachStats.total} Beaches Safe
-          </span>
-          <span class="text-sky-600 dark:text-sky-400 font-bold">Open →</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Utilities Directory Grid -->
-    <section class="space-y-4">
-      <div class="flex items-center justify-between px-1">
-        <h2 class="text-lg font-bold text-slate-900 dark:text-white">
-          All Utilities
-        </h2>
-        <span class="text-xs text-slate-500 dark:text-slate-400">
-          {allTools.length} tools available & planned
-        </span>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="tools-grid">
+    <!-- Main Dashboard: One Card Per Utility -->
+    <section>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="utilities-grid">
         {allTools.map((tool) => (
           <ToolCard tool={tool} />
         ))}
