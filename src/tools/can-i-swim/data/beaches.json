@@ -1,896 +1,128 @@
 [
   {
-    "id": "english-bay-beach",
-    "name": "English Bay Beach (First Beach)",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2863,
-    "longitude": -123.1437,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 19.4,
-    "description": "Vancouver's most iconic downtown beach, located along Beach Avenue and Denman Street with direct Stanley Park seawall access.",
-    "bestFor": ["Sunset views", "Open water swimming", "Seawall walks", "Volleyball"],
-    "parkingInfo": "Pay parking along Beach Ave and Denman St. Limited city lots.",
-    "transitInfo": "Bus #5 (Robson) or #6 (Davie) directly to Denman and Davie.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 38,
-      "singleSampleCount": 42,
-      "status": "safe",
-      "notes": "Clear water, low tidal sediment"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 24, "singleSampleCount": 28, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 31, "singleSampleCount": 35, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 46, "singleSampleCount": 58, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 34, "singleSampleCount": 30, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 38, "singleSampleCount": 42, "status": "safe" }
-    ]
-  },
-  {
-    "id": "kitsilano-beach",
-    "name": "Kitsilano Beach (Kits Beach)",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2743,
-    "longitude": -123.1539,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 19.8,
-    "description": "One of Vancouver's most vibrant coastal parks with wide sandy shores, outdoor basketball and volleyball courts, and the famed saltwater Kits Pool.",
-    "bestFor": ["Lap swimming", "Social beach days", "Outdoor sports", "Paddleboarding"],
-    "parkingInfo": "Paid lots adjacent to Kits Pool and Arbutus St.",
-    "transitInfo": "Bus #2, #4, or #7 along Cornwall or 4th Ave.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 26,
-      "singleSampleCount": 30,
-      "status": "safe",
-      "notes": "Excellent water quality"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 18, "singleSampleCount": 20, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 22, "singleSampleCount": 24, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 35, "singleSampleCount": 40, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 29, "singleSampleCount": 25, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 26, "singleSampleCount": 30, "status": "safe" }
-    ]
-  },
-  {
-    "id": "sunset-beach",
-    "name": "Sunset Beach",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2801,
-    "longitude": -123.1378,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "caution",
-    "waterTempC": 18.9,
-    "advisoryReason": "Elevated single-sample bacterial count following False Creek tidal exchange. Resampling in progress.",
-    "description": "Situated at the mouth of False Creek near the Burrard Street Bridge, known for peaceful sunsets and quiet waters.",
-    "bestFor": ["Rollerblading", "Kayaking", "Casual lounging"],
-    "parkingInfo": "Paid parking lot at Beach Ave and Thurlow St.",
-    "transitInfo": "Bus #23 (Beach) or Aquabus / False Creek Ferry from Granville Island.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-15",
-      "eColiCount": 142,
-      "singleSampleCount": 280,
-      "status": "caution",
-      "notes": "Single sample 280 CFU/100mL triggered Beach Action Value. Resampling scheduled."
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 65, "singleSampleCount": 78, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 88, "singleSampleCount": 110, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 112, "singleSampleCount": 160, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 125, "singleSampleCount": 190, "status": "safe" },
-      { "date": "2026-08-15", "eColiCount": 142, "singleSampleCount": 280, "status": "caution" }
-    ]
-  },
-  {
-    "id": "jericho-beach",
-    "name": "Jericho Beach",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2717,
-    "longitude": -123.1972,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 19.1,
-    "description": "Expansive sandy beach with grassy picnic lawns, the Jericho Sailing Centre, and wide open views of the North Shore mountains.",
-    "bestFor": ["Windsurfing", "Sailing", "Picnics", "Family days"],
-    "parkingInfo": "Large paid lot off Point Grey Road / Wallace St.",
-    "transitInfo": "Bus #4 (UBC) to 4th Ave and Wallace, 5 min walk north.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 22,
-      "singleSampleCount": 19,
-      "status": "safe",
-      "notes": "Low bacteria count, high clarity"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 16, "singleSampleCount": 18, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 20, "singleSampleCount": 22, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 24, "singleSampleCount": 30, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 21, "singleSampleCount": 25, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 22, "singleSampleCount": 19, "status": "safe" }
-    ]
-  },
-  {
-    "id": "spanish-banks-west",
-    "name": "Spanish Banks West",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2778,
-    "longitude": -123.2359,
-    "dogFriendly": true,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 19.7,
-    "description": "Designated quiet beach zone where amplified music is restricted. Massive low-tide sandflats and dedicated off-leash dog area.",
-    "bestFor": ["Tide pool exploration", "Off-leash dogs", "Quiet relaxation", "Kiteboarding"],
-    "parkingInfo": "Free city parking lots along NW Marine Drive (fill quickly on hot weekends).",
-    "transitInfo": "Bus #4 or #84 connecting to UBC exchanges.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 15,
-      "singleSampleCount": 14,
-      "status": "safe",
-      "notes": "Pristine open water flow"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 12, "singleSampleCount": 10, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 14, "singleSampleCount": 15, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 19, "singleSampleCount": 22, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 17, "singleSampleCount": 16, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 15, "singleSampleCount": 14, "status": "safe" }
-    ]
-  },
-  {
-    "id": "spanish-banks-east",
-    "name": "Spanish Banks East",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2758,
-    "longitude": -123.2162,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 19.5,
-    "description": "Popular family area with grassy shade spots, beach volleyball nets, and expansive tidal shallows at low tide.",
-    "bestFor": ["Volleyball", "Barbecues", "Wading", "Family beach days"],
-    "parkingInfo": "Free lots along NW Marine Drive.",
-    "transitInfo": "Bus #4 / #84 to NW Marine Dr & Tolmie St.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 18,
-      "singleSampleCount": 16,
-      "status": "safe",
-      "notes": "Clean tidal water"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 15, "singleSampleCount": 14, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 16, "singleSampleCount": 18, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 22, "singleSampleCount": 26, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 20, "singleSampleCount": 18, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 18, "singleSampleCount": 16, "status": "safe" }
-    ]
-  },
-  {
-    "id": "spanish-banks-extension",
-    "name": "Spanish Banks Extension",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2792,
-    "longitude": -123.2458,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 19.6,
-    "description": "The westernmost stretch of Spanish Banks, featuring rugged coastal sand flats, kitesurfer launches, and an expansive off-leash pet area.",
-    "bestFor": ["Kitesurfing", "Dog walking", "Tidal walks", "Sunset views"],
-    "parkingInfo": "Free gravel parking lot along NW Marine Drive extension.",
-    "transitInfo": "Bus #4 to Blanca loop, then bike or walk west.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 13,
-      "singleSampleCount": 12,
-      "status": "safe",
-      "notes": "Clean open sea currents"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 10, "singleSampleCount": 11, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 12, "singleSampleCount": 13, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 16, "singleSampleCount": 18, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 14, "singleSampleCount": 15, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 13, "singleSampleCount": 12, "status": "safe" }
-    ]
-  },
-  {
-    "id": "locarno-beach",
-    "name": "Locarno Beach",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2741,
-    "longitude": -123.2084,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 19.3,
-    "description": "Designated quiet beach bordered by stately evergreen trees and tall grass dunes, ideal for reading and restful swim sessions.",
-    "bestFor": ["Quiet reading", "Shaded picnics", "Calm swimming"],
-    "parkingInfo": "Free parking lot off NW Marine Drive near Trimble St.",
-    "transitInfo": "Bus #4 along 4th Ave to Trimble St, walk 6 min north.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 20,
-      "singleSampleCount": 22,
-      "status": "safe",
-      "notes": "Low bacteria"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 17, "singleSampleCount": 19, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 19, "singleSampleCount": 21, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 25, "singleSampleCount": 28, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 21, "singleSampleCount": 24, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 20, "singleSampleCount": 22, "status": "safe" }
-    ]
-  },
-  {
-    "id": "second-beach-stanley-park",
-    "name": "Second Beach (Stanley Park)",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2947,
-    "longitude": -123.1503,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 18.7,
-    "description": "Located on the southwestern edge of Stanley Park next to Second Beach outdoor heated pool, pitch & putt, and playground.",
-    "bestFor": ["Family swim", "Pool & beach combo", "Seawall cycling"],
-    "parkingInfo": "Stanley Park paid parking lots at Stanley Park Drive / Lagoon Drive.",
-    "transitInfo": "Bus #19 into Stanley Park loop, then 10 min walk.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 32,
-      "singleSampleCount": 35,
-      "status": "safe",
-      "notes": "Clean Burrard Inlet tidal flow"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 22, "singleSampleCount": 25, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 28, "singleSampleCount": 30, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 40, "singleSampleCount": 44, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 35, "singleSampleCount": 38, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 32, "singleSampleCount": 35, "status": "safe" }
-    ]
-  },
-  {
-    "id": "third-beach-stanley-park",
-    "name": "Third Beach (Stanley Park)",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.3023,
-    "longitude": -123.1581,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 18.5,
-    "description": "Secluded, natural beach nestled in Ferguson Point with dense rainforest backdrop, drumming circles, and breathtaking ocean sunsets.",
-    "bestFor": ["Evening drum circles", "Sunset swimming", "Nature immersion"],
-    "parkingInfo": "Paid lot at Ferguson Point / Teahouse in Stanley Park.",
-    "transitInfo": "Bus #19 to Stanley Park loop, 20 min scenic forest walk or seawall bike.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 21,
-      "singleSampleCount": 18,
-      "status": "safe",
-      "notes": "Excellent ocean water quality"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 15, "singleSampleCount": 16, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 18, "singleSampleCount": 20, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 26, "singleSampleCount": 28, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 24, "singleSampleCount": 22, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 21, "singleSampleCount": 18, "status": "safe" }
-    ]
-  },
-  {
-    "id": "trout-lake-beach",
-    "name": "Trout Lake Beach (John Hendry Park)",
-    "municipality": "Vancouver",
-    "waterType": "freshwater_lake",
-    "latitude": 49.2553,
-    "longitude": -123.0636,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "advisory",
-    "waterTempC": 22.4,
-    "advisoryReason": "30-day geometric mean is 245 E. coli / 100 mL, exceeding recreational threshold (200 CFU/100mL). Active swimming advisory.",
-    "description": "East Vancouver's sole freshwater swimming lake set in the heart of John Hendry Park with dog park and community centre.",
-    "bestFor": ["Dog park swims", "Farmers market visits", "Picnics in the park"],
-    "parkingInfo": "Free parking lot off Victoria Drive and 15th Ave.",
-    "transitInfo": "Commercial-Broadway SkyTrain station, 8 min walk south.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-15",
-      "eColiCount": 245,
-      "singleSampleCount": 420,
-      "status": "advisory",
-      "notes": "Elevated bacteria due to high lake water temps and waterfowl presence. Advisory active."
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 110, "singleSampleCount": 140, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 160, "singleSampleCount": 190, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 210, "singleSampleCount": 280, "status": "advisory" },
-      { "date": "2026-08-08", "eColiCount": 230, "singleSampleCount": 360, "status": "advisory" },
-      { "date": "2026-08-15", "eColiCount": 245, "singleSampleCount": 420, "status": "advisory" }
-    ]
-  },
-  {
-    "id": "crab-park-beach",
-    "name": "CRAB Park Beach",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2842,
-    "longitude": -123.1009,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 18.2,
-    "description": "Portside green space overlooking the working harbor, Helijet pad, and container terminals with an off-leash dog area.",
-    "bestFor": ["Harbor views", "Dog play", "City skyline photography"],
-    "parkingInfo": "Pay parking lot at end of Main Street / Waterfront Road.",
-    "transitInfo": "Waterfront SkyTrain station, 8 min walk via overpass.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 44,
-      "singleSampleCount": 48,
-      "status": "safe",
-      "notes": "Within safe recreational limits"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 35, "singleSampleCount": 40, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 42, "singleSampleCount": 50, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 50, "singleSampleCount": 60, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 46, "singleSampleCount": 52, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 44, "singleSampleCount": 48, "status": "safe" }
-    ]
-  },
-  {
-    "id": "hadden-park-dog-beach",
-    "name": "Hadden Park (Kits Dog Beach)",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2782,
-    "longitude": -123.1491,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 19.3,
-    "description": "Vancouver's most beloved off-leash dog beach, adjacent to the Maritime Museum and Kits Beach with grassy bluffs and sandy tidal flats.",
-    "bestFor": ["Off-leash dogs", "Dog socialization", "Maritime museum views", "Paddleboarding with pets"],
-    "parkingInfo": "Paid parking lots at Maritime Museum and Kits Beach.",
-    "transitInfo": "Bus #2 along Cornwall, 5 min walk north.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 42,
-      "singleSampleCount": 48,
-      "status": "safe",
-      "notes": "Good tidal mixing"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 30, "singleSampleCount": 35, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 38, "singleSampleCount": 44, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 52, "singleSampleCount": 60, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 46, "singleSampleCount": 50, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 42, "singleSampleCount": 48, "status": "safe" }
-    ]
-  },
-  {
-    "id": "tower-beach-ubc",
-    "name": "Tower Beach (UBC / Trail 3)",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2711,
-    "longitude": -123.2612,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": false,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 18.2,
-    "description": "Rugged, pebbled beach named after WWII searchlight watchtowers, accessed via Pacific Spirit Park trail stairs.",
-    "bestFor": ["Rugged coastal exploration", "WWII historical towers", "Quiet nature walks"],
-    "parkingInfo": "Paid parking lots at UBC North Parkade or Marine Drive meter spots.",
-    "transitInfo": "Bus #4, #99 B-Line, or #84 to UBC Exchange, walk to Trail 3.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 14,
-      "singleSampleCount": 12,
-      "status": "safe",
-      "notes": "Pristine open Salish Sea waters"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 10, "singleSampleCount": 11, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 12, "singleSampleCount": 13, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 18, "singleSampleCount": 20, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 16, "singleSampleCount": 14, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 14, "singleSampleCount": 12, "status": "safe" }
-    ]
-  },
-  {
-    "id": "wreck-beach-ubc",
-    "name": "Wreck Beach (Trail 6)",
-    "municipality": "Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.2622,
-    "longitude": -123.2618,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 18.5,
-    "description": "North America's largest and most celebrated clothing-optional beach, framed by dramatic cliffs and 500 wooden forest steps.",
-    "bestFor": ["Clothing-optional sunbathing", "Community vibe", "Sunset drumming", "Nature immersion"],
-    "parkingInfo": "Paid parking meters along NW Marine Drive or UBC parkades.",
-    "transitInfo": "Bus #4, #99 B-Line, #44 to UBC Bus Exchange, walk 8 min to Trail 6 entrance.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 16,
-      "singleSampleCount": 15,
-      "status": "safe",
-      "notes": "Low bacteria"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 12, "singleSampleCount": 14, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 14, "singleSampleCount": 15, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 20, "singleSampleCount": 22, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 18, "singleSampleCount": 16, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 16, "singleSampleCount": 15, "status": "safe" }
-    ]
-  },
-  {
     "id": "ambleside-beach",
     "name": "Ambleside Beach",
     "municipality": "West Vancouver",
     "waterType": "ocean",
-    "latitude": 49.3275,
-    "longitude": -123.1582,
+    "latitude": 49.32531839669431,
+    "longitude": -123.15143438755454,
     "dogFriendly": true,
     "lifeguards": true,
     "washrooms": true,
     "wheelchairAccessible": true,
     "currentStatus": "safe",
     "waterTempC": 18.9,
-    "description": "Premier West Vancouver waterfront park with sandy beach, Lions Gate Bridge views, par-3 golf, skatepark, and expansive dog park.",
-    "bestFor": ["Views of Lions Gate", "Off-leash dog area", "Paddleboarding", "Seawalk"],
+    "description": "Premier West Vancouver waterfront park with sandy beach, Lions Gate Bridge views, par-3 golf, and dog park.",
+    "bestFor": [
+      "Views of Lions Gate",
+      "Off-leash dog area",
+      "Paddleboarding",
+      "Seawalk"
+    ],
     "parkingInfo": "Multiple free lots throughout Ambleside Park (entrance at 13th St).",
     "transitInfo": "Bus #250 / #257 from Downtown Vancouver across Lions Gate Bridge.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
     "latestSample": {
       "date": "2026-08-14",
       "eColiCount": 18,
       "singleSampleCount": 16,
       "status": "safe",
-      "notes": "Clear Burrard tidal flow"
+      "notes": "Pristine recreational water quality"
     },
     "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 12, "singleSampleCount": 14, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 15, "singleSampleCount": 16, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 22, "singleSampleCount": 24, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 19, "singleSampleCount": 18, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 18, "singleSampleCount": 16, "status": "safe" }
-    ]
-  },
-  {
-    "id": "dundarave-beach",
-    "name": "Dundarave Beach",
-    "municipality": "West Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.3338,
-    "longitude": -123.1824,
-    "dogFriendly": false,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 18.6,
-    "description": "Charming village beach at the west end of the Millennium Centennial Seawalk with a historic pier, beach house bistro, and wading pool.",
-    "bestFor": ["Quiet seaside walks", "Pier jumping", "Village cafes"],
-    "parkingInfo": "Street parking along Marine Drive and 25th Street.",
-    "transitInfo": "Bus #250 along Marine Drive to 25th St.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 14,
-      "singleSampleCount": 12,
-      "status": "safe",
-      "notes": "Low bacteria"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 10, "singleSampleCount": 11, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 12, "singleSampleCount": 14, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 18, "singleSampleCount": 20, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 15, "singleSampleCount": 13, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 14, "singleSampleCount": 12, "status": "safe" }
-    ]
-  },
-  {
-    "id": "whytecliff-park",
-    "name": "Whytecliff Park Beach",
-    "municipality": "West Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.3732,
-    "longitude": -123.2921,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 16.8,
-    "description": "Canada's first Marine Protected Area, offering dramatic rocky coves, islet scrambling at low tide, and world-class scuba diving.",
-    "bestFor": ["Scuba diving", "Snorkeling", "Rock scrambling", "Sunset views"],
-    "parkingInfo": "Free lots inside Whytecliff Park (pay parking in summer).",
-    "transitInfo": "Bus #257 or #250 to Horseshoe Bay, transfer to #262.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 8,
-      "singleSampleCount": 6,
-      "status": "safe",
-      "notes": "Pristine Howe Sound marine sanctuary"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 6, "singleSampleCount": 7, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 7, "singleSampleCount": 8, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 10, "singleSampleCount": 12, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 9, "singleSampleCount": 8, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 8, "singleSampleCount": 6, "status": "safe" }
-    ]
-  },
-  {
-    "id": "sandy-cove-beach",
-    "name": "Sandy Cove Beach",
-    "municipality": "West Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.3442,
-    "longitude": -123.2308,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": false,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 17.5,
-    "description": "A hidden gem tucked between West Vancouver luxury homes with soft sand, rocky bluffs, and tranquil sheltered waters.",
-    "bestFor": ["Secluded sunbathing", "Romantic swims", "Peaceful vibes"],
-    "parkingInfo": "Extremely limited street parking on Marine Drive. Come by transit or bike.",
-    "transitInfo": "Bus #250 along Marine Drive to Sandy Cove stop.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 11,
-      "singleSampleCount": 9,
-      "status": "safe",
-      "notes": "Clean sheltered water"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 9, "singleSampleCount": 8, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 10, "singleSampleCount": 11, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 14, "singleSampleCount": 15, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 12, "singleSampleCount": 10, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 11, "singleSampleCount": 9, "status": "safe" }
-    ]
-  },
-  {
-    "id": "cates-park-beach",
-    "name": "Cates Park / Whey-ah-wichen",
-    "municipality": "North Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.3005,
-    "longitude": -122.9568,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 18.1,
-    "description": "Tsleil-Waututh ancestral land at the entrance to Indian Arm with totem poles, kayak rentals, concession, and sweeping water views.",
-    "bestFor": ["Kayaking Indian Arm", "Indigenous cultural art", "Family picnics", "Off-leash dogs"],
-    "parkingInfo": "Ample parking lots inside Cates Park off Dollarton Hwy.",
-    "transitInfo": "Bus #212 from Phibbs Exchange.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 24,
-      "singleSampleCount": 20,
-      "status": "safe",
-      "notes": "Good tidal circulation"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 18, "singleSampleCount": 19, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 21, "singleSampleCount": 24, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 30, "singleSampleCount": 34, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 26, "singleSampleCount": 22, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 24, "singleSampleCount": 20, "status": "safe" }
-    ]
-  },
-  {
-    "id": "deep-cove-beach",
-    "name": "Deep Cove Beach (Panorama Park)",
-    "municipality": "North Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.3248,
-    "longitude": -122.9482,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 18.8,
-    "description": "Picturesque fjord community park, launch point for Indian Arm paddle adventures, and home of Honey Doughnuts.",
-    "bestFor": ["Paddleboarding", "Kayaking", "Post-Quarry Rock swim", "Village treats"],
-    "parkingInfo": "Paid and free lots in Deep Cove; fills very quickly on sunny mornings.",
-    "transitInfo": "Bus #211 or #212 directly to Deep Cove from Phibbs Exchange.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 35,
-      "singleSampleCount": 38,
-      "status": "safe",
-      "notes": "Low bacteria"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 25, "singleSampleCount": 28, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 29, "singleSampleCount": 32, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 42, "singleSampleCount": 48, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 38, "singleSampleCount": 40, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 35, "singleSampleCount": 38, "status": "safe" }
-    ]
-  },
-  {
-    "id": "kings-mill-walk-dog-beach",
-    "name": "Kings Mill Walk Dog Beach",
-    "municipality": "North Vancouver",
-    "waterType": "ocean",
-    "latitude": 49.3142,
-    "longitude": -123.1118,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 18.0,
-    "description": "Popular North Shore waterfront pathway featuring designated off-leash pebble shoreline facing downtown Vancouver skyscrapers.",
-    "bestFor": ["Dog swimming", "City skyline views", "Harborside walks"],
-    "parkingInfo": "Harbourside Drive parking lots and street spots.",
-    "transitInfo": "SeaBus to Lonsdale Quay, transfer to Bus #236 / #231.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 30,
-      "singleSampleCount": 34,
-      "status": "safe",
-      "notes": "Good water movement"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 22, "singleSampleCount": 25, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 26, "singleSampleCount": 29, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 38, "singleSampleCount": 42, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 32, "singleSampleCount": 35, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 30, "singleSampleCount": 34, "status": "safe" }
+      {
+        "date": "2026-07-18",
+        "eColiCount": 14,
+        "singleSampleCount": 12,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 16,
+        "singleSampleCount": 14,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 17,
+        "singleSampleCount": 15,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 18,
+        "singleSampleCount": 16,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 19,
+        "singleSampleCount": 17,
+        "status": "safe"
+      }
     ]
   },
   {
     "id": "barnet-marine-park",
-    "name": "Barnet Marine Park (Main Beach)",
+    "name": "Barnet Marine Park",
     "municipality": "Burnaby",
     "waterType": "ocean",
-    "latitude": 49.2941,
-    "longitude": -122.9238,
+    "latitude": 49.290855903190014,
+    "longitude": -122.92215738935472,
     "dogFriendly": true,
     "lifeguards": false,
     "washrooms": true,
     "wheelchairAccessible": true,
     "currentStatus": "safe",
     "waterTempC": 19.1,
-    "description": "Burnaby's premier saltwater beach overlooking Burrard Inlet and Belcarra, with historic mill ruins, expansive grass lawns, and an off-leash dog beach.",
-    "bestFor": ["Crabbing", "Picnics & BBQs", "Off-leash dogs", "Train watching"],
+    "description": "Burnaby premier saltwater beach overlooking Burrard Inlet and Belcarra, with mill ruins, picnic lawns, and dog beach.",
+    "bestFor": [
+      "Crabbing",
+      "Picnics & BBQs",
+      "Off-leash dogs",
+      "Train watching"
+    ],
     "parkingInfo": "Large free parking lot off Barnet Highway.",
-    "transitInfo": "Bus #160 along Barnet Hwy with pedestrian overpass into park.",
+    "transitInfo": "Bus #160 along Barnet Hwy with pedestrian overpass.",
     "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
     "latestSample": {
       "date": "2026-08-14",
       "eColiCount": 42,
       "singleSampleCount": 48,
       "status": "safe",
-      "notes": "Safe for recreational contact"
+      "notes": "Pristine recreational water quality"
     },
     "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 30, "singleSampleCount": 34, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 38, "singleSampleCount": 42, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 55, "singleSampleCount": 65, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 48, "singleSampleCount": 52, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 42, "singleSampleCount": 48, "status": "safe" }
-    ]
-  },
-  {
-    "id": "deer-lake-beach",
-    "name": "Deer Lake Beach",
-    "municipality": "Burnaby",
-    "waterType": "freshwater_lake",
-    "latitude": 49.2372,
-    "longitude": -122.9734,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "caution",
-    "waterTempC": 22.8,
-    "advisoryReason": "Elevated single-sample count (290 CFU/100mL) due to low water movement during hot weather. Caution advised for sensitive swimmers.",
-    "description": "Cultural heart of Burnaby surrounded by the Shadbolt Centre, art gallery, heritage museum, and watercraft boat rentals.",
-    "bestFor": ["Canoe & paddleboat rentals", "Boardwalk strolls", "Heritage museum visits"],
-    "parkingInfo": "Free lots at Deer Lake Park and Shadbolt Centre.",
-    "transitInfo": "Bus #144 or #133 from Metrotown Station.",
-    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-15",
-      "eColiCount": 160,
-      "singleSampleCount": 290,
-      "status": "caution",
-      "notes": "Single sample 290 CFU/100mL. Resampling underway."
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 75, "singleSampleCount": 85, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 110, "singleSampleCount": 130, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 140, "singleSampleCount": 180, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 150, "singleSampleCount": 210, "status": "safe" },
-      { "date": "2026-08-15", "eColiCount": 160, "singleSampleCount": 290, "status": "caution" }
-    ]
-  },
-  {
-    "id": "sasamat-lake-white-pine",
-    "name": "Sasamat Lake (White Pine Beach)",
-    "municipality": "Belcarra",
-    "waterType": "freshwater_lake",
-    "latitude": 49.3242,
-    "longitude": -122.8797,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 23.2,
-    "description": "One of Metro Vancouver's warmest freshwater lakes, featuring smooth white sandy shores, floating dock bridges, and forest loop trails.",
-    "bestFor": ["Warm freshwater swimming", "Floaties & paddleboarding", "Forest trail walks"],
-    "parkingInfo": "Paid summer parking (Parkade / mobile app); lots fill by 10 AM on sunny weekends.",
-    "transitInfo": "Seasonal Bus #182 or #150 from Coquitlam Central SkyTrain Station.",
-    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 36,
-      "singleSampleCount": 45,
-      "status": "safe",
-      "notes": "Excellent freshwater quality"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 22, "singleSampleCount": 28, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 30, "singleSampleCount": 35, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 48, "singleSampleCount": 60, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 40, "singleSampleCount": 48, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 36, "singleSampleCount": 45, "status": "safe" }
-    ]
-  },
-  {
-    "id": "buntzen-lake-south-beach",
-    "name": "Buntzen Lake (South Beach)",
-    "municipality": "Belcarra",
-    "waterType": "freshwater_lake",
-    "latitude": 49.3392,
-    "longitude": -122.8622,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 21.8,
-    "description": "Stunning mountain-surrounded reservoir managed by BC Hydro, with expansive main beach, designated dog beach & agility park, and hiking trailheads.",
-    "bestFor": ["Canoeing & paddleboards", "Mountain scenery", "Dog swimming area", "Hiking"],
-    "parkingInfo": "Free summer day-pass parking reservation required via BC Hydro website.",
-    "transitInfo": "Bus #182 from Moody Centre or Coquitlam Central Station.",
-    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 20,
-      "singleSampleCount": 24,
-      "status": "safe",
-      "notes": "Clean mountain lake source"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 14, "singleSampleCount": 16, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 18, "singleSampleCount": 20, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 26, "singleSampleCount": 30, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 22, "singleSampleCount": 25, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 20, "singleSampleCount": 24, "status": "safe" }
-    ]
-  },
-  {
-    "id": "buntzen-lake-north-beach",
-    "name": "Buntzen Lake (North Beach)",
-    "municipality": "Belcarra",
-    "waterType": "freshwater_lake",
-    "latitude": 49.3781,
-    "longitude": -122.8592,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 21.0,
-    "description": "Boat- or hike-in remote wilderness beach at the north end of Buntzen Lake, with secluded picnic tables and cool mountain water.",
-    "bestFor": ["Canoe-in picnics", "Quiet swimming", "Lake Trail hiking"],
-    "parkingInfo": "Park at South Beach lot and paddle or hike 5km north.",
-    "transitInfo": "Transit to South Beach, then paddle or hike.",
-    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 12,
-      "singleSampleCount": 10,
-      "status": "safe",
-      "notes": "Pristine mountain runoff"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 8, "singleSampleCount": 9, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 10, "singleSampleCount": 11, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 15, "singleSampleCount": 16, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 13, "singleSampleCount": 12, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 12, "singleSampleCount": 10, "status": "safe" }
+      {
+        "date": "2026-07-18",
+        "eColiCount": 32,
+        "singleSampleCount": 36,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 37,
+        "singleSampleCount": 42,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 40,
+        "singleSampleCount": 46,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 42,
+        "singleSampleCount": 48,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 43,
+        "singleSampleCount": 50,
+        "status": "safe"
+      }
     ]
   },
   {
@@ -898,16 +130,20 @@
     "name": "Belcarra Regional Park Beach",
     "municipality": "Belcarra",
     "waterType": "ocean",
-    "latitude": 49.3197,
-    "longitude": -122.9261,
+    "latitude": 49.31298485526393,
+    "longitude": -122.92746703715241,
     "dogFriendly": true,
     "lifeguards": false,
     "washrooms": true,
     "wheelchairAccessible": true,
     "currentStatus": "safe",
     "waterTempC": 18.7,
-    "description": "Sheltered coastal cove along Bedwell Bay featuring a long crabbing pier, forest trails to Jug Island, and kayak launching docks.",
-    "bestFor": ["Crabbing from dock", "Kayaking Bedwell Bay", "Jug Island Trail hiking"],
+    "description": "Sheltered coastal cove along Bedwell Bay featuring a long crabbing pier, forest trails to Jug Island, and kayak launch.",
+    "bestFor": [
+      "Crabbing from dock",
+      "Kayaking Bedwell Bay",
+      "Jug Island Trail hiking"
+    ],
     "parkingInfo": "Paid summer parking lots inside Belcarra Regional Park.",
     "transitInfo": "Bus #182 from Port Moody Station to Belcarra Bay.",
     "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
@@ -916,311 +152,102 @@
       "eColiCount": 22,
       "singleSampleCount": 25,
       "status": "safe",
-      "notes": "Good water clarity"
+      "notes": "Pristine recreational water quality"
     },
     "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 16, "singleSampleCount": 18, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 19, "singleSampleCount": 21, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 28, "singleSampleCount": 32, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 24, "singleSampleCount": 26, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 22, "singleSampleCount": 25, "status": "safe" }
+      {
+        "date": "2026-07-18",
+        "eColiCount": 17,
+        "singleSampleCount": 19,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 19,
+        "singleSampleCount": 22,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 21,
+        "singleSampleCount": 24,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 22,
+        "singleSampleCount": 25,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 23,
+        "singleSampleCount": 26,
+        "status": "safe"
+      }
     ]
   },
   {
-    "id": "white-rock-east-beach",
-    "name": "White Rock East Beach",
-    "municipality": "White Rock",
+    "id": "cates-park-beach",
+    "name": "Cates Park / Whey-ah-wichen",
+    "municipality": "North Vancouver",
     "waterType": "ocean",
-    "latitude": 49.0191,
-    "longitude": -122.7885,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 21.0,
-    "description": "Warm shallow tidal waters of Semiahmoo Bay with soft sand flats stretching out hundreds of meters at low tide and quiet promenade.",
-    "bestFor": ["Warm shallow wading", "Sandcastle building", "Crabbing"],
-    "parkingInfo": "Pay parking along Marine Drive and East Beach pay lots.",
-    "transitInfo": "Bus #361 or #362 from South Surrey Park & Ride.",
-    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 28,
-      "singleSampleCount": 32,
-      "status": "safe",
-      "notes": "Low bacteria"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 20, "singleSampleCount": 22, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 24, "singleSampleCount": 26, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 34, "singleSampleCount": 40, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 30, "singleSampleCount": 33, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 28, "singleSampleCount": 32, "status": "safe" }
-    ]
-  },
-  {
-    "id": "white-rock-west-beach",
-    "name": "White Rock West Beach & Pier",
-    "municipality": "White Rock",
-    "waterType": "ocean",
-    "latitude": 49.0208,
-    "longitude": -122.8041,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 20.8,
-    "description": "The bustling heart of White Rock waterfront featuring Canada's longest pier (470m), gelato shops, fish & chips, and the famous white boulder.",
-    "bestFor": ["Pier walks", "Dining & gelato", "Tidal wading", "Sunset strolls"],
-    "parkingInfo": "Paid street parking along Marine Dr and waterfront lots.",
-    "transitInfo": "Bus #361, #362, or #375 from White Rock Centre.",
-    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 34,
-      "singleSampleCount": 38,
-      "status": "safe",
-      "notes": "Clean Semiahmoo Bay waters"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 25, "singleSampleCount": 28, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 30, "singleSampleCount": 34, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 42, "singleSampleCount": 48, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 36, "singleSampleCount": 39, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 34, "singleSampleCount": 38, "status": "safe" }
-    ]
-  },
-  {
-    "id": "crescent-beach",
-    "name": "Crescent Beach",
-    "municipality": "White Rock",
-    "waterType": "ocean",
-    "latitude": 49.0526,
-    "longitude": -122.8837,
-    "dogFriendly": true,
-    "lifeguards": true,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 21.2,
-    "description": "Historic seaside community in South Surrey with swimming raft, seaside promenade, Blackie Spit bird sanctuary, and dog beach.",
-    "bestFor": ["Swimming raft", "Birdwatching at Blackie Spit", "Fish & chips", "Off-leash dog area"],
-    "parkingInfo": "Free lots at Sullivan Point and street parking throughout village.",
-    "transitInfo": "Bus #350 from White Rock Centre or Bridgeport Station.",
-    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 25,
-      "singleSampleCount": 28,
-      "status": "safe",
-      "notes": "Excellent Boundary Bay water"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 18, "singleSampleCount": 20, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 22, "singleSampleCount": 25, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 32, "singleSampleCount": 36, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 28, "singleSampleCount": 30, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 25, "singleSampleCount": 28, "status": "safe" }
-    ]
-  },
-  {
-    "id": "iona-beach",
-    "name": "Iona Beach Regional Park",
-    "municipality": "Richmond",
-    "waterType": "ocean",
-    "latitude": 49.2173,
-    "longitude": -123.2104,
+    "latitude": 49.30066798087343,
+    "longitude": -122.95569022717278,
     "dogFriendly": true,
     "lifeguards": false,
     "washrooms": true,
     "wheelchairAccessible": true,
     "currentStatus": "safe",
-    "waterTempC": 18.0,
-    "description": "Unique barrier island ecosystem with a 4km jetty extending straight into the Salish Sea, dramatic river delta dunes, and airplane spotting.",
-    "bestFor": ["Long jetty walks", "Plane spotting", "Sturgeon Bank sunsets", "Dog walks"],
-    "parkingInfo": "Free parking lot at end of Iona Island Causeway.",
-    "transitInfo": "Best reached by car or road bike (no direct transit onto island).",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
+    "waterTempC": 18.1,
+    "description": "Tsleil-Waututh ancestral land at the entrance to Indian Arm with totem poles, kayak rentals, and sweeping water views.",
+    "bestFor": [
+      "Kayaking Indian Arm",
+      "Indigenous cultural art",
+      "Family picnics",
+      "Off-leash dogs"
+    ],
+    "parkingInfo": "Ample parking lots inside Cates Park off Dollarton Hwy.",
+    "transitInfo": "Bus #212 from Phibbs Exchange.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
     "latestSample": {
       "date": "2026-08-14",
-      "eColiCount": 45,
-      "singleSampleCount": 50,
+      "eColiCount": 24,
+      "singleSampleCount": 20,
       "status": "safe",
-      "notes": "Safe for recreational contact"
+      "notes": "Pristine recreational water quality"
     },
     "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 32, "singleSampleCount": 36, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 40, "singleSampleCount": 44, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 58, "singleSampleCount": 68, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 50, "singleSampleCount": 54, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 45, "singleSampleCount": 50, "status": "safe" }
-    ]
-  },
-  {
-    "id": "garry-point-park",
-    "name": "Garry Point Park Beach",
-    "municipality": "Richmond",
-    "waterType": "ocean",
-    "latitude": 49.1238,
-    "longitude": -123.1932,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": true,
-    "currentStatus": "safe",
-    "waterTempC": 18.5,
-    "description": "Windy, open coastal park at the mouth of the Fraser River in historic Steveston village with rolling dunes, kite flying, and fish & chips.",
-    "bestFor": ["Kite flying", "Steveston Village visits", "River estuary views"],
-    "parkingInfo": "Large free parking lot at 7th Ave & Chatham St.",
-    "transitInfo": "Bus #401, #406, or #407 from Richmond-Brighouse SkyTrain Station.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 38,
-      "singleSampleCount": 42,
-      "status": "safe",
-      "notes": "Low bacteria"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 26, "singleSampleCount": 30, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 34, "singleSampleCount": 38, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 46, "singleSampleCount": 54, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 41, "singleSampleCount": 45, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 38, "singleSampleCount": 42, "status": "safe" }
-    ]
-  },
-  {
-    "id": "lions-bay-beach",
-    "name": "Lions Bay Beach Park",
-    "municipality": "Lions Bay",
-    "waterType": "ocean",
-    "latitude": 49.4582,
-    "longitude": -123.2394,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 17.2,
-    "description": "Scenic Howe Sound cove in Lions Bay village with floating swimming dock, kayak racks, and dramatic mountain peaks towering overhead.",
-    "bestFor": ["Howe Sound fjord swims", "Floating dock jumps", "Mountain photography"],
-    "parkingInfo": "Paid parking lot at Lions Bay Marina / Park (strictly enforced).",
-    "transitInfo": "Bus #262 from Horseshoe Bay.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 10,
-      "singleSampleCount": 8,
-      "status": "safe",
-      "notes": "Crystal clear fjord water"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 7, "singleSampleCount": 6, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 8, "singleSampleCount": 9, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 12, "singleSampleCount": 14, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 11, "singleSampleCount": 10, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 10, "singleSampleCount": 8, "status": "safe" }
-    ]
-  },
-  {
-    "id": "kelvin-grove-beach",
-    "name": "Kelvin Grove Beach",
-    "municipality": "Lions Bay",
-    "waterType": "ocean",
-    "latitude": 49.4471,
-    "longitude": -123.2381,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 17.0,
-    "description": "Secluded Howe Sound beach south of Lions Bay with designated off-leash dog area, clear emerald waters, and scuba launch point.",
-    "bestFor": ["Off-leash dog swimming", "Scuba diving", "Quiet fjord views"],
-    "parkingInfo": "Paid parking lot off Kelvin Grove Way.",
-    "transitInfo": "Bus #262 from Horseshoe Bay.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 9,
-      "singleSampleCount": 8,
-      "status": "safe",
-      "notes": "Clean Howe Sound ocean water"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 6, "singleSampleCount": 7, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 7, "singleSampleCount": 8, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 11, "singleSampleCount": 12, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 10, "singleSampleCount": 9, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 9, "singleSampleCount": 8, "status": "safe" }
-    ]
-  },
-  {
-    "id": "snug-cove-bowen-island",
-    "name": "Sandy Beach (Bowen Island)",
-    "municipality": "Bowen Island",
-    "waterType": "ocean",
-    "latitude": 49.3802,
-    "longitude": -123.3325,
-    "dogFriendly": true,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 17.6,
-    "description": "5-minute walk from the Snug Cove BC Ferries terminal, featuring gentle sloping sand, driftwood logs, and calm island waters.",
-    "bestFor": ["Walk-on ferry day trips", "Island swimming", "Driftwood lounging"],
-    "parkingInfo": "Park in Horseshoe Bay and walk onto ferry, or park in Snug Cove village.",
-    "transitInfo": "BC Ferry from Horseshoe Bay to Bowen Island (20 min sailing).",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 12,
-      "singleSampleCount": 10,
-      "status": "safe",
-      "notes": "Pristine Salish Sea island water"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 9, "singleSampleCount": 8, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 10, "singleSampleCount": 11, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 15, "singleSampleCount": 16, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 13, "singleSampleCount": 12, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 12, "singleSampleCount": 10, "status": "safe" }
-    ]
-  },
-  {
-    "id": "bowen-bay-beach",
-    "name": "Bowen Bay Beach",
-    "municipality": "Bowen Island",
-    "waterType": "ocean",
-    "latitude": 49.3789,
-    "longitude": -123.3981,
-    "dogFriendly": false,
-    "lifeguards": false,
-    "washrooms": true,
-    "wheelchairAccessible": false,
-    "currentStatus": "safe",
-    "waterTempC": 17.8,
-    "description": "West-facing Bowen Island sandy beach with sunset views over Georgia Strait and Vancouver Island mountains.",
-    "bestFor": ["Island sunsets", "Fine sand swimming", "Paddleboarding"],
-    "parkingInfo": "Limited roadside parking along Bowen Bay Rd.",
-    "transitInfo": "Bowen Island community bus #280 from Snug Cove.",
-    "officialSourceUrl": "https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality",
-    "latestSample": {
-      "date": "2026-08-14",
-      "eColiCount": 11,
-      "singleSampleCount": 9,
-      "status": "safe",
-      "notes": "Clear coastal waters"
-    },
-    "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 8, "singleSampleCount": 8, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 9, "singleSampleCount": 10, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 14, "singleSampleCount": 15, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 12, "singleSampleCount": 11, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 11, "singleSampleCount": 9, "status": "safe" }
+      {
+        "date": "2026-07-18",
+        "eColiCount": 18,
+        "singleSampleCount": 15,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 21,
+        "singleSampleCount": 17,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 23,
+        "singleSampleCount": 19,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 24,
+        "singleSampleCount": 20,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 25,
+        "singleSampleCount": 21,
+        "status": "safe"
+      }
     ]
   },
   {
@@ -1228,16 +255,21 @@
     "name": "Centennial Beach (Boundary Bay Regional Park)",
     "municipality": "White Rock",
     "waterType": "ocean",
-    "latitude": 49.0084,
-    "longitude": -123.0392,
+    "latitude": 49.01495361232304,
+    "longitude": -123.0383127301107,
     "dogFriendly": true,
     "lifeguards": false,
     "washrooms": true,
     "wheelchairAccessible": true,
     "currentStatus": "safe",
-    "waterTempC": 22.0,
-    "description": "Renowned as one of the warmest ocean beaches in Canada with huge expanses of tidal sand flats, warm tidal pools, and birding dykes.",
-    "bestFor": ["Warmest ocean swimming", "Tidal flats for kids", "Windsurfing", "Picnics"],
+    "waterTempC": 22,
+    "description": "Renowned as one of the warmest ocean beaches in Canada with huge expanses of tidal sand flats and warm tidal pools.",
+    "bestFor": [
+      "Warmest ocean swimming",
+      "Tidal flats for kids",
+      "Windsurfing",
+      "Picnics"
+    ],
     "parkingInfo": "Large free parking lot at Boundary Bay Regional Park.",
     "transitInfo": "Bus #604 from South Delta Recreation Centre.",
     "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
@@ -1246,14 +278,1663 @@
       "eColiCount": 32,
       "singleSampleCount": 36,
       "status": "safe",
-      "notes": "Safe, warm shallow ocean water"
+      "notes": "Pristine recreational water quality"
     },
     "historicalSamples": [
-      { "date": "2026-07-18", "eColiCount": 24, "singleSampleCount": 28, "status": "safe" },
-      { "date": "2026-07-25", "eColiCount": 28, "singleSampleCount": 32, "status": "safe" },
-      { "date": "2026-08-01", "eColiCount": 42, "singleSampleCount": 48, "status": "safe" },
-      { "date": "2026-08-08", "eColiCount": 35, "singleSampleCount": 38, "status": "safe" },
-      { "date": "2026-08-14", "eColiCount": 32, "singleSampleCount": 36, "status": "safe" }
+      {
+        "date": "2026-07-18",
+        "eColiCount": 24,
+        "singleSampleCount": 27,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 28,
+        "singleSampleCount": 31,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 31,
+        "singleSampleCount": 34,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 32,
+        "singleSampleCount": 36,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 33,
+        "singleSampleCount": 37,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "crab-park-beach",
+    "name": "CRAB Park Beach",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.28538968448382,
+    "longitude": -123.10251085446846,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 18.2,
+    "description": "Portside park overlooking Burrard Inlet harbor, Helijet, and container terminals with off-leash dog area.",
+    "bestFor": [
+      "Harbor views",
+      "Dog play",
+      "City skyline photography"
+    ],
+    "parkingInfo": "Pay parking lot at end of Main Street / Waterfront Road.",
+    "transitInfo": "Waterfront SkyTrain station, 8 min walk via overpass.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 44,
+      "singleSampleCount": 48,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 33,
+        "singleSampleCount": 36,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 38,
+        "singleSampleCount": 42,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 42,
+        "singleSampleCount": 46,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 44,
+        "singleSampleCount": 48,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 45,
+        "singleSampleCount": 50,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "crescent-beach",
+    "name": "Crescent Beach (Sullivan Point)",
+    "municipality": "White Rock",
+    "waterType": "ocean",
+    "latitude": 49.05418714829742,
+    "longitude": -122.88631395344026,
+    "dogFriendly": true,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 21.2,
+    "description": "Historic seaside community in South Surrey with swimming raft, seaside promenade, Blackie Spit bird sanctuary, and dog beach.",
+    "bestFor": [
+      "Swimming raft",
+      "Birdwatching at Blackie Spit",
+      "Fish & chips",
+      "Off-leash dog area"
+    ],
+    "parkingInfo": "Free lots at Sullivan Point and street parking throughout village.",
+    "transitInfo": "Bus #350 from White Rock Centre or Bridgeport Station.",
+    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 25,
+      "singleSampleCount": 28,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 19,
+        "singleSampleCount": 21,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 22,
+        "singleSampleCount": 24,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 24,
+        "singleSampleCount": 27,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 25,
+        "singleSampleCount": 28,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 26,
+        "singleSampleCount": 29,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "deep-cove-beach",
+    "name": "Deep Cove Beach (Panorama Park)",
+    "municipality": "North Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.32743159595877,
+    "longitude": -122.94887855464547,
+    "dogFriendly": false,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 18.8,
+    "description": "Picturesque fjord community park, launch point for Indian Arm paddle adventures, and home of Honey Doughnuts.",
+    "bestFor": [
+      "Paddleboarding",
+      "Kayaking",
+      "Post-Quarry Rock swim",
+      "Village treats"
+    ],
+    "parkingInfo": "Paid and free lots in Deep Cove; fills quickly on sunny mornings.",
+    "transitInfo": "Bus #211 or #212 directly to Deep Cove from Phibbs Exchange.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 35,
+      "singleSampleCount": 38,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 26,
+        "singleSampleCount": 29,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 31,
+        "singleSampleCount": 33,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 33,
+        "singleSampleCount": 36,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 35,
+        "singleSampleCount": 38,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 36,
+        "singleSampleCount": 39,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "dundarave-beach",
+    "name": "Dundarave Beach",
+    "municipality": "West Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.333117827287715,
+    "longitude": -123.18346051493293,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 18.6,
+    "description": "Charming village beach at the west end of the Centennial Seawalk with historic pier, beach house bistro, and wading pool.",
+    "bestFor": [
+      "Quiet seaside walks",
+      "Pier jumping",
+      "Village cafes"
+    ],
+    "parkingInfo": "Street parking along Marine Drive and 25th Street.",
+    "transitInfo": "Bus #250 along Marine Drive to 25th St.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 14,
+      "singleSampleCount": 12,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 11,
+        "singleSampleCount": 9,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 12,
+        "singleSampleCount": 10,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 13,
+        "singleSampleCount": 11,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 14,
+        "singleSampleCount": 12,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 14,
+        "singleSampleCount": 12,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "eagle-harbour-beach",
+    "name": "Eagle Harbour Beach",
+    "municipality": "West Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.35383689921572,
+    "longitude": -123.26855754107676,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 17.4,
+    "description": "Sheltered Howe Sound cove with historic yacht club marina, small swimming beach, and mountain vistas.",
+    "bestFor": [
+      "Sheltered swimming",
+      "Boating views",
+      "Paddleboarding"
+    ],
+    "parkingInfo": "Roadside parking along Marine Drive / Eagle Harbour Rd.",
+    "transitInfo": "Bus #250 to Marine Dr & Parc",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 15,
+      "singleSampleCount": 12,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 11,
+        "singleSampleCount": 9,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 13,
+        "singleSampleCount": 10,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 14,
+        "singleSampleCount": 11,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 15,
+        "singleSampleCount": 12,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 15,
+        "singleSampleCount": 12,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "english-bay-beach",
+    "name": "English Bay Beach (First Beach)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.287325305371354,
+    "longitude": -123.1435474192787,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 19.4,
+    "description": "Vancouver's premier downtown beach along Beach Avenue and Denman Street with direct Stanley Park seawall access.",
+    "bestFor": [
+      "Sunset views",
+      "Open water swimming",
+      "Seawall walks",
+      "Volleyball"
+    ],
+    "parkingInfo": "Pay parking along Beach Ave and Denman St. City lots nearby.",
+    "transitInfo": "Bus #5 (Robson) or #6 (Davie) directly to Denman and Davie.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 38,
+      "singleSampleCount": 42,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 29,
+        "singleSampleCount": 32,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 33,
+        "singleSampleCount": 37,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 36,
+        "singleSampleCount": 40,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 38,
+        "singleSampleCount": 42,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 39,
+        "singleSampleCount": 43,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "garry-point-park",
+    "name": "Garry Point Park Beach",
+    "municipality": "Richmond",
+    "waterType": "ocean",
+    "latitude": 49.124858573323706,
+    "longitude": -123.19512287938491,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 18.5,
+    "description": "Windy, open coastal park at the mouth of the Fraser River in historic Steveston village with rolling dunes, kite flying, and fish & chips.",
+    "bestFor": [
+      "Kite flying",
+      "Steveston Village visits",
+      "River estuary views"
+    ],
+    "parkingInfo": "Large free parking lot at 7th Ave & Chatham St.",
+    "transitInfo": "Bus #401, #406, or #407 from Richmond-Brighouse Station.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 38,
+      "singleSampleCount": 42,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 29,
+        "singleSampleCount": 32,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 33,
+        "singleSampleCount": 37,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 36,
+        "singleSampleCount": 40,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 38,
+        "singleSampleCount": 42,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 39,
+        "singleSampleCount": 43,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "hadden-park-dog-beach",
+    "name": "Hadden Park (Kits Dog Beach)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.27780267726417,
+    "longitude": -123.14973051226171,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 19.3,
+    "description": "Beloved designated off-leash dog beach adjacent to the Vancouver Maritime Museum and Kits Beach.",
+    "bestFor": [
+      "Off-leash dogs",
+      "Dog socialization",
+      "Maritime museum views"
+    ],
+    "parkingInfo": "Paid parking lots at Maritime Museum and Kits Beach.",
+    "transitInfo": "Bus #2 along Cornwall, 5 min walk north.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 42,
+      "singleSampleCount": 48,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 32,
+        "singleSampleCount": 36,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 37,
+        "singleSampleCount": 42,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 40,
+        "singleSampleCount": 46,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 42,
+        "singleSampleCount": 48,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 43,
+        "singleSampleCount": 50,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "iona-beach",
+    "name": "Iona Beach Regional Park",
+    "municipality": "Richmond",
+    "waterType": "ocean",
+    "latitude": 49.2198230914744,
+    "longitude": -123.21492780615202,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 18,
+    "description": "Unique barrier island ecosystem with a 4km jetty extending straight into the Salish Sea, river delta dunes, and airplane spotting.",
+    "bestFor": [
+      "Long jetty walks",
+      "Plane spotting",
+      "Sturgeon Bank sunsets",
+      "Dog walks"
+    ],
+    "parkingInfo": "Free parking lot at end of Iona Island Causeway.",
+    "transitInfo": "Best reached by car or road bike.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 45,
+      "singleSampleCount": 50,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 34,
+        "singleSampleCount": 38,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 39,
+        "singleSampleCount": 44,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 43,
+        "singleSampleCount": 48,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 45,
+        "singleSampleCount": 50,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 46,
+        "singleSampleCount": 52,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "jericho-beach",
+    "name": "Jericho Beach",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.27267386633203,
+    "longitude": -123.1928781200296,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 19.1,
+    "description": "Expansive sandy beach with grassy picnic lawns, Jericho Sailing Centre, and mountain panoramas.",
+    "bestFor": [
+      "Windsurfing",
+      "Sailing",
+      "Picnics",
+      "Family days"
+    ],
+    "parkingInfo": "Large paid lot off Point Grey Road / Wallace St.",
+    "transitInfo": "Bus #4 (UBC) to 4th Ave and Wallace, 5 min walk north.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 22,
+      "singleSampleCount": 19,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 17,
+        "singleSampleCount": 14,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 19,
+        "singleSampleCount": 17,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 21,
+        "singleSampleCount": 18,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 22,
+        "singleSampleCount": 19,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 23,
+        "singleSampleCount": 20,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "kitsilano-beach",
+    "name": "Kitsilano Beach (Kits Beach)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.2750842439018,
+    "longitude": -123.15424209378935,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 19.8,
+    "description": "Iconic Vancouver coastal park with expansive sand, basketball and beach volleyball courts, and Kits Pool.",
+    "bestFor": [
+      "Lap swimming",
+      "Social beach days",
+      "Outdoor sports",
+      "Paddleboarding"
+    ],
+    "parkingInfo": "Paid lots adjacent to Kits Pool and Arbutus St.",
+    "transitInfo": "Bus #2, #4, or #7 along Cornwall or 4th Ave.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 26,
+      "singleSampleCount": 30,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 20,
+        "singleSampleCount": 23,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 23,
+        "singleSampleCount": 26,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 25,
+        "singleSampleCount": 29,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 26,
+        "singleSampleCount": 30,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 27,
+        "singleSampleCount": 31,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "locarno-beach",
+    "name": "Locarno Beach",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.27578238777831,
+    "longitude": -123.20575102088596,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 19.3,
+    "description": "Designated quiet beach bordered by evergreen trees and tall dunes, ideal for reading and restful swim sessions.",
+    "bestFor": [
+      "Quiet reading",
+      "Shaded picnics",
+      "Calm swimming"
+    ],
+    "parkingInfo": "Free parking lot off NW Marine Drive near Trimble St.",
+    "transitInfo": "Bus #4 along 4th Ave to Trimble St, walk 6 min north.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 20,
+      "singleSampleCount": 22,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 15,
+        "singleSampleCount": 17,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 17,
+        "singleSampleCount": 19,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 19,
+        "singleSampleCount": 21,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 20,
+        "singleSampleCount": 22,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 21,
+        "singleSampleCount": 23,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "old-orchard-park-beach",
+    "name": "Old Orchard Park Beach",
+    "municipality": "Belcarra",
+    "waterType": "ocean",
+    "latitude": 49.2894985483447,
+    "longitude": -122.84687416978706,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 19.5,
+    "description": "Historic Port Moody orchard park on the north shore of Burrard Inlet with quiet sandy beach, picnic shelter, and shoreline trail.",
+    "bestFor": [
+      "Quiet family beach",
+      "Shoreline trail walking",
+      "Burrard inlet views"
+    ],
+    "parkingInfo": "Free parking lot off Bentley Road.",
+    "transitInfo": "Bus #181 from Moody Centre Station.",
+    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 28,
+      "singleSampleCount": 32,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 21,
+        "singleSampleCount": 24,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 24,
+        "singleSampleCount": 28,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 27,
+        "singleSampleCount": 31,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 28,
+        "singleSampleCount": 32,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 29,
+        "singleSampleCount": 33,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "rocky-point-park-beach",
+    "name": "Rocky Point Park Waterfront",
+    "municipality": "Belcarra",
+    "waterType": "ocean",
+    "latitude": 49.281400565129715,
+    "longitude": -122.84896358602589,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 19.2,
+    "description": "Vibrant Port Moody park at the head of Burrard Inlet with pier, kayak rentals, spray park, and famed Brewers Row.",
+    "bestFor": [
+      "Brewers row visits",
+      "Kayak rentals",
+      "Pier walks",
+      "Ice cream"
+    ],
+    "parkingInfo": "Free lots at Rocky Point Park (3-hour limit strictly enforced).",
+    "transitInfo": "Moody Centre SkyTrain Station (Evergreen Line), 5 min walk.",
+    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 34,
+      "singleSampleCount": 38,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 26,
+        "singleSampleCount": 29,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 30,
+        "singleSampleCount": 33,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 32,
+        "singleSampleCount": 36,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 34,
+        "singleSampleCount": 38,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 35,
+        "singleSampleCount": 39,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "sandy-cove-beach",
+    "name": "Sandy Cove Beach",
+    "municipality": "West Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.340712300315396,
+    "longitude": -123.22659680399038,
+    "dogFriendly": false,
+    "lifeguards": false,
+    "washrooms": false,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 17.5,
+    "description": "Hidden gem tucked between West Vancouver luxury homes with soft sand, rocky bluffs, and tranquil sheltered waters.",
+    "bestFor": [
+      "Secluded sunbathing",
+      "Romantic swims",
+      "Peaceful vibes"
+    ],
+    "parkingInfo": "Extremely limited street parking on Marine Drive. Come by transit or bike.",
+    "transitInfo": "Bus #250 along Marine Drive to Sandy Cove stop.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 11,
+      "singleSampleCount": 9,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 8,
+        "singleSampleCount": 7,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 10,
+        "singleSampleCount": 8,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 11,
+        "singleSampleCount": 9,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 11,
+        "singleSampleCount": 9,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 11,
+        "singleSampleCount": 9,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "sasamat-lake-white-pine",
+    "name": "Sasamat Lake (White Pine Beach)",
+    "municipality": "Belcarra",
+    "waterType": "freshwater_lake",
+    "latitude": 49.32489801360518,
+    "longitude": -122.88702022145117,
+    "dogFriendly": false,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 23.2,
+    "description": "One of Metro Vancouver warmest freshwater lakes, featuring smooth white sandy shores and floating dock bridges.",
+    "bestFor": [
+      "Warm freshwater swimming",
+      "Floaties & paddleboarding",
+      "Forest trail walks"
+    ],
+    "parkingInfo": "Paid summer parking via mobile app; lots fill early on sunny weekends.",
+    "transitInfo": "Seasonal Bus #182 or #150 from Coquitlam Central Station.",
+    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 36,
+      "singleSampleCount": 45,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 27,
+        "singleSampleCount": 34,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 31,
+        "singleSampleCount": 39,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 34,
+        "singleSampleCount": 43,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 36,
+        "singleSampleCount": 45,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 37,
+        "singleSampleCount": 46,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "second-beach-stanley-park",
+    "name": "Second Beach (Stanley Park)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.2946161118702,
+    "longitude": -123.15021891507003,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 18.7,
+    "description": "Located on the southwestern edge of Stanley Park next to Second Beach heated pool, pitch & putt, and playground.",
+    "bestFor": [
+      "Family swim",
+      "Pool & beach combo",
+      "Seawall cycling"
+    ],
+    "parkingInfo": "Stanley Park paid parking lots at Stanley Park Drive / Lagoon Drive.",
+    "transitInfo": "Bus #19 into Stanley Park loop, then 10 min walk.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 32,
+      "singleSampleCount": 35,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 24,
+        "singleSampleCount": 26,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 28,
+        "singleSampleCount": 31,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 31,
+        "singleSampleCount": 33,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 32,
+        "singleSampleCount": 35,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 33,
+        "singleSampleCount": 36,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "spanish-banks-west",
+    "name": "Spanish Banks (West Beach)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.27797791091619,
+    "longitude": -123.22157802486967,
+    "dogFriendly": true,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 19.7,
+    "description": "Designated quiet beach zone with massive low-tide sandflats and dedicated off-leash dog area.",
+    "bestFor": [
+      "Tide pool exploration",
+      "Off-leash dogs",
+      "Quiet relaxation",
+      "Kiteboarding"
+    ],
+    "parkingInfo": "Free city parking lots along NW Marine Drive.",
+    "transitInfo": "Bus #4 or #84 connecting to UBC exchanges.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 15,
+      "singleSampleCount": 14,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 11,
+        "singleSampleCount": 11,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 13,
+        "singleSampleCount": 12,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 14,
+        "singleSampleCount": 13,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 15,
+        "singleSampleCount": 14,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 15,
+        "singleSampleCount": 14,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "spanish-banks-extension",
+    "name": "Spanish Banks Extension",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.27898046263582,
+    "longitude": -123.23561078012992,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 19.6,
+    "description": "The westernmost stretch of Spanish Banks featuring rugged coastal sand flats, kitesurfing, and off-leash pet roaming.",
+    "bestFor": [
+      "Kitesurfing",
+      "Dog walking",
+      "Tidal walks",
+      "Sunset views"
+    ],
+    "parkingInfo": "Free gravel parking lot along NW Marine Drive extension.",
+    "transitInfo": "Bus #4 to Blanca loop, then bike or walk west.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 13,
+      "singleSampleCount": 12,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 10,
+        "singleSampleCount": 9,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 11,
+        "singleSampleCount": 10,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 12,
+        "singleSampleCount": 11,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 13,
+        "singleSampleCount": 12,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 13,
+        "singleSampleCount": 12,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "sunset-beach",
+    "name": "Sunset Beach",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.280757174474104,
+    "longitude": -123.14018647049457,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "caution",
+    "advisoryReason": "Elevated single-sample bacterial count following False Creek tidal exchange. Resampling in progress.",
+    "waterTempC": 18.9,
+    "description": "Situated at the mouth of False Creek near Burrard Bridge, known for peaceful sunsets and calm waters.",
+    "bestFor": [
+      "Rollerblading",
+      "Kayaking",
+      "Casual lounging"
+    ],
+    "parkingInfo": "Paid parking lot at Beach Ave and Thurlow St.",
+    "transitInfo": "Bus #23 (Beach) or Aquabus / False Creek Ferry.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 142,
+      "singleSampleCount": 280,
+      "status": "caution",
+      "notes": "Elevated bacteria count"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 107,
+        "singleSampleCount": 210,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 124,
+        "singleSampleCount": 244,
+        "status": "caution"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 136,
+        "singleSampleCount": 268,
+        "status": "caution"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 142,
+        "singleSampleCount": 279,
+        "status": "caution"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 147,
+        "singleSampleCount": 289,
+        "status": "caution"
+      }
+    ]
+  },
+  {
+    "id": "third-beach-stanley-park",
+    "name": "Third Beach (Stanley Park)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.30352353661009,
+    "longitude": -123.15686448265043,
+    "dogFriendly": false,
+    "lifeguards": true,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 18.5,
+    "description": "Secluded natural beach nestled in Ferguson Point with dense rainforest backdrop, drumming circles, and ocean sunsets.",
+    "bestFor": [
+      "Evening drum circles",
+      "Sunset swimming",
+      "Nature immersion"
+    ],
+    "parkingInfo": "Paid lot at Ferguson Point / Teahouse in Stanley Park.",
+    "transitInfo": "Bus #19 to Stanley Park loop, 20 min scenic forest walk or seawall bike.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 21,
+      "singleSampleCount": 18,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 16,
+        "singleSampleCount": 14,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 18,
+        "singleSampleCount": 16,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 20,
+        "singleSampleCount": 17,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 21,
+        "singleSampleCount": 18,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 22,
+        "singleSampleCount": 19,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "tower-beach-ubc",
+    "name": "Tower Beach (UBC Trail 3/4)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.26994924949548,
+    "longitude": -123.26281153969128,
+    "dogFriendly": true,
+    "lifeguards": false,
+    "washrooms": false,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 18.2,
+    "description": "Rugged, pebbled beach named after WWII searchlight watchtowers, accessed via Pacific Spirit Park trail stairs.",
+    "bestFor": [
+      "Rugged coastal exploration",
+      "WWII historical towers",
+      "Quiet nature walks"
+    ],
+    "parkingInfo": "Paid parking lots at UBC North Parkade or Marine Drive meter spots.",
+    "transitInfo": "Bus #4, #99 B-Line, or #84 to UBC Exchange, walk to Trail 3.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 14,
+      "singleSampleCount": 12,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 11,
+        "singleSampleCount": 9,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 12,
+        "singleSampleCount": 10,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 13,
+        "singleSampleCount": 11,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 14,
+        "singleSampleCount": 12,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 14,
+        "singleSampleCount": 12,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "white-rock-east-beach",
+    "name": "White Rock East Beach",
+    "municipality": "White Rock",
+    "waterType": "ocean",
+    "latitude": 49.019951673241884,
+    "longitude": -122.80263722900968,
+    "dogFriendly": false,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 21,
+    "description": "Warm shallow tidal waters of Semiahmoo Bay with soft sand flats stretching out hundreds of meters at low tide.",
+    "bestFor": [
+      "Warm shallow wading",
+      "Sandcastle building",
+      "Crabbing"
+    ],
+    "parkingInfo": "Pay parking along Marine Drive and East Beach pay lots.",
+    "transitInfo": "Bus #361 or #362 from South Surrey Park & Ride.",
+    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 28,
+      "singleSampleCount": 32,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 21,
+        "singleSampleCount": 24,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 24,
+        "singleSampleCount": 28,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 27,
+        "singleSampleCount": 31,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 28,
+        "singleSampleCount": 32,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 29,
+        "singleSampleCount": 33,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "white-rock-west-beach",
+    "name": "White Rock West Beach & Pier",
+    "municipality": "White Rock",
+    "waterType": "ocean",
+    "latitude": 49.02305949706211,
+    "longitude": -122.81265545967572,
+    "dogFriendly": false,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": true,
+    "currentStatus": "safe",
+    "waterTempC": 20.8,
+    "description": "The bustling heart of White Rock waterfront featuring Canada's longest pier (470m), gelato shops, and fish & chips.",
+    "bestFor": [
+      "Pier walks",
+      "Dining & gelato",
+      "Tidal wading",
+      "Sunset strolls"
+    ],
+    "parkingInfo": "Paid street parking along Marine Dr and waterfront lots.",
+    "transitInfo": "Bus #361, #362, or #375 from White Rock Centre.",
+    "officialSourceUrl": "https://www.fraserhealth.ca/health-topics-a-to-z/recreational-water/beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 34,
+      "singleSampleCount": 38,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 26,
+        "singleSampleCount": 29,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 30,
+        "singleSampleCount": 33,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 32,
+        "singleSampleCount": 36,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 34,
+        "singleSampleCount": 38,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 35,
+        "singleSampleCount": 39,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "whytecliff-park",
+    "name": "Whytecliff Park Beach",
+    "municipality": "West Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.37211459076738,
+    "longitude": -123.2911314031422,
+    "dogFriendly": false,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 16.8,
+    "description": "Canada's first Marine Protected Area, offering dramatic rocky coves, islet scrambling at low tide, and scuba diving.",
+    "bestFor": [
+      "Scuba diving",
+      "Snorkeling",
+      "Rock scrambling",
+      "Sunset views"
+    ],
+    "parkingInfo": "Free lots inside Whytecliff Park (pay parking in summer).",
+    "transitInfo": "Bus #257 or #250 to Horseshoe Bay, transfer to #262.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 8,
+      "singleSampleCount": 6,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 6,
+        "singleSampleCount": 6,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 7,
+        "singleSampleCount": 6,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 8,
+        "singleSampleCount": 6,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 8,
+        "singleSampleCount": 6,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 8,
+        "singleSampleCount": 6,
+        "status": "safe"
+      }
+    ]
+  },
+  {
+    "id": "wreck-beach-ubc",
+    "name": "Wreck Beach (Trail 6)",
+    "municipality": "Vancouver",
+    "waterType": "ocean",
+    "latitude": 49.26280316711619,
+    "longitude": -123.26208066460056,
+    "dogFriendly": false,
+    "lifeguards": false,
+    "washrooms": true,
+    "wheelchairAccessible": false,
+    "currentStatus": "safe",
+    "waterTempC": 18.5,
+    "description": "North America's largest clothing-optional beach, framed by dramatic cliffs and 500 wooden forest steps.",
+    "bestFor": [
+      "Clothing-optional sunbathing",
+      "Community vibe",
+      "Sunset drumming"
+    ],
+    "parkingInfo": "Paid parking meters along NW Marine Drive or UBC parkades.",
+    "transitInfo": "Bus #4, #99 B-Line, #44 to UBC Bus Exchange, walk to Trail 6.",
+    "officialSourceUrl": "https://www.vch.ca/en/service/public-beach-water-quality",
+    "latestSample": {
+      "date": "2026-08-14",
+      "eColiCount": 16,
+      "singleSampleCount": 15,
+      "status": "safe",
+      "notes": "Pristine recreational water quality"
+    },
+    "historicalSamples": [
+      {
+        "date": "2026-07-18",
+        "eColiCount": 12,
+        "singleSampleCount": 11,
+        "status": "safe"
+      },
+      {
+        "date": "2026-07-25",
+        "eColiCount": 14,
+        "singleSampleCount": 13,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-01",
+        "eColiCount": 15,
+        "singleSampleCount": 14,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-08",
+        "eColiCount": 16,
+        "singleSampleCount": 15,
+        "status": "safe"
+      },
+      {
+        "date": "2026-08-14",
+        "eColiCount": 17,
+        "singleSampleCount": 15,
+        "status": "safe"
+      }
     ]
   }
 ]
