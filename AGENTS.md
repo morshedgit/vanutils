@@ -37,20 +37,25 @@ This file defines specialized AI agent roles for developing, scaling, and mainta
 ### Agent 3: UI/UX & Design System Specialist (`Design-Agent`)
 - **Mission**: Implement clean, ultra-responsive Tailwind UI components across the platform.
 - **Responsibilities**:
-  - Build shared components in `src/components/shared/` (Header, SearchInput, StatusBadge, TagFilter, GeoPicker).
-  - Ensure strict semantic colour contrast for all status states (Emerald/Amber/Rose/Slate).
+  - Build shared components in `src/components/shared/` (Header, ToolCard, StatusBadge, GeoPicker).
+  - Enforce the **Zero-Fluff, High-Density Card Law**: Whole card is clickable (`<a>`), 80%+ space dedicated to direct live data, zero decorative icons/categories/nested buttons.
+  - Maintain client-side pinning synchronization (`vanutils_pinned_<tool-id>`).
   - Optimize mobile layout and PWA touch interactions.
 
 ### Agent 4: Edge Infrastructure & QA Engineer (`Edge-QA-Agent`)
 - **Mission**: Ensure zero-error Cloudflare Pages builds and peak edge performance.
 - **Responsibilities**:
-  - Validate `astro.config.mjs` and `public/_headers` caching policies.
+  - Validate `astro.config.mjs`, `wrangler.json`, and `public/_headers` caching policies.
   - Execute `npm run check` and verify that all code compiles without Node runtime dependencies.
   - Audit Lighthouse performance, accessibility, best practices, and SEO.
 
 ## 3. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility (e.g. BC Ferries Standby Radar):
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with types and services.
-2. **Registry Declaration**: Register in `src/config/tools.ts` with icon and status.
-3. **Route Implementation**: Create `src/pages/<tool-id>/index.astro` using `ToolLayout`.
-4. **Validation**: Ensure zero cross-tool dependencies and verify `npm run build`.
+2. **Registry Declaration**: Register in `src/config/tools.ts`.
+3. **High-Density Card Implementation**: Implement in `src/components/shared/ToolCard.astro` ensuring:
+   - The entire card is a clickable `<a>` container.
+   - Maximize live data capacity (e.g. show 6-10+ live data points or routes).
+   - Zero decorative fluff, category badges, or nested buttons.
+4. **Route Implementation**: Create `src/pages/<tool-id>/index.astro` using `ToolLayout` with ⭐ pinning support.
+5. **Validation**: Ensure zero cross-tool dependencies and verify `npm run check` & `npm run build`.

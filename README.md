@@ -8,7 +8,16 @@
 
 > A unified, ultra-lightweight suite of hyper-local micro-utilities designed specifically for Metro Vancouver residents. Instead of forcing users to install multiple bulky apps or navigate fragmented government websites filled with slow tables and ads, VanUtils provides single-purpose, sub-second tools accessible from one cohesive hub.
 
+Detailed requirements and UX laws are documented in the [Product Requirements Document (PRD.md)](./PRD.md).
+
 ---
+
+## 🎛️ The Zero-Fluff, High-Density Dashboard Law
+All utility cards on the Main Dashboard (`/`) follow strict density standards:
+- **100% Clickable Container (`<a>`)**: No nested buttons, secondary links, or bottom footers.
+- **Maximum Data Density (80%+ Card Space)**: Fits 8–12+ live beach statuses, terminal queues, or mountain snow levels directly on the card face.
+- **Zero Decorative Fluff**: Eliminates decorative icon boxes, category badges, and promotional subheaders.
+- **⭐ Real-Time Personalization**: Users can star/pin favorite items inside any utility tool to customize what appears on their home dashboard card (persisted via `localStorage`).
 
 ## 🚀 Flagship Pilot: Tool #1 "Can I Swim Today?" (`/swim`)
 

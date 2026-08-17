@@ -29,9 +29,11 @@ npm run preview
 - **Rule 2: Shared UI & Layout Usage**: Pages must wrap inside `src/layouts/PlatformLayout.astro` (for Hub) or `src/layouts/ToolLayout.astro` (for specific utilities) to ensure unified navigation, geolocation context, and branding.
 - **Rule 3: Client JavaScript Budget**: Keep total client JS bundle strictly < 25KB. Use server-rendered Astro components by default. Use client islands only when real-time client state (filtering, geolocation distance sorting) is required.
 - **Rule 4: Cloudflare Edge Compatibility**: Do NOT import Node.js native libraries (`fs`, `path`, `child_process`) in runtime edge code. Use Web Standard APIs (`fetch`, `Request`, `Response`, `URLSearchParams`).
+- **Rule 5: Zero-Fluff, High-Density Dashboard Card Standard**: Main dashboard utility cards must be 100% clickable containers (`<a>`), allocate 80%+ of card space to direct live data points (e.g. 8-12+ live beaches or routes), and eliminate decorative icon boxes, category pills, verbose subheaders, and redundant buttons. Support ⭐ pinning synced via `localStorage`.
 
 ## 4. How to Add a New Micro-Utility
 1. **Create Module**: Add `src/tools/<new-tool>/` with `types.ts`, `services/`, and `components/`.
 2. **Register Tool**: Add metadata entry to `src/config/tools.ts`.
-3. **Add Pages**: Create `src/pages/<new-tool>/index.astro` wrapping in `<ToolLayout>`.
-4. **Test & Verify**: Run `npm run build` to verify Cloudflare hybrid output.
+3. **Build High-Density Card**: Implement in `src/components/shared/ToolCard.astro` following Rule 5.
+4. **Add Pages**: Create `src/pages/<new-tool>/index.astro` wrapping in `<ToolLayout>` with ⭐ item pinning support.
+5. **Test & Verify**: Run `npm run check` and `npm run build` to verify Cloudflare output.
