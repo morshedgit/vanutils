@@ -3,9 +3,12 @@ import ToolLayout from '../../layouts/ToolLayout.astro';
 import FilterTabs from '../../tools/mountain-snow/components/FilterTabs.astro';
 import MountainCard from '../../tools/mountain-snow/components/MountainCard.astro';
 import WebcamMatrix from '../../tools/mountain-snow/components/WebcamMatrix.astro';
-import { getAllMountains, getSnowOverviewStats } from '../../tools/mountain-snow/services/snowService';
+import { getLiveMountains, getSnowOverviewStats } from '../../tools/mountain-snow/services/snowService';
 
-const mountains = getAllMountains();
+// Set Edge Cache header: 5 min max age, 10 min background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const mountains = await getLiveMountains();
 const stats = getSnowOverviewStats(mountains);
 const allWebcams = mountains.flatMap((m) => m.webcams);
 ---

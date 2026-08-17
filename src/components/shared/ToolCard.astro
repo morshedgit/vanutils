@@ -1,8 +1,8 @@
 ---
 import type { ToolMeta } from '../../types/shared';
 import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
-import { getAllRoutes } from '../../tools/bc-ferries/services/ferryService';
-import { getAllMountains } from '../../tools/mountain-snow/services/snowService';
+import { getLiveRoutes } from '../../tools/bc-ferries/services/ferryService';
+import { getLiveMountains } from '../../tools/mountain-snow/services/snowService';
 
 interface Props {
   tool: ToolMeta;
@@ -10,14 +10,14 @@ interface Props {
 
 const { tool } = Astro.props;
 
-// Fetch data for high-density listings
+// Fetch live data for high-density listings at the edge
 const allBeaches = tool.id === 'can-i-swim' ? getAllBeaches() : [];
 const initialBeaches = allBeaches.slice(0, 10);
 
-const allFerryRoutes = tool.id === 'bc-ferries' ? getAllRoutes() : [];
+const allFerryRoutes = tool.id === 'bc-ferries' ? await getLiveRoutes() : [];
 const initialFerryRoutes = allFerryRoutes.slice(0, 6);
 
-const allMountains = tool.id === 'mountain-snow' ? getAllMountains() : [];
+const allMountains = tool.id === 'mountain-snow' ? await getLiveMountains() : [];
 const initialMountains = allMountains.slice(0, 4);
 ---
 

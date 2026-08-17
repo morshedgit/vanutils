@@ -2,20 +2,21 @@
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import StandbyGauge from '../../tools/bc-ferries/components/StandbyGauge.astro';
 import WebcamGrid from '../../tools/bc-ferries/components/WebcamGrid.astro';
-import { getAllRoutes, getRouteById } from '../../tools/bc-ferries/services/ferryService';
+import { getLiveRoutes, getRouteById } from '../../tools/bc-ferries/services/ferryService';
 import { getStandbyMeta } from '../../tools/bc-ferries/services/standbyCalc';
 
-export function getStaticPaths() {
-  const routes = getAllRoutes();
-  return routes.map((route) => ({
-    params: { route: route.id },
-    props: { route },
-  }));
+// Set Edge Cache header: 60s max age, 300s background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+
+const { route: routeId } = Astro.params;
+const allLive = await getLiveRoutes();
+const route = getRouteById(routeId || '', allLive);
+
+if (!route) {
+  return Astro.redirect('/ferries');
 }
 
-const { route } = Astro.props;
-
-const reverseRoute = route.reverseRouteId ? getRouteById(route.reverseRouteId) : undefined;
+const reverseRoute = route.reverseRouteId ? getRouteById(route.reverseRouteId, allLive) : undefined;
 const nextSailing = route.nextSailings[0];
 const standbyMeta = nextSailing ? getStandbyMeta(nextSailing.standbyRisk) : undefined;
 ---

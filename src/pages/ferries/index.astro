@@ -4,9 +4,12 @@ import DisruptionBanner from '../../tools/bc-ferries/components/DisruptionBanner
 import SeaBusPulse from '../../tools/bc-ferries/components/SeaBusPulse.astro';
 import FilterTabs from '../../tools/bc-ferries/components/FilterTabs.astro';
 import RouteCard from '../../tools/bc-ferries/components/RouteCard.astro';
-import { getAllRoutes } from '../../tools/bc-ferries/services/ferryService';
+import { getLiveRoutes } from '../../tools/bc-ferries/services/ferryService';
 
-const routes = getAllRoutes();
+// Set Edge Cache header: 60s max age, 300s background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+
+const routes = await getLiveRoutes();
 ---
 
 <ToolLayout

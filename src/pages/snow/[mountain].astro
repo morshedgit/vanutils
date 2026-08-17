@@ -4,18 +4,19 @@ import ElevationVisualizer from '../../tools/mountain-snow/components/ElevationV
 import RoadStatusCard from '../../tools/mountain-snow/components/RoadStatusCard.astro';
 import SnowfallBar from '../../tools/mountain-snow/components/SnowfallBar.astro';
 import WebcamMatrix from '../../tools/mountain-snow/components/WebcamMatrix.astro';
-import { getAllMountains } from '../../tools/mountain-snow/services/snowService';
-import { getAvalancheMeta } from '../../tools/mountain-snow/services/snowService';
+import { getLiveMountains, getMountainById, getAvalancheMeta } from '../../tools/mountain-snow/services/snowService';
 
-export function getStaticPaths() {
-  const mountains = getAllMountains();
-  return mountains.map((mountain) => ({
-    params: { mountain: mountain.id },
-    props: { mountain },
-  }));
+// Set Edge Cache header: 5 min max age, 10 min background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const { mountain: mountainId } = Astro.params;
+const allLive = await getLiveMountains();
+const mountain = getMountainById(mountainId || '', allLive);
+
+if (!mountain) {
+  return Astro.redirect('/snow');
 }
 
-const { mountain } = Astro.props;
 const avAlpine = getAvalancheMeta(mountain.avalancheRating.alpine);
 const avTreeline = getAvalancheMeta(mountain.avalancheRating.treeline);
 const avBelow = getAvalancheMeta(mountain.avalancheRating.belowTreeline);

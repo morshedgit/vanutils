@@ -3,18 +3,15 @@ import PlatformLayout from '../../layouts/PlatformLayout.astro';
 import StatusBadge from '../../components/shared/StatusBadge.astro';
 import Sparkline from '../../tools/can-i-swim/components/Sparkline.astro';
 import SafetyLegend from '../../tools/can-i-swim/components/SafetyLegend.astro';
-import { getAllBeaches, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
+import { getBeachById, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
 import { getStatusMeta } from '../../tools/can-i-swim/services/healthCalc';
 
-export function getStaticPaths() {
-  const beaches = getAllBeaches();
-  return beaches.map((beach) => ({
-    params: { slug: beach.id },
-    props: { beach },
-  }));
-}
+// Set Edge Cache header: 10 min max age, 30 min background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
-const { beach } = Astro.props;
+const { slug } = Astro.params;
+const beach = getBeachById(slug || '');
+
 if (!beach) {
   return Astro.redirect('/swim');
 }
