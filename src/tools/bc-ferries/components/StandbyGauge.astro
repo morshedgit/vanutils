@@ -1,0 +1,35 @@
+---
+import { getStandbyMeta } from '../services/standbyCalc';
+import type { StandbyRiskLevel } from '../types';
+
+interface Props {
+  percent?: number;
+  standbyRisk: StandbyRiskLevel;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { percent, standbyRisk, size = 'md' } = Astro.props;
+const meta = getStandbyMeta(standbyRisk);
+---
+
+<div class="flex items-center gap-2">
+  {percent !== undefined ? (
+    <div class="flex items-center gap-2">
+      <!-- Mini Progress Bar -->
+      <div class="w-16 h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden shrink-0">
+        <div
+          class="h-full rounded-full transition-all duration-300"
+          style={`width: ${percent}%; background-color: ${meta.gaugeColor};`}
+        ></div>
+      </div>
+      <span class="text-xs font-bold text-slate-800 dark:text-slate-200">
+        {percent}%
+      </span>
+    </div>
+  ) : null}
+
+  <span class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold border ${meta.badgeBg} ${meta.badgeText} ${meta.badgeBorder}`}>
+    <span class={`w-1.5 h-1.5 rounded-full ${meta.dotColor}`}></span>
+    <span>{meta.label}</span>
+  </span>
+</div>

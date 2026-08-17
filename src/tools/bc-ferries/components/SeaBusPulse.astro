@@ -1,0 +1,36 @@
+---
+import { getSeaBusLiveStatus } from '../services/ferryService';
+
+const seabus = getSeaBusLiveStatus();
+---
+
+<div class="p-4 rounded-2xl bg-sky-50 dark:bg-slate-900 border border-sky-200/80 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+  <div class="space-y-1">
+    <div class="flex items-center gap-2">
+      <span class="text-base">⚡</span>
+      <span class="text-xs font-bold text-sky-800 dark:text-sky-300 uppercase tracking-wide">
+        TransLink SeaBus Live Pulse
+      </span>
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+    </div>
+    <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+      Waterfront ⇄ Lonsdale Quay
+    </h3>
+    <p class="text-xs text-slate-500 dark:text-slate-400">
+      Frequent 10-minute headway crossing Burrard Inlet in 12 mins. Active: {seabus.activeVessels.join(' & ')}.
+    </p>
+  </div>
+
+  <div class="flex items-center gap-3 shrink-0">
+    <div class="text-right">
+      <div class="text-xs font-bold text-slate-900 dark:text-white">Next Sailing</div>
+      <div class="text-lg font-black text-sky-600 dark:text-sky-400">10m Headway</div>
+    </div>
+    <a
+      href="/ferries/TL-SEABUS"
+      class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all"
+    >
+      Schedule →
+    </a>
+  </div>
+</div>

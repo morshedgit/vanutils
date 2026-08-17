@@ -1,0 +1,42 @@
+---
+import type { Sailing } from '../types';
+import StandbyGauge from './StandbyGauge.astro';
+
+interface Props {
+  sailings: Sailing[];
+  maxDisplay?: number;
+}
+
+const { sailings, maxDisplay = 3 } = Astro.props;
+const displaySailings = sailings.slice(0, maxDisplay);
+---
+
+<div class="space-y-1.5">
+  {displaySailings.map((sailing) => (
+    <div class="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs">
+      <!-- Left: Departure Time & Vessel -->
+      <div class="flex items-center gap-2 min-w-0 pr-2">
+        <span class="font-extrabold text-slate-900 dark:text-white shrink-0">
+          {sailing.departureTime}
+        </span>
+        <span class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+          {sailing.vesselName}
+        </span>
+        {sailing.delayMinutes > 0 && (
+          <span class="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[10px] font-bold">
+            +{sailing.delayMinutes}m
+          </span>
+        )}
+      </div>
+
+      <!-- Right: Deck Space / Standby -->
+      <div class="shrink-0">
+        <StandbyGauge
+          percent={sailing.deckSpacePercent}
+          standbyRisk={sailing.standbyRisk}
+          size="sm"
+        />
+      </div>
+    </div>
+  ))}
+</div>

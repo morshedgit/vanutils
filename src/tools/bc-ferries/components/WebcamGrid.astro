@@ -1,0 +1,42 @@
+---
+import type { HighwayCamera } from '../types';
+
+interface Props {
+  cameras: HighwayCamera[];
+}
+
+const { cameras } = Astro.props;
+---
+
+{cameras.length > 0 && (
+  <div class="space-y-3">
+    <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-semibold">
+      <span class="flex items-center gap-1.5">
+        <span>📹</span> DriveBC Live Highway Approach Cams
+      </span>
+      <span class="text-[11px] text-slate-400">Live feeds update every 5m</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {cameras.map((cam) => (
+        <div class="overflow-hidden rounded-xl bg-slate-900 border border-slate-800 space-y-1.5">
+          <div class="relative aspect-video bg-slate-950">
+            <img
+              src={cam.imageUrl}
+              alt={cam.name}
+              loading="lazy"
+              class="w-full h-full object-cover"
+              onerror="this.onerror=null; this.src='https://images.drivebc.ca/bchighwaycam/pub/html/dbc/529.html';"
+            />
+            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono">
+              {cam.highwayName}
+            </span>
+          </div>
+          <div class="p-2 text-xs font-medium text-slate-200 truncate">
+            {cam.name}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}

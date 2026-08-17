@@ -1,6 +1,7 @@
 ---
 import type { ToolMeta } from '../../types/shared';
 import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
+import { getAllRoutes } from '../../tools/bc-ferries/services/ferryService';
 
 interface Props {
   tool: ToolMeta;
@@ -8,11 +9,12 @@ interface Props {
 
 const { tool } = Astro.props;
 
-// Fetch all beaches for high-density listing
+// Fetch data for high-density listings
 const allBeaches = tool.id === 'can-i-swim' ? getAllBeaches() : [];
-
-// Top 10 prominent beaches to display on the main card
 const initialBeaches = allBeaches.slice(0, 10);
+
+const allFerryRoutes = tool.id === 'bc-ferries' ? getAllRoutes() : [];
+const initialFerryRoutes = allFerryRoutes.slice(0, 6);
 ---
 
 <a
@@ -20,18 +22,20 @@ const initialBeaches = allBeaches.slice(0, 10);
   class="tool-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-500 hover:shadow-md transition-all duration-150"
   data-tool-id={tool.id}
 >
-  <!-- Card Header: Title + Status Pill (No decorative icons/categories) -->
+  <!-- Card Header: Title + Status Pill -->
   <div class="flex items-center justify-between gap-2 mb-3">
     <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors">
       {tool.name}
     </h2>
     <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
-      {tool.id === 'can-i-swim' ? '30/31 Safe' : (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'can-i-swim' && '30/31 Safe'}
+      {tool.id === 'bc-ferries' && 'Live Deck %'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
   <!-- CAN I SWIM: High-Density Beach List (2 Columns on medium screens) -->
-  {tool.id === 'can-i-swim' ? (
+  {tool.id === 'can-i-swim' && (
     <div id="main-card-beaches-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-700 dark:text-slate-300">
       {initialBeaches.map((b) => (
         <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-beach-slug={b.id}>
@@ -58,8 +62,58 @@ const initialBeaches = allBeaches.slice(0, 10);
         </div>
       ))}
     </div>
-  ) : (
-    <!-- Other Tools: Compact Feature Readout -->
+  )}
+
+  <!-- BC FERRIES: High-Density Marine Routes List -->
+  {tool.id === 'bc-ferries' && (
+    <div id="main-card-ferries-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialFerryRoutes.map((r) => {
+        const next = r.nextSailings[0];
+        return (
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-route-id={r.id}>
+            <div class="truncate pr-2 font-medium">
+              <span>{r.shortName}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              {next && next.deckSpacePercent !== undefined ? (
+                <span class="text-slate-700 dark:text-slate-300">
+                  {next.departureTime} ({next.deckSpacePercent}% deck)
+                </span>
+              ) : (
+                <span class="text-slate-500 dark:text-slate-400">
+                  {next ? next.departureTime : 'Scheduled'}
+                </span>
+              )}
+
+              {next && next.standbyRisk === 'low' && (
+                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Standby OK
+                </span>
+              )}
+              {next && next.standbyRisk === 'moderate' && (
+                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> Filling
+                </span>
+              )}
+              {next && next.standbyRisk === 'high' && (
+                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> Full
+                </span>
+              )}
+              {(!next || next.standbyRisk === 'not_applicable') && (
+                <span class="text-sky-600 dark:text-sky-400 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-sky-500"></span> Fast Transit
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+
+  <!-- Other Roadmap Tools: Compact Feature Readout -->
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -123,5 +177,73 @@ const initialBeaches = allBeaches.slice(0, 10);
     }
 
     window.addEventListener('vanutils:pinned-beaches-changed', syncMainCardBeaches);
+  </script>
+)}
+
+{tool.id === 'bc-ferries' && (
+  <script is:inline define:vars={{ allFerryRoutesJson: JSON.stringify(allFerryRoutes) }}>
+    function syncMainCardFerries() {
+      const grid = document.getElementById('main-card-ferries-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_ferries');
+      const allRoutes = JSON.parse(allFerryRoutesJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinnedRoutes = allRoutes.filter((r) => pinnedIds.includes(r.id));
+          const unpinnedRoutes = allRoutes.filter((r) => !pinnedIds.includes(r.id));
+          displayList = [...pinnedRoutes, ...unpinnedRoutes].slice(0, 6);
+        } catch (e) {
+          displayList = allRoutes.slice(0, 6);
+        }
+      } else {
+        displayList = allRoutes.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((r) => {
+        const next = r.nextSailings?.[0];
+        let statusBadge = '';
+        if (next) {
+          if (next.standbyRisk === 'low') {
+            statusBadge = '<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Standby OK</span>';
+          } else if (next.standbyRisk === 'moderate') {
+            statusBadge = '<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Filling</span>';
+          } else if (next.standbyRisk === 'high') {
+            statusBadge = '<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Full</span>';
+          } else {
+            statusBadge = '<span class="text-sky-600 dark:text-sky-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Fast Transit</span>';
+          }
+        }
+
+        const deckText = next && next.deckSpacePercent !== undefined
+          ? `${next.departureTime} (${next.deckSpacePercent}% deck)`
+          : (next ? next.departureTime : 'Scheduled');
+
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-route-id="${r.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${r.shortName}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-700 dark:text-slate-300">${deckText}</span>
+              ${statusBadge}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardFerries);
+    } else {
+      syncMainCardFerries();
+    }
+
+    window.addEventListener('vanutils:pinned-ferries-changed', syncMainCardFerries);
   </script>
 )}

@@ -1,171 +1,159 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import DisruptionBanner from '../../tools/bc-ferries/components/DisruptionBanner.astro';
+import SeaBusPulse from '../../tools/bc-ferries/components/SeaBusPulse.astro';
+import FilterTabs from '../../tools/bc-ferries/components/FilterTabs.astro';
+import RouteCard from '../../tools/bc-ferries/components/RouteCard.astro';
+import { getAllRoutes } from '../../tools/bc-ferries/services/ferryService';
+
+const routes = getAllRoutes();
 ---
 
 <ToolLayout
   toolId="bc-ferries"
-  title="BC Ferries Standby Radar"
-  description="Real-time deck capacity, sailing wait times & historical drive-up standby clearance odds for Tsawwassen & Horseshoe Bay terminals."
+  title="Ferry & Marine Transit Radar"
+  description="Real-time multi-provider marine transit radar. BC Ferries vehicle deck space, standby odds, Hullo fast catamarans, SeaBus, and DriveBC approach cameras."
   currentPath="/ferries"
-  badgeText="Roadmap v1.1"
-  status="planned"
+  badgeText="Live Marine Radar"
+  status="active"
 >
-  <!-- Header Aside Widget -->
-  <div slot="header-aside" class="flex items-center gap-3 bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-    <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-black text-xl border border-sky-500/20">
-      ⛴️
-    </div>
-    <div>
-      <div class="text-xs font-extrabold text-slate-900 dark:text-white">
-        Tsawwassen & Horseshoe Bay
-      </div>
-      <div class="text-[11px] text-slate-500 dark:text-slate-400">
-        4 Major Routes Monitored
-      </div>
-    </div>
-  </div>
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Consolidated Disruption & Marine Weather Header -->
+    <DisruptionBanner />
 
-  <div class="space-y-8">
-    <!-- Roadmap Banner -->
-    <div class="p-6 rounded-3xl bg-sky-500/10 border border-sky-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">🛠️</span>
-        <div>
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Tool In Active Development (Release v1.1)</h3>
-          <p class="text-xs text-slate-600 dark:text-slate-400">
-            Following the VanUtils modular architecture, this tool is slated for release right after Can I Swim. Preview the interface below.
-          </p>
-        </div>
+    <!-- Pinned Marine Routes Section (Mirrors Home Dashboard Card) -->
+    <div id="pinned-ferries-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+          <span class="text-amber-500">⭐</span> My Pinned Routes (Shown on Home Dashboard)
+        </span>
+        <span class="text-[11px] text-slate-400">
+          Click ⭐ on any route to customize
+        </span>
       </div>
-      <a
-        href="/swim"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shrink-0"
-      >
-        Try Live Swim Tool →
-      </a>
+
+      <div id="pinned-ferries-container" class="flex flex-wrap gap-1.5">
+        <!-- Dynamically populated via client script -->
+      </div>
     </div>
 
-    <!-- Interactive Terminal Route Mock -->
-    <div class="rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 space-y-6 shadow-sm">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Live Sailing Standby Radar
-          </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Select a terminal and route to calculate standby clearance odds
-          </p>
-        </div>
+    <!-- TransLink SeaBus Live Pulse Banner -->
+    <SeaBusPulse />
 
-        <!-- Route Selector -->
-        <div class="flex gap-2">
-          <button class="px-3.5 py-1.5 rounded-xl bg-sky-600 text-white text-xs font-bold shadow-xs">
-            Tsawwassen ⇄ Swartz Bay
-          </button>
-          <button class="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700">
-            Horseshoe Bay ⇄ Departure Bay
-          </button>
-        </div>
+    <!-- Filter & Search Controls -->
+    <FilterTabs />
+
+    <!-- Routes Grid Section -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
+        <span id="ferry-count-display">Showing all {routes.length} marine routes</span>
+        <span>Tap any route for full timetable & cams</span>
       </div>
 
-      <!-- Live Sailing Status Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Next Sailing -->
-        <div class="p-5 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">Next Departure</span>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white">On Time</span>
-          </div>
-          <div class="text-2xl font-black text-slate-900 dark:text-white">
-            1:00 PM <span class="text-xs font-normal text-slate-500">Coastal Renaissance</span>
-          </div>
-          <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-            <div class="flex justify-between">
-              <span>Deck Capacity:</span>
-              <span class="font-bold text-emerald-700 dark:text-emerald-400">82% Full (18 spots)</span>
-            </div>
-            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-              <div class="bg-emerald-500 h-2 rounded-full" style="width: 82%"></div>
-            </div>
-          </div>
-          <div class="pt-2 border-t border-emerald-200/60 dark:border-emerald-900/40 flex items-center justify-between text-xs">
-            <span class="text-slate-500">Standby Clearance:</span>
-            <span class="font-black text-emerald-700 dark:text-emerald-400">92% High Probability</span>
-          </div>
-        </div>
-
-        <!-- Following Sailing -->
-        <div class="p-5 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">Following Sailing</span>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-500 text-white">Filling Fast</span>
-          </div>
-          <div class="text-2xl font-black text-slate-900 dark:text-white">
-            3:00 PM <span class="text-xs font-normal text-slate-500">Spirit of BC</span>
-          </div>
-          <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-            <div class="flex justify-between">
-              <span>Deck Capacity:</span>
-              <span class="font-bold text-amber-700 dark:text-amber-400">94% Full (6 spots)</span>
-            </div>
-            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-              <div class="bg-amber-500 h-2 rounded-full" style="width: 94%"></div>
-            </div>
-          </div>
-          <div class="pt-2 border-t border-amber-200/60 dark:border-amber-900/40 flex items-center justify-between text-xs">
-            <span class="text-slate-500">Standby Clearance:</span>
-            <span class="font-black text-amber-700 dark:text-amber-400">45% Medium (1-Sailing Wait)</span>
-          </div>
-        </div>
-
-        <!-- Evening Sailing -->
-        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Evening Sailing</span>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-500 text-white">Open</span>
-          </div>
-          <div class="text-2xl font-black text-slate-900 dark:text-white">
-            5:00 PM <span class="text-xs font-normal text-slate-500">Queen of New West</span>
-          </div>
-          <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-            <div class="flex justify-between">
-              <span>Deck Capacity:</span>
-              <span class="font-bold text-slate-700 dark:text-slate-300">65% Full (42 spots)</span>
-            </div>
-            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-              <div class="bg-sky-500 h-2 rounded-full" style="width: 65%"></div>
-            </div>
-          </div>
-          <div class="pt-2 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
-            <span class="text-slate-500">Standby Clearance:</span>
-            <span class="font-black text-emerald-600 dark:text-emerald-400">98% Very High</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Highway Queue Cams Preview -->
-      <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
-        <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-          <span>📷</span> Synchronized DriveBC Terminal Queue Cams (Preview)
-        </h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 p-4 text-center space-y-2">
-            <div class="text-xs font-bold text-slate-700 dark:text-slate-300">Hwy 17 at Tsawwassen Causeway</div>
-            <div class="h-32 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-400 text-xs font-medium">
-              [Live Highway 17 Feed Sync]
-            </div>
-            <div class="text-[11px] text-slate-500">Traffic moving freely: 0 min causeway delay</div>
-          </div>
-
-          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 p-4 text-center space-y-2">
-            <div class="text-xs font-bold text-slate-700 dark:text-slate-300">Hwy 1 at Horseshoe Bay Cut</div>
-            <div class="h-32 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-400 text-xs font-medium">
-              [Live Highway 1 Feed Sync]
-            </div>
-            <div class="text-[11px] text-slate-500">Terminal approach clear: Normal queuing</div>
-          </div>
-        </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5" id="ferries-grid">
+        {routes.map((route) => (
+          <RouteCard route={route} />
+        ))}
       </div>
     </div>
   </div>
 </ToolLayout>
+
+<script>
+  const DEFAULT_PINNED_FERRIES = ['TSA-SWB', 'HSB-NAN', 'HSB-LNG', 'HULLO-VAN-NAN', 'TL-SEABUS'];
+
+  function getPinnedFerryIds(): string[] {
+    const saved = localStorage.getItem('vanutils_pinned_ferries');
+    return saved ? JSON.parse(saved) : DEFAULT_PINNED_FERRIES;
+  }
+
+  function setPinnedFerryIds(ids: string[]) {
+    localStorage.setItem('vanutils_pinned_ferries', JSON.stringify(ids));
+    window.dispatchEvent(new CustomEvent('vanutils:pinned-ferries-changed'));
+    renderPinnedFerries();
+    updateFerryPinButtonStates();
+  }
+
+  function toggleFerryPin(routeId: string) {
+    let current = getPinnedFerryIds();
+    if (current.includes(routeId)) {
+      current = current.filter(id => id !== routeId);
+    } else {
+      current = [...current, routeId];
+    }
+    setPinnedFerryIds(current);
+  }
+
+  function updateFerryPinButtonStates() {
+    const pinned = getPinnedFerryIds();
+    const pinBtns = document.querySelectorAll('.pin-ferry-toggle') as NodeListOf<HTMLButtonElement>;
+
+    pinBtns.forEach(btn => {
+      const id = btn.dataset.routeId || '';
+      const isPinned = pinned.includes(id);
+      btn.classList.toggle('text-amber-500', isPinned);
+      btn.classList.toggle('text-slate-300', !isPinned);
+      btn.classList.toggle('dark:text-slate-600', !isPinned);
+      btn.title = isPinned ? 'Remove from Main Dashboard' : 'Pin to Main Dashboard';
+    });
+  }
+
+  function renderPinnedFerries() {
+    const container = document.getElementById('pinned-ferries-container');
+    if (!container) return;
+
+    const pinned = getPinnedFerryIds();
+    const cards = Array.from(document.querySelectorAll('.ferry-route-card')) as HTMLElement[];
+
+    if (pinned.length === 0) {
+      container.innerHTML = `<span class="text-xs text-slate-400 italic">No routes pinned. Click ⭐ on any route below to show it on your dashboard.</span>`;
+      return;
+    }
+
+    container.innerHTML = pinned.map(id => {
+      const match = cards.find(c => c.dataset.routeId === id);
+      const name = match ? (match.dataset.routeName || id).replace(/ \(.*\)/, '') : id;
+
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+          <a href="/ferries/${id}" class="hover:text-sky-500 truncate max-w-[180px]">${name}</a>
+          <button type="button" class="unpin-ferry-btn ml-1 text-slate-400 hover:text-rose-500 font-bold" data-id="${id}" title="Remove from main">×</button>
+        </span>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.unpin-ferry-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.id;
+        if (id) toggleFerryPin(id);
+      });
+    });
+  }
+
+  function setupFerryDashboard() {
+    updateFerryPinButtonStates();
+    renderPinnedFerries();
+
+    document.querySelectorAll('.pin-ferry-toggle').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = (btn as HTMLElement).dataset.routeId;
+        if (id) toggleFerryPin(id);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFerryDashboard);
+  } else {
+    setupFerryDashboard();
+  }
+
+  window.addEventListener('vanutils:pinned-ferries-changed', () => {
+    updateFerryPinButtonStates();
+    renderPinnedFerries();
+  });
+</script>

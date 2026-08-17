@@ -1,0 +1,77 @@
+---
+import type { FerryRoute } from '../types';
+import SailingTimeline from './SailingTimeline.astro';
+
+interface Props {
+  route: FerryRoute;
+}
+
+const { route } = Astro.props;
+---
+
+<div
+  class="ferry-route-card group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-sky-500/60 hover:shadow-md transition-all duration-150"
+  data-route-id={route.id}
+  data-route-category={route.category}
+  data-route-provider={route.provider}
+  data-route-name={route.name}
+>
+  <div>
+    <!-- Top Row: Provider + Category + Pin -->
+    <div class="flex items-center justify-between gap-2 mb-2">
+      <div class="flex items-center gap-1.5">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+          {route.provider === 'bc-ferries' && '⛴️ BC Ferries'}
+          {route.provider === 'hullo' && '⚡ Hullo Fast Ferry'}
+          {route.provider === 'translink' && '🚇 TransLink SeaBus'}
+          {route.provider === 'water-taxi' && '🚤 Water Taxi'}
+          {route.provider === 'moti' && '⚓ Inland Ferry'}
+        </span>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <span class="text-[11px] text-slate-500 dark:text-slate-400">
+          ⏱️ {route.crossingDurationMinutes}m crossing
+        </span>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <button
+          type="button"
+          class="pin-ferry-toggle p-1 rounded-lg text-slate-300 dark:text-slate-600 hover:text-amber-400 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          data-route-id={route.id}
+          title="Pin to Main Dashboard"
+          aria-label={`Pin ${route.name}`}
+        >
+          <svg class="w-4 h-4 fill-current star-icon" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Route Title -->
+    <h3 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors mb-2.5">
+      <a href={`/ferries/${route.id}`} class="focus:outline-none hover:underline">
+        {route.name}
+      </a>
+    </h3>
+
+    <!-- Upcoming Sailings Timeline -->
+    <div class="mb-3">
+      <SailingTimeline sailings={route.nextSailings} maxDisplay={3} />
+    </div>
+  </div>
+
+  <!-- Bottom Row: Terminal Details & Full Schedule Link -->
+  <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+    <span class="truncate pr-2">
+      {route.frequencyText || `${route.originTerminal} ⇄ ${route.destinationTerminal}`}
+    </span>
+
+    <a
+      href={`/ferries/${route.id}`}
+      class="text-xs font-bold text-sky-600 dark:text-sky-400 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5 shrink-0"
+    >
+      Full Schedule →
+    </a>
+  </div>
+</div>

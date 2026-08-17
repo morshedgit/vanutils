@@ -1,0 +1,564 @@
+[
+  {
+    "id": "TSA-SWB",
+    "provider": "bc-ferries",
+    "category": "vehicle",
+    "name": "Tsawwassen to Swartz Bay (Victoria)",
+    "shortName": "Tsawwassen ➔ Victoria (Swartz Bay)",
+    "originTerminal": "Tsawwassen (Mainland)",
+    "destinationTerminal": "Swartz Bay (Victoria)",
+    "vesselType": "vehicle_and_passenger",
+    "crossingDurationMinutes": 95,
+    "reverseRouteId": "SWB-TSA",
+    "frequencyText": "Hourly on the hour (7:00 AM – 9:00 PM)",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "14:00",
+        "arrivalTime": "15:35",
+        "vesselName": "Spirit of British Columbia",
+        "deckSpacePercent": 78,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time • Good Standby Clearance"
+      },
+      {
+        "departureTime": "15:00",
+        "arrivalTime": "16:35",
+        "vesselName": "Coastal Celebration",
+        "deckSpacePercent": 42,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time • Favourable Standby"
+      },
+      {
+        "departureTime": "16:00",
+        "arrivalTime": "17:35",
+        "vesselName": "Spirit of Vancouver Island",
+        "deckSpacePercent": 24,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 5,
+        "standbyRisk": "moderate",
+        "weatherRisk": "normal",
+        "statusText": "5m Delay • Filling Fast"
+      },
+      {
+        "departureTime": "17:00",
+        "arrivalTime": "18:35",
+        "vesselName": "Queen of New Westminster",
+        "deckSpacePercent": 8,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "high",
+        "weatherRisk": "normal",
+        "statusText": "Peak Commute • Standby Queue Full"
+      }
+    ],
+    "highwayCameras": [
+      {
+        "id": "cam-tsa-56",
+        "name": "Hwy 17 at 56th St (Tsawwassen Approach)",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg",
+        "highwayName": "Highway 17",
+        "location": "Delta / Tsawwassen",
+        "orientation": "Southbound"
+      },
+      {
+        "id": "cam-tsa-causeway",
+        "name": "Hwy 17 Causeway",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/530.jpg",
+        "highwayName": "Highway 17 Causeway",
+        "location": "Roberts Bank / Ferry Terminal",
+        "orientation": "Westbound"
+      }
+    ]
+  },
+  {
+    "id": "HSB-NAN",
+    "provider": "bc-ferries",
+    "category": "vehicle",
+    "name": "Horseshoe Bay to Departure Bay (Nanaimo)",
+    "shortName": "Horseshoe Bay ➔ Nanaimo (Dep Bay)",
+    "originTerminal": "Horseshoe Bay (West Van)",
+    "destinationTerminal": "Departure Bay (Nanaimo)",
+    "vesselType": "vehicle_and_passenger",
+    "crossingDurationMinutes": 100,
+    "reverseRouteId": "NAN-HSB",
+    "frequencyText": "Every 2 hours (6:30 AM – 10:40 PM)",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "14:30",
+        "arrivalTime": "16:10",
+        "vesselName": "Queen of Oak Bay",
+        "deckSpacePercent": 54,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time • Standby Open"
+      },
+      {
+        "departureTime": "16:50",
+        "arrivalTime": "18:30",
+        "vesselName": "Queen of Cowichan",
+        "deckSpacePercent": 18,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 10,
+        "standbyRisk": "moderate",
+        "weatherRisk": "normal",
+        "statusText": "10m Delay • 1-Sailing Wait Likely"
+      },
+      {
+        "departureTime": "19:05",
+        "arrivalTime": "20:45",
+        "vesselName": "Queen of Oak Bay",
+        "deckSpacePercent": 65,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time"
+      }
+    ],
+    "highwayCameras": [
+      {
+        "id": "cam-hsb-exit2",
+        "name": "Hwy 1 Upper Levels at Exit 2 (Horseshoe Bay)",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/795.jpg",
+        "highwayName": "Highway 1",
+        "location": "West Vancouver",
+        "orientation": "Westbound"
+      },
+      {
+        "id": "cam-hsb-keith",
+        "name": "Keith Road & Terminal Approach",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/796.jpg",
+        "highwayName": "Keith Road",
+        "location": "Horseshoe Bay Village",
+        "orientation": "Terminal Entry"
+      }
+    ]
+  },
+  {
+    "id": "HSB-LNG",
+    "provider": "bc-ferries",
+    "category": "vehicle",
+    "name": "Horseshoe Bay to Langdale (Sunshine Coast)",
+    "shortName": "Horseshoe Bay ➔ Sunshine Coast",
+    "originTerminal": "Horseshoe Bay (West Van)",
+    "destinationTerminal": "Langdale (Gibsons)",
+    "vesselType": "vehicle_and_passenger",
+    "crossingDurationMinutes": 40,
+    "reverseRouteId": "LNG-HSB",
+    "frequencyText": "8-10 Daily Sailings",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "14:15",
+        "arrivalTime": "14:55",
+        "vesselName": "Queen of Surrey",
+        "deckSpacePercent": 68,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time • Smooth Boarding"
+      },
+      {
+        "departureTime": "16:25",
+        "arrivalTime": "17:05",
+        "vesselName": "Queen of Surrey",
+        "deckSpacePercent": 31,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "moderate",
+        "weatherRisk": "normal",
+        "statusText": "Filling Fast"
+      },
+      {
+        "departureTime": "18:40",
+        "arrivalTime": "19:20",
+        "vesselName": "Queen of Surrey",
+        "deckSpacePercent": 75,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time"
+      }
+    ],
+    "highwayCameras": [
+      {
+        "id": "cam-hsb-exit2-lng",
+        "name": "Hwy 1 at Exit 2 to Ferries",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/795.jpg",
+        "highwayName": "Highway 1",
+        "location": "West Vancouver",
+        "orientation": "Westbound"
+      }
+    ]
+  },
+  {
+    "id": "TSA-DUK",
+    "provider": "bc-ferries",
+    "category": "vehicle",
+    "name": "Tsawwassen to Duke Point (Nanaimo)",
+    "shortName": "Tsawwassen ➔ Nanaimo (Duke Point)",
+    "originTerminal": "Tsawwassen (Mainland)",
+    "destinationTerminal": "Duke Point (Nanaimo)",
+    "vesselType": "vehicle_and_passenger",
+    "crossingDurationMinutes": 120,
+    "reverseRouteId": "DUK-TSA",
+    "frequencyText": "Every 2.5 hours (5:15 AM – 10:45 PM)",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "15:15",
+        "arrivalTime": "17:15",
+        "vesselName": "Queen of Alberni",
+        "deckSpacePercent": 82,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "Plenty of Deck Space"
+      },
+      {
+        "departureTime": "17:45",
+        "arrivalTime": "19:45",
+        "vesselName": "Queen of Coquitlam",
+        "deckSpacePercent": 48,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time"
+      }
+    ],
+    "highwayCameras": [
+      {
+        "id": "cam-tsa-56-duk",
+        "name": "Hwy 17 at 56th St Approach",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg",
+        "highwayName": "Highway 17",
+        "location": "Delta",
+        "orientation": "Southbound"
+      }
+    ]
+  },
+  {
+    "id": "HULLO-VAN-NAN",
+    "provider": "hullo",
+    "category": "passenger",
+    "name": "Hullo Fast Ferry: Vancouver to Nanaimo",
+    "shortName": "Downtown Van ➔ Nanaimo (Hullo ⚡)",
+    "originTerminal": "Vancouver Harbour Flight Centre (Downtown)",
+    "destinationTerminal": "Nanaimo Port Drive (Cruise Terminal)",
+    "vesselType": "passenger_only",
+    "crossingDurationMinutes": 75,
+    "reverseRouteId": "HULLO-NAN-VAN",
+    "frequencyText": "5-7 Daily Fast Catamaran Sailings",
+    "fareNote": "Passenger only • WiFi & power onboard",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "14:45",
+        "arrivalTime": "16:00",
+        "vesselName": "Hullo Spindle Whorl",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "On Time • Seats Available"
+      },
+      {
+        "departureTime": "17:30",
+        "arrivalTime": "18:45",
+        "vesselName": "Hullo huym̓ixtw̓",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "On Time • Premium Seats Open"
+      },
+      {
+        "departureTime": "20:00",
+        "arrivalTime": "21:15",
+        "vesselName": "Hullo Spindle Whorl",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "On Time"
+      }
+    ],
+    "highwayCameras": []
+  },
+  {
+    "id": "TL-SEABUS",
+    "provider": "translink",
+    "category": "passenger",
+    "name": "TransLink SeaBus: Waterfront to Lonsdale Quay",
+    "shortName": "Waterfront ➔ Lonsdale Quay (SeaBus)",
+    "originTerminal": "Waterfront Station (Downtown)",
+    "destinationTerminal": "Lonsdale Quay (North Vancouver)",
+    "vesselType": "passenger_only",
+    "crossingDurationMinutes": 12,
+    "reverseRouteId": "TL-SEABUS-SB",
+    "frequencyText": "Every 10 mins (Peak) / 15 mins (Off-Peak)",
+    "fareNote": "Compass Card 1-Zone / 2-Zone",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "13:45",
+        "arrivalTime": "13:57",
+        "vesselName": "Burrard Otter II",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "Boarding • 10m Headway"
+      },
+      {
+        "departureTime": "13:55",
+        "arrivalTime": "14:07",
+        "vesselName": "Burrard Chinook",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "On Schedule"
+      },
+      {
+        "departureTime": "14:05",
+        "arrivalTime": "14:17",
+        "vesselName": "Burrard Otter II",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "On Schedule"
+      }
+    ],
+    "highwayCameras": []
+  },
+  {
+    "id": "HSB-BOW",
+    "provider": "bc-ferries",
+    "category": "local",
+    "name": "Horseshoe Bay to Bowen Island (Route 8)",
+    "shortName": "Horseshoe Bay ➔ Bowen Island",
+    "originTerminal": "Horseshoe Bay (West Van)",
+    "destinationTerminal": "Snug Cove (Bowen Island)",
+    "vesselType": "vehicle_and_passenger",
+    "crossingDurationMinutes": 20,
+    "reverseRouteId": "BOW-HSB",
+    "frequencyText": "Hourly departures",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "14:35",
+        "arrivalTime": "14:55",
+        "vesselName": "Queen of Capilano",
+        "deckSpacePercent": 72,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time • Good Standby"
+      },
+      {
+        "departureTime": "15:45",
+        "arrivalTime": "16:05",
+        "vesselName": "Queen of Capilano",
+        "deckSpacePercent": 40,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time"
+      }
+    ],
+    "highwayCameras": [
+      {
+        "id": "cam-hsb-bow-keith",
+        "name": "Keith Rd Approach to Horseshoe Bay",
+        "imageUrl": "https://images.drivebc.ca/bchighwaycam/pub/cameras/796.jpg",
+        "highwayName": "Keith Road",
+        "location": "Horseshoe Bay",
+        "orientation": "Terminal Entry"
+      }
+    ]
+  },
+  {
+    "id": "TSA-SGI",
+    "provider": "bc-ferries",
+    "category": "local",
+    "name": "Tsawwassen to Southern Gulf Islands",
+    "shortName": "Tsawwassen ➔ Gulf Islands (Galiano/Salt Spring)",
+    "originTerminal": "Tsawwassen",
+    "destinationTerminal": "Sturdies Bay / Village Bay / Long Harbour",
+    "vesselType": "vehicle_and_passenger",
+    "crossingDurationMinutes": 55,
+    "frequencyText": "4-6 daily multi-island direct & thru sailings",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "15:40",
+        "arrivalTime": "16:35",
+        "vesselName": "Salish Eagle",
+        "deckSpacePercent": 50,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "On Time"
+      }
+    ],
+    "highwayCameras": []
+  },
+  {
+    "id": "WT-HOWE-SOUND",
+    "provider": "water-taxi",
+    "category": "local",
+    "name": "Howe Sound Water Taxi (Keats & Gambier)",
+    "shortName": "Horseshoe Bay ➔ Keats & Gambier Islands",
+    "originTerminal": "Horseshoe Bay (Government Dock)",
+    "destinationTerminal": "Keats Landing & Gambier Harbour",
+    "vesselType": "passenger_only",
+    "crossingDurationMinutes": 30,
+    "frequencyText": "Scheduled runs via Cormorant Marine & Mercury",
+    "fareNote": "Foot passenger only • Walk-on dock loading",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "14:30",
+        "arrivalTime": "15:00",
+        "vesselName": "Cormorant I",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "On Schedule"
+      },
+      {
+        "departureTime": "17:00",
+        "arrivalTime": "17:30",
+        "vesselName": "Mercury IV",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "On Schedule"
+      }
+    ],
+    "highwayCameras": []
+  },
+  {
+    "id": "FC-FERRIES",
+    "provider": "water-taxi",
+    "category": "local",
+    "name": "False Creek Ferries & Aquabus",
+    "shortName": "Granville Island ➔ Yaletown & Olympic Village",
+    "originTerminal": "Granville Island Public Market",
+    "destinationTerminal": "Yaletown / Aquatic Centre / Olympic Village",
+    "vesselType": "passenger_only",
+    "crossingDurationMinutes": 8,
+    "frequencyText": "Continuous departures every 5–10 mins",
+    "fareNote": "Hop-on inner-harbour mini ferries",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "Continuous",
+        "arrivalTime": "Continuous",
+        "vesselName": "Fleet of 14 Ferries",
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "not_applicable",
+        "weatherRisk": "normal",
+        "statusText": "Frequent service every 5-10m"
+      }
+    ],
+    "highwayCameras": []
+  },
+  {
+    "id": "MOTI-BARNSTON",
+    "provider": "moti",
+    "category": "local",
+    "name": "Barnston Island Ferry (Fraser River Barge)",
+    "shortName": "Surrey (104 Ave) ➔ Barnston Island",
+    "originTerminal": "Surrey (Foot of 104 Ave)",
+    "destinationTerminal": "Barnston Island",
+    "vesselType": "cable_barge",
+    "crossingDurationMinutes": 5,
+    "frequencyText": "On-demand free shuttle barge",
+    "fareNote": "Free provincial ferry operated by MOTI",
+    "activeNotices": [],
+    "lastUpdated": "2026-08-17T13:40:00Z",
+    "isStale": false,
+    "nextSailings": [
+      {
+        "departureTime": "On Demand",
+        "arrivalTime": "On Demand",
+        "vesselName": "Barnston Island No. 3",
+        "passengerSpaceAvailable": true,
+        "deckSpacePercent": 95,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "Normal On-Demand Operations"
+      }
+    ],
+    "highwayCameras": []
+  }
+]

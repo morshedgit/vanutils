@@ -1,0 +1,33 @@
+---
+import { getMarineWeather } from '../services/ferryService';
+import { getWeatherRiskMeta } from '../services/standbyCalc';
+
+const weather = getMarineWeather();
+const weatherMeta = getWeatherRiskMeta(weather.advisoryLevel);
+---
+
+<div class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+  <div class="space-y-1">
+    <div class="flex items-center gap-2">
+      <span class={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${weatherMeta.badgeBg} ${weatherMeta.badgeText}`}>
+        <span>🌊 {weatherMeta.label}</span>
+      </span>
+      <span class="text-xs text-slate-400">
+        Strait of Georgia • Wind: {weather.windSpeedKnots} kts {weather.windDirection}
+      </span>
+    </div>
+    <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+      Metro Vancouver Marine Transit Radar
+    </h2>
+    <p class="text-xs text-slate-300">
+      Real-time vehicle deck capacities, Hullo fast catamarans, TransLink SeaBus, and DriveBC approach queues.
+    </p>
+  </div>
+
+  <div class="flex items-center gap-2 shrink-0">
+    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-medium border border-slate-700">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>Live Multi-Provider Feed</span>
+    </span>
+  </div>
+</div>
