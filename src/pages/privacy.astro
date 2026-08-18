@@ -6,24 +6,24 @@ const privacySchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Privacy Policy | VanUtils',
-    url: 'https://vanutils.ca/privacy',
-    description: 'Privacy policy for VanUtils. Learn how we handle client-side preferences and telemetry.',
+    name: 'Privacy Policy | VanHeartbeat',
+    url: 'https://vanheartbeat.ca/privacy',
+    description: 'Privacy policy for VanHeartbeat. Learn how we handle client-side preferences and telemetry.',
   },
   {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanUtils', item: 'https://vanutils.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: 'https://vanutils.ca/privacy' },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: 'https://vanheartbeat.ca/privacy' },
     ],
   },
 ];
 ---
 
 <PlatformLayout
-  title="Privacy Policy | VanUtils"
-  description="VanUtils privacy policy: Learn about our privacy-first architecture, client-side localStorage preferences, and transparent data practices."
+  title="Privacy Policy | VanHeartbeat"
+  description="VanHeartbeat privacy policy: Learn about our privacy-first architecture, client-side localStorage preferences, and transparent data practices."
   currentPath="/privacy"
 >
   <JsonLd schema={privacySchema} />
@@ -50,7 +50,7 @@ const privacySchema = [
         <span>OUR PRIVACY COMMITMENT: ZERO PERSONAL PROFILING</span>
       </div>
       <p class="text-xs sm:text-sm leading-relaxed text-emerald-800 dark:text-emerald-300">
-        VanUtils is built on a privacy-respecting architecture. We do not require user account registration, do not collect personal identities or email addresses, and do not track or sell your browsing history. Your preferences (like pinned beaches and color theme) remain exclusively on your device.
+        VanHeartbeat is built on a privacy-respecting architecture. We do not require user account registration, do not collect personal identities or email addresses, and do not track or sell your browsing history. Your preferences (like pinned beaches and color theme) remain exclusively on your device.
       </p>
     </div>
 
@@ -63,7 +63,7 @@ const privacySchema = [
           <span class="text-sky-500">1.</span> Information We Do Not Collect
         </h2>
         <p>
-          Unlike commercial applications, VanUtils does not require you to provide personally identifiable information (PII) to access any of our micro-utilities. Specifically:
+          Unlike commercial applications, VanHeartbeat does not require you to provide personally identifiable information (PII) to access any of our civic telemetry modules. Specifically:
         </p>
         <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
           <li><strong>No User Accounts:</strong> You do not need to register, create a username, or provide a password.</li>
@@ -78,7 +78,7 @@ const privacySchema = [
           <span class="text-sky-500">2.</span> Client-Side Device Storage (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">localStorage</code>)
         </h2>
         <p>
-          To provide a customized experience without requiring accounts or cloud databases, VanUtils uses your browser's local storage capabilities (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">localStorage</code>) to persist:
+          To provide a customized experience without requiring accounts or cloud databases, VanHeartbeat uses your browser's local storage capabilities (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">localStorage</code>) to persist:
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm pt-2">
           <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
@@ -132,7 +132,7 @@ const privacySchema = [
           <span class="text-sky-500">4.</span> Web Analytics &amp; Performance Telemetry
         </h2>
         <p>
-          To monitor platform stability, assess which micro-utilities are most helpful to the community, and optimize edge cache delivery, we may utilize privacy-conscious web analytics tools, such as <strong>Google Analytics</strong> or Cloudflare Web Analytics.
+          To monitor platform stability, assess which telemetry feeds are most helpful to the community, and optimize edge cache delivery, we may utilize privacy-conscious web analytics tools, such as Cloudflare Web Analytics.
         </p>
         <p>
           These services collect aggregate, non-personally identifiable technical information such as:
@@ -144,7 +144,7 @@ const privacySchema = [
           <li>Browser type, operating system, device screen resolution, and page load speed metrics.</li>
         </ul>
         <p class="text-xs text-slate-600 dark:text-slate-400">
-          We do not correlate this aggregate analytics data with individual personal identities. For more details on how cookies are utilized by analytics tools, please review our <a href="/cookies" class="text-sky-600 dark:text-sky-400 hover:underline">Cookie Policy</a>.
+          We do not correlate this aggregate analytics data with individual personal identities. For more details on how cookies are utilized, please review our <a href="/cookies" class="text-sky-600 dark:text-sky-400 hover:underline">Cookie Policy</a>.
         </p>
       </section>
 
@@ -154,7 +154,7 @@ const privacySchema = [
           <span class="text-sky-500">5.</span> External Links &amp; Public Feeds
         </h2>
         <p>
-          VanUtils provides direct links to external websites and official public services (such as Vancouver Coastal Health, Fraser Health, TransLink, BC Ferries, City of Vancouver, DriveBC, and Environment Canada). When you click an external link, you are subject to the privacy policies and practices of that third-party website. We encourage you to review their respective policies.
+          VanHeartbeat provides direct links to external websites and official public services (such as Vancouver Coastal Health, Fraser Health, TransLink, BC Ferries, City of Vancouver, DriveBC, and Environment Canada). When you click an external link, you are subject to the privacy policies and practices of that third-party website. We encourage you to review their respective policies.
         </p>
       </section>
 
@@ -167,7 +167,7 @@ const privacySchema = [
           We may update this Privacy Policy from time to time to reflect platform enhancements or changes in legal standards. Any revisions will be published immediately on this page with an updated effective date.
         </p>
         <p>
-          If you have questions, feedback, or concerns regarding privacy practices on VanUtils, you can reach out through our public <a href="https://github.com/morshedgit/vanutils" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">GitHub repository</a>.
+          If you have questions, feedback, or concerns regarding privacy practices on VanHeartbeat, you can reach out through our <a href="/contact" class="text-sky-600 dark:text-sky-400 hover:underline">Contact page</a> or via email at <a href="mailto:privacy@vanheartbeat.ca" class="text-sky-600 dark:text-sky-400 hover:underline">privacy@vanheartbeat.ca</a>.
         </p>
       </section>
 

@@ -8,21 +8,21 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-
 const aboutSchema = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
-  name: 'About VanUtils — Metro Vancouver Civic Telemetry',
-  description: 'Learn about the VanUtils platform, our 100% real-data mandate, edge server architecture, and public telemetry data pipelines.',
-  url: 'https://vanutils.ca/about',
+  name: 'About VanHeartbeat — Metro Vancouver Civic Telemetry',
+  description: 'Learn about the VanHeartbeat platform, our 100% real-data mandate, edge server architecture, and public telemetry data pipelines.',
+  url: 'https://vanheartbeat.ca/about',
   inLanguage: 'en-CA',
   publisher: {
     '@type': 'Organization',
-    name: 'VanUtils',
-    url: 'https://vanutils.ca',
+    name: 'VanHeartbeat',
+    url: 'https://vanheartbeat.ca',
   },
 };
 ---
 
 <PlatformLayout
-  title="About VanUtils — Metro Vancouver Civic Telemetry"
-  description="Learn about the VanUtils mission: 100% verified real-time public telemetry, zero tracking, sub-50ms Edge SSR performance, and public data sources."
+  title="About VanHeartbeat — Metro Vancouver Civic Telemetry"
+  description="Learn about the VanHeartbeat mission: 100% verified real-time public telemetry, zero tracking, sub-50ms Edge SSR performance, and public data sources."
   currentPath="/about"
 >
   <JsonLd schema={aboutSchema} />
@@ -38,7 +38,7 @@ const aboutSchema = {
         High-Performance Civic Telemetry for Metro Vancouver
       </h1>
       <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
-        VanUtils is an independent, hyper-local public utility network engineered to deliver sub-second answers to everyday questions about Vancouver life, recreation, transit, and city infrastructure.
+        VanHeartbeat is an independent, hyper-local civic pulse network engineered to deliver sub-second answers to everyday questions about Vancouver life, recreation, transit, and city infrastructure.
       </p>
     </div>
 
@@ -90,7 +90,7 @@ const aboutSchema = {
       <div class="space-y-1">
         <h2 class="text-xl font-bold text-slate-900 dark:text-white">Official Upstream Telemetry Sources</h2>
         <p class="text-xs text-slate-500 dark:text-slate-400">
-          VanUtils aggregates and standardizes feeds published under open government and public health mandates:
+          VanHeartbeat aggregates and standardizes feeds published under open government and public health mandates:
         </p>
       </div>
 

@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://vanutils.ca',
+  site: 'https://vanheartbeat.ca',
   output: 'server',
   adapter: cloudflare({
     imageService: 'cloudflare',

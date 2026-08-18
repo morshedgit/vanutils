@@ -90,7 +90,7 @@ export async function getLiveCrossings(): Promise<BridgeCrossing[]> {
       'https://api.open511.gov.bc.ca/events?bbox=-123.35,49.0,-122.6,49.4&status=ACTIVE&format=json',
       {
         signal: controller.signal,
-        headers: { 'User-Agent': 'VanUtils/1.0' },
+        headers: { 'User-Agent': 'VanHeartbeat/2.0' },
       }
     );
 

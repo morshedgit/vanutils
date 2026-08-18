@@ -12,16 +12,16 @@ interface Props {
 }
 
 const {
-  title = 'VanUtils — Vancouver Micro-Utilities Hub',
-  description = 'Ultra-lightweight, sub-second hyper-local tools for Metro Vancouver residents. Beach water quality, ferry standby, mountain snow lines and more.',
+  title = 'VanHeartbeat — Metro Vancouver Live Civic Pulse & Telemetry',
+  description = 'Ultra-lightweight, sub-second hyper-local civic telemetry for Metro Vancouver residents. Beach water quality, ferry standby, mountain snow lines, ER wait times and more.',
   currentPath = '/',
-  ogImage = 'https://vanutils.ca/og-banner.svg',
+  ogImage = 'https://vanheartbeat.ca/og-banner.svg',
   canonicalUrl,
   type = 'website',
 } = Astro.props;
 
-const fullTitle = title.includes('VanUtils') ? title : `${title} | VanUtils`;
-const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanutils.ca' : `https://vanutils.ca${currentPath.replace(/\/$/, '')}`);
+const fullTitle = title.includes('VanHeartbeat') ? title : `${title} | VanHeartbeat`;
+const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanheartbeat.ca' : `https://vanheartbeat.ca${currentPath.replace(/\/$/, '')}`);
 ---
 
 <!doctype html>
@@ -38,7 +38,7 @@ const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanuti
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
-    <meta property="og:site_name" content="VanUtils" />
+    <meta property="og:site_name" content="VanHeartbeat" />
     <meta property="og:locale" content="en_CA" />
     <meta property="og:url" content={resolvedCanonical} />
     <meta property="og:title" content={fullTitle} />
@@ -46,14 +46,14 @@ const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanuti
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="VanUtils — Vancouver Micro-Utilities Hub" />
+    <meta property="og:image:alt" content="VanHeartbeat — Metro Vancouver Live Civic Pulse" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="VanUtils — Vancouver Micro-Utilities Hub" />
+    <meta name="twitter:image:alt" content="VanHeartbeat — Metro Vancouver Live Civic Pulse" />
 
 
     <!-- Google Fonts: Inter font family -->

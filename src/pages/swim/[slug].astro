@@ -42,9 +42,9 @@ const beachSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanUtils', item: 'https://vanutils.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Can I Swim', item: 'https://vanutils.ca/swim' },
-      { '@type': 'ListItem', position: 3, name: beach.name, item: `https://vanutils.ca/swim/${beach.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Can I Swim', item: 'https://vanheartbeat.ca/swim' },
+      { '@type': 'ListItem', position: 3, name: beach.name, item: `https://vanheartbeat.ca/swim/${beach.id}` },
     ],
   },
 ];
@@ -61,7 +61,7 @@ const beachSchema = [
     <!-- Top Breadcrumb & Actions -->
     <div class="flex items-center justify-between gap-4">
       <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanUtils</a>
+        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanHeartbeat</a>
         <span>/</span>
         <a href="/swim" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Can I Swim</a>
         <span>/</span>

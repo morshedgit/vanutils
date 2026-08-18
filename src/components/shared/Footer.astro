@@ -9,13 +9,13 @@ import { TOOLS_REGISTRY } from '../../config/tools';
       <div class="space-y-4">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-600 to-teal-500 flex items-center justify-center text-white font-bold text-xs shadow-md shadow-sky-500/20">
-            VU
+            VH
           </div>
-          <span class="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">Van<span class="text-sky-500">Utils</span></span>
-          <span class="text-[9px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Live</span>
+          <span class="font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">Van<span class="text-sky-500">Heartbeat</span></span>
+          <span class="text-[9px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Live Pulse</span>
         </div>
         <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          Metro Vancouver's independent live civic telemetry hub. Ultra-fast, single-purpose micro-utilities with 100% verified public data, zero ads, and zero third-party tracking.
+          Metro Vancouver's real-time civic pulse and public telemetry network. Ultra-fast, single-purpose micro-utilities with 100% verified public data, zero ads, and zero third-party tracking.
         </p>
         <div class="space-y-1.5 text-[11px] text-slate-500 dark:text-slate-400 pt-1">
           <div class="flex items-center gap-2">
@@ -64,7 +64,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               rel="noopener noreferrer"
               class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
             >
-              Vancouver Coastal Health (VCH)
+              <span>Vancouver Coastal Health (VCH)</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
           </li>
@@ -75,7 +75,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               rel="noopener noreferrer"
               class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
             >
-              BC Ferries Real-Time API
+              <span>BC Ferries Real-Time API</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
           </li>
@@ -86,7 +86,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               rel="noopener noreferrer"
               class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
             >
-              DriveBC Open511 Telemetry
+              <span>DriveBC Open511 Telemetry</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
           </li>
@@ -97,7 +97,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               rel="noopener noreferrer"
               class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
             >
-              City of Vancouver Open Data
+              <span>City of Vancouver Open Data</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
           </li>
@@ -108,51 +108,45 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               rel="noopener noreferrer"
               class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
             >
-              Bank of Canada Valet
+              <span>Bank of Canada Valet</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
           </li>
         </ul>
       </div>
 
-      <!-- Column 4: Platform, Trust & Legal -->
+      <!-- Column 4: Platform, Trust & Legal (Clean Text-Only, Zero Emojis) -->
       <div>
         <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">Platform &amp; Legal</h4>
         <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-400">
           <li>
-            <a href="/about" class="hover:text-sky-500 transition-colors flex items-center gap-1.5">
-              <span>🛡️</span>
-              <span>About VanUtils</span>
+            <a href="/about" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+              About VanHeartbeat
             </a>
           </li>
           <li>
-            <a href="/contact" class="hover:text-sky-500 transition-colors flex items-center gap-1.5">
-              <span>📬</span>
-              <span>Contact Us &amp; Corrections</span>
+            <a href="/contact" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+              Contact Us &amp; Data Corrections
             </a>
           </li>
           <li>
-            <a href="/privacy" class="hover:text-sky-500 transition-colors flex items-center gap-1.5">
-              <span>🔒</span>
-              <span>Privacy Policy</span>
+            <a href="/privacy" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+              Privacy Policy
             </a>
           </li>
           <li>
-            <a href="/terms" class="hover:text-sky-500 transition-colors flex items-center gap-1.5">
-              <span>⚖️</span>
-              <span>Terms &amp; Disclaimers</span>
+            <a href="/terms" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+              Terms of Service
             </a>
           </li>
           <li>
-            <a href="/cookies" class="hover:text-sky-500 transition-colors flex items-center gap-1.5">
-              <span>🍪</span>
-              <span>Cookie Policy</span>
+            <a href="/cookies" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+              Cookie Policy
             </a>
           </li>
           <li>
-            <a href="/sitemap.xml" target="_blank" class="hover:text-sky-500 transition-colors flex items-center gap-1.5">
-              <span>🗺️</span>
-              <span>XML Sitemap</span>
+            <a href="/sitemap.xml" target="_blank" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+              XML Sitemap
             </a>
           </li>
         </ul>
@@ -161,12 +155,12 @@ import { TOOLS_REGISTRY } from '../../config/tools';
 
     <!-- Informational Disclaimer -->
     <div class="py-3 px-4 rounded-xl bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed mb-8">
-      <strong class="text-slate-700 dark:text-slate-300">⚠️ Public Safety &amp; Medical Notice:</strong> VanUtils aggregates real-time public telemetry for informational convenience. Metrics and wait estimates are calculated from live feeds. For medical emergencies or immediate life safety threats, dial <strong>911</strong> immediately. Always adhere to posted physical beach closure signage and emergency advisories.
+      <strong class="text-slate-700 dark:text-slate-300">Public Safety Notice:</strong> VanHeartbeat aggregates real-time public telemetry for informational convenience. Metrics and wait estimates are calculated from live feeds. For medical emergencies or immediate life safety threats, dial <strong>911</strong> immediately. Always adhere to posted physical beach closure signage and emergency advisories.
     </div>
 
     <!-- Bottom Bar -->
     <div class="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-      <p>© {new Date().getFullYear()} VanUtils. Handcrafted in Vancouver, British Columbia 🌲🌊</p>
+      <p>© {new Date().getFullYear()} VanHeartbeat. Handcrafted in Vancouver, British Columbia.</p>
       <div class="flex flex-wrap items-center gap-4 text-xs">
         <a href="/about" class="hover:text-slate-900 dark:hover:text-white transition-colors">About</a>
         <a href="/contact" class="hover:text-slate-900 dark:hover:text-white transition-colors">Contact</a>
@@ -177,4 +171,5 @@ import { TOOLS_REGISTRY } from '../../config/tools';
     </div>
   </div>
 </footer>
+
 

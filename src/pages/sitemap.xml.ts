@@ -15,7 +15,7 @@ import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketS
 import { getLiveSportsFacilities } from '../tools/sports-facilities/services/sportsService';
 
 export const GET: APIRoute = async () => {
-  const baseUrl = 'https://vanutils.ca';
+  const baseUrl = 'https://vanheartbeat.ca';
   const now = new Date().toISOString();
 
   // 1. Static Root & Tool Hub Routes

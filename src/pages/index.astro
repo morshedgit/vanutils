@@ -15,17 +15,17 @@ const alerts = await getLiveBreakingAlerts();
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'VanUtils',
-  alternateName: 'Vancouver Micro-Utilities Hub',
-  url: 'https://vanutils.ca',
-  description: 'Ultra-fast, single-purpose live micro-utilities and public telemetry for Metro Vancouver residents.',
+  name: 'VanHeartbeat',
+  alternateName: 'Vancouver Live Civic Telemetry & Vital Signs',
+  url: 'https://vanheartbeat.ca',
+  description: 'Ultra-fast, single-purpose live civic telemetry, vital signs, and public data for Metro Vancouver residents.',
   inLanguage: 'en-CA',
 };
 ---
 
 <PlatformLayout
-  title="VanUtils — Vancouver Micro-Utilities Hub"
-  description="Fast, single-purpose local tools for Metro Vancouver. Beach water quality, ferry radar, snow levels, and city tools."
+  title="VanHeartbeat — Metro Vancouver Live Civic Pulse & Telemetry"
+  description="Metro Vancouver's live civic pulse. Sub-second beach water quality, ferry standby radar, mountain snow levels, ER wait times, and city telemetry."
   currentPath="/"
 >
   <JsonLd schema={websiteSchema} />
@@ -37,7 +37,7 @@ const websiteSchema = {
     <!-- SEO Primary Heading & Live Header -->
     <div class="space-y-1">
       <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-        Metro Vancouver Live Micro-Utilities & Telemetry
+        Metro Vancouver Live Civic Pulse & Telemetry
       </h1>
       <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
         Sub-second public data, beach water quality, ferry radar, snow levels, and emergency wait times.

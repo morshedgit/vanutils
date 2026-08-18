@@ -1,7 +1,7 @@
 {
-  "name": "VanUtils — Vancouver Micro-Utilities",
-  "short_name": "VanUtils",
-  "description": "Hyper-local, ultra-fast micro-utilities for Metro Vancouver residents",
+  "name": "VanHeartbeat — Vancouver Live Civic Pulse",
+  "short_name": "VanHeartbeat",
+  "description": "Metro Vancouver's real-time civic pulse and public telemetry network",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",

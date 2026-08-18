@@ -25,7 +25,7 @@ async function syncLiveNews() {
     try {
       const cbcRes = await fetch(
         'https://www.cbc.ca/webfeed/rss/rss-canada-britishcolumbia',
-        { headers: { 'User-Agent': 'VanUtils/1.0' } }
+        { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
       ).catch(() => null);
 
       if (cbcRes && cbcRes.ok) {

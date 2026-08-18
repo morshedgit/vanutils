@@ -6,24 +6,24 @@ const cookieSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Cookie Policy | VanUtils',
-    url: 'https://vanutils.ca/cookies',
-    description: 'Cookie policy and local browser storage disclosure for VanUtils micro-utilities.',
+    name: 'Cookie Policy | VanHeartbeat',
+    url: 'https://vanheartbeat.ca/cookies',
+    description: 'Cookie policy and local browser storage disclosure for VanHeartbeat civic telemetry.',
   },
   {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanUtils', item: 'https://vanutils.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Cookie Policy', item: 'https://vanutils.ca/cookies' },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Cookie Policy', item: 'https://vanheartbeat.ca/cookies' },
     ],
   },
 ];
 ---
 
 <PlatformLayout
-  title="Cookie Policy | VanUtils"
-  description="Cookie policy for VanUtils. Learn how we use client-side local storage and web performance cookies."
+  title="Cookie Policy | VanHeartbeat"
+  description="Cookie policy for VanHeartbeat. Learn how we use client-side local storage and web performance cookies."
   currentPath="/cookies"
 >
   <JsonLd schema={cookieSchema} />
@@ -50,7 +50,7 @@ const cookieSchema = [
         <span>TRANSPARENCY: PRIVACY-FIRST STORAGE</span>
       </div>
       <p class="text-xs sm:text-sm leading-relaxed text-sky-800 dark:text-sky-300">
-        VanUtils does not use invasive advertising cookies or cross-site behavioral tracking networks. We primarily rely on your browser's lightweight <strong>Local Storage</strong> to save your pinned tools, preferred color scheme, and alert dismissals entirely on your own device.
+        VanHeartbeat does not use invasive advertising cookies or cross-site behavioral tracking networks. We primarily rely on your browser's lightweight <strong>Local Storage</strong> to save your pinned tools, preferred color scheme, and alert dismissals entirely on your own device.
       </p>
     </div>
 
@@ -70,7 +70,7 @@ const cookieSchema = [
       <!-- Section 2: Storage Types -->
       <section class="space-y-4">
         <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-          <span class="text-sky-500">2.</span> How VanUtils Uses Storage &amp; Cookies
+          <span class="text-sky-500">2.</span> How VanHeartbeat Uses Storage &amp; Cookies
         </h2>
 
         <div class="space-y-3">
@@ -128,26 +128,8 @@ const cookieSchema = [
               </span>
             </div>
             <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              We may utilize analytics services like <strong>Google Analytics</strong> or Cloudflare Analytics to understand aggregate platform traffic, discover which tools are most heavily utilized by Metro Vancouver residents, and troubleshoot edge rendering performance.
+              We may utilize analytics services like Cloudflare Analytics to understand aggregate platform traffic, discover which telemetry feeds are most heavily utilized by Metro Vancouver residents, and troubleshoot edge rendering performance.
             </p>
-            <div class="overflow-x-auto text-xs">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500">
-                    <th class="py-1.5 pr-4 font-semibold">Cookie Name</th>
-                    <th class="py-1.5 pr-4 font-semibold">Provider</th>
-                    <th class="py-1.5 font-semibold">Purpose</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono text-[11px]">
-                  <tr>
-                    <td class="py-1.5 pr-4 text-sky-600 dark:text-sky-400">_ga / _ga_*</td>
-                    <td class="py-1.5 pr-4 font-sans text-slate-600 dark:text-slate-400">Google Analytics</td>
-                    <td class="py-1.5 font-sans text-slate-500">Distinguishes anonymous visitors and calculates pageview counts</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
           </div>
         </div>
       </section>
@@ -158,7 +140,7 @@ const cookieSchema = [
           <span class="text-sky-500">3.</span> Zero Commercial Advertising Cookies
         </h2>
         <p>
-          VanUtils has a strict zero-ad policy. We do not place advertising cookies, conversion tracking pixels, retargeting beacons, or data broker scripts on our platform.
+          VanHeartbeat has a strict zero-ad policy. We do not place advertising cookies, conversion tracking pixels, retargeting beacons, or data broker scripts on our platform.
         </p>
       </section>
 
@@ -187,7 +169,7 @@ const cookieSchema = [
           <span class="text-sky-500">5.</span> Updates to This Policy
         </h2>
         <p>
-          Any adjustments to our storage or analytics practices will be reflected on this page. For any questions, please consult our <a href="/privacy" class="text-sky-600 dark:text-sky-400 hover:underline">Privacy Policy</a> or open a ticket on <a href="https://github.com/morshedgit/vanutils" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">GitHub</a>.
+          Any adjustments to our storage or analytics practices will be reflected on this page. For any questions, please consult our <a href="/privacy" class="text-sky-600 dark:text-sky-400 hover:underline">Privacy Policy</a> or reach out through our <a href="/contact" class="text-sky-600 dark:text-sky-400 hover:underline">Contact page</a>.
         </p>
       </section>
 

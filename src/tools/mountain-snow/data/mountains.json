@@ -9,19 +9,19 @@
       {
         "label": "Base (Downhill Lodge)",
         "elevationMeters": 910,
-        "temperatureCelsius": 16.8,
+        "temperatureCelsius": 16.9,
         "precipitation": "clear"
       },
       {
         "label": "Mid-Mountain",
         "elevationMeters": 1100,
-        "temperatureCelsius": 15.6,
+        "temperatureCelsius": 15.7,
         "precipitation": "clear"
       },
       {
         "label": "Mt. Strachan Summit",
         "elevationMeters": 1440,
-        "temperatureCelsius": 13.4,
+        "temperatureCelsius": 13.5,
         "precipitation": "clear"
       }
     ],
@@ -67,7 +67,7 @@
       }
     ],
     "officialSourceUrl": "https://cypressmountain.com/downhill-conditions-and-cams",
-    "lastUpdated": "2026-08-18T18:34:35.791Z"
+    "lastUpdated": "2026-08-18T18:46:09.999Z"
   },
   {
     "id": "grouse",
@@ -79,19 +79,19 @@
       {
         "label": "Valley / Skyride Base",
         "elevationMeters": 274,
-        "temperatureCelsius": 20,
+        "temperatureCelsius": 20.1,
         "precipitation": "clear"
       },
       {
         "label": "Chalet Plateau",
         "elevationMeters": 1128,
-        "temperatureCelsius": 14.5,
+        "temperatureCelsius": 14.6,
         "precipitation": "clear"
       },
       {
         "label": "The Peak",
         "elevationMeters": 1250,
-        "temperatureCelsius": 13.7,
+        "temperatureCelsius": 13.8,
         "precipitation": "clear"
       }
     ],
@@ -137,31 +137,31 @@
       }
     ],
     "officialSourceUrl": "https://www.grousemountain.com/current-conditions",
-    "lastUpdated": "2026-08-18T18:34:35.792Z"
+    "lastUpdated": "2026-08-18T18:46:09.996Z"
   },
   {
     "id": "seymour",
     "name": "Mount Seymour",
     "shortName": "Mt. Seymour (1,449m)",
     "region": "north_shore",
-    "currentFreezingLevelMeters": 4350,
+    "currentFreezingLevelMeters": 4360,
     "elevationBands": [
       {
         "label": "Base Area",
         "elevationMeters": 930,
-        "temperatureCelsius": 16.4,
+        "temperatureCelsius": 16.5,
         "precipitation": "clear"
       },
       {
         "label": "Mystery Peak",
         "elevationMeters": 1230,
-        "temperatureCelsius": 14.4,
+        "temperatureCelsius": 14.5,
         "precipitation": "clear"
       },
       {
         "label": "Mt. Seymour Summit",
         "elevationMeters": 1449,
-        "temperatureCelsius": 13,
+        "temperatureCelsius": 13.1,
         "precipitation": "clear"
       }
     ],
@@ -207,7 +207,7 @@
       }
     ],
     "officialSourceUrl": "https://mtseymour.ca/today",
-    "lastUpdated": "2026-08-18T18:34:35.791Z"
+    "lastUpdated": "2026-08-18T18:46:09.998Z"
   },
   {
     "id": "whistler",
@@ -219,19 +219,19 @@
       {
         "label": "Whistler Village",
         "elevationMeters": 675,
-        "temperatureCelsius": 20.7,
+        "temperatureCelsius": 21,
         "precipitation": "clear"
       },
       {
         "label": "Mid-Mountain (Roundhouse)",
         "elevationMeters": 1850,
-        "temperatureCelsius": 13,
+        "temperatureCelsius": 13.3,
         "precipitation": "clear"
       },
       {
         "label": "Whistler Peak",
         "elevationMeters": 2284,
-        "temperatureCelsius": 10.2,
+        "temperatureCelsius": 10.5,
         "precipitation": "clear"
       }
     ],
@@ -277,6 +277,6 @@
       }
     ],
     "officialSourceUrl": "https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
-    "lastUpdated": "2026-08-18T18:34:35.772Z"
+    "lastUpdated": "2026-08-18T18:46:09.998Z"
   }
 ]

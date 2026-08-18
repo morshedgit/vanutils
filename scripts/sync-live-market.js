@@ -25,7 +25,7 @@ async function syncLiveMarket() {
     try {
       const valetRes = await fetch(
         'https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json',
-        { headers: { 'User-Agent': 'VanUtils/1.0' } }
+        { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
       ).catch(() => null);
 
       if (valetRes && valetRes.ok) {

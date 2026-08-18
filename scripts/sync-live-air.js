@@ -19,7 +19,7 @@ async function syncLiveAir() {
     try {
       const airRes = await fetch(
         'https://envistaweb.env.gov.bc.ca/aqo/api/station/latest',
-        { headers: { 'User-Agent': 'VanUtils/1.0' } }
+        { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
       ).catch(() => null);
 
       if (airRes && airRes.ok) {

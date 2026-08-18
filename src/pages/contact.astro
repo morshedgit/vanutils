@@ -8,19 +8,19 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-
 const contactSchema = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
-  name: 'Contact & Feedback — VanUtils',
-  description: 'Submit feedback, feature requests, or municipal data corrections to the VanUtils platform team.',
-  url: 'https://vanutils.ca/contact',
+  name: 'Contact & Feedback — VanHeartbeat',
+  description: 'Submit feedback, feature requests, or municipal data corrections to the VanHeartbeat platform team.',
+  url: 'https://vanheartbeat.ca/contact',
   inLanguage: 'en-CA',
   mainEntity: {
     '@type': 'Organization',
-    name: 'VanUtils',
-    url: 'https://vanutils.ca',
-    email: 'contact@vanutils.ca',
+    name: 'VanHeartbeat',
+    url: 'https://vanheartbeat.ca',
+    email: 'contact@vanheartbeat.ca',
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'technical support',
-      email: 'contact@vanutils.ca',
+      email: 'contact@vanheartbeat.ca',
       areaServed: 'CA-BC',
       availableLanguage: ['English'],
     },
@@ -29,8 +29,8 @@ const contactSchema = {
 ---
 
 <PlatformLayout
-  title="Contact Us & Data Feedback — VanUtils"
-  description="Report a data discrepancy, suggest a new Metro Vancouver micro-utility, or reach out to the VanUtils team. Corrections reviewed within 2 hours."
+  title="Contact Us & Data Feedback — VanHeartbeat"
+  description="Report a data discrepancy, suggest a new Metro Vancouver micro-utility, or reach out to the VanHeartbeat team. Corrections reviewed within 2 hours."
   currentPath="/contact"
 >
   <JsonLd schema={contactSchema} />
@@ -43,10 +43,10 @@ const contactSchema = {
         <span>Community Feedback &amp; Corrections</span>
       </div>
       <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-        Get in Touch with the VanUtils Team
+        Get in Touch with the VanHeartbeat Team
       </h1>
       <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
-        VanUtils is dedicated to maintaining 100% verified, real-time public telemetry for Metro Vancouver. If you spot a discrepancy, have a partnership inquiry, or want to suggest a new tool, let us know below.
+        VanHeartbeat is dedicated to maintaining 100% verified, real-time public telemetry for Metro Vancouver. If you spot a discrepancy, have a partnership inquiry, or want to suggest a new tool, let us know below.
       </p>
     </div>
 
@@ -142,8 +142,8 @@ const contactSchema = {
           </p>
           <div class="pt-2 border-t border-slate-200 dark:border-slate-800 text-xs space-y-1 text-slate-500 dark:text-slate-400">
             <div>Direct Email:</div>
-            <a href="mailto:contact@vanutils.ca" class="font-bold text-sky-600 dark:text-sky-400 hover:underline">
-              contact@vanutils.ca
+            <a href="mailto:contact@vanheartbeat.ca" class="font-bold text-sky-600 dark:text-sky-400 hover:underline">
+              contact@vanheartbeat.ca
             </a>
           </div>
         </div>

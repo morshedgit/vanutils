@@ -30,8 +30,8 @@
   </g>
 
   <!-- Logo Pill -->
-  <rect x="100" y="90" width="180" height="48" rx="24" fill="#ffffff" fill-opacity="0.15" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
-  <text x="130" y="122" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800" fill="#ffffff" letter-spacing="1">VANUTILS</text>
+  <rect x="100" y="90" width="220" height="48" rx="24" fill="#ffffff" fill-opacity="0.15" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.5" />
+  <text x="130" y="122" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800" fill="#ffffff" letter-spacing="1">VANHEARTBEAT</text>
   <circle cx="116" cy="114" r="5" fill="#38bdf8" />
 
   <!-- Main Headline -->
@@ -39,7 +39,7 @@
     Metro Vancouver
   </text>
   <text x="100" y="285" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="56" font-weight="900" fill="#38bdf8" letter-spacing="-1.5">
-    Live Micro-Utilities Hub
+    Live Civic Pulse
   </text>
 
   <!-- Subheadline -->
@@ -68,6 +68,6 @@
 
   <!-- Bottom Footer -->
   <text x="100" y="550" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="600" fill="#94a3b8">
-    ⚡ 100% Real-Time Data • 0 Trackers • 0 Paywalls • vanutils.ca
+    ⚡ 100% Real-Time Data • 0 Trackers • 0 Paywalls • vanheartbeat.ca
   </text>
 </svg>
