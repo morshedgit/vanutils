@@ -585,34 +585,74 @@ const avgWeatherTemp = allWeatherStations.length > 0
       </div>
     )}
 
-    <!-- 14. WEATHER: Microclimate Temperature Spread & Doppler Radar Pulse -->
+    <!-- 14. WEATHER: Interactive Animated SVG Doppler Weather Radar Scope -->
     {tool.id === 'weather-forecast' && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Doppler Radar &amp; Microclimates</span>
+            <span>Doppler Radar Scope (50km)</span>
           </span>
           <span class="text-sky-600 dark:text-sky-400 font-bold">
-            {avgWeatherTemp}°C Regional Avg
+            {avgWeatherTemp}°C Live
           </span>
         </div>
 
-        <!-- Regional Microclimate Temperature Spread Gradient Bar -->
-        <div class="space-y-1">
-          <div class="h-2 w-full bg-gradient-to-r from-teal-500 via-sky-500 to-amber-500 rounded-full flex relative overflow-hidden">
-            <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+        <!-- Radar Scope Viewport Container -->
+        <div class="relative w-full h-24 rounded-xl bg-slate-950 border border-emerald-500/20 overflow-hidden flex items-center justify-center">
+          <!-- Animated Rotating Radar Sweep -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-44 h-44 rounded-full border border-emerald-500/20 flex items-center justify-center relative">
+              <!-- Concentric Range Rings -->
+              <div class="w-32 h-32 rounded-full border border-emerald-500/20"></div>
+              <div class="w-20 h-20 rounded-full border border-emerald-500/20"></div>
+              <div class="w-8 h-8 rounded-full border border-emerald-500/30"></div>
+              
+              <!-- Crosshairs -->
+              <div class="absolute w-full h-[1px] bg-emerald-500/20"></div>
+              <div class="absolute h-full w-[1px] bg-emerald-500/20"></div>
+              
+              <!-- Rotating Conic Sweep Beam -->
+              <div
+                class="absolute inset-0 rounded-full animate-spin"
+                style="animation-duration: 4s; background: conic-gradient(from 0deg, rgba(16, 185, 129, 0.45) 0deg, rgba(14, 165, 233, 0.15) 45deg, transparent 90deg, transparent 360deg);"
+              ></div>
+            </div>
           </div>
-          <div class="flex justify-between text-[8px] text-slate-400 font-medium">
-            <span>🌲 North Shore (17°C)</span>
-            <span>🏙️ Downtown (19.4°C)</span>
-            <span>✈️ Fraser Delta (20°C)</span>
+
+          <!-- Radar Station Pings / Blips -->
+          <div class="absolute inset-0 p-2 text-[9px] pointer-events-none">
+            <!-- North Shore -->
+            <div class="absolute top-2 left-[48%] -translate-x-1/2 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              <span class="font-mono text-[8px] font-bold text-emerald-300">NVAN 17°C</span>
+            </div>
+            <!-- Downtown -->
+            <div class="absolute top-[42%] left-[45%] -translate-x-1/2 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+              <span class="font-mono text-[8px] font-bold text-sky-200">DT 19°C</span>
+            </div>
+            <!-- YVR / Richmond -->
+            <div class="absolute bottom-2 left-[28%] flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              <span class="font-mono text-[8px] font-bold text-amber-200">YVR 20°C</span>
+            </div>
+            <!-- SFU / Burnaby -->
+            <div class="absolute top-[38%] right-2.5 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span class="font-mono text-[8px] font-bold text-emerald-200">SFU 16°C</span>
+            </div>
+          </div>
+
+          <!-- Live Scan Status Badge -->
+          <div class="absolute bottom-1 right-1.5 z-10 px-1.5 py-0.5 rounded bg-slate-900/90 border border-emerald-500/30 text-[8px] font-mono text-emerald-400">
+            ECCC SWEEP: 0.0mm
           </div>
         </div>
 
         <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
-          <span>📡 Doppler Radar Active</span>
-          <span>🌧️ 0.0mm Rain Front</span>
+          <span>📡 Aldergrove Doppler Active</span>
+          <span>Clear Salish Sea Front</span>
         </div>
       </div>
     )}

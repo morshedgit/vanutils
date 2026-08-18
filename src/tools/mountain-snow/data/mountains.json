@@ -4,7 +4,7 @@
     "name": "Cypress Mountain",
     "shortName": "Cypress (1,440m)",
     "region": "north_shore",
-    "currentFreezingLevelMeters": 4430,
+    "currentFreezingLevelMeters": 4420,
     "elevationBands": [
       {
         "label": "Base (Downhill Lodge)",
@@ -67,7 +67,7 @@
       }
     ],
     "officialSourceUrl": "https://cypressmountain.com/downhill-conditions-and-cams",
-    "lastUpdated": "2026-08-18T22:26:40.808Z"
+    "lastUpdated": "2026-08-18T22:49:48.578Z"
   },
   {
     "id": "grouse",
@@ -137,14 +137,14 @@
       }
     ],
     "officialSourceUrl": "https://www.grousemountain.com/current-conditions",
-    "lastUpdated": "2026-08-18T22:26:40.804Z"
+    "lastUpdated": "2026-08-18T22:49:48.564Z"
   },
   {
     "id": "seymour",
     "name": "Mount Seymour",
     "shortName": "Mt. Seymour (1,449m)",
     "region": "north_shore",
-    "currentFreezingLevelMeters": 4410,
+    "currentFreezingLevelMeters": 4420,
     "elevationBands": [
       {
         "label": "Base Area",
@@ -207,31 +207,31 @@
       }
     ],
     "officialSourceUrl": "https://mtseymour.ca/today",
-    "lastUpdated": "2026-08-18T22:26:40.809Z"
+    "lastUpdated": "2026-08-18T22:49:48.577Z"
   },
   {
     "id": "whistler",
     "name": "Whistler Blackcomb",
     "shortName": "Whistler (2,284m)",
     "region": "sea_to_sky",
-    "currentFreezingLevelMeters": 4350,
+    "currentFreezingLevelMeters": 4400,
     "elevationBands": [
       {
         "label": "Whistler Village",
         "elevationMeters": 675,
-        "temperatureCelsius": 22.3,
+        "temperatureCelsius": 22.2,
         "precipitation": "clear"
       },
       {
         "label": "Mid-Mountain (Roundhouse)",
         "elevationMeters": 1850,
-        "temperatureCelsius": 14.6,
+        "temperatureCelsius": 14.5,
         "precipitation": "clear"
       },
       {
         "label": "Whistler Peak",
         "elevationMeters": 2284,
-        "temperatureCelsius": 11.8,
+        "temperatureCelsius": 11.7,
         "precipitation": "clear"
       }
     ],
@@ -277,6 +277,6 @@
       }
     ],
     "officialSourceUrl": "https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
-    "lastUpdated": "2026-08-18T22:26:40.810Z"
+    "lastUpdated": "2026-08-18T22:49:48.577Z"
   }
 ]
