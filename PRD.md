@@ -198,6 +198,102 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #8: Vancouver Development & Rezoning Radar (`/civic`) — Active Live / Specification
+- **Module Identifier**: `civic-development` (internal route `/civic` and `/civic/[application-id]`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All rezoning applications, development permit records (DP), issued building permits, public hearing schedules, floor space ratio (FSR) metrics, unit mixes, and architectural elevation drawing links are 100% real-world data ingested directly from the official City of Vancouver Open Data API (`rezoning-applications`, `development-applications`, `issued-building-permits`) and City Clerk Council & Public Hearing Calendars.
+  - Generating, simulating, or displaying any synthetic, mock, or fake zoning or application data is strictly prohibited.
+- **Problem Solved**:
+  - Vancouver is undergoing unprecedented urban transformation under the Broadway Plan, Vancouver Plan, and Provincial Transit-Oriented Development (TOD) legislation. Finding out what is being planned on a specific block currently requires navigating complex municipal Shapefiles, disparate PDF agendas, and slow GIS viewers.
+  - Provides residents, renters, and homeowners with sub-second, address-aware visibility into proposed towers, rental units, below-market social housing, council public hearings, and direct comment submission links within walking distance (250m–1000m).
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveProposals()` implemented in `src/tools/civic-development/services/civicService.ts`.
+  - Parallel queries to official City of Vancouver REST/GeoJSON endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: If upstream municipal endpoints encounter latency or downtime, the loader immediately falls back to the last-known verified snapshot with `isStale: true` and an explicit timestamp rather than blocking page render.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')` (Low/Periodic Acuity: 1-hour edge cache with 24-hour background revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating to `/civic`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card real estate presents 6–10 live rows of real municipal planning telemetry:
+    1. *Broadway Plan Corridor*: 38 Active Tower Proposals
+    2. *Downtown & West End*: 24 Active Rezonings
+    3. *Mount Pleasant & Main St*: 16 Active Proposals
+    4. *Kitsilano & West 4th*: 11 Active Proposals
+    5. *Cambie & Marine Gateway TOD*: 19 Active Proposals
+    6. *Next Public Hearing*: Tue 6:00 PM (4 Projects on Agenda)
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_civic-development')` allowing users to pin specific corridors or neighborhood watches to their home dashboard.
+  - **Zero Visual Bloat**: No decorative icons, category pills, or promotional blurbs.
+- **Core Features**:
+  - **Spatial Proximity Engine (Haversine)**: 1-tap browser geolocation or address input with 250m, 500m, 1000m, and 2000m radius filters.
+  - **Standardized Building Metrics Card**:
+    - Application ID & Address (e.g. `RZ-2026-00018 — 1425 W 11th Ave`)
+    - Height & Scale: Proposed storeys and total height in meters
+    - Density / FSR: Proposed Floor Space Ratio compared to existing baseline
+    - Unit Mix Breakdown: Market rental, 60-year secured below-market rental / social housing, strata condo units, and commercial / retail ground floor sq ft
+    - Parking & Bike Stalls: Vehicle parking and Class A bicycle lockers
+  - **Application Lifecycle Timeline**:
+    - Visual tracker: *Under Review → Community Open House → Public Hearing Scheduled → Approved in Principle → Permits Issued → Under Construction*
+  - **Public Hearing Countdown & Council Comment Portal**:
+    - Live countdown to scheduled City Council public hearings with 1-tap direct deep links to submit official comments or register to speak at Council.
+  - **Verified Architectural Document Deep-Links**:
+    - Direct links to official architectural elevation drawings, shadow studies, landscape plans, and Urban Design Panel presentations on `vancouver.ca`.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/civic-development/types.ts
+  export type ApplicationType = 'rezoning' | 'development_permit' | 'building_permit';
+
+  export type ApplicationStatus = 
+    | 'under_review' 
+    | 'open_house' 
+    | 'public_hearing_scheduled' 
+    | 'approved' 
+    | 'refused' 
+    | 'under_construction';
+
+  export interface UnitMix {
+    marketRental: number;
+    belowMarketRental: number;
+    socialHousing: number;
+    strataCondo: number;
+    totalUnits: number;
+  }
+
+  export interface PublicHearingDetails {
+    hearingDate?: string;          // ISO 8601
+    councilMeetingUrl?: string;
+    publicCommentDeadline?: string;// ISO 8601
+    submitCommentUrl: string;
+  }
+
+  export interface DevelopmentProposal {
+    id: string;                    // "RZ-2026-00018"
+    type: ApplicationType;
+    address: string;
+    neighbourhood: string;
+    latitude: number;
+    longitude: number;
+    storeys: number;
+    heightMeters: number;
+    proposedFSR: number;
+    existingFSR?: number;
+    units: UnitMix;
+    commercialAreaSqFt: number;
+    status: ApplicationStatus;
+    statusDescription: string;
+    publicHearing?: PublicHearingDetails;
+    applicantName: string;
+    architecturalDrawingsUrl: string;
+    officialCityUrl: string;
+    lastUpdated: string;           // ISO 8601
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Route `/civic` initial render $< 500\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript $< 20\text{KB}$; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.

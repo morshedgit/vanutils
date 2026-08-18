@@ -52,6 +52,7 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 | **Tool #5: ER & Urgent Care** | `/health` | **Active Live** | 11 Hospital ERs & 9 UPCCs, real-time wait times & triage routing. |
 | **Tool #6: Bridges & Tunnels** | `/bridges` | **Active Live** | 10 Marine crossings, live delays, counterflow lane visualizer & webcams. |
 | **Tool #7: Wildfire Smoke & AQHI** | `/air` | **Active Live** | 12 BAM-1020 air stations, live PM2.5 levels, 24h curves & clean-air shelters. |
+| **Tool #8: Development & Rezoning** | `/civic` | **Active Live** | City Open Data rezoning tracker, height/unit breakdowns, hearing calendars & comment portals. |
 
 ---
 
