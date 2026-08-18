@@ -12,7 +12,7 @@
     "reverseRouteId": "SWB-TSA",
     "frequencyText": "Hourly on the hour (7:00 AM – 9:00 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:39:51.473Z",
+    "lastUpdated": "2026-08-18T21:42:44.495Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -31,37 +31,37 @@
         "departureTime": "3:00 pm",
         "arrivalTime": "",
         "vesselName": "Spirit of British Columbia",
-        "deckSpacePercent": 26,
+        "deckSpacePercent": 23,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "moderate",
         "weatherRisk": "normal",
-        "statusText": "26% Space Available"
+        "statusText": "23% Space Available"
       },
       {
         "departureTime": "4:00 pm",
         "arrivalTime": "",
         "vesselName": "Coastal Celebration",
-        "deckSpacePercent": 4,
+        "deckSpacePercent": 6,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "4% Space Available"
+        "statusText": "6% Space Available"
       },
       {
         "departureTime": "5:00 pm",
         "arrivalTime": "",
         "vesselName": "Spirit of Vancouver Island",
-        "deckSpacePercent": 11,
+        "deckSpacePercent": 12,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "11% Space Available"
+        "statusText": "12% Space Available"
       },
       {
         "departureTime": "6:00 pm",
@@ -180,7 +180,7 @@
     "reverseRouteId": "NAN-HSB",
     "frequencyText": "Every 2 hours (6:30 AM – 10:40 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:39:51.474Z",
+    "lastUpdated": "2026-08-18T21:42:44.496Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -312,7 +312,7 @@
     "reverseRouteId": "LNG-HSB",
     "frequencyText": "8-10 Daily Sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:39:51.474Z",
+    "lastUpdated": "2026-08-18T21:42:44.496Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -331,13 +331,13 @@
         "departureTime": "3:40 pm",
         "arrivalTime": "",
         "vesselName": "Queen of Coquitlam",
-        "deckSpacePercent": 69,
+        "deckSpacePercent": 66,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "69% Space Available"
+        "statusText": "66% Space Available"
       },
       {
         "departureTime": "4:40 pm",
@@ -460,7 +460,7 @@
     "reverseRouteId": "DUK-TSA",
     "frequencyText": "Every 2.5 hours (5:15 AM – 10:45 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:39:51.474Z",
+    "lastUpdated": "2026-08-18T21:42:44.496Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -503,13 +503,13 @@
         "departureTime": "5:45 pm",
         "arrivalTime": "",
         "vesselName": "Coastal Inspiration",
-        "deckSpacePercent": 12,
+        "deckSpacePercent": 14,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "12% Space Available"
+        "statusText": "14% Space Available"
       },
       {
         "departureTime": "8:15 pm",
@@ -702,7 +702,7 @@
     "reverseRouteId": "BOW-HSB",
     "frequencyText": "Hourly departures",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:39:51.474Z",
+    "lastUpdated": "2026-08-18T21:42:44.496Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -861,7 +861,7 @@
     "crossingDurationMinutes": 55,
     "frequencyText": "4-6 daily multi-island direct & thru sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:39:51.474Z",
+    "lastUpdated": "2026-08-18T21:42:44.496Z",
     "isStale": false,
     "nextSailings": [
       {
