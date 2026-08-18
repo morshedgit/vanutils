@@ -1,0 +1,197 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import BreakingAlertBanner from '../../tools/local-news/components/BreakingAlertBanner.astro';
+import FilterTabs from '../../tools/local-news/components/FilterTabs.astro';
+import ArticleCard from '../../tools/local-news/components/ArticleCard.astro';
+import { getLiveNews, getLiveBreakingAlerts, getNewsOverviewStats } from '../../tools/local-news/services/newsService';
+
+// Tiered Edge Cache: 5-minute edge TTL, 10-minute background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const articles = await getLiveNews();
+const alerts = await getLiveBreakingAlerts();
+const stats = getNewsOverviewStats(articles, alerts);
+---
+
+<ToolLayout
+  toolId="local-news"
+  title="Metro Vancouver Local News & Breaking Alert Radar"
+  description="Sub-second, zero-ad local civic news wire, breaking weather warnings, transit alerts, and City Council updates."
+  currentPath="/news"
+  badgeText="Live Wire"
+  status="active"
+>
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Breaking News & Emergency Alert Ribbon -->
+    <BreakingAlertBanner alerts={alerts} />
+
+    <!-- Hero Header Snapshot -->
+    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Verified Non-Paywalled Wire • {stats.totalArticles} Active Reports</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+          Real-Time Civic News, Transit Updates & Weather Advisories
+        </h2>
+        <p class="text-xs text-slate-300">
+          Curated directly from CBC Vancouver, City of Vancouver Media Releases, TransLink, and Environment Canada. Zero ads, zero tracking.
+        </p>
+      </div>
+
+      <!-- Instant Keyword Filter -->
+      <div class="w-full sm:w-64">
+        <input
+          type="text"
+          id="news-search-input"
+          placeholder="Filter news wire..."
+          class="w-full px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 transition-colors"
+        />
+      </div>
+    </section>
+
+    <!-- Pinned Headlines Section (Mirrors Home Dashboard Card) -->
+    <div id="pinned-news-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+          <span>⭐</span>
+          <span>Pinned News Feed (Shown on Main Dashboard)</span>
+        </span>
+        <span class="text-[11px] text-slate-400">Click star on any story to customize</span>
+      </div>
+      <div id="pinned-news-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <!-- Dynamically populated via client JS -->
+      </div>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <FilterTabs activeTab="all" />
+
+    <!-- Articles Grid -->
+    <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {articles.map((article) => (
+        <ArticleCard article={article} />
+      ))}
+    </div>
+  </div>
+</ToolLayout>
+
+<script is:inline define:vars={{ articlesJson: JSON.stringify(articles) }}>
+  // Pinned News Management
+  const STORAGE_KEY = 'vanutils_pinned_local-news';
+  const DEFAULT_PINNED = [
+    'cbc-broadway-subway-testing',
+    'cov-council-broadway-below-market-rental',
+    'translink-seabus-10-min-summer-headways',
+    'eccc-strait-georgia-gale-statement',
+    'metrovan-capilano-reservoir-levels',
+    'park-board-kits-pool-structural-sealing'
+  ];
+
+  function getPinnedIds() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return DEFAULT_PINNED;
+  }
+
+  function savePinnedIds(ids) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    window.dispatchEvent(new CustomEvent('vanutils:pinned-news-changed', { detail: ids }));
+  }
+
+  function renderPinnedGrid() {
+    const grid = document.getElementById('pinned-news-grid');
+    if (!grid) return;
+
+    const pinnedIds = getPinnedIds();
+    const allArticles = JSON.parse(articlesJson || '[]');
+    const pinned = allArticles.filter((a) => pinnedIds.includes(a.id));
+
+    if (pinned.length === 0) {
+      grid.innerHTML = '<p class="text-xs text-slate-400 py-1">No pinned stories. Star any news item below to add!</p>';
+      return;
+    }
+
+    grid.innerHTML = pinned.map((a) => `
+      <div class="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-xs">
+        <div class="truncate pr-2 font-bold text-slate-900 dark:text-white">
+          <a href="/news/${a.id}" class="hover:text-sky-500">${a.title}</a>
+          <span class="text-[10px] text-slate-400 block">${a.outletName}</span>
+        </div>
+        <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
+          ${a.category.replace('_', ' ')}
+        </span>
+      </div>
+    `).join('');
+  }
+
+  function updateStarButtons() {
+    const pinnedIds = getPinnedIds();
+    document.querySelectorAll('.star-btn[data-article-star-id]').forEach((btn) => {
+      const id = btn.getAttribute('data-article-star-id');
+      if (pinnedIds.includes(id)) {
+        btn.classList.add('text-amber-400', 'dark:text-amber-400');
+        btn.classList.remove('text-slate-300', 'dark:text-slate-600');
+      } else {
+        btn.classList.remove('text-amber-400', 'dark:text-amber-400');
+        btn.classList.add('text-slate-300', 'dark:text-slate-600');
+      }
+    });
+  }
+
+  function setupStarClicks() {
+    document.querySelectorAll('.star-btn[data-article-star-id]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = btn.getAttribute('data-article-star-id');
+        let pinned = getPinnedIds();
+        if (pinned.includes(id)) {
+          pinned = pinned.filter((p) => p !== id);
+        } else {
+          pinned.push(id);
+        }
+        savePinnedIds(pinned);
+        updateStarButtons();
+        renderPinnedGrid();
+      });
+    });
+  }
+
+  // Instant Client-Side Keyword Filter
+  function setupSearchFilter() {
+    const searchInput = document.getElementById('news-search-input');
+    const cards = document.querySelectorAll('.article-card');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+      const query = (e.target.value || '').toLowerCase().trim();
+      cards.forEach((card) => {
+        const text = card.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPinnedGrid();
+      updateStarButtons();
+      setupStarClicks();
+      setupSearchFilter();
+    });
+  } else {
+    renderPinnedGrid();
+    updateStarButtons();
+    setupStarClicks();
+    setupSearchFilter();
+  }
+</script>

@@ -1,0 +1,69 @@
+---
+interface Props {
+  activeTab?: string;
+}
+
+const { activeTab = 'all' } = Astro.props;
+
+const tabs = [
+  { id: 'all', label: 'All News', icon: '📰' },
+  { id: 'civic_politics', label: 'Civic & Politics', icon: '🏛️' },
+  { id: 'transit_infrastructure', label: 'Transit & Roads', icon: '🚆' },
+  { id: 'weather_hazards', label: 'Weather & Hazards', icon: '🌧️' },
+  { id: 'housing_development', label: 'Housing & Planning', icon: '🏗️' },
+  { id: 'parks_community', label: 'Parks & Community', icon: '🌳' },
+];
+---
+
+<div class="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none text-xs font-semibold">
+  {tabs.map((t) => (
+    <button
+      type="button"
+      data-news-tab={t.id}
+      class={`news-filter-btn px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1.5 ${
+        t.id === activeTab
+          ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xs'
+          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+      }`}
+    >
+      <span>{t.icon}</span>
+      <span>{t.label}</span>
+    </button>
+  ))}
+</div>
+
+<script>
+  function setupNewsFilterTabs() {
+    const buttons = document.querySelectorAll('.news-filter-btn');
+    const cards = document.querySelectorAll('.article-card');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-news-tab');
+
+        // Update button states
+        buttons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+          b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        });
+        btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        btn.classList.add('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+
+        cards.forEach((card) => {
+          const cat = card.getAttribute('data-category');
+          if (tabId === 'all' || cat === tabId) {
+            (card as HTMLElement).classList.remove('hidden');
+          } else {
+            (card as HTMLElement).classList.add('hidden');
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupNewsFilterTabs);
+  } else {
+    setupNewsFilterTabs();
+  }
+</script>

@@ -1,0 +1,89 @@
+---
+import type { BreakingAlert } from '../types';
+
+interface Props {
+  alerts: BreakingAlert[];
+}
+
+const { alerts } = Astro.props;
+---
+
+{alerts.length > 0 && (
+  <div id="breaking-alerts-container" class="space-y-2">
+    {alerts.map((alert) => (
+      <div
+        class="breaking-alert-banner p-3.5 sm:p-4 rounded-2xl bg-rose-500/10 dark:bg-rose-950/40 border-2 border-rose-500/40 text-rose-900 dark:text-rose-200 shadow-sm flex items-start justify-between gap-3 transition-all"
+        data-alert-id={alert.id}
+      >
+        <div class="flex items-start gap-3">
+          <span class="text-xl shrink-0 mt-0.5 animate-pulse">🚨</span>
+          <div class="space-y-1 text-xs sm:text-sm">
+            <div class="flex items-center gap-2 font-black tracking-wide text-rose-700 dark:text-rose-300 uppercase text-xs">
+              <span>{alert.outletName} Active Alert</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded font-bold bg-rose-500/20 text-rose-800 dark:text-rose-200">
+                {alert.severity.toUpperCase()}
+              </span>
+            </div>
+            <p class="font-bold leading-snug">
+              {alert.title}
+            </p>
+            <p class="text-xs text-rose-800/90 dark:text-rose-300/90 font-medium">
+              {alert.summary}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          {alert.actionUrl && (
+            <a
+              href={alert.actionUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-xs transition-colors whitespace-nowrap"
+            >
+              Details →
+            </a>
+          )}
+          <button
+            type="button"
+            class="dismiss-alert-btn p-1 text-rose-400 hover:text-rose-600 dark:hover:text-rose-200 transition-colors"
+            data-dismiss-id={alert.id}
+            title="Dismiss alert"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+<script>
+  function setupAlertDismissals() {
+    document.querySelectorAll('.breaking-alert-banner').forEach((banner) => {
+      const id = banner.getAttribute('data-alert-id');
+      if (id && localStorage.getItem(`vanutils_dismissed_alert_${id}`)) {
+        (banner as HTMLElement).style.display = 'none';
+      }
+    });
+
+    document.querySelectorAll('.dismiss-alert-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-dismiss-id');
+        if (id) {
+          localStorage.setItem(`vanutils_dismissed_alert_${id}`, 'true');
+          const banner = document.querySelector(`.breaking-alert-banner[data-alert-id="${id}"]`);
+          if (banner) (banner as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupAlertDismissals);
+  } else {
+    setupAlertDismissals();
+  }
+</script>

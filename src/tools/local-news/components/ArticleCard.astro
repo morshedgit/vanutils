@@ -1,0 +1,84 @@
+---
+import type { NewsArticle } from '../types';
+import { getCategoryMeta, formatTimeAgo } from '../services/newsService';
+
+interface Props {
+  article: NewsArticle;
+}
+
+const { article } = Astro.props;
+const catMeta = getCategoryMeta(article.category);
+const timeAgo = formatTimeAgo(article.publishedAt);
+---
+
+<div
+  class="article-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-sky-500 transition-all flex flex-col justify-between"
+  data-article-id={article.id}
+  data-category={article.category}
+  data-source={article.source}
+>
+  <div>
+    <!-- Top Header: Outlet Pill, Time-Ago & Star Pin -->
+    <div class="flex items-start justify-between gap-2 mb-2">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          {article.outletName}
+        </span>
+        <span class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold border ${catMeta.badgeBg}`}>
+          <span>{catMeta.icon}</span>
+          <span>{catMeta.label}</span>
+        </span>
+        {article.isBreaking && (
+          <span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30 animate-pulse">
+            Breaking
+          </span>
+        )}
+        <span class="text-xs text-slate-400 font-medium">
+          {timeAgo}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="star-btn p-1.5 rounded-lg text-slate-300 hover:text-amber-400 dark:text-slate-600 dark:hover:text-amber-400 transition-colors shrink-0"
+        data-article-star-id={article.id}
+        title="Pin to Dashboard"
+      >
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Article Headline -->
+    <a href={`/news/${article.id}`} class="hover:text-sky-500 transition-colors block my-2">
+      <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-snug">
+        {article.title}
+      </h3>
+    </a>
+
+    <!-- Summary -->
+    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
+      {article.summary}
+    </p>
+  </div>
+
+  <!-- Bottom Outbound Canonical Link -->
+  <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-800/60 text-xs font-semibold">
+    <a
+      href={`/news/${article.id}`}
+      class="text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1"
+    >
+      <span>Read Clean Wire Brief</span>
+      <span>→</span>
+    </a>
+    <a
+      href={article.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+    >
+      Primary Source ({article.outletName}) ↗
+    </a>
+  </div>
+</div>

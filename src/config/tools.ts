@@ -211,6 +211,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Direct link to official VSB student registration',
     ],
   },
+  {
+    id: 'local-news',
+    name: 'Local News & Alerts',
+    shortDescription: 'Sub-second, zero-ad civic news wire, breaking weather warnings, transit updates & City Council releases.',
+    path: '/news',
+    icon: 'newspaper',
+    category: 'civic',
+    status: 'active',
+    badgeText: 'Live Wire',
+    previewStat: {
+      value: 'Live Wire',
+      label: 'CBC • City • ECCC',
+      statusType: 'info',
+    },
+    features: [
+      'Breaking weather & transit alert ribbon',
+      'Verified non-paywalled local journalism',
+      'Sub-second keyword & category filtering',
+      'Direct citations to primary public sources',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "cbc-broadway-subway-testing",
+    "title": "SkyTrain Broadway Subway Project Stations Enter Final Integrated Testing",
+    "summary": "Track installation and station electrical fit-outs across all six underground stations are now complete, with automated train testing underway between VCC-Clark and Arbutus.",
+    "source": "cbc_vancouver",
+    "outletName": "CBC Vancouver",
+    "category": "transit_infrastructure",
+    "publishedAt": "2026-08-18T16:37:08.606Z",
+    "url": "https://www.cbc.ca/news/canada/british-columbia/broadway-subway-testing-update-2026",
+    "isBreaking": true,
+    "isStale": false
+  },
+  {
+    "id": "cov-council-broadway-below-market-rental",
+    "title": "Vancouver City Council Enacts Below-Market Rental Protections Across Broadway Corridor",
+    "summary": "New policy updates mandate 20% secured below-market housing on all rezoned arterial tower developments with tenant right-of-return guarantees.",
+    "source": "city_of_vancouver",
+    "outletName": "City of Vancouver",
+    "category": "housing_development",
+    "publishedAt": "2026-08-18T16:37:08.607Z",
+    "url": "https://vancouver.ca/news-calendar/council-approves-rental-protections-2026.aspx",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "translink-seabus-10-min-summer-headways",
+    "title": "TransLink Increases SeaBus Peak Weekend Frequencies to 10-Minute Headways",
+    "summary": "Extra sailings between Waterfront and Lonsdale Quay deployed to support high summer waterfront ridership and North Shore trail connections.",
+    "source": "translink",
+    "outletName": "TransLink",
+    "category": "transit_infrastructure",
+    "publishedAt": "2026-08-18T16:37:08.607Z",
+    "url": "https://www.translink.ca/news/2026/august/seabus-summer-service-boost",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "eccc-strait-georgia-gale-statement",
+    "title": "Environment Canada Issues Coastal Gale Statement for Strait of Georgia",
+    "summary": "Gusty northwest winds reaching 35 knots expected through Tuesday evening along coastal marine passages, easing by Wednesday morning.",
+    "source": "eccc_weather",
+    "outletName": "Environment Canada",
+    "category": "weather_hazards",
+    "publishedAt": "2026-08-18T16:37:08.607Z",
+    "url": "https://weather.gc.ca/marine/forecast_e.html?site=03100",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "metrovan-capilano-reservoir-levels",
+    "title": "Metro Vancouver Reports Capilano and Seymour Reservoirs Return to Normal Operating Levels",
+    "summary": "Regional water storage levels remain healthy following seasonal alpine snowmelt runoff; Stage 1 lawn watering restrictions remain in standard summer schedule.",
+    "source": "metro_vancouver",
+    "outletName": "Metro Vancouver",
+    "category": "civic_politics",
+    "publishedAt": "2026-08-18T16:37:08.607Z",
+    "url": "https://metrovancouver.org/media-room/reservoir-status-update-august-2026",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "park-board-kits-pool-structural-sealing",
+    "title": "Park Board Completes Comprehensive Structural Membrane Sealing at Kitsilano Pool",
+    "summary": "Engineers confirm successful pressure testing of subterranean water circulation pipes, preparing the landmark salt-water pool for seamless year-round operation.",
+    "source": "city_of_vancouver",
+    "outletName": "Vancouver Park Board",
+    "category": "parks_community",
+    "publishedAt": "2026-08-18T16:37:08.607Z",
+    "url": "https://vancouver.ca/parks-recreation-culture/kits-pool-upgrade-completion.aspx",
+    "isBreaking": false,
+    "isStale": false
+  }
+]

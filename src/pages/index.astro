@@ -1,12 +1,15 @@
 ---
 import PlatformLayout from '../layouts/PlatformLayout.astro';
 import ToolCard from '../components/shared/ToolCard.astro';
+import BreakingAlertBanner from '../tools/local-news/components/BreakingAlertBanner.astro';
 import { TOOLS_REGISTRY } from '../config/tools';
+import { getLiveBreakingAlerts } from '../tools/local-news/services/newsService';
 
 // Set Edge Cache header for sub-50ms delivery with 60s live revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
 const allTools = TOOLS_REGISTRY;
+const alerts = await getLiveBreakingAlerts();
 ---
 
 <PlatformLayout
@@ -14,7 +17,10 @@ const allTools = TOOLS_REGISTRY;
   description="Fast, single-purpose local tools for Metro Vancouver. Beach water quality, ferry radar, snow levels, and city tools."
   currentPath="/"
 >
-  <div class="max-w-5xl mx-auto py-2">
+  <div class="max-w-5xl mx-auto py-2 space-y-4">
+    <!-- Active Breaking News & Emergency Alerts -->
+    <BreakingAlertBanner alerts={alerts} />
+
     <!-- Main Dashboard: One Card Per Utility -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="utilities-grid">
       {allTools.map((tool) => (

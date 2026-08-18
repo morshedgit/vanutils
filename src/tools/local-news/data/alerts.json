@@ -1,0 +1,13 @@
+[
+  {
+    "id": "eccc-coastal-gale-2026-08",
+    "title": "Coastal Gale & Marine Wind Warning in Effect",
+    "source": "eccc_weather",
+    "outletName": "Environment Canada",
+    "severity": "warning",
+    "timestamp": "2026-08-18T16:37:08.607Z",
+    "summary": "Northwest winds 25 to 35 knots developing over the Strait of Georgia. Marine vessels and coastal ferry sailings should monitor conditions.",
+    "actionUrl": "https://weather.gc.ca/warnings/report_e.html?bc42",
+    "isStale": false
+  }
+]

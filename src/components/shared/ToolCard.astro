@@ -10,6 +10,7 @@ import { getLiveStations } from '../../tools/air-quality/services/airQualityServ
 import { getLiveProposals } from '../../tools/civic-development/services/civicService';
 import { getLiveEvents } from '../../tools/community-events/services/eventService';
 import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
+import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
 
 interface Props {
   tool: ToolMeta;
@@ -48,6 +49,9 @@ const initialEvents = allEvents.slice(0, 6);
 const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
 const initialSchools = allSchools.slice(0, 6);
 
+const allArticles = tool.id === 'local-news' ? await getLiveNews() : [];
+const initialArticles = allArticles.slice(0, 6);
+
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const avgFreezingLevel = allMountains.length > 0
   ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
@@ -76,7 +80,8 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
       {tool.id === 'civic-development' && '38 Broadway Towers'}
       {tool.id === 'community-events' && '6 Free This Week'}
       {tool.id === 'school-catchment' && 'VSB SD39 Catchments'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'local-news' && 'Live News Wire'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -398,8 +403,35 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     </div>
   )}
 
+  <!-- LOCAL NEWS: High-Density News Wire List -->
+  {tool.id === 'local-news' && (
+    <div id="main-card-news-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialArticles.map((a) => {
+        const timeStr = formatTimeAgo(a.publishedAt);
+        return (
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-article-id={a.id}>
+            <div class="truncate pr-2 font-medium">
+              <span class="font-bold text-slate-900 dark:text-white mr-1">[{a.outletName}]</span>
+              <span>{a.title}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-1.5 text-[11px] font-semibold">
+              <span class="text-slate-400">
+                {timeStr}
+              </span>
+              {a.isBreaking && (
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-rose-500/20 text-rose-700 dark:text-rose-300">
+                  Breaking
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -995,5 +1027,60 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     }
 
     window.addEventListener('vanutils:pinned-schools-changed', syncMainCardSchools);
+  </script>
+)}
+
+{tool.id === 'local-news' && (
+  <script is:inline define:vars={{ allArticlesJson: JSON.stringify(allArticles) }}>
+    function syncMainCardNews() {
+      const grid = document.getElementById('main-card-news-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_local-news');
+      const allArticles = JSON.parse(allArticlesJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinned = allArticles.filter((a) => pinnedIds.includes(a.id));
+          const unpinned = allArticles.filter((a) => !pinnedIds.includes(a.id));
+          displayList = [...pinned, ...unpinned].slice(0, 6);
+        } catch (e) {
+          displayList = allArticles.slice(0, 6);
+        }
+      } else {
+        displayList = allArticles.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((a) => {
+        const breakingBadge = a.isBreaking
+          ? '<span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-rose-500/20 text-rose-700 dark:text-rose-300">Breaking</span>'
+          : '';
+
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-article-id="${a.id}">
+            <div class="truncate pr-2 font-medium">
+              <span class="font-bold text-slate-900 dark:text-white mr-1">[${a.outletName}]</span>
+              <span>${a.title}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-1.5 text-[11px] font-semibold">
+              <span class="text-slate-400">Recently</span>
+              ${breakingBadge}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardNews);
+    } else {
+      syncMainCardNews();
+    }
+
+    window.addEventListener('vanutils:pinned-news-changed', syncMainCardNews);
   </script>
 )}

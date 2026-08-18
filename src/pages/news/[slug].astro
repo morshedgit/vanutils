@@ -1,0 +1,94 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import { getLiveNews, getArticleById, getCategoryMeta, formatTimeAgo } from '../../tools/local-news/services/newsService';
+
+// Tiered Edge Cache: 5-minute edge TTL, 10-minute background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const { slug } = Astro.params;
+const allArticles = await getLiveNews();
+const article = getArticleById(slug || '', allArticles);
+
+if (!article) {
+  return Astro.redirect('/news');
+}
+
+const catMeta = getCategoryMeta(article.category);
+const timeAgo = formatTimeAgo(article.publishedAt);
+const publishedDate = new Date(article.publishedAt);
+---
+
+<ToolLayout
+  toolId="local-news"
+  title={`${article.title} — Vancouver Local News`}
+  description={`${article.summary}`}
+  currentPath={`/news/${article.id}`}
+  badgeText={article.outletName}
+  status="active"
+>
+  <div class="space-y-6 max-w-3xl mx-auto">
+    <!-- Breadcrumb & Back Link -->
+    <div class="flex items-center justify-between">
+      <a
+        href="/news"
+        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
+      >
+        <span>←</span>
+        <span>Back to News Wire</span>
+      </a>
+      <span class="text-xs text-slate-400">
+        Verified Non-Paywalled Source
+      </span>
+    </div>
+
+    <!-- Article Header Hero -->
+    <article class="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          {article.outletName}
+        </span>
+        <span class={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border ${catMeta.badgeBg}`}>
+          <span>{catMeta.icon}</span>
+          <span>{catMeta.label}</span>
+        </span>
+        {article.isBreaking && (
+          <span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30">
+            🚨 Breaking Wire
+          </span>
+        )}
+        <span class="text-xs text-slate-400 font-medium ml-auto">
+          {timeAgo} ({publishedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
+        </span>
+      </div>
+
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug">
+        {article.title}
+      </h1>
+
+      <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+        {article.summary}
+      </div>
+
+      <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/60">
+        <button
+          type="button"
+          class="star-btn px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-400 text-xs font-bold transition-colors flex items-center gap-1.5"
+          data-article-star-id={article.id}
+        >
+          <span>⭐</span>
+          <span>Pin to Home</span>
+        </button>
+
+        <a
+          href={article.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
+        >
+          <span>Read Full Report at {article.outletName}</span>
+          <span>↗</span>
+        </a>
+      </div>
+    </article>
+  </div>
+</ToolLayout>
