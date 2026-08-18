@@ -58,6 +58,7 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 | **Tool #11: Local News & Breaking Alerts** | `/news` | **Active Live** | Sub-second civic wire, breaking weather/transit emergency banners & verified local journalism. |
 | **Tool #12: Real Estate & Rental Heartbeat** | `/market` | **Active Live** | GVR MLS® HPI benchmarks, sales-to-active ratios, median rents & BoC mortgage rate gauges. |
 | **Tool #13: Sports, Courts & Rec Radar** | `/sports` | **Active Live** | 150+ public facilities, lighted tennis/pickleball courts, pool lanes, ice rink schedules & turf rainouts. |
+| **Tool #14: Weather & Microclimate Radar** | `/weather` | **Active Live** | ECCC station soundings, 8 microclimate gradients, 24h rain curves & 7-day high/low forecasts. |
 
 ---
 

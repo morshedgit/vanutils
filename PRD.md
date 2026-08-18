@@ -794,6 +794,130 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #14: Metro Vancouver Hyper-Local Weather & Microclimate Radar (`/weather`) — Active Live / Specification
+- **Module Identifier**: `weather-forecast` (internal route `/weather` and `/weather/[station]`, e.g. `/weather/downtown-vancouver`, `/weather/kitsilano`, `/weather/yvr-airport`, `/weather/north-vancouver`, `/weather/richmond`, `/weather/burnaby-mountain`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All current weather observations, temperatures, precipitation amounts, wind velocities, atmospheric pressures, UV indices, 24-hour hourly precipitation curves, and 7-day multi-model forecasts are 100% real-world meteorological data ingested directly from official public feeds:
+    - **Environment and Climate Change Canada (ECCC) Automated Weather Stations (AWS)**: Live station soundings for YVR Airport (`CWVR`), Vancouver Harbour (`CWVF`), West Vancouver (`CWWA`), Point Atkinson (`CWTA`), Richmond Nature Park, and Burnaby Mountain.
+    - **ECCC Weather Alerts (CAP-CP Protocol)**: Real-time meteorological warnings, gale watches, wind advisories, and rainfall warnings for Metro Vancouver.
+    - **Open-Meteo High-Resolution Canadian HRDPS / GEM Numerical Model API**: Hourly precipitation curves, humidity, dew point, cloud cover, and UV index.
+  - Generating, simulating, or displaying any synthetic, mock, or AI-hallucinated weather data is strictly prohibited.
+  - Strict Anti-Ad Policy: Zero ad banners, zero video autoplays, zero paywalled radar maps, and zero tracking cookies.
+- **Problem Solved**:
+  - Metro Vancouver features extreme microclimates—North Vancouver (under the Coast Mountains) often experiences heavy rain and $16^\circ\text{C}$ temperatures, while YVR / Tsawwassen is sunny and $21^\circ\text{C}$ with 0mm of rain. Broad "Vancouver" single-city forecasts fail to capture local conditions.
+  - Commercial weather apps are bloated with ads, auto-playing video clips, and slow trackers.
+  - Residents need an instantaneous ($< 50\text{ms}$ TTFB), high-density microclimate radar comparing coastal, urban, mountain, and valley stations side-by-side with 24-hour precipitation curves.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveWeather(stationOrCoords?)` implemented in `src/tools/weather-forecast/services/weatherService.ts`.
+  - Parallel queries to Open-Meteo HRDPS Canadian model endpoints and ECCC feeds using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: Falls back to the last-known verified meteorological snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')` (Medium Volatility: 5-minute edge cache with 10-minute background SWR revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/weather`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of real-time microclimate soundings across Vancouver neighborhoods:
+    1. *Downtown / Harbour* • 19.4°C • ☀️ Sunny • 0.0mm (Wind: E 12 km/h)
+    2. *Kitsilano Beach* • 20.1°C • ☀️ Warm / Clear • 0.0mm (UV: 6 High)
+    3. *North Van / Lynn Valley* • 17.2°C • 🌦️ Showers • 1.8mm (Cloud: 85%)
+    4. *YVR / Sea Island* • 19.8°C • 💨 SW 18 km/h • 0.0mm (Baro: 101.4 kPa)
+    5. *Burnaby Mountain (SFU)* • 16.5°C • 🌫️ Overcast • 0.4mm
+    6. *Richmond / Steveston* • 20.5°C • ☀️ Sunny • 0.0mm (Humidity: 58%)
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_weather-forecast')` allowing users to pin favorite neighborhood microclimates to their home dashboard.
+  - **Zero Visual Bloat**: No animated weather avatars, promotional widgets, or sponsored content.
+- **Core Features**:
+  - **Microclimate Station Matrix**:
+    - Real-time temperature (°C), "Feels Like" Humidex / Wind Chill, relative humidity (%), barometric pressure (kPa), wind speed (km/h) & direction, and UV index.
+  - **24-Hour Precipitation Trajectory Curves**:
+    - High-density SVG sparklines showing hourly rain intensity (mm/h) and probability of precipitation (PoP %).
+  - **7-Day ECCC High/Low Forecast Horizon**:
+    - Daily condition icons, high/low temperature spreads, expected total rainfall accumulation, and sunrise/sunset times.
+  - **ECCC Active Meteorological Advisory Banner**:
+    - High-contrast warning ribbon for severe rainfall warnings, atmospheric rivers, gale watches, wind warnings, or heat advisories.
+  - **1-Tap Browser Geolocation**:
+    - Automatically resolves user GPS to the closest microclimate station (e.g. Kitsilano vs. North Van vs. Richmond).
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/weather-forecast/types.ts
+  export type WeatherCondition = 
+    | 'sunny' 
+    | 'mostly_sunny' 
+    | 'partly_cloudy' 
+    | 'overcast' 
+    | 'fog' 
+    | 'light_rain' 
+    | 'moderate_rain' 
+    | 'heavy_rain' 
+    | 'thunderstorm' 
+    | 'snow_flurries';
+
+  export interface HourlyForecast {
+    time: string;                  // ISO 8601 or "14:00"
+    temperatureCelsius: number;
+    precipitationMm: number;
+    precipitationProbabilityPercent: number;
+    condition: WeatherCondition;
+  }
+
+  export interface DailyForecast {
+    date: string;                  // "2026-08-19"
+    dayOfWeek: string;             // "Wednesday"
+    tempHighCelsius: number;
+    tempLowCelsius: number;
+    totalPrecipitationMm: number;
+    precipitationProbabilityPercent: number;
+    condition: WeatherCondition;
+    uvIndexMax: number;
+    sunrise: string;
+    sunset: string;
+  }
+
+  export interface WeatherStation {
+    id: string;                    // "kitsilano"
+    name: string;                  // "Kitsilano Beach"
+    shortName: string;             // "Kits Beach"
+    region: 'vancouver_core' | 'north_shore' | 'burnaby_east' | 'richmond_south';
+    latitude: number;
+    longitude: number;
+    elevationMeters: number;
+    current: {
+      temperatureCelsius: number;
+      feelsLikeCelsius: number;
+      condition: WeatherCondition;
+      humidityPercent: number;
+      windSpeedKmh: number;
+      windDirection: string;       // "SW", "WNW"
+      windGustKmh?: number;
+      pressureKpa: number;
+      uvIndex: number;
+      precipitation24hMm: number;
+    };
+    hourly: HourlyForecast[];      // Next 24 hours
+    daily: DailyForecast[];        // 7-day forecast
+    advisory?: {
+      title: string;
+      severity: 'warning' | 'watch' | 'statement';
+      description: string;
+      issuedAt: string;
+    };
+    officialStationCode?: string;  // e.g. "CWVR", "CWVF"
+    lastUpdated: string;           // ISO 8601
+    isStale: boolean;
+  }
+
+  export interface WeatherOverviewStats {
+    avgTemperatureCelsius: number;
+    maxTemperatureCelsius: number;
+    minTemperatureCelsius: number;
+    highestRainStation: string;
+    activeAdvisoryCount: number;
+  }
+  ```
+- **Performance Budget**:
+  - Page render $< 400\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript payload $< 15\text{KB}$; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
