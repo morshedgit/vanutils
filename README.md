@@ -54,6 +54,7 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 | **Tool #7: Wildfire Smoke & AQHI** | `/air` | **Active Live** | 12 BAM-1020 air stations, live PM2.5 levels, 24h curves & clean-air shelters. |
 | **Tool #8: Development & Rezoning** | `/civic` | **Active Live** | City Open Data rezoning tracker, height/unit breakdowns, hearing calendars & comment portals. |
 | **Tool #9: Community Events Radar** | `/events` | **Active Live** | 100% Free local events, street festivals, Park Board movies, VPL talks & calendar exports. |
+| **Tool #10: School & Childcare Catchment** | `/schools` | **Active Live** | VSB SD39 English & French Immersion catchment resolver + licensed childcare VCH logs. |
 
 ---
 

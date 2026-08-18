@@ -378,6 +378,101 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #10: VSB School Catchment & Licensed Childcare Navigator (`/schools`) — Active Live / Specification
+- **Module Identifier**: `school-catchment` (internal route `/schools` and `/schools/[school-slug]`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All school catchment boundaries, school grade configurations, French Immersion lottery feeder patterns, and licensed childcare inspection reports are 100% real-world data ingested directly from the Vancouver School Board (SD39) GIS Catchment Open Dataset, the BC Ministry of Education School Directory API, and the Vancouver Coastal Health (VCH) Community Care Facilities Licensing Database.
+  - Generating, simulating, or displaying any synthetic, mock, or fake catchment boundaries or daycare inspection records is strictly prohibited.
+- **Problem Solved**:
+  - Vancouver families moving into a new home or apartment face confusion regarding public school catchments (Vancouver School District 39), including Elementary Main Schools vs. Annexes (K–3 annexes feeding 4–7 main schools), Early & Late French Immersion boundaries, and strict cross-boundary restrictions.
+  - Provides a sub-50ms address-lookup utility to resolve exact Elementary, Annex, and Secondary school catchments, view French Immersion feeder tracks, and locate licensed childcare centers with verified VCH health inspection records.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveCatchment(addressOrCoords)` implemented in `src/tools/school-catchment/services/catchmentService.ts`.
+  - Parallel queries to VSB SD39 GeoJSON, BC Ministry of Education, and VCH endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Point-in-Polygon Geofencing executes on Cloudflare Edge in $< 50\text{ms}$.
+  - Graceful Failover: Falls back to the last-known verified SD39 catchment boundary index with `isStale: true` and an explicit timestamp warning if upstream GIS services experience latency.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800')` (24-hour edge cache with 7-day background revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/schools`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of verified educational and catchment telemetry:
+    1. *Kitsilano Secondary (8-12)* • Gordon / Tennyson / Bayview Feeder
+    2. *Lord Byng Secondary (8-12)* • Queen Elizabeth / Jules Quesnel Feeder
+    3. *Eric Hamber Secondary (8-12)* • Cavell / Jamieson / Osler Feeder
+    4. *Sir Winston Churchill (8-12)* • IB & French Immersion Dual-Track
+    5. *VSB Kindergarten Registration*: Open (Priority SD39 Catchment Round)
+    6. *Licensed Childcare Directory*: 180+ Facilities with VCH Inspection Logs
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_school-catchment')` allowing parents to pin their designated neighborhood schools directly to the home screen.
+  - **Zero Visual Bloat**: No decorative icons, category pills, or marketing blurbs.
+- **Core Features**:
+  - **Address-Based School Catchment Resolver**:
+    - Designated Elementary School (K–7)
+    - Designated Elementary Annex (K–3/4, if applicable)
+    - Designated Secondary High School (8–12)
+    - Early French Immersion (K–7) and Late French Immersion (6–7) feeder tracks
+  - **School Facility Profile & Program Directory**:
+    - Grade configurations, student enrollment, and contact info
+    - District choice programs (Montessori, French Immersion, Fine Arts, Mini-School, IB)
+    - 1-tap direct links to official VSB registration portal
+  - **Licensed Childcare & Daycare Inspection Navigator**:
+    - Proximity radius locator for licensed centers within 1km (Infant/Toddler 0-36m, Group 3-5 Preschool, School-Age)
+    - VCH Public Health inspection compliance status (*Compliant / Infractions Remedied / Follow-up Required*) with direct report deep-links
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/school-catchment/types.ts
+  export type SchoolCategory = 'elementary' | 'elementary_annex' | 'secondary';
+  export type ProgramTrack = 'english_regular' | 'early_french_immersion' | 'late_french_immersion' | 'montessori' | 'ib';
+
+  export interface SchoolInfo {
+    id: string;                     // "general-gordon-elementary"
+    name: string;                   // "General Gordon Elementary"
+    category: SchoolCategory;
+    gradeSpan: string;              // "K-7"
+    address: string;
+    latitude: number;
+    longitude: number;
+    phone: string;
+    programs: ProgramTrack[];
+    websiteUrl: string;
+  }
+
+  export interface CatchmentLookupResult {
+    queriedAddress: string;
+    latitude: number;
+    longitude: number;
+    elementary: SchoolInfo;
+    annex?: SchoolInfo;
+    secondary: SchoolInfo;
+    frenchImmersionEarly?: SchoolInfo;
+    frenchImmersionLate?: SchoolInfo;
+  }
+
+  export interface ChildcareInspection {
+    inspectionDate: string;         // ISO 8601
+    status: 'compliant' | 'infractions_remedied' | 'follow_up_required';
+    summary: string;
+    reportUrl: string;
+  }
+
+  export interface LicensedChildcareCenter {
+    id: string;                     // "kitsilano-daycare-centre"
+    name: string;                   // "Kitsilano Daycare Centre"
+    facilityType: 'infant_toddler' | 'group_3_5' | 'school_age' | 'preschool';
+    address: string;
+    latitude: number;
+    longitude: number;
+    licensedCapacity: number;
+    phone: string;
+    lastInspection: ChildcareInspection;
+    officialSourceUrl: string;
+  }
+  ```
+- **Performance Budget**:
+  - Edge geofencing $< 50\text{ms}$; Page render $< 400\text{ms}$; Client JavaScript $< 15\text{KB}$; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
