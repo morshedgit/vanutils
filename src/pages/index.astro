@@ -1,6 +1,7 @@
 ---
 import PlatformLayout from '../layouts/PlatformLayout.astro';
 import ToolCard from '../components/shared/ToolCard.astro';
+import JsonLd from '../components/shared/JsonLd.astro';
 import BreakingAlertBanner from '../tools/local-news/components/BreakingAlertBanner.astro';
 import { TOOLS_REGISTRY } from '../config/tools';
 import { getLiveBreakingAlerts } from '../tools/local-news/services/newsService';
@@ -10,6 +11,16 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-re
 
 const allTools = TOOLS_REGISTRY;
 const alerts = await getLiveBreakingAlerts();
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'VanUtils',
+  alternateName: 'Vancouver Micro-Utilities Hub',
+  url: 'https://vanutils.ca',
+  description: 'Ultra-fast, single-purpose live micro-utilities and public telemetry for Metro Vancouver residents.',
+  inLanguage: 'en-CA',
+};
 ---
 
 <PlatformLayout
@@ -17,12 +28,25 @@ const alerts = await getLiveBreakingAlerts();
   description="Fast, single-purpose local tools for Metro Vancouver. Beach water quality, ferry radar, snow levels, and city tools."
   currentPath="/"
 >
+  <JsonLd schema={websiteSchema} />
+
   <div class="w-full space-y-6">
     <!-- Active Breaking News & Emergency Alerts -->
     <BreakingAlertBanner alerts={alerts} />
 
+    <!-- SEO Primary Heading & Live Header -->
+    <div class="space-y-1">
+      <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+        Metro Vancouver Live Micro-Utilities & Telemetry
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        Sub-second public data, beach water quality, ferry radar, snow levels, and emergency wait times.
+      </p>
+    </div>
+
     <!-- Dashboard Category Filter Tabs & Quick Search Bar -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-2">
+
       <!-- Category Pills -->
       <div class="flex flex-wrap gap-1.5" id="home-category-filters">
         <button
