@@ -473,6 +473,104 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #11: Metro Vancouver Local News & Breaking Alert Radar (`/news`) — Active Live / Specification
+- **Module Identifier**: `local-news` (internal route `/news` and `/news/[slug]`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All news headlines, articles, civic press releases, official meteorological alerts, transit disruption notices, and emergency bulletins are 100% real-world data ingested directly from authentic, non-paywalled institutional RSS, Atom, and REST feeds:
+    - **CBC News British Columbia / Vancouver** (Official Public RSS: `https://www.cbc.ca/webfeed/rss/rss-canada-britishcolumbia`)
+    - **City of Vancouver Media Releases & Public Notices** (`https://vancouver.ca/news-calendar/rss.aspx`)
+    - **Metro Vancouver Regional District Media Releases** (`https://metrovancouver.org/about-us/media-releases`)
+    - **Environment and Climate Change Canada (ECCC) Weather Alerts** (CAP-CP Alert Feed for Metro Vancouver / YVR)
+    - **TransLink News & Major Service Disruption Advisories**
+    - **Emergency Info BC / DriveBC Major Civic Incident Feeds**
+  - Generating, simulating, or displaying any synthetic, AI-hallucinated, or fake news headlines is strictly prohibited.
+  - Strict Anti-Clickbait & Non-Commercial Filter: Filters out clickbait tabloids, sponsored marketing posts, celebrity gossip, and paywalled links.
+- **Problem Solved**:
+  - Local Vancouver news is increasingly scattered across ad-choked commercial websites, paywalled outlets, and fragmented social media channels filled with sensationalism and popup tracking scripts.
+  - Residents need a sub-second, zero-ad, high-density civic news wire that highlights urgent local alerts (weather emergencies, transit disruptions, civic policy votes, water notices) alongside verified local journalism.
+- **Breaking News & Civic Alert Banner Protocol**:
+  - **Component Specification**: `src/tools/local-news/components/BreakingAlertBanner.astro` and global platform integration.
+  - **Dynamic Emergency Surface**: Surfaces active `critical` or `warning` alerts at the top of `/` and `/news` (e.g. *🚨 ECCC Severe Wind Warning in effect for Metro Vancouver*, *⚠️ SkyTrain Expo Line temporary service suspension*, *💧 Metro Vancouver Boil Water Notice*).
+  - **Auto-Collapse**: Automatically unmounts/hides when no high-priority alerts are active (`activeAlerts.length === 0`).
+  - **1-Tap Dismissal**: Persisted per alert via `localStorage.getItem('vanutils_dismissed_alert_<id>')`.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loaders `getLiveNews()` and `getLiveBreakingAlerts()` implemented in `src/tools/local-news/services/newsService.ts`.
+  - Parallel queries to verified upstream feeds using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: Falls back to the last-known verified news snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+- **Tiered Edge Caching Matrix**:
+  - Breaking Alerts: `Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120')` (High Real-Time Acuity: 1-minute edge cache with 2-minute SWR).
+  - General News Feed: `Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')` (Medium Volatility: 5-minute edge cache with 10-minute SWR).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/news`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of verified local news headlines with outlet tags and elapsed timestamps:
+    1. *CBC Vancouver* • SkyTrain Broadway Subway Stations Enter Final Commissioning (24m ago)
+    2. *City of Van* • Council Approves Below-Market Rental Incentives on Broadway (1h ago)
+    3. *ECCC Weather* • Coastal Gale Warning Issued for Strait of Georgia (2h ago)
+    4. *TransLink* • SeaBus Increases Weekend Headways to 10 Minutes for Summer (3h ago)
+    5. *MetroVan* • Capilano Watershed Reservoir Levels Return to Normal (5h ago)
+    6. *Park Board* • Kitsilano Pool Completes Structural Sealing for Fall (7h ago)
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_local-news')` allowing users to pin favorite news categories (e.g. *Transit & Roads, Civic Politics, Weather & Hazards, Housing & Planning*) to their home screen.
+  - **Zero Visual Bloat**: No thumbnail image bloat, sponsored ads, video autoplay, or promotional fluff.
+- **Core Features**:
+  - **Breaking News Banner & Ticker**: High-visibility alert ribbon for severe weather, transit disruptions, and civic emergencies.
+  - **Category Quick-Filters**:
+    - 🏛️ *Civic & Politics*: City Council votes, municipal bylaws, zoning decisions.
+    - 🚆 *Transit & Infrastructure*: TransLink upgrades, bridge maintenance, road closures.
+    - 🌧️ *Weather & Environment*: ECCC weather warnings, air quality advisories, snow lines.
+    - 🏗️ *Housing & Planning*: Broadway Plan developments, rental vacancy reports, tenant protections.
+    - 🌳 *Parks & Community*: Park Board updates, community centre facilities, beach advisories.
+  - **Direct Non-Paywalled Citations**: Clean outbound links directly to the verified primary source with time-ago badges (e.g. `12m ago`, `1h ago`).
+  - **Instant Title & Keyword Search**: Sub-millisecond client-side filter across current articles.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/local-news/types.ts
+  export type NewsOutlet = 
+    | 'cbc_vancouver' 
+    | 'city_of_vancouver' 
+    | 'metro_vancouver' 
+    | 'eccc_weather' 
+    | 'translink' 
+    | 'emergency_info_bc';
+
+  export type NewsCategory = 
+    | 'civic_politics' 
+    | 'transit_infrastructure' 
+    | 'weather_hazards' 
+    | 'housing_development' 
+    | 'parks_community';
+
+  export type AlertSeverity = 'critical' | 'warning' | 'advisory' | 'info';
+
+  export interface BreakingAlert {
+    id: string;                      // "eccc-wind-warning-2026-08"
+    title: string;                   // "Special Weather Statement: Coastal Gale Warning"
+    source: NewsOutlet;
+    severity: AlertSeverity;
+    timestamp: string;               // ISO 8601
+    summary: string;
+    actionUrl?: string;
+    isStale: boolean;
+  }
+
+  export interface NewsArticle {
+    id: string;                      // "cbc-broadway-subway-update-2026"
+    title: string;                   // "Broadway Subway Project Stations Enter Final Testing"
+    summary: string;
+    source: NewsOutlet;
+    outletName: string;              // "CBC News"
+    category: NewsCategory;
+    publishedAt: string;             // ISO 8601
+    url: string;                     // Direct canonical source URL
+    isBreaking: boolean;
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Page render $< 400\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript payload $< 15\text{KB}$; zero ad networks or analytics trackers; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
