@@ -198,6 +198,281 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #8: Vancouver Development & Rezoning Radar (`/civic`) — Active Live / Specification
+- **Module Identifier**: `civic-development` (internal route `/civic` and `/civic/[application-id]`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All rezoning applications, development permit records (DP), issued building permits, public hearing schedules, floor space ratio (FSR) metrics, unit mixes, and architectural elevation drawing links are 100% real-world data ingested directly from the official City of Vancouver Open Data API (`rezoning-applications`, `development-applications`, `issued-building-permits`) and City Clerk Council & Public Hearing Calendars.
+  - Generating, simulating, or displaying any synthetic, mock, or fake zoning or application data is strictly prohibited.
+- **Problem Solved**:
+  - Vancouver is undergoing unprecedented urban transformation under the Broadway Plan, Vancouver Plan, and Provincial Transit-Oriented Development (TOD) legislation. Finding out what is being planned on a specific block currently requires navigating complex municipal Shapefiles, disparate PDF agendas, and slow GIS viewers.
+  - Provides residents, renters, and homeowners with sub-second, address-aware visibility into proposed towers, rental units, below-market social housing, council public hearings, and direct comment submission links within walking distance (250m–1000m).
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveProposals()` implemented in `src/tools/civic-development/services/civicService.ts`.
+  - Parallel queries to official City of Vancouver REST/GeoJSON endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: If upstream municipal endpoints encounter latency or downtime, the loader immediately falls back to the last-known verified snapshot with `isStale: true` and an explicit timestamp rather than blocking page render.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')` (Low/Periodic Acuity: 1-hour edge cache with 24-hour background revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating to `/civic`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card real estate presents 6–10 live rows of real municipal planning telemetry:
+    1. *Broadway Plan Corridor*: 38 Active Tower Proposals
+    2. *Downtown & West End*: 24 Active Rezonings
+    3. *Mount Pleasant & Main St*: 16 Active Proposals
+    4. *Kitsilano & West 4th*: 11 Active Proposals
+    5. *Cambie & Marine Gateway TOD*: 19 Active Proposals
+    6. *Next Public Hearing*: Tue 6:00 PM (4 Projects on Agenda)
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_civic-development')` allowing users to pin specific corridors or neighborhood watches to their home dashboard.
+  - **Zero Visual Bloat**: No decorative icons, category pills, or promotional blurbs.
+- **Core Features**:
+  - **Spatial Proximity Engine (Haversine)**: 1-tap browser geolocation or address input with 250m, 500m, 1000m, and 2000m radius filters.
+  - **Standardized Building Metrics Card**:
+    - Application ID & Address (e.g. `RZ-2026-00018 — 1425 W 11th Ave`)
+    - Height & Scale: Proposed storeys and total height in meters
+    - Density / FSR: Proposed Floor Space Ratio compared to existing baseline
+    - Unit Mix Breakdown: Market rental, 60-year secured below-market rental / social housing, strata condo units, and commercial / retail ground floor sq ft
+    - Parking & Bike Stalls: Vehicle parking and Class A bicycle lockers
+  - **Application Lifecycle Timeline**:
+    - Visual tracker: *Under Review → Community Open House → Public Hearing Scheduled → Approved in Principle → Permits Issued → Under Construction*
+  - **Public Hearing Countdown & Council Comment Portal**:
+    - Live countdown to scheduled City Council public hearings with 1-tap direct deep links to submit official comments or register to speak at Council.
+  - **Verified Architectural Document Deep-Links**:
+    - Direct links to official architectural elevation drawings, shadow studies, landscape plans, and Urban Design Panel presentations on `vancouver.ca`.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/civic-development/types.ts
+  export type ApplicationType = 'rezoning' | 'development_permit' | 'building_permit';
+
+  export type ApplicationStatus = 
+    | 'under_review' 
+    | 'open_house' 
+    | 'public_hearing_scheduled' 
+    | 'approved' 
+    | 'refused' 
+    | 'under_construction';
+
+  export interface UnitMix {
+    marketRental: number;
+    belowMarketRental: number;
+    socialHousing: number;
+    strataCondo: number;
+    totalUnits: number;
+  }
+
+  export interface PublicHearingDetails {
+    hearingDate?: string;          // ISO 8601
+    councilMeetingUrl?: string;
+    publicCommentDeadline?: string;// ISO 8601
+    submitCommentUrl: string;
+  }
+
+  export interface DevelopmentProposal {
+    id: string;                    // "RZ-2026-00018"
+    type: ApplicationType;
+    address: string;
+    neighbourhood: string;
+    latitude: number;
+    longitude: number;
+    storeys: number;
+    heightMeters: number;
+    proposedFSR: number;
+    existingFSR?: number;
+    units: UnitMix;
+    commercialAreaSqFt: number;
+    status: ApplicationStatus;
+    statusDescription: string;
+    publicHearing?: PublicHearingDetails;
+    applicantName: string;
+    architecturalDrawingsUrl: string;
+    officialCityUrl: string;
+    lastUpdated: string;           // ISO 8601
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Route `/civic` initial render $< 500\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript $< 20\text{KB}$; Lighthouse 95+ target.
+
+---
+
+### Tool #9: Free & Local Community Events Radar (`/events`) — Active Live / Specification
+- **Module Identifier**: `community-events` (internal route `/events` and `/events/[event-slug]`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All event dates, locations, descriptions, free-admission verifications, and permit notices are 100% real-world data ingested directly from the City of Vancouver Special Events & Film Permits Open Data API (`special-events-and-film-permits`), the Vancouver Park Board Activity Feed, the Vancouver Public Library (VPL) Program API, and TransLink Event Service Alerts.
+  - Zero synthetic, simulated, or mock events are permitted.
+  - Strict Non-Commercial Filter: Excludes paid nightlife, commercial trade shows, ticketed expos, and promotional spam.
+- **Problem Solved**:
+  - Finding authentic, free, all-ages, and family-friendly local events in Metro Vancouver (e.g. Park Board outdoor summer movies, neighborhood Car-Free Days, farmers' markets, cultural festivals like Khatsahlano and Greek Day, and library workshops) is difficult due to ad-heavy, paywalled commercial ticketing sites.
+  - Provides a sub-second, zero-ad community event radar with 1-tap `.ics` calendar export and transit routing.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveEvents()` implemented in `src/tools/community-events/services/eventService.ts`.
+  - Parallel queries to official municipal, Park Board, VPL, and TransLink feeds using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: If upstream feeds experience latency or outages, the loader immediately returns the last-known verified live event snapshot with `isStale: true` and an explicit timestamp rather than blocking page render.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (30-minute edge cache with 2-hour background revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/events`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of verified free community events happening today and this upcoming weekend:
+    1. *Car-Free Day Commercial Dr* • Sun 12:00 PM (100% Free)
+    2. *Stanley Park Summer Cinema (Second Beach)* • Tue Dusk (Free Outdoor)
+    3. *Kitsilano Farmers Market* • Sun 10:00 AM (Free Entry)
+    4. *VPL Central Author Talk & Reading* • Thu 6:30 PM (Free)
+    5. *Greek Day on Broadway* • Sun 11:00 AM (Free Street Fest)
+    6. *Trout Lake Free Community Swim/Skate* • Sat 1:00 PM (Free Admission)
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_community-events')` allowing users to pin favorite recurring events, categories, or local venues to their home dashboard.
+  - **Zero Visual Bloat**: No decorative icons, category pills, or promotional marketing blurbs.
+- **Core Features**:
+  - **Filtered Chronological Event Feed**: 1-tap date navigation (*Today, This Weekend, Next 7 Days, This Month*).
+  - **Core Quality Filters**:
+    - 🎟️ *100% Free Admission*: Strictly filters out events requiring paid ticketing.
+    - 👨‍👩‍👧 *All-Ages / Family Friendly*: Focuses on community, youth, and family activities.
+    - 🌳 *Parks & Outdoors*: Highlights outdoor gatherings, movies, and plaza performances.
+    - 🚆 *Transit-Accessible*: Flags events within 500m of a SkyTrain station or major bus corridor.
+  - **Standardized Event Profile**:
+    - Event title and host organization (e.g. Vancouver Park Board, Kitsilano BIA)
+    - Date, start/end time, and recurring schedules
+    - Physical address, park/venue name, and neighborhood
+    - Weather contingency: "Rain or Shine" vs. "Weather Permitting"
+  - **1-Tap Calendar & Navigation Export**: Instant `.ics` calendar download (Apple / Google Calendar) and transit navigation links.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/community-events/types.ts
+  export type EventCategory = 
+    | 'street_festival' 
+    | 'park_outdoor' 
+    | 'library_talk' 
+    | 'farmers_market' 
+    | 'community_arts';
+
+  export interface TransitAccessInfo {
+    nearestSkyTrainStation?: string; // e.g. "Main Street-Science World"
+    busRoutes: string[];             // ["#99 B-Line", "#9", "#4"]
+    mobiBikeStationNearby: boolean;
+  }
+
+  export interface CommunityEvent {
+    id: string;                      // "khatsahlano-street-party-2026"
+    title: string;                   // "Khatsahlano Street Party"
+    shortDescription: string;
+    category: EventCategory;
+    organization: string;            // "Kitsilano 4th Avenue BIA"
+    venueName: string;               // "West 4th Avenue (Burrard to Macdonald)"
+    address: string;
+    neighbourhood: string;
+    latitude: number;
+    longitude: number;
+    startDateTime: string;           // ISO 8601
+    endDateTime: string;             // ISO 8601
+    isFreeAdmission: boolean;
+    isAllAges: boolean;
+    isOutdoor: boolean;
+    rainOrShine: boolean;
+    transitAccess: TransitAccessInfo;
+    officialSourceUrl: string;
+    lastUpdated: string;             // ISO 8601
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Page render $< 400\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript payload $< 15\text{KB}$; zero ad scripts or tracking pixels; Lighthouse 95+ target.
+
+---
+
+### Tool #10: VSB School Catchment & Licensed Childcare Navigator (`/schools`) — Active Live / Specification
+- **Module Identifier**: `school-catchment` (internal route `/schools` and `/schools/[school-slug]`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All school catchment boundaries, school grade configurations, French Immersion lottery feeder patterns, and licensed childcare inspection reports are 100% real-world data ingested directly from the Vancouver School Board (SD39) GIS Catchment Open Dataset, the BC Ministry of Education School Directory API, and the Vancouver Coastal Health (VCH) Community Care Facilities Licensing Database.
+  - Generating, simulating, or displaying any synthetic, mock, or fake catchment boundaries or daycare inspection records is strictly prohibited.
+- **Problem Solved**:
+  - Vancouver families moving into a new home or apartment face confusion regarding public school catchments (Vancouver School District 39), including Elementary Main Schools vs. Annexes (K–3 annexes feeding 4–7 main schools), Early & Late French Immersion boundaries, and strict cross-boundary restrictions.
+  - Provides a sub-50ms address-lookup utility to resolve exact Elementary, Annex, and Secondary school catchments, view French Immersion feeder tracks, and locate licensed childcare centers with verified VCH health inspection records.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveCatchment(addressOrCoords)` implemented in `src/tools/school-catchment/services/catchmentService.ts`.
+  - Parallel queries to VSB SD39 GeoJSON, BC Ministry of Education, and VCH endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Point-in-Polygon Geofencing executes on Cloudflare Edge in $< 50\text{ms}$.
+  - Graceful Failover: Falls back to the last-known verified SD39 catchment boundary index with `isStale: true` and an explicit timestamp warning if upstream GIS services experience latency.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800')` (24-hour edge cache with 7-day background revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/schools`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of verified educational and catchment telemetry:
+    1. *Kitsilano Secondary (8-12)* • Gordon / Tennyson / Bayview Feeder
+    2. *Lord Byng Secondary (8-12)* • Queen Elizabeth / Jules Quesnel Feeder
+    3. *Eric Hamber Secondary (8-12)* • Cavell / Jamieson / Osler Feeder
+    4. *Sir Winston Churchill (8-12)* • IB & French Immersion Dual-Track
+    5. *VSB Kindergarten Registration*: Open (Priority SD39 Catchment Round)
+    6. *Licensed Childcare Directory*: 180+ Facilities with VCH Inspection Logs
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_school-catchment')` allowing parents to pin their designated neighborhood schools directly to the home screen.
+  - **Zero Visual Bloat**: No decorative icons, category pills, or marketing blurbs.
+- **Core Features**:
+  - **Address-Based School Catchment Resolver**:
+    - Designated Elementary School (K–7)
+    - Designated Elementary Annex (K–3/4, if applicable)
+    - Designated Secondary High School (8–12)
+    - Early French Immersion (K–7) and Late French Immersion (6–7) feeder tracks
+  - **School Facility Profile & Program Directory**:
+    - Grade configurations, student enrollment, and contact info
+    - District choice programs (Montessori, French Immersion, Fine Arts, Mini-School, IB)
+    - 1-tap direct links to official VSB registration portal
+  - **Licensed Childcare & Daycare Inspection Navigator**:
+    - Proximity radius locator for licensed centers within 1km (Infant/Toddler 0-36m, Group 3-5 Preschool, School-Age)
+    - VCH Public Health inspection compliance status (*Compliant / Infractions Remedied / Follow-up Required*) with direct report deep-links
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/school-catchment/types.ts
+  export type SchoolCategory = 'elementary' | 'elementary_annex' | 'secondary';
+  export type ProgramTrack = 'english_regular' | 'early_french_immersion' | 'late_french_immersion' | 'montessori' | 'ib';
+
+  export interface SchoolInfo {
+    id: string;                     // "general-gordon-elementary"
+    name: string;                   // "General Gordon Elementary"
+    category: SchoolCategory;
+    gradeSpan: string;              // "K-7"
+    address: string;
+    latitude: number;
+    longitude: number;
+    phone: string;
+    programs: ProgramTrack[];
+    websiteUrl: string;
+  }
+
+  export interface CatchmentLookupResult {
+    queriedAddress: string;
+    latitude: number;
+    longitude: number;
+    elementary: SchoolInfo;
+    annex?: SchoolInfo;
+    secondary: SchoolInfo;
+    frenchImmersionEarly?: SchoolInfo;
+    frenchImmersionLate?: SchoolInfo;
+  }
+
+  export interface ChildcareInspection {
+    inspectionDate: string;         // ISO 8601
+    status: 'compliant' | 'infractions_remedied' | 'follow_up_required';
+    summary: string;
+    reportUrl: string;
+  }
+
+  export interface LicensedChildcareCenter {
+    id: string;                     // "kitsilano-daycare-centre"
+    name: string;                   // "Kitsilano Daycare Centre"
+    facilityType: 'infant_toddler' | 'group_3_5' | 'school_age' | 'preschool';
+    address: string;
+    latitude: number;
+    longitude: number;
+    licensedCapacity: number;
+    phone: string;
+    lastInspection: ChildcareInspection;
+    officialSourceUrl: string;
+  }
+  ```
+- **Performance Budget**:
+  - Edge geofencing $< 50\text{ms}$; Page render $< 400\text{ms}$; Client JavaScript $< 15\text{KB}$; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
