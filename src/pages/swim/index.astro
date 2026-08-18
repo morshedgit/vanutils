@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import BeachCard from '../../tools/can-i-swim/components/BeachCard.astro';
 import FilterBar from '../../tools/can-i-swim/components/FilterBar.astro';
 import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
@@ -8,6 +9,37 @@ import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
 const beaches = getAllBeaches();
+
+const swimFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the safe E. coli limit for swimming in Vancouver beaches?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Vancouver Coastal Health (VCH) sets the safe recreational swimming standard at a 30-day geometric mean under 200 E. coli per 100mL of water. A single sample exceeding 400 E. coli per 100mL or geometric mean above 200 triggers an official swimming advisory.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How often is beach water quality tested in Metro Vancouver?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Water samples are collected weekly throughout the primary recreational season (May through September) by Vancouver Coastal Health and Fraser Health across 31 Metro Vancouver saltwater and freshwater beach sites.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What causes swimming advisories at Vancouver beaches?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Elevated bacterial levels are typically caused by stormwater runoff following heavy rainfall, agricultural/urban drainage, tidal stagnation during heatwaves, or high concentrations of waterfowl and domestic animals.',
+      },
+    },
+  ],
+};
 ---
 
 <ToolLayout
@@ -18,6 +50,8 @@ const beaches = getAllBeaches();
   badgeText="Live Water Radar"
   status="active"
 >
+  <JsonLd schema={swimFaqSchema} />
+
   <div class="space-y-4 max-w-4xl mx-auto">
     <!-- Pinned Main Beaches Quick Bar (Customizable for Home Card) -->
     <div id="pinned-beaches-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">

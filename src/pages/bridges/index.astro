@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import IncidentsBanner from '../../tools/bridge-traffic/components/IncidentsBanner.astro';
 import FilterTabs from '../../tools/bridge-traffic/components/FilterTabs.astro';
 import CrossingCard from '../../tools/bridge-traffic/components/CrossingCard.astro';
@@ -11,6 +12,29 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-re
 const crossings = await getLiveCrossings();
 const stats = getBridgeOverviewStats(crossings);
 const allIncidents = crossings.flatMap((c) => c.activeIncidents);
+
+const bridgesFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'When does the Lions Gate Bridge counterflow lane switch directions?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The Lions Gate Bridge center lane direction is dynamically controlled by the BC Ministry of Transportation based on real-time traffic volume. It generally prioritizes Southbound into Downtown during the morning commute (6:00 AM – 9:30 AM) and Northbound into West/North Vancouver during the afternoon rush (3:00 PM – 7:00 PM).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How are bridge crossing delays measured in Metro Vancouver?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Crossing travel times and delays are calculated continuously using DriveBC Open511 telemetry, automated speed sensors, and approach corridor transit data across the 10 primary Metro Vancouver crossings.',
+      },
+    },
+  ],
+};
 ---
 
 <ToolLayout
@@ -21,6 +45,8 @@ const allIncidents = crossings.flatMap((c) => c.activeIncidents);
   badgeText="Live Crossing Radar"
   status="active"
 >
+  <JsonLd schema={bridgesFaqSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Active Incidents / Stalls Alert -->
     <IncidentsBanner incidents={allIncidents} />

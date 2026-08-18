@@ -12,7 +12,7 @@
     "reverseRouteId": "SWB-TSA",
     "frequencyText": "Hourly on the hour (7:00 AM – 9:00 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T18:25:33.143Z",
+    "lastUpdated": "2026-08-18T18:31:38.471Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -67,13 +67,13 @@
         "departureTime": "2:00 pm",
         "arrivalTime": "",
         "vesselName": "Queen of New Westminster",
-        "deckSpacePercent": 17,
+        "deckSpacePercent": 16,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "moderate",
         "weatherRisk": "normal",
-        "statusText": "17% Space Available"
+        "statusText": "16% Space Available"
       },
       {
         "departureTime": "3:00 pm",
@@ -187,13 +187,13 @@
         "departureTime": "8:00 am",
         "arrivalTime": "",
         "vesselName": "Coastal Celebration",
-        "deckSpacePercent": 14,
+        "deckSpacePercent": 13,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "14% Space Available"
+        "statusText": "13% Space Available"
       }
     ],
     "highwayCameras": [
@@ -228,7 +228,7 @@
     "reverseRouteId": "NAN-HSB",
     "frequencyText": "Every 2 hours (6:30 AM – 10:40 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T18:25:33.144Z",
+    "lastUpdated": "2026-08-18T18:31:38.472Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -372,7 +372,7 @@
     "reverseRouteId": "LNG-HSB",
     "frequencyText": "8-10 Daily Sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T18:25:33.144Z",
+    "lastUpdated": "2026-08-18T18:31:38.472Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -391,30 +391,18 @@
         "departureTime": "12:10 pm",
         "arrivalTime": "",
         "vesselName": "Queen of Surrey",
-        "deckSpacePercent": 64,
+        "deckSpacePercent": 61,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "64% Space Available"
+        "statusText": "61% Space Available"
       },
       {
         "departureTime": "1:20 pm",
         "arrivalTime": "",
         "vesselName": "Queen of Coquitlam",
-        "deckSpacePercent": 76,
-        "passengerSpaceAvailable": true,
-        "isCancelled": false,
-        "delayMinutes": 0,
-        "standbyRisk": "low",
-        "weatherRisk": "normal",
-        "statusText": "76% Space Available"
-      },
-      {
-        "departureTime": "2:25 pm",
-        "arrivalTime": "",
-        "vesselName": "Queen of Surrey",
         "deckSpacePercent": 77,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
@@ -422,6 +410,18 @@
         "standbyRisk": "low",
         "weatherRisk": "normal",
         "statusText": "77% Space Available"
+      },
+      {
+        "departureTime": "2:25 pm",
+        "arrivalTime": "",
+        "vesselName": "Queen of Surrey",
+        "deckSpacePercent": 76,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "76% Space Available"
       },
       {
         "departureTime": "3:40 pm",
@@ -556,7 +556,7 @@
     "reverseRouteId": "DUK-TSA",
     "frequencyText": "Every 2.5 hours (5:15 AM – 10:45 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T18:25:33.144Z",
+    "lastUpdated": "2026-08-18T18:31:38.472Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -611,13 +611,13 @@
         "departureTime": "5:45 pm",
         "arrivalTime": "",
         "vesselName": "Coastal Inspiration",
-        "deckSpacePercent": 22,
+        "deckSpacePercent": 21,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "moderate",
         "weatherRisk": "normal",
-        "statusText": "22% Space Available"
+        "statusText": "21% Space Available"
       },
       {
         "departureTime": "8:15 pm",
@@ -810,7 +810,7 @@
     "reverseRouteId": "BOW-HSB",
     "frequencyText": "Hourly departures",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T18:25:33.144Z",
+    "lastUpdated": "2026-08-18T18:31:38.472Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -993,7 +993,7 @@
     "crossingDurationMinutes": 55,
     "frequencyText": "4-6 daily multi-island direct & thru sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T18:25:33.144Z",
+    "lastUpdated": "2026-08-18T18:31:38.472Z",
     "isStale": false,
     "nextSailings": [
       {

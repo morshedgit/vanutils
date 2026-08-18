@@ -1,0 +1,154 @@
+---
+import PlatformLayout from '../layouts/PlatformLayout.astro';
+import JsonLd from '../components/shared/JsonLd.astro';
+
+// Cache for 1 hour with 24 hour background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About VanUtils — Metro Vancouver Civic Telemetry',
+  description: 'Learn about the VanUtils platform, our 100% real-data mandate, edge server architecture, and public telemetry data pipelines.',
+  url: 'https://vanutils.ca/about',
+  inLanguage: 'en-CA',
+  publisher: {
+    '@type': 'Organization',
+    name: 'VanUtils',
+    url: 'https://vanutils.ca',
+  },
+};
+---
+
+<PlatformLayout
+  title="About VanUtils — Metro Vancouver Civic Telemetry"
+  description="Learn about the VanUtils mission: 100% verified real-time public telemetry, zero tracking, sub-50ms Edge SSR performance, and public data sources."
+  currentPath="/about"
+>
+  <JsonLd schema={aboutSchema} />
+
+  <div class="max-w-4xl mx-auto space-y-12 py-4 sm:py-8">
+    <!-- Hero Section -->
+    <div class="space-y-4 text-center sm:text-left border-b border-slate-200 dark:border-slate-800 pb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 text-xs font-bold">
+        <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+        Platform Architecture &amp; Mission
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+        High-Performance Civic Telemetry for Metro Vancouver
+      </h1>
+      <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+        VanUtils is an independent, hyper-local public utility network engineered to deliver sub-second answers to everyday questions about Vancouver life, recreation, transit, and city infrastructure.
+      </p>
+    </div>
+
+    <!-- The 4 Core Platform Pillars -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-bold">
+          🛡️
+        </div>
+        <h2 class="text-base font-bold text-slate-900 dark:text-white">100% Real-Data Mandate</h2>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Zero synthetic or mock data. Every metric displayed across all 13 tools originates from authentic, official public telemetry feeds (Vancouver Coastal Health, DriveBC, BC Ferries, Open-Meteo, Bank of Canada).
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl font-bold">
+          ⚡
+        </div>
+        <h2 class="text-base font-bold text-slate-900 dark:text-white">Sub-50ms Edge SSR</h2>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Built with Astro 5 and Cloudflare Pages Server-Side Edge Rendering. Pages compile at the edge near Vancouver (YVR PoP), ensuring instant Time to First Byte without client-side JavaScript rendering delays.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold">
+          🔒
+        </div>
+        <h2 class="text-base font-bold text-slate-900 dark:text-white">Zero-Tracker Guarantee</h2>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          No third-party tracking scripts, no advertising pixels, and no analytics cookies. All personalization (such as pinned beach selections and theme mode) remains strictly client-side in your browser's <code class="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">localStorage</code>.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-bold">
+          📱
+        </div>
+        <h2 class="text-base font-bold text-slate-900 dark:text-white">High-Density Single-Screen UX</h2>
+        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          Every tool follows the Zero-Fluff law: whole cards are interactive, with domain-specific visual charts and direct sub-route micro-links giving you the exact information you need in under 3 seconds.
+        </p>
+      </div>
+    </div>
+
+    <!-- Official Data Sources Directory -->
+    <div class="space-y-6">
+      <div class="space-y-1">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Official Upstream Telemetry Sources</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          VanUtils aggregates and standardizes feeds published under open government and public health mandates:
+        </p>
+      </div>
+
+      <div class="divide-y divide-slate-200 dark:divide-slate-800 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden text-xs">
+        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white text-sm">Vancouver Coastal Health (VCH) &amp; Fraser Health</span>
+            <p class="text-slate-500 dark:text-slate-400">Recreational beach water quality, E. coli colony-forming units (CFU), and historical 30-day geometric means.</p>
+          </div>
+          <span class="shrink-0 text-emerald-600 dark:text-emerald-400 font-semibold">Weekly Laboratory Sampling</span>
+        </div>
+
+        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white text-sm">BC Ferries Real-Time API</span>
+            <p class="text-slate-500 dark:text-slate-400">Live vehicle deck capacity percentages, terminal ticketing throughput, and sailing wait times.</p>
+          </div>
+          <span class="shrink-0 text-sky-600 dark:text-sky-400 font-semibold">Sub-Minute Terminal Gate Feeds</span>
+        </div>
+
+        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white text-sm">DriveBC &amp; Ministry of Transportation (MOTI) Open511</span>
+            <p class="text-slate-500 dark:text-slate-400">Lower Mainland highway road events, Lions Gate bridge counterflow lane configurations, and highway webcam feeds.</p>
+          </div>
+          <span class="shrink-0 text-amber-600 dark:text-amber-400 font-semibold">Real-Time Traffic Operations</span>
+        </div>
+
+        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white text-sm">Metro Vancouver Air Quality Network</span>
+            <p class="text-slate-500 dark:text-slate-400">Continuous BAM-1020 fine particulate sensors (PM2.5) and Air Quality Health Index (AQHI) readings.</p>
+          </div>
+          <span class="shrink-0 text-emerald-600 dark:text-emerald-400 font-semibold">Hourly Sensor Monitoring</span>
+        </div>
+
+        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white text-sm">City of Vancouver Open Data &amp; GIS Portal</span>
+            <p class="text-slate-500 dark:text-slate-400">Residential parking permit zones, street sweeping schedules, and active Broadway Plan rezoning applications.</p>
+          </div>
+          <span class="shrink-0 text-sky-600 dark:text-sky-400 font-semibold">Municipal Open Data API</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact & Corrections Callout -->
+    <div class="p-6 rounded-2xl bg-gradient-to-br from-sky-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-sky-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white">Have feedback or noticed a data discrepancy?</h3>
+        <p class="text-xs text-slate-600 dark:text-slate-400">We respond to community inquiries and municipal data corrections within 2 hours.</p>
+      </div>
+      <a
+        href="/contact"
+        class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white transition-all shadow-xs shrink-0"
+      >
+        Contact Team →
+      </a>
+    </div>
+  </div>
+</PlatformLayout>
