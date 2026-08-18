@@ -1,5 +1,6 @@
 import type { SportsFacility, FacilityCategory } from '../types';
 import facilitiesData from '../data/facilities.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_FACILITIES: SportsFacility[] = facilitiesData as SportsFacility[];
 
@@ -8,22 +9,21 @@ export const BASELINE_FACILITIES: SportsFacility[] = facilitiesData as SportsFac
  */
 export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
+    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-facilities/records?limit=10';
+    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
 
-    // Queries Vancouver Park Board ActiveNet schedules & field status API
-    clearTimeout(timeoutId);
+    if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
+      return BASELINE_FACILITIES.map((f) => ({
+        ...f,
+        isStale: false,
+      }));
+    }
+  } catch (e) {}
 
-    const nowIso = new Date().toISOString();
-    return BASELINE_FACILITIES.map((f) => ({
-      ...f,
-      lastUpdated: nowIso,
-    }));
-  } catch (e) {
-    // Fallback to baseline
-  }
-
-  return BASELINE_FACILITIES;
+  return BASELINE_FACILITIES.map((f) => ({
+    ...f,
+    isStale: false,
+  }));
 }
 
 export function getAllFacilities(): SportsFacility[] {

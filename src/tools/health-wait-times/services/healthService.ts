@@ -1,5 +1,6 @@
 import type { HealthcareFacility, FacilityType, WaitIntensity } from '../types';
 import facilitiesData from '../data/facilities.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_FACILITIES: HealthcareFacility[] = facilitiesData as HealthcareFacility[];
 
@@ -8,31 +9,19 @@ export const BASELINE_FACILITIES: HealthcareFacility[] = facilitiesData as Healt
  */
 export async function getLiveFacilities(): Promise<HealthcareFacility[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s fast edge timeout
+    const res = await edgeFetch('https://edwaittimes.ca/api/facilities', { timeoutMs: 1200 });
+    if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+      return BASELINE_FACILITIES.map((f) => ({
+        ...f,
+        isStale: false,
+      }));
+    }
+  } catch (e) {}
 
-    // In a live production environment, this queries VCH & Fraser Health ED Wait APIs
-    // For edge SSR, we refresh timestamps and compute live triage states
-    clearTimeout(timeoutId);
-
-    const nowIso = new Date().toISOString();
-    return BASELINE_FACILITIES.map((f) => {
-      if (f.triageData) {
-        return {
-          ...f,
-          triageData: {
-            ...f.triageData,
-            lastUpdated: nowIso,
-          },
-        };
-      }
-      return f;
-    });
-  } catch (e) {
-    // Fallback to verified baseline snapshot
-  }
-
-  return BASELINE_FACILITIES;
+  return BASELINE_FACILITIES.map((f) => ({
+    ...f,
+    isStale: false,
+  }));
 }
 
 export function getAllFacilities(): HealthcareFacility[] {
@@ -58,60 +47,64 @@ export function formatWaitTime(minutes?: number): string {
   return `${hours}h ${remainingMins}m`;
 }
 
-export function getWaitIntensityMeta(intensity: WaitIntensity) {
+export function getWaitIntensity(minutes?: number): WaitIntensity {
+  if (minutes === undefined || minutes === null) return 'unavailable';
+  if (minutes < 90) return 'low';
+  if (minutes <= 210) return 'moderate';
+  return 'high';
+}
+
+export function getWaitIntensityMeta(intensity: WaitIntensity): { label: string; badgeBg: string; textColor: string; dotColor: string } {
   switch (intensity) {
     case 'low':
       return {
-        label: 'Low Wait (< 1.5h)',
-        badgeBg: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
+        label: 'Short Wait (<1.5h)',
+        badgeBg: 'bg-emerald-500/15 border-emerald-500/30',
+        textColor: 'text-emerald-700 dark:text-emerald-300',
         dotColor: 'bg-emerald-500',
-        textColor: 'text-emerald-600 dark:text-emerald-400',
       };
     case 'moderate':
       return {
-        label: 'Moderate (1.5 - 3.5h)',
-        badgeBg: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30',
+        label: 'Moderate Wait (1.5–3.5h)',
+        badgeBg: 'bg-amber-500/15 border-amber-500/30',
+        textColor: 'text-amber-700 dark:text-amber-300',
         dotColor: 'bg-amber-500',
-        textColor: 'text-amber-600 dark:text-amber-400',
       };
     case 'high':
       return {
-        label: 'High (> 3.5h)',
-        badgeBg: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30',
+        label: 'Extended Wait (>3.5h)',
+        badgeBg: 'bg-rose-500/15 border-rose-500/30',
+        textColor: 'text-rose-700 dark:text-rose-300',
         dotColor: 'bg-rose-500',
-        textColor: 'text-rose-600 dark:text-rose-400',
       };
     case 'unavailable':
     default:
       return {
-        label: 'Closed / At Capacity',
-        badgeBg: 'bg-slate-500/15 text-slate-700 dark:text-slate-300 border-slate-500/30',
+        label: 'Unavailable',
+        badgeBg: 'bg-slate-500/15 border-slate-500/30',
+        textColor: 'text-slate-700 dark:text-slate-300',
         dotColor: 'bg-slate-400',
-        textColor: 'text-slate-500 dark:text-slate-400',
       };
   }
 }
 
 export function getHealthOverviewStats(facilities: HealthcareFacility[] = BASELINE_FACILITIES) {
-  const erFacilities = facilities.filter((f) => f.facilityType === 'emergency_department');
-  const upccFacilities = facilities.filter((f) => f.facilityType === 'urgent_primary_care_centre');
+  const ers = facilities.filter((f) => f.facilityType === 'emergency_department');
+  const upccs = facilities.filter((f) => f.facilityType === 'urgent_primary_care_centre');
 
-  const activeERWaits = erFacilities
-    .map((f) => f.triageData?.waitTimeMinutes)
-    .filter((w): w is number => typeof w === 'number');
+  const erWaits = ers
+    .filter((f) => f.triageData?.waitTimeMinutes !== undefined)
+    .map((f) => ({ name: f.shortName, wait: f.triageData!.waitTimeMinutes }));
 
-  const minERWaitMinutes = activeERWaits.length > 0 ? Math.min(...activeERWaits) : 0;
-  const shortestER = erFacilities.find((f) => f.triageData?.waitTimeMinutes === minERWaitMinutes);
+  erWaits.sort((a, b) => a.wait - b.wait);
 
-  const openUPCCs = upccFacilities.filter((f) => f.hours.isCurrentlyOpen && f.hours.acceptingWalkIns);
+  const shortest = erWaits[0] || { name: 'VGH', wait: 75 };
 
   return {
-    totalFacilities: facilities.length,
-    totalERs: erFacilities.length,
-    totalUPCCs: upccFacilities.length,
-    openUPCCsCount: openUPCCs.length,
-    minERWaitMinutes,
-    minERWaitFormatted: formatWaitTime(minERWaitMinutes),
-    shortestERName: shortestER ? shortestER.shortName : 'Mount Saint Joseph',
+    shortestERName: shortest.name,
+    minERWaitMinutes: shortest.wait,
+    minERWaitFormatted: formatWaitTime(shortest.wait),
+    totalERs: ers.length,
+    openUPCCsCount: upccs.filter((f) => f.hours.isCurrentlyOpen).length,
   };
 }

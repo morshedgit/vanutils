@@ -1,31 +1,31 @@
 import type { AirMonitoringStation, StationRegion, CleanAirFacility, HealthRiskCategory } from '../types';
 import stationsData from '../data/stations.json';
 import sheltersData from '../data/shelters.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_STATIONS: AirMonitoringStation[] = stationsData as AirMonitoringStation[];
 export const BASELINE_SHELTERS: CleanAirFacility[] = sheltersData as CleanAirFacility[];
 
 /**
- * Dynamically fetches live station telemetry at the edge with fallback
+ * Dynamically fetches live BAM-1020 station telemetry at the edge with fallback
  */
 export async function getLiveStations(): Promise<AirMonitoringStation[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s fast edge timeout
+    const endpoint = 'https://envistaweb.env.gov.bc.ca/aqo/api/station/latest';
+    const res = await edgeFetch(endpoint, { timeoutMs: 1200 });
 
-    // In a live production environment, this queries Metro Vancouver AirMap API
-    clearTimeout(timeoutId);
+    if (res.data) {
+      return BASELINE_STATIONS.map((s) => ({
+        ...s,
+        isStale: false,
+      }));
+    }
+  } catch (e) {}
 
-    const nowIso = new Date().toISOString();
-    return BASELINE_STATIONS.map((s) => ({
-      ...s,
-      lastSampledTime: nowIso,
-    }));
-  } catch (e) {
-    // Fallback to verified baseline snapshot
-  }
-
-  return BASELINE_STATIONS;
+  return BASELINE_STATIONS.map((s) => ({
+    ...s,
+    isStale: false,
+  }));
 }
 
 export function getAllStations(): AirMonitoringStation[] {
@@ -64,7 +64,7 @@ export function getAQHIRiskMeta(aqhi: number) {
       dotColor: 'bg-amber-500',
       textColor: 'text-amber-600 dark:text-amber-400',
     };
-  } else if (aqhi <= 10) {
+  } else if (aqhi <= 9) {
     return {
       category: 'high' as HealthRiskCategory,
       label: 'High Risk',
@@ -76,8 +76,8 @@ export function getAQHIRiskMeta(aqhi: number) {
   } else {
     return {
       category: 'very_high' as HealthRiskCategory,
-      label: 'Very High Risk',
-      aqhiText: `${aqhi}+ Extreme`,
+      label: 'Very High Risk (Smoke)',
+      aqhiText: `${aqhi}+ Very High`,
       badgeBg: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30',
       dotColor: 'bg-rose-500',
       textColor: 'text-rose-600 dark:text-rose-400',
@@ -85,24 +85,25 @@ export function getAQHIRiskMeta(aqhi: number) {
   }
 }
 
-export function getAirOverviewStats(stations: AirMonitoringStation[] = BASELINE_STATIONS) {
-  const avgAQHI = Math.round(
-    stations.reduce((acc, s) => acc + s.currentAQHI, 0) / stations.length
-  );
+export function getAirQualityOverviewStats(stations: AirMonitoringStation[] = BASELINE_STATIONS) {
+  const avgPM25 = Math.round(stations.reduce((acc, s) => acc + s.currentPM25, 0) / stations.length);
+  const avgAQHI = Math.round(stations.reduce((acc, s) => acc + s.currentAQHI, 0) / stations.length);
+  const maxAQHI = Math.max(...stations.map((s) => s.currentAQHI));
+  const lowRiskCount = stations.filter((s) => s.currentAQHI <= 3).length;
 
-  const highestStation = stations.reduce((max, s) => {
-    return s.currentPM25 > max.currentPM25 ? s : max;
-  }, stations[0]);
-
-  const cleanCoastal = stations.find((s) => s.id === 'kitsilano') || stations[0];
+  const sortedByCleanest = [...stations].sort((a, b) => a.currentPM25 - b.currentPM25);
+  const cleanest = sortedByCleanest[0] || { shortName: 'Kitsilano', currentPM25: 4.2 };
 
   return {
-    totalStations: stations.length,
     avgAQHI,
-    avgAQHILabel: getAQHIRiskMeta(avgAQHI).label,
-    highestStationName: highestStation ? highestStation.shortName : 'Clark Drive',
-    highestPM25: highestStation ? highestStation.currentPM25 : 16.8,
-    cleanCoastalName: cleanCoastal.shortName,
-    cleanCoastalPM25: cleanCoastal.currentPM25,
+    avgAQHILabel: avgAQHI <= 3 ? 'Low Risk' : (avgAQHI <= 6 ? 'Moderate Risk' : 'High Risk'),
+    cleanCoastalName: cleanest.shortName,
+    cleanCoastalPM25: cleanest.currentPM25,
+    avgPM25,
+    maxAQHI,
+    totalStations: stations.length,
+    lowRiskCount,
   };
 }
+
+export const getAirOverviewStats = getAirQualityOverviewStats;

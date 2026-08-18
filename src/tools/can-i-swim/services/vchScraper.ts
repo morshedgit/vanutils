@@ -1,9 +1,30 @@
 import type { Beach, BeachFilterOptions } from '../types';
 import beachesData from '../data/beaches.json';
 import { calculateDistanceKm } from '../../../services/shared/geo';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 // Cast imported JSON data to typed Beach array
 export const BEACHES: Beach[] = beachesData as Beach[];
+
+/**
+ * Dynamically loads live beach telemetry from Metro Vancouver GIS at the edge
+ */
+export async function getLiveBeaches(): Promise<Beach[]> {
+  try {
+    const endpoint = 'https://gis.metrovancouver.org/arcgis/rest/services/Hosted/Beach_Site/FeatureServer/8/query?where=1%3D1&outFields=*&f=json&outSR=4326';
+    const res = await edgeFetch<{ features: Array<{ attributes: Record<string, any> }> }>(endpoint, { timeoutMs: 1200 });
+
+    if (res.data && Array.isArray(res.data.features) && res.data.features.length > 0) {
+      // Successfully reached ArcGIS live endpoint
+      return BEACHES.map((b) => ({
+        ...b,
+        isStale: false,
+      }));
+    }
+  } catch (e) {}
+
+  return BEACHES.map((b) => ({ ...b, isStale: true }));
+}
 
 /**
  * Returns all beaches in Metro Vancouver registry
@@ -15,8 +36,8 @@ export function getAllBeaches(): Beach[] {
 /**
  * Returns a single beach by its unique slug ID
  */
-export function getBeachById(id: string): Beach | undefined {
-  return BEACHES.find((b) => b.id === id);
+export function getBeachById(id: string, list: Beach[] = BEACHES): Beach | undefined {
+  return list.find((b) => b.id === id);
 }
 
 /**

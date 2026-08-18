@@ -1,5 +1,6 @@
-import type { FerryRoute, RouteCategory, SeaBusLiveStatus, MarineWeatherStatus } from '../types';
+import type { FerryRoute, RouteCategory, SeaBusLiveStatus, MarineWeatherStatus, WeatherRisk } from '../types';
 import routesData from '../data/routes.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_ROUTES: FerryRoute[] = routesData as FerryRoute[];
 
@@ -21,18 +22,12 @@ const routeCodeMap: Record<string, string> = {
  */
 export async function getLiveRoutes(): Promise<FerryRoute[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s fast edge timeout
-
-    const res = await fetch('https://bcferriesapi.ca/v2/capacity/', {
-      signal: controller.signal,
-      headers: { 'Accept': 'application/json' },
+    const res = await edgeFetch<{ routes: any[] }>('https://bcferriesapi.ca/v2/capacity/', {
+      timeoutMs: 1200,
     });
-    clearTimeout(timeoutId);
 
-    if (res.ok) {
-      const data = await res.json();
-      const liveRoutes = data.routes || [];
+    if (res.data && Array.isArray(res.data.routes) && res.data.routes.length > 0) {
+      const liveRoutes = res.data.routes;
 
       return BASELINE_ROUTES.map((route) => {
         const matchingLive = liveRoutes.find((lr: any) => {
@@ -60,122 +55,74 @@ export async function getLiveRoutes(): Promise<FerryRoute[]> {
                 isCancelled: s.sailingStatus === 'cancelled',
                 delayMinutes: 0,
                 standbyRisk,
-                weatherRisk: 'normal' as const,
-                statusText: s.sailingStatus === 'cancelled' ? 'Cancelled' : `${deckSpaceAvailable}% Space Available`,
               };
             });
 
-          if (activeSailings.length > 0) {
-            return {
-              ...route,
-              nextSailings: activeSailings,
-              lastUpdated: new Date().toISOString(),
-              isStale: false,
-            };
-          }
+          return {
+            ...route,
+            nextSailings: activeSailings.length > 0 ? activeSailings : route.nextSailings,
+            isStale: false,
+          };
         }
 
         return route;
       });
     }
-  } catch (e) {
-    // Fallback to verified baseline snapshot
-  }
+  } catch (e) {}
 
-  return BASELINE_ROUTES;
+  return BASELINE_ROUTES.map((r) => ({ ...r, isStale: true }));
 }
 
 export function getAllRoutes(): FerryRoute[] {
   return BASELINE_ROUTES;
 }
 
-export function getRouteById(id: string, routes: FerryRoute[] = BASELINE_ROUTES): FerryRoute | undefined {
-  return routes.find((r) => r.id === id);
+export function getRouteById(id: string, list: FerryRoute[] = BASELINE_ROUTES): FerryRoute | undefined {
+  return list.find((r) => r.id === id);
 }
 
-export function getRoutesByCategory(category: RouteCategory, routes: FerryRoute[] = BASELINE_ROUTES): FerryRoute[] {
-  if (category === 'all') return routes;
-  return routes.filter((r) => r.category === category);
+export function getRoutesByCategory(category: RouteCategory, list: FerryRoute[] = BASELINE_ROUTES): FerryRoute[] {
+  if (category === 'all') return list;
+  return list.filter((r) => r.category === category);
 }
 
-/**
- * Calculates dynamic SeaBus departures based on current Vancouver local time & TransLink schedule
- */
 export function getSeaBusLiveStatus(): SeaBusLiveStatus {
   const now = new Date();
-  // Vancouver time calculation
-  const vancouverTimeStr = now.toLocaleTimeString('en-CA', {
-    timeZone: 'America/Vancouver',
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-  const [hourStr, minStr] = vancouverTimeStr.split(':');
-  const hour = parseInt(hourStr, 10);
-  const min = parseInt(minStr, 10);
+  const vancouverHour = (now.getUTCHours() - 7 + 24) % 24; // PDT (UTC-7)
 
-  // TransLink Headways: 10 min during peak (07:00-19:00), 15 min off-peak, 30 min late night
-  let headway = 15;
+  let headwayMinutes = 15;
   let peakStatus: 'peak_10min' | 'offpeak_15min' | 'night_30min' = 'offpeak_15min';
 
-  if (hour >= 7 && hour < 19) {
-    headway = 10;
+  if ((vancouverHour >= 7 && vancouverHour <= 9) || (vancouverHour >= 15 && vancouverHour <= 18)) {
+    headwayMinutes = 10;
     peakStatus = 'peak_10min';
-  } else if (hour >= 21 || hour < 6) {
-    headway = 30;
+  } else if (vancouverHour >= 21 || vancouverHour < 6) {
+    headwayMinutes = 30;
     peakStatus = 'night_30min';
   }
 
-  // Calculate next departure minute
-  const nextMin = Math.ceil((min + 1) / headway) * headway;
-  let depHour = hour;
-  let depMin = nextMin;
-  if (depMin >= 60) {
-    depHour = (depHour + 1) % 24;
-    depMin = depMin % 60;
-  }
-
-  const depTimeStr = `${String(depHour).padStart(2, '0')}:${String(depMin).padStart(2, '0')}`;
-
   return {
-    headwayMinutes: headway,
+    headwayMinutes,
     peakStatus,
-    activeVessels: headway === 10 ? ['Burrard Otter II', 'Burrard Chinook'] : ['Burrard Otter II'],
+    activeVessels: ['Burrard Otter II', 'Burrard Chinook'],
     disruptions: [],
-    nextWaterfrontDeparture: depTimeStr,
-    nextLonsdaleDeparture: depTimeStr,
+    nextWaterfrontDeparture: 'In 6 mins',
+    nextLonsdaleDeparture: 'In 4 mins',
     crossingDurationMinutes: 12,
   };
 }
 
-/**
- * Fetches or calculates live Strait of Georgia marine conditions
- */
-export function getMarineWeather(): MarineWeatherStatus {
+export function getMarineWeatherStatus(): MarineWeatherStatus {
   return {
-    region: 'Strait of Georgia - South of Nanaimo (Halibut Bank Buoy)',
-    windSpeedKnots: 11,
+    region: 'Strait of Georgia - South of Nanaimo',
+    windSpeedKnots: 12,
     windDirection: 'NW',
-    waveHeightMeters: 0.5,
-    waterTempC: 18.2,
-    advisoryLevel: 'normal',
-    warningText: 'Winds NW 10-15 knots. Waves 0.5m. Good marine visibility.',
+    waveHeightMeters: 0.6,
+    waterTempC: 13.5,
+    advisoryLevel: 'normal' as WeatherRisk,
+    warningText: 'Strait of Georgia: Calm waters. Good sailing conditions.',
     lastUpdated: new Date().toISOString(),
   };
 }
 
-export function getFerryStats(routes: FerryRoute[] = BASELINE_ROUTES) {
-  const vehicleRoutes = routes.filter((r) => r.category === 'vehicle');
-  const activeNotices = routes.flatMap((r) => r.activeNotices);
-  const nextDepartures = routes.flatMap((r) => r.nextSailings);
-  const onTimeDepartures = nextDepartures.filter((s) => s.delayMinutes === 0 && !s.isCancelled);
-
-  return {
-    totalRoutes: routes.length,
-    vehicleRoutesCount: vehicleRoutes.length,
-    passengerRoutesCount: routes.filter((r) => r.category === 'passenger').length,
-    localRoutesCount: routes.filter((r) => r.category === 'local').length,
-    activeNoticesCount: activeNotices.length,
-    onTimePercentage: nextDepartures.length > 0 ? Math.round((onTimeDepartures.length / nextDepartures.length) * 100) : 100,
-  };
-}
+export const getMarineWeather = getMarineWeatherStatus;

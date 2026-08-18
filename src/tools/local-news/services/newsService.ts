@@ -1,6 +1,8 @@
 import type { NewsArticle, BreakingAlert, NewsCategory } from '../types';
 import articlesData from '../data/articles.json';
 import alertsData from '../data/alerts.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { parseRssXml } from '../../../services/shared/xmlParser';
 
 export const BASELINE_ARTICLES: NewsArticle[] = articlesData as NewsArticle[];
 export const BASELINE_ALERTS: BreakingAlert[] = alertsData as BreakingAlert[];
@@ -10,20 +12,28 @@ export const BASELINE_ALERTS: BreakingAlert[] = alertsData as BreakingAlert[];
  */
 export async function getLiveBreakingAlerts(): Promise<BreakingAlert[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
+    const endpoint = 'https://weather.gc.ca/rss/warning/bc-74_e.xml';
+    const res = await edgeFetch<string>(endpoint, { timeoutMs: 1200 });
 
-    // Queries ECCC CAP-CP Alert Feed & Emergency Info BC
-    clearTimeout(timeoutId);
+    if (res.data && typeof res.data === 'string') {
+      const items = parseRssXml(res.data);
+      const activeAlerts = items.filter((it) => !it.title.toLowerCase().includes('no watches or warnings in effect'));
 
-    const nowIso = new Date().toISOString();
-    return BASELINE_ALERTS.map((a) => ({
-      ...a,
-      timestamp: nowIso,
-    }));
-  } catch (e) {
-    // Fallback to baseline
-  }
+      if (activeAlerts.length > 0) {
+        return activeAlerts.map((it, idx) => ({
+          id: `eccc-alert-${idx}`,
+          title: it.title,
+          source: 'eccc_weather',
+          outletName: 'Environment Canada',
+          severity: 'warning',
+          timestamp: it.pubDate || new Date().toISOString(),
+          summary: it.description || it.title,
+          actionUrl: it.link,
+          isStale: false,
+        }));
+      }
+    }
+  } catch (e) {}
 
   return BASELINE_ALERTS;
 }
@@ -33,16 +43,41 @@ export async function getLiveBreakingAlerts(): Promise<BreakingAlert[]> {
  */
 export async function getLiveNews(): Promise<NewsArticle[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
+    const endpoint = 'https://www.cbc.ca/cmlink/rss-canada-britishcolumbia';
+    const res = await edgeFetch<string>(endpoint, { timeoutMs: 1200 });
 
-    // Queries CBC BC RSS, City of Vancouver media releases, TransLink News
-    clearTimeout(timeoutId);
+    if (res.data && typeof res.data === 'string') {
+      const items = parseRssXml(res.data);
+      if (items.length > 0) {
+        return items.slice(0, 8).map((it, idx) => {
+          const lower = `${it.title} ${it.description}`.toLowerCase();
+          let category: NewsCategory = 'civic_politics';
+          if (lower.includes('transit') || lower.includes('skytrain') || lower.includes('bus') || lower.includes('bridge') || lower.includes('ferry')) {
+            category = 'transit_infrastructure';
+          } else if (lower.includes('housing') || lower.includes('rent') || lower.includes('real estate') || lower.includes('rezoning')) {
+            category = 'housing_development';
+          } else if (lower.includes('weather') || lower.includes('smoke') || lower.includes('snow') || lower.includes('heat') || lower.includes('rain')) {
+            category = 'weather_hazards';
+          } else if (lower.includes('park') || lower.includes('swim') || lower.includes('event') || lower.includes('festival')) {
+            category = 'parks_community';
+          }
 
-    return BASELINE_ARTICLES;
-  } catch (e) {
-    // Fallback to baseline
-  }
+          return {
+            id: `cbc-live-${idx}`,
+            title: it.title,
+            summary: it.description || it.title,
+            source: 'cbc_vancouver',
+            outletName: 'CBC News',
+            category,
+            publishedAt: it.pubDate || new Date().toISOString(),
+            url: it.link,
+            isBreaking: idx === 0,
+            isStale: false,
+          };
+        });
+      }
+    }
+  } catch (e) {}
 
   return BASELINE_ARTICLES;
 }
@@ -61,7 +96,7 @@ export function getCategoryMeta(category: NewsCategory) {
       return {
         label: 'Civic & Politics',
         icon: '🏛️',
-        badgeBg: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30',
+        badgeBg: 'bg-slate-500/15 text-slate-700 dark:text-slate-300 border-slate-500/30',
       };
     case 'transit_infrastructure':
       return {
@@ -69,58 +104,52 @@ export function getCategoryMeta(category: NewsCategory) {
         icon: '🚆',
         badgeBg: 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30',
       };
+    case 'housing_development':
+      return {
+        label: 'Housing & Development',
+        icon: '🏗️',
+        badgeBg: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30',
+      };
     case 'weather_hazards':
       return {
         label: 'Weather & Hazards',
-        icon: '🌧️',
+        icon: '🌦️',
         badgeBg: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30',
-      };
-    case 'housing_development':
-      return {
-        label: 'Housing & Planning',
-        icon: '🏗️',
-        badgeBg: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
       };
     case 'parks_community':
     default:
       return {
         label: 'Parks & Community',
         icon: '🌳',
-        badgeBg: 'bg-teal-500/15 text-teal-700 dark:text-teal-300 border-teal-500/30',
+        badgeBg: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
       };
   }
 }
 
-export function formatTimeAgo(isoString: string): string {
-  try {
-    const published = new Date(isoString).getTime();
-    const now = Date.now();
-    const diffMins = Math.max(1, Math.floor((now - published) / (1000 * 60)));
-
-    if (diffMins < 60) {
-      return `${diffMins}m ago`;
-    }
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) {
-      return `${diffHours}h ago`;
-    }
-    const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays}d ago`;
-  } catch (e) {
-    return 'Recently';
-  }
-}
-
 export function getNewsOverviewStats(articles: NewsArticle[] = BASELINE_ARTICLES, alerts: BreakingAlert[] = BASELINE_ALERTS) {
-  const totalArticles = articles.length;
-  const breakingCount = articles.filter((a) => a.isBreaking).length;
   const activeAlertsCount = alerts.length;
+  const transitReportsCount = articles.filter((a) => a.category === 'transit_infrastructure').length;
+  const civicReportsCount = articles.filter((a) => a.category === 'civic_politics').length;
 
   return {
-    totalArticles,
-    breakingCount,
+    totalArticles: articles.length,
     activeAlertsCount,
-    latestHeadline: articles[0]?.title || 'SkyTrain Broadway Subway Project Stations Enter Final Testing',
-    latestOutlet: articles[0]?.outletName || 'CBC Vancouver',
+    transitReportsCount,
+    civicReportsCount,
   };
+}
+
+export function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMinutes < 1) return 'Just now';
+  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays === 1) return '1d ago';
+  return `${diffDays}d ago`;
 }

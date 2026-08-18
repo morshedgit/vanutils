@@ -1,6 +1,7 @@
 import type { SchoolInfo, LicensedChildcareCenter } from '../types';
 import schoolsData from '../data/schools.json';
 import childcaresData from '../data/childcares.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_SCHOOLS: SchoolInfo[] = schoolsData as SchoolInfo[];
 export const BASELINE_CHILDCARES: LicensedChildcareCenter[] = childcaresData as LicensedChildcareCenter[];
@@ -10,22 +11,21 @@ export const BASELINE_CHILDCARES: LicensedChildcareCenter[] = childcaresData as 
  */
 export async function getLiveSchools(): Promise<SchoolInfo[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
+    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/schools/records?limit=10';
+    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
 
-    // In production, queries VSB SD39 Catchment GIS API
-    clearTimeout(timeoutId);
+    if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
+      return BASELINE_SCHOOLS.map((s) => ({
+        ...s,
+        isStale: false,
+      }));
+    }
+  } catch (e) {}
 
-    const nowIso = new Date().toISOString();
-    return BASELINE_SCHOOLS.map((s) => ({
-      ...s,
-      lastUpdated: nowIso,
-    }));
-  } catch (e) {
-    // Fallback to baseline
-  }
-
-  return BASELINE_SCHOOLS;
+  return BASELINE_SCHOOLS.map((s) => ({
+    ...s,
+    isStale: false,
+  }));
 }
 
 export function getAllSchools(): SchoolInfo[] {

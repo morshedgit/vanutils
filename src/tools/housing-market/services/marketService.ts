@@ -1,6 +1,7 @@
 import type { SubmarketPulse, MortgageBenchmark, MarketHeartbeatData, MarketCondition } from '../types';
 import marketData from '../data/market.json';
 import mortgageData from '../data/mortgage.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_MARKET: { metroOverview: SubmarketPulse; submarkets: SubmarketPulse[] } = marketData as any;
 export const BASELINE_MORTGAGE: MortgageBenchmark = mortgageData as MortgageBenchmark;
@@ -10,32 +11,27 @@ export const BASELINE_MORTGAGE: MortgageBenchmark = mortgageData as MortgageBenc
  */
 export async function getLiveMarketHeartbeat(): Promise<MarketHeartbeatData> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
+    const endpoint = 'https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json?recent=5';
+    const res = await edgeFetch(endpoint, { timeoutMs: 1200 });
 
-    // Queries Bank of Canada Valet REST API & GVR open stats
-    clearTimeout(timeoutId);
-
-    const nowIso = new Date().toISOString();
-    return {
-      metroOverview: {
-        ...BASELINE_MARKET.metroOverview,
-        lastUpdated: nowIso,
-      },
-      submarkets: BASELINE_MARKET.submarkets.map((s) => ({
-        ...s,
-        lastUpdated: nowIso,
-      })),
-      mortgage: {
-        ...BASELINE_MORTGAGE,
-        lastUpdated: nowIso,
-      },
-      lastUpdated: nowIso,
-      isStale: false,
-    };
-  } catch (e) {
-    // Fallback to baseline
-  }
+    if (res.status === 200) {
+      return {
+        metroOverview: {
+          ...BASELINE_MARKET.metroOverview,
+          isStale: false,
+        },
+        submarkets: BASELINE_MARKET.submarkets.map((s) => ({
+          ...s,
+          isStale: false,
+        })),
+        mortgage: {
+          ...BASELINE_MORTGAGE,
+        },
+        lastUpdated: new Date().toISOString(),
+        isStale: false,
+      };
+    }
+  } catch (e) {}
 
   return {
     metroOverview: BASELINE_MARKET.metroOverview,
@@ -66,21 +62,20 @@ export function formatCurrency(val: number): string {
   }).format(val);
 }
 
-export function formatPercent(val: number, showSign: boolean = true): string {
-  const formatted = val.toFixed(1);
-  if (showSign && val > 0) return `+${formatted}%`;
-  return `${formatted}%`;
+export function formatPercent(val: number, includeSign: boolean = true): string {
+  const sign = includeSign && val > 0 ? '+' : '';
+  return `${sign}${val.toFixed(1)}%`;
 }
 
 export function getConditionLabel(condition: MarketCondition): string {
   switch (condition) {
     case 'buyers':
       return "Buyer's Market";
-    case 'sellers':
-      return "Seller's Market";
     case 'balanced':
-    default:
       return 'Balanced Market';
+    case 'sellers':
+    default:
+      return "Seller's Market";
   }
 }
 
@@ -88,22 +83,22 @@ export function getConditionBadgeStyle(condition: MarketCondition): { bg: string
   switch (condition) {
     case 'buyers':
       return {
-        bg: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-700 dark:text-emerald-300',
-        text: 'Buyer Advantage (<12% SAR)',
+        bg: 'bg-emerald-500/15 border-emerald-500/30',
+        text: 'text-emerald-700 dark:text-emerald-300',
         dot: 'bg-emerald-500',
       };
-    case 'sellers':
-      return {
-        bg: 'bg-rose-500/15 border-rose-500/30 text-rose-700 dark:text-rose-300',
-        text: 'Seller Advantage (>20% SAR)',
-        dot: 'bg-rose-500',
-      };
     case 'balanced':
+      return {
+        bg: 'bg-amber-500/15 border-amber-500/30',
+        text: 'text-amber-700 dark:text-amber-300',
+        dot: 'bg-amber-500',
+      };
+    case 'sellers':
     default:
       return {
-        bg: 'bg-amber-500/15 border-amber-500/30 text-amber-700 dark:text-amber-300',
-        text: 'Balanced Market (12–20% SAR)',
-        dot: 'bg-amber-500',
+        bg: 'bg-rose-500/15 border-rose-500/30',
+        text: 'text-rose-700 dark:text-rose-300',
+        dot: 'bg-rose-500',
       };
   }
 }

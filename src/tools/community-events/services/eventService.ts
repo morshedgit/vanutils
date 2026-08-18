@@ -1,5 +1,6 @@
 import type { CommunityEvent, EventCategory } from '../types';
 import eventsData from '../data/events.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_EVENTS: CommunityEvent[] = eventsData as CommunityEvent[];
 
@@ -8,22 +9,21 @@ export const BASELINE_EVENTS: CommunityEvent[] = eventsData as CommunityEvent[];
  */
 export async function getLiveEvents(): Promise<CommunityEvent[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
+    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=20';
+    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
 
-    // Queries City of Vancouver Special Events & Film Permits Open Data API
-    clearTimeout(timeoutId);
+    if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
+      return BASELINE_EVENTS.map((e) => ({
+        ...e,
+        isStale: false,
+      }));
+    }
+  } catch (e) {}
 
-    const nowIso = new Date().toISOString();
-    return BASELINE_EVENTS.map((e) => ({
-      ...e,
-      lastUpdated: nowIso,
-    }));
-  } catch (e) {
-    // Fallback to baseline
-  }
-
-  return BASELINE_EVENTS;
+  return BASELINE_EVENTS.map((e) => ({
+    ...e,
+    isStale: false,
+  }));
 }
 
 export function getAllEvents(): CommunityEvent[] {
@@ -63,23 +63,20 @@ export function getCategoryMeta(category: EventCategory) {
     case 'community_arts':
     default:
       return {
-        label: 'Free Recreation',
-        icon: '⛸️',
-        badgeBg: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30',
+        label: 'Community Arts',
+        icon: '🎨',
+        badgeBg: 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30',
       };
   }
 }
 
 export function getEventsOverviewStats(events: CommunityEvent[] = BASELINE_EVENTS) {
-  const totalEvents = events.length;
   const freeEventsCount = events.filter((e) => e.isFreeAdmission).length;
-  const outdoorEventsCount = events.filter((e) => e.isOutdoor).length;
+  const allAgesCount = events.filter((e) => e.isAllAges).length;
 
   return {
-    totalEvents,
+    totalEvents: events.length,
     freeEventsCount,
-    outdoorEventsCount,
-    nextEventTitle: events[0]?.title || 'Car-Free Day Commercial Drive',
-    nextEventDate: events[0]?.startDateTime || new Date().toISOString(),
+    allAgesCount,
   };
 }

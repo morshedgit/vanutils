@@ -12,21 +12,9 @@
     "reverseRouteId": "SWB-TSA",
     "frequencyText": "Hourly on the hour (7:00 AM – 9:00 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T19:11:24.049Z",
+    "lastUpdated": "2026-08-18T20:21:20.442Z",
     "isStale": false,
     "nextSailings": [
-      {
-        "departureTime": "11:07 am",
-        "arrivalTime": "12:42 pm",
-        "vesselName": "Spirit of British Columbia",
-        "deckSpacePercent": 100,
-        "passengerSpaceAvailable": true,
-        "isCancelled": false,
-        "delayMinutes": 0,
-        "standbyRisk": "low",
-        "weatherRisk": "normal",
-        "statusText": "100% Space Available"
-      },
       {
         "departureTime": "12:04 pm",
         "arrivalTime": "1:39 pm",
@@ -40,9 +28,21 @@
         "statusText": "100% Space Available"
       },
       {
-        "departureTime": "1:00 pm",
-        "arrivalTime": "",
+        "departureTime": "1:06 pm",
+        "arrivalTime": "2:41 pm",
         "vesselName": "Spirit of Vancouver Island",
+        "deckSpacePercent": 100,
+        "passengerSpaceAvailable": true,
+        "isCancelled": false,
+        "delayMinutes": 0,
+        "standbyRisk": "low",
+        "weatherRisk": "normal",
+        "statusText": "100% Space Available"
+      },
+      {
+        "departureTime": "2:00 pm",
+        "arrivalTime": "",
+        "vesselName": "Queen of New Westminster",
         "deckSpacePercent": 0,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
@@ -50,18 +50,6 @@
         "standbyRisk": "high",
         "weatherRisk": "normal",
         "statusText": "0% Space Available"
-      },
-      {
-        "departureTime": "2:00 pm",
-        "arrivalTime": "",
-        "vesselName": "Queen of New Westminster",
-        "deckSpacePercent": 14,
-        "passengerSpaceAvailable": true,
-        "isCancelled": false,
-        "delayMinutes": 0,
-        "standbyRisk": "high",
-        "weatherRisk": "normal",
-        "statusText": "14% Space Available"
       },
       {
         "departureTime": "3:00 pm",
@@ -91,13 +79,13 @@
         "departureTime": "5:00 pm",
         "arrivalTime": "",
         "vesselName": "Spirit of Vancouver Island",
-        "deckSpacePercent": 11,
+        "deckSpacePercent": 12,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "11% Space Available"
+        "statusText": "12% Space Available"
       },
       {
         "departureTime": "6:00 pm",
@@ -127,13 +115,13 @@
         "departureTime": "8:00 pm",
         "arrivalTime": "",
         "vesselName": "Coastal Celebration",
-        "deckSpacePercent": 5,
+        "deckSpacePercent": 3,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "5% Space Available"
+        "statusText": "3% Space Available"
       },
       {
         "departureTime": "9:00 pm",
@@ -163,25 +151,25 @@
         "departureTime": "7:00 am",
         "arrivalTime": "",
         "vesselName": "Spirit of British Columbia",
-        "deckSpacePercent": 50,
+        "deckSpacePercent": 48,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "50% Space Available"
+        "statusText": "48% Space Available"
       },
       {
         "departureTime": "8:00 am",
         "arrivalTime": "",
         "vesselName": "Coastal Celebration",
-        "deckSpacePercent": 10,
+        "deckSpacePercent": 8,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "10% Space Available"
+        "statusText": "8% Space Available"
       }
     ],
     "highwayCameras": [
@@ -216,21 +204,9 @@
     "reverseRouteId": "NAN-HSB",
     "frequencyText": "Every 2 hours (6:30 AM – 10:40 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T19:11:24.049Z",
+    "lastUpdated": "2026-08-18T20:21:20.442Z",
     "isStale": false,
     "nextSailings": [
-      {
-        "departureTime": "11:08 am",
-        "arrivalTime": "12:48 pm",
-        "vesselName": "Queen of Oak Bay",
-        "deckSpacePercent": 100,
-        "passengerSpaceAvailable": true,
-        "isCancelled": false,
-        "delayMinutes": 0,
-        "standbyRisk": "low",
-        "weatherRisk": "normal",
-        "statusText": "100% Space Available"
-      },
       {
         "departureTime": "",
         "arrivalTime": "",
@@ -360,25 +336,25 @@
     "reverseRouteId": "LNG-HSB",
     "frequencyText": "8-10 Daily Sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T19:11:24.049Z",
+    "lastUpdated": "2026-08-18T20:21:20.442Z",
     "isStale": false,
     "nextSailings": [
       {
-        "departureTime": "",
-        "arrivalTime": "...",
-        "vesselName": "Scheduled Vessel",
-        "deckSpacePercent": 100,
+        "departureTime": "1:20 pm",
+        "arrivalTime": "",
+        "vesselName": "Queen of Coquitlam",
+        "deckSpacePercent": 44,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "100% Space Available"
+        "statusText": "44% Space Available"
       },
       {
-        "departureTime": "1:20 pm",
+        "departureTime": "2:25 pm",
         "arrivalTime": "",
-        "vesselName": "Queen of Coquitlam",
+        "vesselName": "Queen of Surrey",
         "deckSpacePercent": 80,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
@@ -388,28 +364,16 @@
         "statusText": "80% Space Available"
       },
       {
-        "departureTime": "2:25 pm",
-        "arrivalTime": "",
-        "vesselName": "Queen of Surrey",
-        "deckSpacePercent": 76,
-        "passengerSpaceAvailable": true,
-        "isCancelled": false,
-        "delayMinutes": 0,
-        "standbyRisk": "low",
-        "weatherRisk": "normal",
-        "statusText": "76% Space Available"
-      },
-      {
         "departureTime": "3:40 pm",
         "arrivalTime": "",
         "vesselName": "Queen of Coquitlam",
-        "deckSpacePercent": 74,
+        "deckSpacePercent": 75,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "74% Space Available"
+        "statusText": "75% Space Available"
       },
       {
         "departureTime": "4:40 pm",
@@ -475,37 +439,37 @@
         "departureTime": "7:30 am",
         "arrivalTime": "",
         "vesselName": "Queen of Surrey",
-        "deckSpacePercent": 47,
+        "deckSpacePercent": 46,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "47% Space Available"
+        "statusText": "46% Space Available"
       },
       {
         "departureTime": "8:50 am",
         "arrivalTime": "",
         "vesselName": "Queen of Coquitlam",
-        "deckSpacePercent": 62,
+        "deckSpacePercent": 61,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "62% Space Available"
+        "statusText": "61% Space Available"
       },
       {
         "departureTime": "9:50 am",
         "arrivalTime": "",
         "vesselName": "Queen of Surrey",
-        "deckSpacePercent": 47,
+        "deckSpacePercent": 46,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "47% Space Available"
+        "statusText": "46% Space Available"
       }
     ],
     "highwayCameras": [
@@ -532,13 +496,13 @@
     "reverseRouteId": "DUK-TSA",
     "frequencyText": "Every 2.5 hours (5:15 AM – 10:45 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T19:11:24.049Z",
+    "lastUpdated": "2026-08-18T20:21:20.442Z",
     "isStale": false,
     "nextSailings": [
       {
-        "departureTime": "10:27 am",
-        "arrivalTime": "12:27 pm",
-        "vesselName": "Coastal Renaissance",
+        "departureTime": "1:15 pm",
+        "arrivalTime": "3:15 pm",
+        "vesselName": "Coastal Inspiration",
         "deckSpacePercent": 100,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
@@ -551,18 +515,6 @@
         "departureTime": "11:30 am",
         "arrivalTime": "",
         "vesselName": "Queen of Alberni",
-        "deckSpacePercent": 0,
-        "passengerSpaceAvailable": true,
-        "isCancelled": false,
-        "delayMinutes": 0,
-        "standbyRisk": "high",
-        "weatherRisk": "normal",
-        "statusText": "0% Space Available"
-      },
-      {
-        "departureTime": "12:45 pm",
-        "arrivalTime": "",
-        "vesselName": "Delayed approx. 23m Coastal Inspiration",
         "deckSpacePercent": 0,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
@@ -611,37 +563,37 @@
         "departureTime": "10:45 pm",
         "arrivalTime": "",
         "vesselName": "Coastal Inspiration",
-        "deckSpacePercent": 62,
+        "deckSpacePercent": 63,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "62% Space Available"
+        "statusText": "63% Space Available"
       },
       {
         "departureTime": "5:15 am",
         "arrivalTime": "",
         "vesselName": "Coastal Renaissance",
-        "deckSpacePercent": 46,
+        "deckSpacePercent": 44,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "46% Space Available"
+        "statusText": "44% Space Available"
       },
       {
         "departureTime": "7:45 am",
         "arrivalTime": "",
         "vesselName": "Coastal Inspiration",
-        "deckSpacePercent": 15,
+        "deckSpacePercent": 13,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
-        "standbyRisk": "moderate",
+        "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "15% Space Available"
+        "statusText": "13% Space Available"
       },
       {
         "departureTime": "10:15 am",
@@ -786,21 +738,9 @@
     "reverseRouteId": "BOW-HSB",
     "frequencyText": "Hourly departures",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T19:11:24.049Z",
+    "lastUpdated": "2026-08-18T20:21:20.442Z",
     "isStale": false,
     "nextSailings": [
-      {
-        "departureTime": "11:55 am",
-        "arrivalTime": "",
-        "vesselName": "Queen of Capilano",
-        "deckSpacePercent": 0,
-        "passengerSpaceAvailable": true,
-        "isCancelled": false,
-        "delayMinutes": 0,
-        "standbyRisk": "high",
-        "weatherRisk": "normal",
-        "statusText": "0% Space Available"
-      },
       {
         "departureTime": "1:10 pm",
         "arrivalTime": "",
@@ -969,7 +909,7 @@
     "crossingDurationMinutes": 55,
     "frequencyText": "4-6 daily multi-island direct & thru sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T19:11:24.049Z",
+    "lastUpdated": "2026-08-18T20:21:20.442Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -1000,13 +940,13 @@
         "departureTime": "4:00 pm",
         "arrivalTime": "",
         "vesselName": "Salish Eagle",
-        "deckSpacePercent": 50,
+        "deckSpacePercent": 49,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "50% Space Available"
+        "statusText": "49% Space Available"
       },
       {
         "departureTime": "7:50 pm",
