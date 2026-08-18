@@ -56,6 +56,7 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 | **Tool #9: Community Events Radar** | `/events` | **Active Live** | 100% Free local events, street festivals, Park Board movies, VPL talks & calendar exports. |
 | **Tool #10: School & Childcare Catchment** | `/schools` | **Active Live** | VSB SD39 English & French Immersion catchment resolver + licensed childcare VCH logs. |
 | **Tool #11: Local News & Breaking Alerts** | `/news` | **Active Live** | Sub-second civic wire, breaking weather/transit emergency banners & verified local journalism. |
+| **Tool #12: Real Estate & Rental Heartbeat** | `/market` | **Active Live** | GVR MLS® HPI benchmarks, sales-to-active ratios, median rents & BoC mortgage rate gauges. |
 
 ---
 
