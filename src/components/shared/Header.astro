@@ -9,7 +9,7 @@ interface Props {
 
 const { currentPath = '/' } = Astro.props;
 
-const outdoorsTools = TOOLS_REGISTRY.filter((t) => ['can-i-swim', 'mountain-snow', 'air-quality', 'sports-courts'].includes(t.id));
+const outdoorsTools = TOOLS_REGISTRY.filter((t) => ['can-i-swim', 'mountain-snow', 'air-quality', 'sports-courts', 'weather-forecast'].includes(t.id));
 const transitTools = TOOLS_REGISTRY.filter((t) => ['bc-ferries', 'bridge-traffic', 'evo-parking'].includes(t.id));
 const healthTools = TOOLS_REGISTRY.filter((t) => ['health-wait-times', 'community-events', 'school-catchment'].includes(t.id));
 const civicTools = TOOLS_REGISTRY.filter((t) => ['civic-development', 'housing-market', 'local-news'].includes(t.id));

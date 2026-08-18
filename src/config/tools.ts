@@ -274,6 +274,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Turf athletic field rainout & floodlight status',
     ],
   },
+  {
+    id: 'weather-forecast',
+    name: 'Microclimate Weather Radar',
+    shortDescription: 'Real-time hyper-local temperatures, 24h precipitation curves, wind & UV across Metro Vancouver microclimates.',
+    path: '/weather',
+    icon: 'sun',
+    category: 'outdoors',
+    status: 'active',
+    badgeText: 'Microclimate Radar',
+    previewStat: {
+      value: '19.4°C',
+      label: 'Downtown • 0mm Rain',
+      statusType: 'safe',
+    },
+    features: [
+      'Coastal vs. North Shore microclimate soundings',
+      '24-Hour hourly rain accumulation sparklines',
+      'Environment Canada active weather alert ribbon',
+      '1-Tap GPS closest neighborhood station locator',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

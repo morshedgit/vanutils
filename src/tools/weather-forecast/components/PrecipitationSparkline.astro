@@ -1,0 +1,55 @@
+---
+import type { HourlyForecast } from '../types';
+
+interface Props {
+  hourly: HourlyForecast[];
+  width?: number;
+  height?: number;
+}
+
+const { hourly, width = 240, height = 36 } = Astro.props;
+
+const dataPoints = hourly.slice(0, 8);
+const maxPrecip = Math.max(1.0, ...dataPoints.map((h) => h.precipitationMm));
+
+const points = dataPoints.map((item, idx) => {
+  const x = Math.round((idx / Math.max(1, dataPoints.length - 1)) * (width - 16) + 8);
+  const normalizedY = item.precipitationMm / maxPrecip;
+  const y = Math.round(height - 8 - normalizedY * (height - 16));
+  return { x, y, prob: item.precipitationProbabilityPercent, mm: item.precipitationMm, time: item.time };
+});
+
+const polylinePoints = points.map((p) => `${p.x},${p.y}`).join(' ');
+const areaPath = `M ${points[0]?.x || 0},${height - 4} L ${polylinePoints} L ${points[points.length - 1]?.x || width},${height - 4} Z`;
+---
+
+<div class="relative flex flex-col">
+  <div class="flex items-center justify-between text-[10px] text-slate-400 font-medium mb-1">
+    <span>Next 8h Rain Intensity</span>
+    <span>Max: {maxPrecip.toFixed(1)}mm/h</span>
+  </div>
+  <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} class="overflow-visible">
+    <defs>
+      <linearGradient id="precipGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0284c7" stop-opacity="0.35" />
+        <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0" />
+      </linearGradient>
+    </defs>
+    <!-- Grid Baseline -->
+    <line x1="8" y1={height - 4} x2={width - 8} y2={height - 4} stroke="#cbd5e1" stroke-dasharray="2 2" stroke-width="1" class="dark:stroke-slate-700" />
+    
+    <!-- Area & Line -->
+    <path d={areaPath} fill="url(#precipGrad)" />
+    <polyline fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points={polylinePoints} />
+
+    <!-- Markers -->
+    {points.map((p) => (
+      <circle cx={p.x} cy={p.y} r="2.5" class="fill-sky-500 stroke-white dark:stroke-slate-900 stroke-1" />
+    ))}
+  </svg>
+  <div class="flex items-center justify-between text-[9px] text-slate-400 font-mono mt-1">
+    <span>{points[0]?.time || 'Now'}</span>
+    <span>{points[Math.floor(points.length / 2)]?.time || '+4h'}</span>
+    <span>{points[points.length - 1]?.time || '+8h'}</span>
+  </div>
+</div>

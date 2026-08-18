@@ -11,8 +11,9 @@ import { getLiveProposals } from '../../tools/civic-development/services/civicSe
 import { getLiveEvents } from '../../tools/community-events/services/eventService';
 import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
 import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
-import { getLiveMarketHeartbeat, formatCurrency } from '../../tools/housing-market/services/marketService';
+import { getLiveMarketHeartbeat } from '../../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
+import { getLiveWeather } from '../../tools/weather-forecast/services/weatherService';
 
 interface Props {
   tool: ToolMeta;
@@ -67,6 +68,12 @@ const initialSubmarkets = allSubmarkets.slice(0, 3);
 
 const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
 const initialSportsFacilities = allSportsFacilities.slice(0, 3);
+
+const allWeatherStations = tool.id === 'weather-forecast' ? await getLiveWeather() : [];
+const initialWeatherStations = allWeatherStations.slice(0, 4);
+const avgWeatherTemp = allWeatherStations.length > 0
+  ? Math.round((allWeatherStations.reduce((acc, s) => acc + s.current.temperatureCelsius, 0) / allWeatherStations.length) * 10) / 10
+  : 19.4;
 ---
 
 <div
@@ -90,6 +97,7 @@ const initialSportsFacilities = allSportsFacilities.slice(0, 3);
         {tool.id === 'local-news' && '📰'}
         {tool.id === 'housing-market' && '📈'}
         {tool.id === 'sports-courts' && '🎾'}
+        {tool.id === 'weather-forecast' && '🌦️'}
       </span>
       <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
         {tool.name}
@@ -111,6 +119,7 @@ const initialSportsFacilities = allSportsFacilities.slice(0, 3);
         {tool.id === 'local-news' && 'Live Wire'}
         {tool.id === 'housing-market' && '18.4% SAR'}
         {tool.id === 'sports-courts' && '84 Courts'}
+        {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
       </span>
     </a>
   </div>
@@ -852,6 +861,27 @@ const initialSportsFacilities = allSportsFacilities.slice(0, 3);
             <span class="shrink-0 font-bold text-[11px] text-emerald-600 dark:text-emerald-400">
               {f.courtDetails?.hasLights ? '💡 Lighted' : '🟢 Open'}
             </span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <!-- MICROCLIMATE WEATHER -->
+    {tool.id === 'weather-forecast' && (
+      <div class="space-y-1" id="main-card-weather-grid">
+        {initialWeatherStations.map((s) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-station-id={s.id}>
+            <a href={`/weather/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              {s.shortName}
+            </a>
+            <div class="shrink-0 flex items-center gap-2 text-[11px]">
+              <span class="font-bold text-slate-900 dark:text-white">
+                {s.current.temperatureCelsius}°C
+              </span>
+              <span class="text-slate-400">
+                {s.current.precipitation24hMm > 0 ? `🌧️ ${s.current.precipitation24hMm}mm` : '☀️ 0mm'}
+              </span>
+            </div>
           </div>
         ))}
       </div>

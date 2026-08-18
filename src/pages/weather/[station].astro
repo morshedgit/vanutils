@@ -1,0 +1,191 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import WeatherBadge from '../../tools/weather-forecast/components/WeatherBadge.astro';
+import PrecipitationSparkline from '../../tools/weather-forecast/components/PrecipitationSparkline.astro';
+import { getLiveWeather, getStationById, getWeatherConditionMeta } from '../../tools/weather-forecast/services/weatherService';
+
+// Set Edge Cache header: 5 min max age, 10 min background SWR revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const { station: stationSlug } = Astro.params;
+const allStations = await getLiveWeather();
+const station = getStationById(stationSlug || '', allStations);
+
+if (!station) {
+  return Astro.redirect('/weather');
+}
+
+const otherStations = allStations.filter((s) => s.id !== station.id).slice(0, 3);
+---
+
+<ToolLayout
+  toolId="weather-forecast"
+  title={`${station.name} — Live Weather & Microclimate Sounding`}
+  description={`Live temperature, 24-hour precipitation curve, wind speeds, humidity, and 7-day forecast for ${station.name}, Metro Vancouver.`}
+  currentPath={`/weather/${station.id}`}
+  badgeText={station.shortName}
+  status="active"
+>
+  <div class="space-y-6 max-w-4xl mx-auto">
+    <!-- Back Link -->
+    <div>
+      <a href="/weather" class="text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline inline-flex items-center gap-1">
+        <span>←</span>
+        <span>Back to All Microclimates</span>
+      </a>
+    </div>
+
+    <!-- Station Header & Current Conditions Hero -->
+    <section class="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 border border-slate-700/80 shadow-lg space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              {station.name}
+            </h1>
+            <span
+              data-pin-btn
+              data-tool="weather-forecast"
+              data-item-id={station.id}
+              class="text-slate-400 hover:text-amber-400 text-lg cursor-pointer p-0.5"
+              title="Pin to top"
+            >
+              ★
+            </span>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-slate-300 mt-1">
+            <span class="capitalize">{station.region.replace(/_/g, ' ')}</span>
+            <span>•</span>
+            <span>Elevation: {station.elevationMeters}m</span>
+            {station.officialStationCode && (
+              <>
+                <span>•</span>
+                <span class="font-mono bg-slate-800 px-2 py-0.5 rounded border border-slate-700">ECCC AWS: {station.officialStationCode}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <WeatherBadge condition={station.current.condition} size="lg" />
+      </div>
+
+      <!-- Hero Metrics Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+        <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+          <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Temperature</span>
+          <div class="text-3xl font-extrabold text-white mt-1">
+            {station.current.temperatureCelsius}°C
+          </div>
+          <span class="text-xs text-slate-300">Feels like {station.current.feelsLikeCelsius}°C</span>
+        </div>
+
+        <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+          <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Wind & Gusts</span>
+          <div class="text-xl font-bold text-white mt-1">
+            {station.current.windDirection} {station.current.windSpeedKmh} <span class="text-xs font-normal">km/h</span>
+          </div>
+          <span class="text-xs text-slate-300">Gusts up to {station.current.windGustKmh || station.current.windSpeedKmh} km/h</span>
+        </div>
+
+        <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+          <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Humidity & UV</span>
+          <div class="text-xl font-bold text-white mt-1">
+            {station.current.humidityPercent}% <span class="text-xs font-normal">RH</span>
+          </div>
+          <span class="text-xs text-slate-300">UV Index: {station.current.uvIndex} (Moderate)</span>
+        </div>
+
+        <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+          <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Pressure & Rain</span>
+          <div class="text-xl font-bold text-white mt-1">
+            {station.current.pressureKpa} <span class="text-xs font-normal">kPa</span>
+          </div>
+          <span class="text-xs text-slate-300">24h Rain: {station.current.precipitation24hMm}mm</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24-Hour Precipitation & Hourly Timeline -->
+    <section class="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 p-5 shadow-sm space-y-4">
+      <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+        24-Hour Precipitation Trajectory & Hourly Forecast
+      </h2>
+      
+      <PrecipitationSparkline hourly={station.hourly} height={64} />
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+        {station.hourly.map((h) => {
+          const meta = getWeatherConditionMeta(h.condition);
+          return (
+            <div class="flex flex-col items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center">
+              <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">{h.time}</span>
+              <span class="text-lg my-1">{meta.icon}</span>
+              <span class="text-xs font-bold text-slate-900 dark:text-white">{h.temperatureCelsius}°C</span>
+              <span class="text-[10px] text-sky-600 dark:text-sky-400 mt-0.5">{h.precipitationMm > 0 ? `${h.precipitationMm}mm` : `${h.precipitationProbabilityPercent}%`}</span>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- 5-Day Extended Microclimate Outlook -->
+    <section class="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 p-5 shadow-sm space-y-3">
+      <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+        5-Day Extended High-Resolution Outlook
+      </h2>
+      
+      <div class="divide-y divide-slate-100 dark:divide-slate-800">
+        {station.daily.map((d) => {
+          const meta = getWeatherConditionMeta(d.condition);
+          return (
+            <div class="py-3 flex items-center justify-between gap-4 text-xs sm:text-sm">
+              <div class="w-28 sm:w-36">
+                <div class="font-bold text-slate-900 dark:text-white">{d.dayOfWeek}</div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400">{d.date}</div>
+              </div>
+
+              <div class="flex items-center gap-2 flex-1">
+                <span class="text-lg">{meta.icon}</span>
+                <span class="text-slate-700 dark:text-slate-300 font-medium hidden sm:inline">{meta.label}</span>
+              </div>
+
+              <div class="flex items-center gap-4 text-right">
+                <div class="text-slate-500 dark:text-slate-400 text-xs hidden sm:block">
+                  <span>Sunrise: {d.sunrise}</span> • <span>Sunset: {d.sunset}</span>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold text-slate-900 dark:text-white">{d.tempHighCelsius}° / <span class="text-slate-500 font-normal">{d.tempLowCelsius}°</span></div>
+                  <div class="text-[11px] text-sky-600 dark:text-sky-400">{d.totalPrecipitationMm > 0 ? `${d.totalPrecipitationMm}mm Rain` : '0mm'}</div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Nearby Microclimate Comparison -->
+    <section class="space-y-3">
+      <h2 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+        Compare with Neighbor Microclimates
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {otherStations.map((os) => (
+          <a
+            href={`/weather/${os.id}`}
+            class="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 hover:border-sky-500 transition-colors flex items-center justify-between"
+          >
+            <div>
+              <div class="font-bold text-xs text-slate-900 dark:text-white">{os.shortName}</div>
+              <div class="text-[11px] text-slate-500 capitalize">{os.region.replace(/_/g, ' ')}</div>
+            </div>
+            <div class="text-right">
+              <div class="font-extrabold text-sm text-slate-900 dark:text-white">{os.current.temperatureCelsius}°C</div>
+              <div class="text-[10px] text-slate-400">{os.current.precipitation24hMm > 0 ? `🌧️ ${os.current.precipitation24hMm}mm` : '☀️ 0mm'}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</ToolLayout>

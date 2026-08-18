@@ -1,0 +1,47 @@
+---
+interface Props {
+  activeRegion?: string;
+}
+
+const { activeRegion = 'all' } = Astro.props;
+
+const regions = [
+  { id: 'all', label: 'All Microclimates' },
+  { id: 'vancouver_core', label: 'Vancouver Core' },
+  { id: 'north_shore', label: 'North Shore' },
+  { id: 'burnaby_east', label: 'Burnaby & East' },
+  { id: 'richmond_south', label: 'Richmond & South' },
+];
+---
+
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+  <!-- Filter Pills -->
+  <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+    {regions.map((reg) => (
+      <button
+        type="button"
+        data-filter-region={reg.id}
+        class={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
+          activeRegion === reg.id
+            ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/20'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+        }`}
+      >
+        {reg.label}
+      </button>
+    ))}
+  </div>
+
+  <!-- Search Input -->
+  <div class="relative w-full sm:w-64">
+    <input
+      type="text"
+      id="weather-search-input"
+      placeholder="Search neighborhood or station..."
+      class="w-full pl-9 pr-3 py-1.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+    />
+    <svg class="w-4 h-4 absolute left-3 top-2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+  </div>
+</div>

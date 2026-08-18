@@ -1,0 +1,149 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import StationCard from '../../tools/weather-forecast/components/StationCard.astro';
+import FilterTabs from '../../tools/weather-forecast/components/FilterTabs.astro';
+import WeatherAdvisoryBanner from '../../tools/weather-forecast/components/WeatherAdvisoryBanner.astro';
+import { getLiveWeather, getWeatherOverviewStats } from '../../tools/weather-forecast/services/weatherService';
+
+// Set Edge Cache header: 5 min max age, 10 min background SWR revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
+const stations = await getLiveWeather();
+const stats = getWeatherOverviewStats(stations);
+
+const hasActiveAdvisory = stats.activeAdvisoryCount > 0;
+---
+
+<ToolLayout
+  toolId="weather-forecast"
+  title="Metro Vancouver Hyper-Local Weather & Microclimate Radar"
+  description="Real-time temperatures, 24-hour precipitation curves, wind soundings & UV across Vancouver, North Shore, Richmond, and Burnaby microclimates."
+  currentPath="/weather"
+  badgeText="Microclimate Radar"
+  status="active"
+>
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Active ECCC Weather Advisory Banner -->
+    <WeatherAdvisoryBanner hasAdvisory={hasActiveAdvisory} />
+
+    <!-- Hero Regional Microclimate Snapshot -->
+    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Regional Spread: {stats.minTemperatureCelsius}°C to {stats.maxTemperatureCelsius}°C</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+          Real-Time Microclimate Soundings & 24h Rain Radar
+        </h2>
+        <p class="text-xs text-slate-300">
+          Tracking {stations.length} official meteorological stations. Highest 24h Rain: {stats.highestRainStation}. Regional Mean: {stats.avgTemperatureCelsius}°C.
+        </p>
+      </div>
+
+      <!-- 1-Tap Geolocation Sorter -->
+      <button
+        type="button"
+        id="geo-sort-weather-btn"
+        class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-md shadow-sky-600/30 transition-all shrink-0 cursor-pointer"
+      >
+        <span>📍</span>
+        <span>Find Closest Station</span>
+      </button>
+    </section>
+
+    <!-- Filter & Search Tabs -->
+    <FilterTabs activeRegion="all" />
+
+    <!-- Station Cards Grid -->
+    <div id="weather-stations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {stations.map((station) => (
+        <StationCard station={station} />
+      ))}
+    </div>
+  </div>
+</ToolLayout>
+
+<script>
+  // Dynamic Client-side Filtering & Search
+  const filterButtons = document.querySelectorAll('[data-filter-region]');
+  const searchInput = document.getElementById('weather-search-input') as HTMLInputElement | null;
+  const cards = document.querySelectorAll<HTMLElement>('[data-station-card]');
+
+  let currentRegion = 'all';
+  let searchQuery = '';
+
+  function applyFilters() {
+    cards.forEach((card) => {
+      const region = card.dataset.region || '';
+      const name = card.dataset.name || '';
+
+      const matchesRegion = currentRegion === 'all' || region === currentRegion;
+      const matchesSearch = !searchQuery || name.includes(searchQuery);
+
+      if (matchesRegion && matchesSearch) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach((b) => {
+        b.classList.remove('bg-sky-600', 'text-white', 'shadow-sm');
+        b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+      });
+      btn.classList.add('bg-sky-600', 'text-white', 'shadow-sm');
+      btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+
+      currentRegion = (btn as HTMLElement).dataset.filterRegion || 'all';
+      applyFilters();
+    });
+  });
+
+  searchInput?.addEventListener('input', (e) => {
+    searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    applyFilters();
+  });
+
+  // Geolocation Closest Station Sorter
+  const geoBtn = document.getElementById('geo-sort-weather-btn');
+  geoBtn?.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    geoBtn.innerHTML = '<span>⏳</span><span>Locating...</span>';
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const uLat = pos.coords.latitude;
+        const uLng = pos.coords.longitude;
+
+        const grid = document.getElementById('weather-stations-grid');
+        if (!grid) return;
+
+        const cardArr = Array.from(cards);
+        cardArr.sort((a, b) => {
+          const latA = parseFloat(a.dataset.lat || '0');
+          const lngA = parseFloat(a.dataset.lng || '0');
+          const latB = parseFloat(b.dataset.lat || '0');
+          const lngB = parseFloat(b.dataset.lng || '0');
+
+          const distA = Math.hypot(latA - uLat, lngA - uLng);
+          const distB = Math.hypot(latB - uLat, lngB - uLng);
+          return distA - distB;
+        });
+
+        cardArr.forEach((c) => grid.appendChild(c));
+        geoBtn.innerHTML = '<span>✅</span><span>Sorted by Nearest</span>';
+      },
+      () => {
+        geoBtn.innerHTML = '<span>❌</span><span>Location denied</span>';
+      }
+    );
+  });
+</script>

@@ -9,7 +9,7 @@
     "build": "npm run data:sync:all && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "data:sync:all": "node scripts/scrape-official-data.js && node scripts/sync-live-ferries.js && node scripts/sync-live-snow.js && node scripts/sync-live-parking.js && node scripts/sync-live-health.js && node scripts/sync-live-bridges.js && node scripts/sync-live-air.js && node scripts/sync-live-civic.js && node scripts/sync-live-events.js && node scripts/sync-live-schools.js && node scripts/sync-live-news.js && node scripts/sync-live-market.js && node scripts/sync-live-sports.js",
+    "data:sync:all": "node scripts/scrape-official-data.js && node scripts/sync-live-ferries.js && node scripts/sync-live-snow.js && node scripts/sync-live-parking.js && node scripts/sync-live-health.js && node scripts/sync-live-bridges.js && node scripts/sync-live-air.js && node scripts/sync-live-civic.js && node scripts/sync-live-events.js && node scripts/sync-live-schools.js && node scripts/sync-live-news.js && node scripts/sync-live-market.js && node scripts/sync-live-sports.js && node scripts/sync-live-weather.js",
     "data:sync": "node scripts/sync-data.js",
     "data:scrape": "node scripts/scrape-official-data.js",
     "ferries:sync": "node scripts/sync-live-ferries.js",
@@ -24,6 +24,7 @@
     "news:sync": "node scripts/sync-live-news.js",
     "market:sync": "node scripts/sync-live-market.js",
     "sports:sync": "node scripts/sync-live-sports.js",
+    "weather:sync": "node scripts/sync-live-weather.js",
     "deploy": "wrangler deploy"
   },
   "repository": {

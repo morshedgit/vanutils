@@ -1,0 +1,30 @@
+---
+interface Props {
+  hasAdvisory?: boolean;
+  title?: string;
+  description?: string;
+}
+
+const {
+  hasAdvisory = false,
+  title = 'Special Weather Statement in Effect',
+  description = 'Environment and Climate Change Canada has issued an alert for Metro Vancouver.',
+} = Astro.props;
+---
+
+{hasAdvisory ? (
+  <div class="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-4 sm:p-5 text-amber-900 dark:text-amber-200 flex items-start gap-3">
+    <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm shadow-amber-500/30">
+      ⚠️
+    </div>
+    <div class="space-y-1 text-xs sm:text-sm">
+      <div class="font-bold flex items-center gap-2">
+        <span>{title}</span>
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500 text-white font-extrabold uppercase">Official ECCC Alert</span>
+      </div>
+      <p class="text-amber-800 dark:text-amber-300 leading-relaxed text-xs">
+        {description}
+      </p>
+    </div>
+  </div>
+) : null}

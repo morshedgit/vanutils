@@ -1,0 +1,23 @@
+---
+import type { WeatherCondition } from '../types';
+import { getWeatherConditionMeta } from '../services/weatherService';
+
+interface Props {
+  condition: WeatherCondition;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { condition, size = 'md' } = Astro.props;
+const meta = getWeatherConditionMeta(condition);
+
+const sizeClasses = {
+  sm: 'px-2 py-0.5 text-xs',
+  md: 'px-2.5 py-1 text-xs font-semibold',
+  lg: 'px-3.5 py-1.5 text-sm font-bold',
+}[size];
+---
+
+<span class={`inline-flex items-center gap-1.5 rounded-full border ${meta.badgeBg} ${sizeClasses}`}>
+  <span>{meta.icon}</span>
+  <span>{meta.label}</span>
+</span>

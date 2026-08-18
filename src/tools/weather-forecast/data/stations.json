@@ -1,0 +1,1010 @@
+[
+  {
+    "id": "downtown-harbour",
+    "name": "Downtown Vancouver (Coal Harbour)",
+    "shortName": "Coal Harbour",
+    "region": "vancouver_core",
+    "latitude": 49.2892,
+    "longitude": -123.1166,
+    "elevationMeters": 10,
+    "officialStationCode": "CWVF",
+    "current": {
+      "temperatureCelsius": 23.6,
+      "feelsLikeCelsius": 25.8,
+      "condition": "sunny",
+      "humidityPercent": 62,
+      "windSpeedKmh": 9,
+      "windDirection": "WNW",
+      "windGustKmh": 10,
+      "pressureKpa": 101.8,
+      "uvIndex": 6,
+      "precipitation24hMm": 0
+    },
+    "hourly": [
+      {
+        "time": "14:00",
+        "temperatureCelsius": 24.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "15:00",
+        "temperatureCelsius": 23.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "16:00",
+        "temperatureCelsius": 23.3,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "17:00",
+        "temperatureCelsius": 23,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "18:00",
+        "temperatureCelsius": 22.8,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "19:00",
+        "temperatureCelsius": 22,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "20:00",
+        "temperatureCelsius": 20.7,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "21:00",
+        "temperatureCelsius": 19.5,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-08-18",
+        "dayOfWeek": "Tuesday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "mostly_sunny",
+        "uvIndexMax": 6,
+        "sunrise": "06:09",
+        "sunset": "20:23"
+      },
+      {
+        "date": "2026-08-19",
+        "dayOfWeek": "Wednesday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 2,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:10",
+        "sunset": "20:21"
+      },
+      {
+        "date": "2026-08-20",
+        "dayOfWeek": "Thursday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 16,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 0,
+        "condition": "partly_cloudy",
+        "uvIndexMax": 6,
+        "sunrise": "06:12",
+        "sunset": "20:19"
+      },
+      {
+        "date": "2026-08-21",
+        "dayOfWeek": "Friday",
+        "tempHighCelsius": 25,
+        "tempLowCelsius": 17,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 7,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:13",
+        "sunset": "20:17"
+      },
+      {
+        "date": "2026-08-22",
+        "dayOfWeek": "Saturday",
+        "tempHighCelsius": 19,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 2,
+        "precipitationProbabilityPercent": 33,
+        "condition": "light_rain",
+        "uvIndexMax": 2,
+        "sunrise": "06:14",
+        "sunset": "20:15"
+      }
+    ],
+    "lastUpdated": "2026-08-18T20:36:07.080Z",
+    "isStale": false
+  },
+  {
+    "id": "kitsilano",
+    "name": "Kitsilano Beach & Point Grey",
+    "shortName": "Kits Beach",
+    "region": "vancouver_core",
+    "latitude": 49.2735,
+    "longitude": -123.1558,
+    "elevationMeters": 6,
+    "officialStationCode": "CWKB",
+    "current": {
+      "temperatureCelsius": 23.4,
+      "feelsLikeCelsius": 26,
+      "condition": "sunny",
+      "humidityPercent": 63,
+      "windSpeedKmh": 7,
+      "windDirection": "W",
+      "windGustKmh": 9,
+      "pressureKpa": 101.9,
+      "uvIndex": 6,
+      "precipitation24hMm": 0
+    },
+    "hourly": [
+      {
+        "time": "14:00",
+        "temperatureCelsius": 23.7,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "15:00",
+        "temperatureCelsius": 23.2,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "16:00",
+        "temperatureCelsius": 22.9,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "17:00",
+        "temperatureCelsius": 22.8,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "18:00",
+        "temperatureCelsius": 22.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "19:00",
+        "temperatureCelsius": 21.8,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "20:00",
+        "temperatureCelsius": 20.4,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "21:00",
+        "temperatureCelsius": 19.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-08-18",
+        "dayOfWeek": "Tuesday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "mostly_sunny",
+        "uvIndexMax": 6,
+        "sunrise": "06:09",
+        "sunset": "20:23"
+      },
+      {
+        "date": "2026-08-19",
+        "dayOfWeek": "Wednesday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 2,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:10",
+        "sunset": "20:21"
+      },
+      {
+        "date": "2026-08-20",
+        "dayOfWeek": "Thursday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 16,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 0,
+        "condition": "partly_cloudy",
+        "uvIndexMax": 6,
+        "sunrise": "06:12",
+        "sunset": "20:19"
+      },
+      {
+        "date": "2026-08-21",
+        "dayOfWeek": "Friday",
+        "tempHighCelsius": 25,
+        "tempLowCelsius": 17,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 7,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:13",
+        "sunset": "20:17"
+      },
+      {
+        "date": "2026-08-22",
+        "dayOfWeek": "Saturday",
+        "tempHighCelsius": 20,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 2,
+        "precipitationProbabilityPercent": 33,
+        "condition": "light_rain",
+        "uvIndexMax": 2,
+        "sunrise": "06:15",
+        "sunset": "20:15"
+      }
+    ],
+    "lastUpdated": "2026-08-18T20:36:07.083Z",
+    "isStale": false
+  },
+  {
+    "id": "north-vancouver",
+    "name": "North Vancouver (Lynn Valley & Capilano)",
+    "shortName": "Lynn Valley",
+    "region": "north_shore",
+    "latitude": 49.3378,
+    "longitude": -123.0384,
+    "elevationMeters": 160,
+    "officialStationCode": "CWNV",
+    "current": {
+      "temperatureCelsius": 23.1,
+      "feelsLikeCelsius": 24.9,
+      "condition": "sunny",
+      "humidityPercent": 63,
+      "windSpeedKmh": 10,
+      "windDirection": "SW",
+      "windGustKmh": 12,
+      "pressureKpa": 100.2,
+      "uvIndex": 6,
+      "precipitation24hMm": 0
+    },
+    "hourly": [
+      {
+        "time": "14:00",
+        "temperatureCelsius": 23.2,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "15:00",
+        "temperatureCelsius": 23.3,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "16:00",
+        "temperatureCelsius": 22.8,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "17:00",
+        "temperatureCelsius": 22.5,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "18:00",
+        "temperatureCelsius": 21.7,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "19:00",
+        "temperatureCelsius": 21.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "20:00",
+        "temperatureCelsius": 20,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "21:00",
+        "temperatureCelsius": 19,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-08-18",
+        "dayOfWeek": "Tuesday",
+        "tempHighCelsius": 23,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "mostly_sunny",
+        "uvIndexMax": 6,
+        "sunrise": "06:08",
+        "sunset": "20:23"
+      },
+      {
+        "date": "2026-08-19",
+        "dayOfWeek": "Wednesday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 2,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:10",
+        "sunset": "20:21"
+      },
+      {
+        "date": "2026-08-20",
+        "dayOfWeek": "Thursday",
+        "tempHighCelsius": 26,
+        "tempLowCelsius": 17,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 0,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:11",
+        "sunset": "20:19"
+      },
+      {
+        "date": "2026-08-21",
+        "dayOfWeek": "Friday",
+        "tempHighCelsius": 27,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 8,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:12",
+        "sunset": "20:17"
+      },
+      {
+        "date": "2026-08-22",
+        "dayOfWeek": "Saturday",
+        "tempHighCelsius": 18,
+        "tempLowCelsius": 13,
+        "totalPrecipitationMm": 2,
+        "precipitationProbabilityPercent": 36,
+        "condition": "light_rain",
+        "uvIndexMax": 2,
+        "sunrise": "06:14",
+        "sunset": "20:15"
+      }
+    ],
+    "lastUpdated": "2026-08-18T20:36:07.103Z",
+    "isStale": false
+  },
+  {
+    "id": "yvr-airport",
+    "name": "YVR Airport & Sea Island",
+    "shortName": "YVR Airport",
+    "region": "richmond_south",
+    "latitude": 49.1967,
+    "longitude": -123.1815,
+    "elevationMeters": 4,
+    "officialStationCode": "CWVR",
+    "current": {
+      "temperatureCelsius": 22.1,
+      "feelsLikeCelsius": 24.1,
+      "condition": "sunny",
+      "humidityPercent": 67,
+      "windSpeedKmh": 10,
+      "windDirection": "WSW",
+      "windGustKmh": 11,
+      "pressureKpa": 101.9,
+      "uvIndex": 6,
+      "precipitation24hMm": 0
+    },
+    "hourly": [
+      {
+        "time": "14:00",
+        "temperatureCelsius": 22.3,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "15:00",
+        "temperatureCelsius": 22.3,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "16:00",
+        "temperatureCelsius": 22.5,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "17:00",
+        "temperatureCelsius": 22.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "18:00",
+        "temperatureCelsius": 22.4,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "19:00",
+        "temperatureCelsius": 21.7,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "20:00",
+        "temperatureCelsius": 20.3,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "21:00",
+        "temperatureCelsius": 19.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-08-18",
+        "dayOfWeek": "Tuesday",
+        "tempHighCelsius": 23,
+        "tempLowCelsius": 14,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "mostly_sunny",
+        "uvIndexMax": 6,
+        "sunrise": "06:09",
+        "sunset": "20:23"
+      },
+      {
+        "date": "2026-08-19",
+        "dayOfWeek": "Wednesday",
+        "tempHighCelsius": 23,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:10",
+        "sunset": "20:21"
+      },
+      {
+        "date": "2026-08-20",
+        "dayOfWeek": "Thursday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 16,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 0,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:12",
+        "sunset": "20:19"
+      },
+      {
+        "date": "2026-08-21",
+        "dayOfWeek": "Friday",
+        "tempHighCelsius": 25,
+        "tempLowCelsius": 17,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 7,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:13",
+        "sunset": "20:17"
+      },
+      {
+        "date": "2026-08-22",
+        "dayOfWeek": "Saturday",
+        "tempHighCelsius": 20,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 2,
+        "precipitationProbabilityPercent": 31,
+        "condition": "light_rain",
+        "uvIndexMax": 2,
+        "sunrise": "06:15",
+        "sunset": "20:15"
+      }
+    ],
+    "lastUpdated": "2026-08-18T20:36:07.098Z",
+    "isStale": false
+  },
+  {
+    "id": "burnaby-mountain",
+    "name": "Burnaby Mountain (SFU Campus)",
+    "shortName": "Burnaby Mtn",
+    "region": "burnaby_east",
+    "latitude": 49.2778,
+    "longitude": -122.9156,
+    "elevationMeters": 365,
+    "officialStationCode": "CWBM",
+    "current": {
+      "temperatureCelsius": 22.7,
+      "feelsLikeCelsius": 24.1,
+      "condition": "sunny",
+      "humidityPercent": 58,
+      "windSpeedKmh": 9,
+      "windDirection": "W",
+      "windGustKmh": 12,
+      "pressureKpa": 97.8,
+      "uvIndex": 6,
+      "precipitation24hMm": 0
+    },
+    "hourly": [
+      {
+        "time": "14:00",
+        "temperatureCelsius": 23,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "15:00",
+        "temperatureCelsius": 23.2,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "16:00",
+        "temperatureCelsius": 22.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "17:00",
+        "temperatureCelsius": 22.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "18:00",
+        "temperatureCelsius": 21.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "19:00",
+        "temperatureCelsius": 20.8,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "20:00",
+        "temperatureCelsius": 19.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "21:00",
+        "temperatureCelsius": 17.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-08-18",
+        "dayOfWeek": "Tuesday",
+        "tempHighCelsius": 23,
+        "tempLowCelsius": 13,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "partly_cloudy",
+        "uvIndexMax": 6,
+        "sunrise": "06:08",
+        "sunset": "20:22"
+      },
+      {
+        "date": "2026-08-19",
+        "dayOfWeek": "Wednesday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 13,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:09",
+        "sunset": "20:20"
+      },
+      {
+        "date": "2026-08-20",
+        "dayOfWeek": "Thursday",
+        "tempHighCelsius": 26,
+        "tempLowCelsius": 14,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 0,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:11",
+        "sunset": "20:18"
+      },
+      {
+        "date": "2026-08-21",
+        "dayOfWeek": "Friday",
+        "tempHighCelsius": 28,
+        "tempLowCelsius": 13,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 8,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:12",
+        "sunset": "20:16"
+      },
+      {
+        "date": "2026-08-22",
+        "dayOfWeek": "Saturday",
+        "tempHighCelsius": 16,
+        "tempLowCelsius": 12,
+        "totalPrecipitationMm": 2.3,
+        "precipitationProbabilityPercent": 36,
+        "condition": "light_rain",
+        "uvIndexMax": 2,
+        "sunrise": "06:14",
+        "sunset": "20:14"
+      }
+    ],
+    "lastUpdated": "2026-08-18T20:36:07.100Z",
+    "isStale": false
+  },
+  {
+    "id": "richmond-steveston",
+    "name": "Richmond (Steveston Village)",
+    "shortName": "Steveston",
+    "region": "richmond_south",
+    "latitude": 49.1256,
+    "longitude": -123.1812,
+    "elevationMeters": 2,
+    "officialStationCode": "CWRS",
+    "current": {
+      "temperatureCelsius": 21.9,
+      "feelsLikeCelsius": 23.4,
+      "condition": "sunny",
+      "humidityPercent": 64,
+      "windSpeedKmh": 11,
+      "windDirection": "W",
+      "windGustKmh": 12,
+      "pressureKpa": 101.9,
+      "uvIndex": 6,
+      "precipitation24hMm": 0
+    },
+    "hourly": [
+      {
+        "time": "14:00",
+        "temperatureCelsius": 22,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "15:00",
+        "temperatureCelsius": 22.5,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "16:00",
+        "temperatureCelsius": 23,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "17:00",
+        "temperatureCelsius": 23.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "18:00",
+        "temperatureCelsius": 23.1,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "19:00",
+        "temperatureCelsius": 22.5,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "20:00",
+        "temperatureCelsius": 20.9,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "21:00",
+        "temperatureCelsius": 19,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-08-18",
+        "dayOfWeek": "Tuesday",
+        "tempHighCelsius": 23,
+        "tempLowCelsius": 13,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:09",
+        "sunset": "20:23"
+      },
+      {
+        "date": "2026-08-19",
+        "dayOfWeek": "Wednesday",
+        "tempHighCelsius": 23,
+        "tempLowCelsius": 15,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:11",
+        "sunset": "20:21"
+      },
+      {
+        "date": "2026-08-20",
+        "dayOfWeek": "Thursday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 16,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 0,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:12",
+        "sunset": "20:19"
+      },
+      {
+        "date": "2026-08-21",
+        "dayOfWeek": "Friday",
+        "tempHighCelsius": 25,
+        "tempLowCelsius": 14,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 7,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:14",
+        "sunset": "20:17"
+      },
+      {
+        "date": "2026-08-22",
+        "dayOfWeek": "Saturday",
+        "tempHighCelsius": 20,
+        "tempLowCelsius": 14,
+        "totalPrecipitationMm": 2.4,
+        "precipitationProbabilityPercent": 30,
+        "condition": "light_rain",
+        "uvIndexMax": 3,
+        "sunrise": "06:15",
+        "sunset": "20:15"
+      }
+    ],
+    "lastUpdated": "2026-08-18T20:36:07.101Z",
+    "isStale": false
+  },
+  {
+    "id": "west-vancouver",
+    "name": "West Vancouver (Point Atkinson & Ambleside)",
+    "shortName": "Point Atkinson",
+    "region": "north_shore",
+    "latitude": 49.3308,
+    "longitude": -123.2644,
+    "elevationMeters": 20,
+    "officialStationCode": "CWTA",
+    "current": {
+      "temperatureCelsius": 23.5,
+      "feelsLikeCelsius": 26.3,
+      "condition": "sunny",
+      "humidityPercent": 63,
+      "windSpeedKmh": 6,
+      "windDirection": "SSW",
+      "windGustKmh": 6,
+      "pressureKpa": 101.7,
+      "uvIndex": 6,
+      "precipitation24hMm": 0
+    },
+    "hourly": [
+      {
+        "time": "14:00",
+        "temperatureCelsius": 23.5,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "15:00",
+        "temperatureCelsius": 23.4,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "16:00",
+        "temperatureCelsius": 23.5,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "17:00",
+        "temperatureCelsius": 23.7,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "18:00",
+        "temperatureCelsius": 23.4,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "19:00",
+        "temperatureCelsius": 22.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "20:00",
+        "temperatureCelsius": 21.6,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
+        "time": "21:00",
+        "temperatureCelsius": 20.3,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-08-18",
+        "dayOfWeek": "Tuesday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 16,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "mostly_sunny",
+        "uvIndexMax": 6,
+        "sunrise": "06:09",
+        "sunset": "20:24"
+      },
+      {
+        "date": "2026-08-19",
+        "dayOfWeek": "Wednesday",
+        "tempHighCelsius": 26,
+        "tempLowCelsius": 17,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 2,
+        "condition": "overcast",
+        "uvIndexMax": 5,
+        "sunrise": "06:10",
+        "sunset": "20:22"
+      },
+      {
+        "date": "2026-08-20",
+        "dayOfWeek": "Thursday",
+        "tempHighCelsius": 22,
+        "tempLowCelsius": 18,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 0,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:12",
+        "sunset": "20:20"
+      },
+      {
+        "date": "2026-08-21",
+        "dayOfWeek": "Friday",
+        "tempHighCelsius": 24,
+        "tempLowCelsius": 18,
+        "totalPrecipitationMm": 0,
+        "precipitationProbabilityPercent": 7,
+        "condition": "overcast",
+        "uvIndexMax": 6,
+        "sunrise": "06:13",
+        "sunset": "20:18"
+      },
+      {
+        "date": "2026-08-22",
+        "dayOfWeek": "Saturday",
+        "tempHighCelsius": 19,
+        "tempLowCelsius": 16,
+        "totalPrecipitationMm": 1.5,
+        "precipitationProbabilityPercent": 34,
+        "condition": "light_rain",
+        "uvIndexMax": 3,
+        "sunrise": "06:15",
+        "sunset": "20:16"
+      }
+    ],
+    "lastUpdated": "2026-08-18T20:36:07.099Z",
+    "isStale": false
+  }
+]
