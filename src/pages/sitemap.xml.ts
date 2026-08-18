@@ -26,6 +26,9 @@ export const GET: APIRoute = async () => {
       priority: '0.9',
       changefreq: 'hourly',
     })),
+    { url: `${baseUrl}/terms`, priority: '0.5', changefreq: 'monthly' },
+    { url: `${baseUrl}/privacy`, priority: '0.5', changefreq: 'monthly' },
+    { url: `${baseUrl}/cookies`, priority: '0.5', changefreq: 'monthly' },
   ];
 
   // 2. Dynamic Detail Slugs

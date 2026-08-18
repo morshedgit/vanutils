@@ -1,0 +1,233 @@
+---
+import PlatformLayout from '../layouts/PlatformLayout.astro';
+import JsonLd from '../components/shared/JsonLd.astro';
+
+const termsSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Terms of Service & Liability Disclaimer | VanUtils',
+    url: 'https://vanutils.ca/terms',
+    description: 'Terms of service, liability limitations, and informational disclaimers for VanUtils micro-utilities.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanUtils', item: 'https://vanutils.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Terms of Service', item: 'https://vanutils.ca/terms' },
+    ],
+  },
+];
+---
+
+<PlatformLayout
+  title="Terms of Service & Disclaimers | VanUtils"
+  description="Terms of use, strict limitation of liability, and official data disclaimers for the VanUtils platform and all micro-utilities."
+  currentPath="/terms"
+>
+  <JsonLd schema={termsSchema} />
+
+  <div class="max-w-4xl mx-auto py-4 sm:py-8 space-y-8">
+    <!-- Header Section -->
+    <div class="space-y-3 border-b border-slate-200 dark:border-slate-800 pb-6">
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 text-xs font-bold uppercase tracking-wider">
+        <span>⚖️</span>
+        <span>Legal Terms &amp; Disclaimers</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+        Terms of Service &amp; Limitation of Liability
+      </h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Effective Date: August 18, 2026 • Last Reviewed: August 2026
+      </p>
+    </div>
+
+    <!-- Prominent Liability Notice Box -->
+    <div class="p-5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 text-amber-900 dark:text-amber-200 space-y-2">
+      <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+        <span class="text-lg">⚠️</span>
+        <span>IMPORTANT NOTICE: INFORMATIONAL &amp; RECREATIONAL PURPOSES ONLY</span>
+      </div>
+      <p class="text-xs sm:text-sm leading-relaxed text-amber-800 dark:text-amber-300">
+        VanUtils is an independent, automated public telemetry aggregator. All tools, metrics, calculations, badges, and alerts are provided strictly on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis. The creators, operators, and contributors of VanUtils bear <strong>NO RESPONSIBILITY OR LIABILITY</strong> for any actions taken, decisions made, losses incurred, fines, towing costs, injuries, health consequences, or damages resulting from reliance on this platform.
+      </p>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="space-y-8 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+      
+      <!-- Section 1 -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">1.</span> Acceptance of Terms
+        </h2>
+        <p>
+          By accessing or using the VanUtils website (<a href="https://vanutils.ca" class="text-sky-600 dark:text-sky-400 hover:underline">vanutils.ca</a>) and any associated sub-routes, APIs, or Progressive Web App (PWA) features (collectively, the "Service"), you agree to be bound by these Terms of Service. If you do not agree to all terms and conditions, you must immediately discontinue use of the Service.
+        </p>
+      </section>
+
+      <!-- Section 2: Complete Disclaimer of Warranties -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">2.</span> Disclaimer of Warranties ("AS IS" &amp; "AS AVAILABLE")
+        </h2>
+        <p>
+          TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. WE EXPRESSLY DISCLAIM ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO:
+        </p>
+        <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+          <li>Warranties of merchantability, fitness for a particular purpose, and non-infringement;</li>
+          <li>Warranties regarding the accuracy, completeness, currency, reliability, or timeliness of any telemetry, sensor data, bacterial readings, wait times, transit schedules, traffic cameras, or weather alerts;</li>
+          <li>Warranties that the Service will operate uninterrupted, secure, or error-free at any particular time or location.</li>
+        </ul>
+      </section>
+
+      <!-- Section 3: Strict Limitation of Liability -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">3.</span> Strict Limitation of Liability
+        </h2>
+        <p>
+          UNDER NO CIRCUMSTANCES SHALL VANUTILS, ITS DEVELOPERS, MAINTAINERS, AFFILIATES, OR DATA LICENSORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, PUNITIVE, OR EXEMPLARY DAMAGES WHATSOEVER, INCLUDING BUT NOT LIMITED TO:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm pt-2">
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>🏥</span> Medical &amp; Health Emergencies
+            </span>
+            <p class="text-slate-600 dark:text-slate-400 text-xs">
+              Any adverse health events, delays in seeking emergency medical attention, illness from natural water exposure, or reliance on emergency room / urgent care wait-time estimates.
+            </p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>🚗</span> Parking Fines &amp; Towing Costs
+            </span>
+            <p class="text-slate-600 dark:text-slate-400 text-xs">
+              Any municipal parking tickets, impound/towing fees, rush-hour lane violations, leaf-cleaning tickets, or car-share drop-off penalties incurred.
+            </p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>⛴️</span> Travel, Transit &amp; Missed Sailings
+            </span>
+            <p class="text-slate-600 dark:text-slate-400 text-xs">
+              Missed ferry sailings, standby queue cutoffs, flight delays, bridge traffic gridlock, bus/SkyTrain disruptions, or travel expenses.
+            </p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>🏔️</span> Alpine &amp; Weather Hazards
+            </span>
+            <p class="text-slate-600 dark:text-slate-400 text-xs">
+              Any backcountry incidents, avalanche exposure, hypothermia, sudden mountain weather shifts, or vehicular tire/chain regulation infractions.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Domain-Specific Operational Disclaimers -->
+      <section class="space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">4.</span> Specific Micro-Utility Disclaimers
+        </h2>
+
+        <div class="space-y-3">
+          <!-- 4.1 Water Quality -->
+          <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
+            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-sm sm:text-base">
+              <span>🌊</span> Water Quality &amp; Swimming Safety (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">/swim</code>)
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              Water quality assessments represent historical laboratory sample results published periodically by Vancouver Coastal Health (VCH) and Fraser Health. Water conditions at ocean beaches and freshwater lakes can fluctuate rapidly due to tides, rainfall runoff, storm outfalls, wildlife, or sudden contamination events. Always obey physical beach warning signs, lifeguard instructions, and official health notices before entering the water.
+            </p>
+          </div>
+
+          <!-- 4.2 Health Wait Times -->
+          <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
+            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-sm sm:text-base">
+              <span>🏥</span> Healthcare &amp; Emergency Wait Times (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">/health</code>)
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              Wait times and triage estimates are approximate calculations provided by health authorities and do NOT guarantee physician availability. <strong>IN CASE OF A MEDICAL EMERGENCY (CHEST PAIN, STROKE SYMPTOMS, SEVERE TRAUMA, SHORTNESS OF BREATH), IMMEDIATELY DIAL 911 OR GO TO THE NEAREST EMERGENCY DEPARTMENT REGARDLESS OF POSTED WAIT TIMES.</strong>
+            </p>
+          </div>
+
+          <!-- 4.3 Car-Share & Parking -->
+          <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
+            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-sm sm:text-base">
+              <span>🚗</span> Parking &amp; Street Sweeping Radar (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">/parking</code>)
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              Parking clearance statuses and street sweeping schedules are informational approximations derived from municipal GIS datasets and car-share guidelines. <strong>Physical curbside signage, posted temporary "No Stopping" notices, emergency closures, and City of Vancouver Street Bylaws strictly supersede all information displayed on VanUtils.</strong> Users remain solely responsible for verifying physical signage before leaving a vehicle.
+            </p>
+          </div>
+
+          <!-- 4.4 Real Estate & Financial -->
+          <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
+            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-sm sm:text-base">
+              <span>📈</span> Real Estate &amp; Mortgage Radar (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">/market</code>)
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              MLS® HPI benchmark data, Bank of Canada interest rate feeds, and mortgage stress test calculators are for educational and general informational purposes only. Nothing on this website constitutes financial, legal, investment, or real estate advice.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Non-Affiliation Disclaimer -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">5.</span> Non-Affiliation with Government or Transport Authorities
+        </h2>
+        <p>
+          VanUtils is an independent community project. VanUtils is <strong>NOT</strong> affiliated with, associated with, authorized by, endorsed by, or in any way officially connected with:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+          <li>City of Vancouver, City of North Vancouver, City of Burnaby, City of Richmond, City of Surrey, or any municipal entity;</li>
+          <li>Metro Vancouver Regional District (MVRD);</li>
+          <li>Vancouver Coastal Health Authority (VCH) or Fraser Health Authority;</li>
+          <li>British Columbia Ferry Services Inc. (BC Ferries) or Hullo (Vancouver Island Ferry Company);</li>
+          <li>TransLink (South Coast British Columbia Transportation Authority);</li>
+          <li>DriveBC or the BC Ministry of Transportation and Infrastructure (MOTI);</li>
+          <li>Environment and Climate Change Canada (ECCC) or Avalanche Canada;</li>
+          <li>Vancouver School Board (SD39) or Greater Vancouver REALTORS® (GVR).</li>
+        </ul>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          All trademarks, service marks, trade names, product names, and logos appearing on the site are the property of their respective owners.
+        </p>
+      </section>
+
+      <!-- Section 6: Indemnification -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">6.</span> Indemnification
+        </h2>
+        <p>
+          You agree to defend, indemnify, and hold harmless VanUtils, its creators, operators, and contributors from and against any claims, actions, demands, damages, losses, liabilities, costs, and expenses (including legal fees) arising out of or related to your use or misuse of the Service, your violation of these Terms, or your reliance on any telemetry presented.
+        </p>
+      </section>
+
+      <!-- Section 7: Governing Law -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">7.</span> Governing Law &amp; Jurisdiction
+        </h2>
+        <p>
+          These Terms of Service and any disputes arising from your use of the Service shall be governed by and construed in accordance with the laws of the Province of British Columbia and the federal laws of Canada applicable therein, without regard to conflict of law principles.
+        </p>
+      </section>
+
+      <!-- Section 8: Changes to Terms -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">8.</span> Modifications &amp; Inquiries
+        </h2>
+        <p>
+          We reserve the right to revise or update these Terms at any time without prior notice. The latest version will always be posted on this page. For questions or technical feedback, you may open an issue on our official <a href="https://github.com/morshedgit/vanutils" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">GitHub repository</a>.
+        </p>
+      </section>
+
+    </div>
+  </div>
+</PlatformLayout>

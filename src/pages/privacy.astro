@@ -1,0 +1,176 @@
+---
+import PlatformLayout from '../layouts/PlatformLayout.astro';
+import JsonLd from '../components/shared/JsonLd.astro';
+
+const privacySchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Privacy Policy | VanUtils',
+    url: 'https://vanutils.ca/privacy',
+    description: 'Privacy policy for VanUtils. Learn how we handle client-side preferences and telemetry.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanUtils', item: 'https://vanutils.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: 'https://vanutils.ca/privacy' },
+    ],
+  },
+];
+---
+
+<PlatformLayout
+  title="Privacy Policy | VanUtils"
+  description="VanUtils privacy policy: Learn about our privacy-first architecture, client-side localStorage preferences, and transparent data practices."
+  currentPath="/privacy"
+>
+  <JsonLd schema={privacySchema} />
+
+  <div class="max-w-4xl mx-auto py-4 sm:py-8 space-y-8">
+    <!-- Header Section -->
+    <div class="space-y-3 border-b border-slate-200 dark:border-slate-800 pb-6">
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold uppercase tracking-wider">
+        <span>🛡️</span>
+        <span>Privacy &amp; Data Transparency</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+        Privacy Policy
+      </h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Effective Date: August 18, 2026 • Last Reviewed: August 2026
+      </p>
+    </div>
+
+    <!-- Quick Summary Box -->
+    <div class="p-5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 text-emerald-900 dark:text-emerald-200 space-y-2">
+      <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+        <span class="text-lg">🔒</span>
+        <span>OUR PRIVACY COMMITMENT: ZERO PERSONAL PROFILING</span>
+      </div>
+      <p class="text-xs sm:text-sm leading-relaxed text-emerald-800 dark:text-emerald-300">
+        VanUtils is built on a privacy-respecting architecture. We do not require user account registration, do not collect personal identities or email addresses, and do not track or sell your browsing history. Your preferences (like pinned beaches and color theme) remain exclusively on your device.
+      </p>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="space-y-8 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+
+      <!-- Section 1 -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">1.</span> Information We Do Not Collect
+        </h2>
+        <p>
+          Unlike commercial applications, VanUtils does not require you to provide personally identifiable information (PII) to access any of our micro-utilities. Specifically:
+        </p>
+        <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+          <li><strong>No User Accounts:</strong> You do not need to register, create a username, or provide a password.</li>
+          <li><strong>No Personal Contact Data:</strong> We do not collect names, email addresses, phone numbers, or physical mailing addresses.</li>
+          <li><strong>No Location History Storage:</strong> When you use geolocation features, your coordinates are processed temporarily in your browser and are never saved to a server database or associated with a user profile.</li>
+        </ul>
+      </section>
+
+      <!-- Section 2: Local Storage -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">2.</span> Client-Side Device Storage (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">localStorage</code>)
+        </h2>
+        <p>
+          To provide a customized experience without requiring accounts or cloud databases, VanUtils uses your browser's local storage capabilities (<code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">localStorage</code>) to persist:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm pt-2">
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>⭐</span> Pinned Favorites
+            </span>
+            <p class="text-slate-600 dark:text-slate-400 text-xs">
+              Keys like <code class="text-[10px]">vanutils_pinned_can-i-swim</code> store IDs of beaches, ferry routes, or mountains you star.
+            </p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>🌓</span> Color Theme
+            </span>
+            <p class="text-slate-600 dark:text-slate-400 text-xs">
+              Remembers your preference for light or dark mode (<code class="text-[10px]">theme</code>) across page visits.
+            </p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1">
+            <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>🔔</span> Alert Dismissals
+            </span>
+            <p class="text-slate-600 dark:text-slate-400 text-xs">
+              Remembers banners you dismissed (<code class="text-[10px]">vanutils_dismissed_alert_*</code>) so you are not prompted repeatedly.
+            </p>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 pt-1">
+          This data is stored purely on your personal device and is never transmitted to or stored on our servers. You can clear this data at any time through your browser settings.
+        </p>
+      </section>
+
+      <!-- Section 3: Geolocation -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">3.</span> Device Location Data
+        </h2>
+        <p>
+          Certain utilities (such as finding the nearest beach on <code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">/swim</code> or evaluating parking spot clearance on <code class="text-xs bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">/parking</code>) offer optional 1-tap browser geolocation.
+        </p>
+        <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+          <li>Location permissions are entirely optional and requested only via standard browser permission prompts.</li>
+          <li>Coordinates are used ephemerally in-browser to calculate mathematical distance (e.g. Haversine formula) to known landmarks.</li>
+          <li>Your exact coordinates are never permanently logged, shared with third parties, or tied to your identity.</li>
+        </ul>
+      </section>
+
+      <!-- Section 4: Analytics & Performance Tracking -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">4.</span> Web Analytics &amp; Performance Telemetry
+        </h2>
+        <p>
+          To monitor platform stability, assess which micro-utilities are most helpful to the community, and optimize edge cache delivery, we may utilize privacy-conscious web analytics tools, such as <strong>Google Analytics</strong> or Cloudflare Web Analytics.
+        </p>
+        <p>
+          These services collect aggregate, non-personally identifiable technical information such as:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+          <li>Page views and navigation paths;</li>
+          <li>Referring websites or search queries;</li>
+          <li>General geographic region (country or metropolitan area level, e.g. Vancouver / Canada);</li>
+          <li>Browser type, operating system, device screen resolution, and page load speed metrics.</li>
+        </ul>
+        <p class="text-xs text-slate-600 dark:text-slate-400">
+          We do not correlate this aggregate analytics data with individual personal identities. For more details on how cookies are utilized by analytics tools, please review our <a href="/cookies" class="text-sky-600 dark:text-sky-400 hover:underline">Cookie Policy</a>.
+        </p>
+      </section>
+
+      <!-- Section 5: Third-Party Links -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">5.</span> External Links &amp; Public Feeds
+        </h2>
+        <p>
+          VanUtils provides direct links to external websites and official public services (such as Vancouver Coastal Health, Fraser Health, TransLink, BC Ferries, City of Vancouver, DriveBC, and Environment Canada). When you click an external link, you are subject to the privacy policies and practices of that third-party website. We encourage you to review their respective policies.
+        </p>
+      </section>
+
+      <!-- Section 6: Updates -->
+      <section class="space-y-3">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span class="text-sky-500">6.</span> Policy Updates &amp; Contact
+        </h2>
+        <p>
+          We may update this Privacy Policy from time to time to reflect platform enhancements or changes in legal standards. Any revisions will be published immediately on this page with an updated effective date.
+        </p>
+        <p>
+          If you have questions, feedback, or concerns regarding privacy practices on VanUtils, you can reach out through our public <a href="https://github.com/morshedgit/vanutils" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">GitHub repository</a>.
+        </p>
+      </section>
+
+    </div>
+  </div>
+</PlatformLayout>
