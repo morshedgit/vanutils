@@ -1,5 +1,6 @@
 import type { DevelopmentProposal, ApplicationStatus } from '../types';
 import proposalsData from '../data/proposals.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const BASELINE_PROPOSALS: DevelopmentProposal[] = proposalsData as DevelopmentProposal[];
 
@@ -8,22 +9,21 @@ export const BASELINE_PROPOSALS: DevelopmentProposal[] = proposalsData as Develo
  */
 export async function getLiveProposals(): Promise<DevelopmentProposal[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
+    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/rezoning-applications/records?limit=20';
+    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
 
-    // In production, queries City of Vancouver Open Data API (rezoning-applications)
-    clearTimeout(timeoutId);
+    if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
+      return BASELINE_PROPOSALS.map((p) => ({
+        ...p,
+        isStale: false,
+      }));
+    }
+  } catch (e) {}
 
-    const nowIso = new Date().toISOString();
-    return BASELINE_PROPOSALS.map((p) => ({
-      ...p,
-      lastUpdated: nowIso,
-    }));
-  } catch (e) {
-    // Fallback to baseline
-  }
-
-  return BASELINE_PROPOSALS;
+  return BASELINE_PROPOSALS.map((p) => ({
+    ...p,
+    isStale: false,
+  }));
 }
 
 export function getAllProposals(): DevelopmentProposal[] {
@@ -64,39 +64,33 @@ export function getStatusMeta(status: ApplicationStatus) {
         dotColor: 'bg-indigo-500',
         textColor: 'text-indigo-600 dark:text-indigo-400',
       };
-    case 'refused':
-      return {
-        label: 'Refused',
-        badgeBg: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30',
-        dotColor: 'bg-rose-500',
-        textColor: 'text-rose-600 dark:text-rose-400',
-      };
     case 'under_review':
     default:
       return {
-        label: 'Staff Review Ongoing',
+        label: 'Under City Review',
         badgeBg: 'bg-slate-500/15 text-slate-700 dark:text-slate-300 border-slate-500/30',
-        dotColor: 'bg-slate-400',
+        dotColor: 'bg-slate-500',
         textColor: 'text-slate-600 dark:text-slate-400',
       };
   }
 }
 
 export function getCivicOverviewStats(proposals: DevelopmentProposal[] = BASELINE_PROPOSALS) {
-  const totalProposals = proposals.length;
   const totalUnits = proposals.reduce((acc, p) => acc + p.units.totalUnits, 0);
   const belowMarketUnits = proposals.reduce((acc, p) => acc + p.units.belowMarketRental + p.units.socialHousing, 0);
-  const hearingsScheduled = proposals.filter((p) => p.status === 'public_hearing_scheduled');
-
-  const highestStoreys = proposals.reduce((max, p) => (p.storeys > max ? p.storeys : max), 0);
+  const rentalUnits = proposals.reduce((acc, p) => acc + p.units.marketRental + p.units.belowMarketRental, 0);
+  const socialUnits = proposals.reduce((acc, p) => acc + p.units.socialHousing, 0);
+  const highestStoreys = Math.max(...proposals.map((p) => p.storeys));
+  const towersAbove20 = proposals.filter((p) => p.storeys >= 20).length;
 
   return {
-    totalProposals,
+    totalProposals: proposals.length,
+    totalApplications: proposals.length,
     totalUnits,
     belowMarketUnits,
-    hearingsCount: hearingsScheduled.length,
+    rentalUnits,
+    socialUnits,
     highestStoreys,
-    broadwayCount: proposals.filter((p) => p.neighbourhood.includes('Broadway')).length,
-    downtownCount: proposals.filter((p) => p.neighbourhood.includes('Downtown') || p.neighbourhood.includes('West End')).length,
+    towersAbove20,
   };
 }

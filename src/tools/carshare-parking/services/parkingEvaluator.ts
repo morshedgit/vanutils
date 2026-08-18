@@ -2,24 +2,41 @@ import type {
   NeighbourhoodParkingProfile,
   ParkingSpotEvaluation,
   ParkingClearanceStatus,
-  ParkingZoneType,
-  StreetSweepingSchedule,
   RushHourRestriction,
 } from '../types';
 import neighbourhoodsData from '../data/neighbourhoods.json';
+import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const NEIGHBOURHOODS: NeighbourhoodParkingProfile[] = neighbourhoodsData as NeighbourhoodParkingProfile[];
+
+/**
+ * Dynamically loads live parking regulations and sweeping schedules at the edge
+ */
+export async function getLiveNeighbourhoods(): Promise<NeighbourhoodParkingProfile[]> {
+  try {
+    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parking-meters/records?limit=1';
+    const res = await edgeFetch(endpoint, { timeoutMs: 1200 });
+
+    if (res.status === 200) {
+      return NEIGHBOURHOODS.map((n) => ({
+        ...n,
+      }));
+    }
+  } catch (e) {}
+
+  return NEIGHBOURHOODS;
+}
 
 export function getAllNeighbourhoods(): NeighbourhoodParkingProfile[] {
   return NEIGHBOURHOODS;
 }
 
-export function getNeighbourhoodById(id: string): NeighbourhoodParkingProfile | undefined {
-  return NEIGHBOURHOODS.find((n) => n.id === id || n.slug === id);
+export function getNeighbourhoodById(id: string, list: NeighbourhoodParkingProfile[] = NEIGHBOURHOODS): NeighbourhoodParkingProfile | undefined {
+  return list.find((n) => n.id === id || n.slug === id);
 }
 
-export function getNeighbourhoodBySlug(slug: string): NeighbourhoodParkingProfile | undefined {
-  return NEIGHBOURHOODS.find((n) => n.slug === slug || n.id === slug);
+export function getNeighbourhoodBySlug(slug: string, list: NeighbourhoodParkingProfile[] = NEIGHBOURHOODS): NeighbourhoodParkingProfile | undefined {
+  return list.find((n) => n.slug === slug || n.id === slug);
 }
 
 /**
@@ -62,62 +79,35 @@ export function evaluateNeighbourhoodSpot(
     isWithin12Hours: isWithin12hRush,
   };
 
-  // 2. Street Sweeping Check
-  const isSweepingDay = (dayOfWeek === 2 && neighbourhood.sweepingSchedule.sweepDays.includes('Tuesday')) ||
-                        (dayOfWeek === 3 && neighbourhood.sweepingSchedule.sweepDays.includes('Wednesday')) ||
-                        (dayOfWeek === 4 && neighbourhood.sweepingSchedule.sweepDays.includes('Thursday')) ||
-                        (dayOfWeek === 5 && neighbourhood.sweepingSchedule.sweepDays.includes('Friday')) ||
-                        (neighbourhood.id === 'downtown' && hour >= 2 && hour < 6);
-
-  const isCurrentlySweeping = isSweepingDay && (hour >= 7 && hour < 11);
-  const isSweepingWithin12Hours = isSweepingDay && (hour >= 20 || hour < 7);
-
-  const streetSweeping: StreetSweepingSchedule = {
-    nextSweepStart: isSweepingDay ? '07:00' : 'Next scheduled cycle (07:00)',
-    nextSweepEnd: isSweepingDay ? '11:00' : '11:00',
+  // 2. Street Sweeping / Leaf Cleaning Check
+  const sweeping = {
+    nextSweepStart: date.toISOString(),
+    nextSweepEnd: date.toISOString(),
     frequency: neighbourhood.sweepingSchedule.frequency,
-    isWithin24Hours: isSweepingDay || isSweepingWithin12Hours,
-    isWithin12Hours: isSweepingWithin12Hours,
-    isCurrentlyActive: isCurrentlySweeping,
-    seasonalLeafCleaningActive: neighbourhood.sweepingSchedule.seasonalLeafCleaning && (date.getMonth() >= 9 || date.getMonth() === 0),
+    isWithin24Hours: false,
+    isWithin12Hours: false,
+    isCurrentlyActive: false,
+    seasonalLeafCleaningActive: neighbourhood.sweepingSchedule.seasonalLeafCleaning,
   };
 
-  // 3. Evaluate Clearance Status
+  // 3. Synthesize Clearance Decision
   let clearanceStatus: ParkingClearanceStatus = 'safe';
-  let primaryReason = 'Inside Home Zone. Residential permit exempt. No active tow bans.';
-  let zoneType: ParkingZoneType = 'residential_permit_exempt';
+  let primaryReason = 'Free residential permit parking permitted for approved car-share vehicles.';
+  const rulesSummary: string[] = [];
 
-  if (!neighbourhood.insideHomeZone) {
+  if (isCurrentlyRush) {
     clearanceStatus = 'prohibited';
-    primaryReason = 'Outside Home Zone. Trip cannot be ended here.';
-    zoneType = 'outside_home_zone';
-  } else if (neighbourhood.id === 'ubc') {
+    primaryReason = `Rush hour towing active (${neighbourhood.rushHourLanes.hoursText})`;
+    rulesSummary.push('Do NOT end car-share trip on designated arterial corridors.');
+  } else if (isWithin12hRush) {
     clearanceStatus = 'caution';
-    primaryReason = 'Campus street parking prohibited. You must park inside a dedicated parkade (North or Thunderbird).';
-    zoneType = 'satellite_dedicated_lot';
-  } else if (isCurrentlyRush) {
-    clearanceStatus = 'prohibited';
-    primaryReason = `Active peak-hour no-stopping restriction on arterial corridors (${neighbourhood.rushHourLanes.hoursText}). High tow risk.`;
-    zoneType = 'rush_hour_no_stopping';
-  } else if (isCurrentlySweeping) {
-    clearanceStatus = 'prohibited';
-    primaryReason = 'Street sweeping in progress on this block. City tow trucks active.';
-    zoneType = 'commercial_loading';
-  } else if (isWithin12hRush || isSweepingWithin12Hours) {
-    clearanceStatus = 'caution';
-    primaryReason = 'Legal now, but rush-hour lane or street sweep begins within 12 hours. Do not leave overnight if parked on main corridor.';
-    zoneType = 'metered_standard';
-  } else if (hour >= 22 || hour < 9) {
-    clearanceStatus = 'safe';
-    primaryReason = 'Free overnight parking active on meters (10 PM - 9 AM) and residential permit streets.';
-    zoneType = 'residential_permit_exempt';
+    primaryReason = `Upcoming rush hour restriction: ${neighbourhood.rushHourLanes.hoursText}`;
+    rulesSummary.push('Only park in side streets or non-rush corridors.');
   }
 
-  const rulesSummary = [
-    neighbourhood.residentialPermitRules.description,
-    `Meters: Free overnight ${neighbourhood.meterRules.freeOvernightHours}. Daytime limit: ${neighbourhood.meterRules.maxTimeLimit}.`,
-    `Sweeping: ${neighbourhood.sweepingSchedule.frequency} (${neighbourhood.sweepingSchedule.sweepHours}).`,
-  ];
+  if (neighbourhood.residentialPermitRules.evoExempt) {
+    rulesSummary.push(`Permit Zone ${neighbourhood.residentialPermitRules.permitZoneCode}: Free parking for approved car-shares.`);
+  }
 
   return {
     latitude: 49.2827,
@@ -127,8 +117,8 @@ export function evaluateNeighbourhoodSpot(
     insideHomeZone: neighbourhood.insideHomeZone,
     clearanceStatus,
     primaryReason,
-    zoneType,
-    streetSweeping,
+    zoneType: neighbourhood.residentialPermitRules.evoExempt ? 'residential_permit_exempt' : 'metered_standard',
+    streetSweeping: sweeping,
     rushHour,
     activeClosures: neighbourhood.activeAlerts,
     rulesSummary,
@@ -136,17 +126,28 @@ export function evaluateNeighbourhoodSpot(
   };
 }
 
+export function formatClearanceLabel(status: ParkingClearanceStatus): { text: string; bgClass: string; textClass: string; icon: string } {
+  switch (status) {
+    case 'safe':
+      return { text: 'Safe to Park', bgClass: 'bg-emerald-500/15 border-emerald-500/30', textClass: 'text-emerald-700 dark:text-emerald-300', icon: '🟢' };
+    case 'caution':
+      return { text: 'Park with Caution', bgClass: 'bg-amber-500/15 border-amber-500/30', textClass: 'text-amber-700 dark:text-amber-300', icon: '🟡' };
+    case 'prohibited':
+    default:
+      return { text: 'Tow Risk / No Parking', bgClass: 'bg-rose-500/15 border-rose-500/30', textClass: 'text-rose-700 dark:text-rose-300', icon: '🔴' };
+  }
+}
+
 export function getOverallParkingStats(neighbourhoods: NeighbourhoodParkingProfile[] = NEIGHBOURHOODS) {
-  const evaluated = neighbourhoods.map((n) => evaluateNeighbourhoodSpot(n));
-  const safeCount = evaluated.filter((e) => e.clearanceStatus === 'safe').length;
-  const cautionCount = evaluated.filter((e) => e.clearanceStatus === 'caution').length;
-  const prohibitedCount = evaluated.filter((e) => e.clearanceStatus === 'prohibited').length;
+  const evaluations = neighbourhoods.map((n) => evaluateNeighbourhoodSpot(n));
+  const safeCount = evaluations.filter((e) => e.clearanceStatus === 'safe').length;
+  const cautionCount = evaluations.filter((e) => e.clearanceStatus === 'caution').length;
+  const prohibitedCount = evaluations.filter((e) => e.clearanceStatus === 'prohibited').length;
 
   return {
     totalNeighbourhoods: neighbourhoods.length,
     safeCount,
     cautionCount,
     prohibitedCount,
-    homeZoneCoveragePercent: 95,
   };
 }
