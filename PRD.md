@@ -571,6 +571,127 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #12: Metro Vancouver Real Estate & Rental Market Heartbeat (`/market`) — Active Live / Specification
+- **Module Identifier**: `housing-market` (internal route `/market` and `/market/[submarket]`, e.g. `/market/vancouver-eastside`, `/market/vancouver-westside`, `/market/burnaby`, `/market/richmond`, `/market/north-shore`, `/market/surrey`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All MLS® Home Price Index (HPI) benchmark prices, sales volumes, active listings, sales-to-active ratios (SNLR / SAR), median rental prices, vacancy rates, and Bank of Canada benchmark interest rates are 100% real-world data ingested directly from official, open, and verified public APIs:
+    - **Greater Vancouver REALTORS® (GVR)** & **Fraser Valley Real Estate Board (FVREB)**: Open Monthly Statistical Reports & MLS® HPI Historical Benchmark Data.
+    - **Bank of Canada Valet REST API**: Overnight Target Policy Rate (`V39079`), 5-Year Conventional Mortgage Benchmark Rate (`V80691311`), and 5-Year Government of Canada Bond Yields (`V39055`).
+    - **Canada Mortgage and Housing Corporation (CMHC HMIP Open API)**: Rental Market Survey (RMS) median asking rents (1-bed, 2-bed, 3-bed), vacancy rates, and purpose-built rental inventory data for Vancouver CMA.
+    - **Statistics Canada Data Web Service (WDS API)**: Table `18-10-0205-01` (New Housing Price Index) & Table `18-10-0169-01` (Residential Property Price Index).
+    - **BC Assessment Open Dataset**: Baseline assessed property values by sub-area and property type.
+  - Generating, simulating, or displaying any synthetic, mock, or fake market pricing, automated appraisal guesses (AVMs), or sales statistics is strictly prohibited.
+  - Strict Anti-Lead-Generation Policy: Zero mandatory user signups, zero contact forms, zero realtor advertisements, and zero pop-up valuation traps.
+- **Problem Solved**:
+  - Understanding the real condition of Metro Vancouver's real estate and rental market is hindered by fragmented, paywalled, or advertising-driven platforms designed primarily to capture leads for realtors.
+  - Buyers, sellers, renters, and homeowners need an instant, unbiased, sub-50ms market heartbeat providing direct insight into market liquidity (Buyer's vs. Balanced vs. Seller's market), real benchmark prices across housing types, rental price trajectories, and mortgage stress test qualifying rates.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveMarketHeartbeat(submarket?)` implemented in `src/tools/housing-market/services/marketService.ts`.
+  - Parallel queries to GVR MLS® HPI datasets, Bank of Canada Valet REST API, and CMHC endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: Falls back to the last-known verified monthly municipal market snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800')` (Low/Periodic Acuity: 24-hour edge cache with 7-day background SWR revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/market`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of verified market liquidity and price telemetry:
+    1. *Market Pulse (Metro Van)* • Balanced Market (18.4% Sales-to-Active Ratio)
+    2. *Condo Benchmark (Eastside)* • $715,400 (-0.8% MoM | +1.2% YoY)
+    3. *Condo Benchmark (Westside)* • $842,000 (+0.4% MoM | -0.5% YoY)
+    4. *Townhouse Benchmark (Metro)* • $1,114,200 (+0.2% MoM | +3.1% YoY)
+    5. *1-Bed Median Asking Rent* • $2,650/mo (Vacancy: 0.9%)
+    6. *BoC Policy & 5-Yr Fixed* • 4.25% Policy Rate | 4.89% 5-Yr Fixed
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_housing-market')` allowing users to pin favorite sub-markets (e.g. *Eastside Condos, Westside Townhomes, North Shore Detached, Metro 1-Bed Rentals*) to their home screen.
+  - **Zero Visual Bloat**: No luxury listing photo spam, lead-capture forms, or marketing blurbs.
+- **Core Features**:
+  - **Market Temperature & Liquidity Gauge**:
+    - Evaluates Sales-to-Active Ratio (SAR %):
+      - 🟢 *Buyer's Market ($< 12\%$)*: Downward price pressure, elevated days on market.
+      - 🟡 *Balanced Market ($12\% - 20\%$)*: Equilibrium between buyers and sellers.
+      - 🔴 *Seller's Market ($> 20\%$)*: Upward price pressure, fast absorption.
+  - **MLS® HPI Benchmark Price Matrix**:
+    - Granular tracking for Detached Homes, Townhouses, and Apartments / Condos.
+    - 1-month, 6-month, 1-year, and 3-year historical percentage trajectories.
+  - **Rental Market Telemetry**:
+    - Median monthly rent by bedroom count (1-Bed, 2-Bed, 3-Bed).
+    - Average rent per square foot ($/sqft) and official CMHC vacancy rates.
+  - **Mortgage & Affordability Radar**:
+    - Bank of Canada Overnight Rate, 5-Year Fixed and Variable benchmarks.
+    - OSFI Stress Test Qualifying Rate (Contract Rate + 2.00%).
+    - Sub-second client-side mortgage payment and stress test qualifying income calculator.
+  - **Sub-Market Multi-Region Scope**:
+    - Vancouver Eastside, Vancouver Westside, Downtown Vancouver, North Shore (West & North Vancouver), Burnaby, Richmond, Tri-Cities (Coquitlam, Port Moody, Port Coquitlam), Surrey & South Fraser.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/housing-market/types.ts
+  export type PropertyType = 'condo' | 'townhouse' | 'detached' | 'all';
+  export type MarketCondition = 'buyers' | 'balanced' | 'sellers';
+  export type SubmarketId = 
+    | 'metro_vancouver'
+    | 'vancouver_eastside'
+    | 'vancouver_westside'
+    | 'vancouver_downtown'
+    | 'north_shore'
+    | 'burnaby'
+    | 'richmond'
+    | 'tri_cities'
+    | 'surrey_langley';
+
+  export interface HpiBenchmark {
+    propertyType: PropertyType;
+    benchmarkPrice: number;
+    change1MonthPercent: number;
+    change6MonthPercent: number;
+    change1YearPercent: number;
+    change3YearPercent: number;
+  }
+
+  export interface RentalMetrics {
+    medianRent1Bed: number;
+    medianRent2Bed: number;
+    medianRent3Bed: number;
+    avgRentPerSqFt: number;
+    vacancyRatePercent: number;
+    annualRentChangePercent: number;
+  }
+
+  export interface MortgageBenchmark {
+    bocOvernightRate: number;
+    fixed5YearBenchmark: number;
+    variable5YearBenchmark: number;
+    stressTestQualifyingRate: number;
+    bondYield5Year: number;
+    lastUpdated: string;
+  }
+
+  export interface SubmarketPulse {
+    id: SubmarketId;
+    name: string;
+    region: string;
+    salesToActiveRatio: number;
+    marketCondition: MarketCondition;
+    totalSales: number;
+    totalActiveListings: number;
+    medianDaysOnMarket: number;
+    benchmarks: HpiBenchmark[];
+    rental: RentalMetrics;
+    lastUpdated: string; // ISO 8601
+    isStale: boolean;
+  }
+
+  export interface MarketHeartbeatData {
+    metroOverview: SubmarketPulse;
+    submarkets: SubmarketPulse[];
+    mortgage: MortgageBenchmark;
+    lastUpdated: string;
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Page render $< 400\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript payload $< 15\text{KB}$; zero tracking or lead capture scripts; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
