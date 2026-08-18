@@ -13,8 +13,8 @@ export function getAllTeams(): SportsTeam[] {
 /**
  * Retrieves a single franchise by its unique ID (e.g. 'canucks', 'whitecaps')
  */
-export function getTeamById(id: string): SportsTeam | undefined {
-  return BASELINE_TEAMS.find((t) => t.id === id);
+export function getTeamById(id: string, list: SportsTeam[] = BASELINE_TEAMS): SportsTeam | undefined {
+  return list.find((t) => t.id === id);
 }
 
 /**
@@ -92,25 +92,55 @@ export async function getLiveSportsTeams(): Promise<SportsTeamsHeartbeat> {
 
     // Attempt live NHL standings query for Canucks
     try {
-      const nhlRes = await fetch('https://api-web.nhle.com/v1/standings/now', {
+      const nhlPromise = fetch('https://api-web.nhle.com/v1/standings/now', {
         signal: controller.signal,
         headers: { 'User-Agent': 'VanHeartbeat/2.0' },
-      });
-
-      if (nhlRes.ok) {
-        const nhlData = await nhlRes.json();
-        const canucksStandings = (nhlData.standings || []).find((s: any) => s.teamAbbrev?.default === 'VAN');
-        if (canucksStandings) {
-          const canucks = teams.find((t) => t.id === 'canucks');
-          if (canucks) {
-            canucks.standings.record = `${canucksStandings.wins}-${canucksStandings.losses}-${canucksStandings.otLosses}`;
-            canucks.standings.points = canucksStandings.points;
-            canucks.standings.rank = canucksStandings.divisionSequence || canucks.standings.rank;
-            canucks.standings.goalDiffOrMargin = canucksStandings.goalDifferential;
-            canucks.standings.streak = `${canucksStandings.streakCount}${canucksStandings.streakCode}`;
+      }).then(async (res) => {
+        if (res.ok) {
+          const nhlData = await res.json();
+          const canucksStandings = (nhlData.standings || []).find((s: any) => s.teamAbbrev?.default === 'VAN');
+          if (canucksStandings) {
+            const canucks = teams.find((t) => t.id === 'canucks');
+            if (canucks) {
+              canucks.standings.record = `${canucksStandings.wins}-${canucksStandings.losses}-${canucksStandings.otLosses}`;
+              canucks.standings.points = canucksStandings.points;
+              canucks.standings.rank = canucksStandings.divisionSequence || canucks.standings.rank;
+              canucks.standings.goalDiffOrMargin = canucksStandings.goalDifferential;
+              canucks.standings.streak = `${canucksStandings.streakCount}${canucksStandings.streakCode}`;
+            }
           }
         }
-      }
+      });
+
+      const mlsPromise = fetch('https://site.api.espn.com/apis/v2/sports/soccer/usa.1/standings', {
+        signal: controller.signal,
+        headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+      }).then(async (res) => {
+        if (res.ok) {
+          const mlsData = await res.json();
+          const entries = mlsData?.children?.[0]?.standings?.entries || [];
+          const whitecapsEntry = entries.find((e: any) => e.team?.abbreviation === 'VAN' || e.team?.name?.toLowerCase().includes('whitecaps'));
+          if (whitecapsEntry) {
+            const whitecaps = teams.find((t) => t.id === 'whitecaps');
+            if (whitecaps) {
+              const stats = whitecapsEntry.stats || [];
+              const wins = stats.find((s: any) => s.name === 'wins')?.value || 0;
+              const losses = stats.find((s: any) => s.name === 'losses')?.value || 0;
+              const ties = stats.find((s: any) => s.name === 'ties')?.value || 0;
+              const pts = stats.find((s: any) => s.name === 'points')?.value || 0;
+              const rank = stats.find((s: any) => s.name === 'rank')?.value || whitecaps.standings.rank;
+              const gd = stats.find((s: any) => s.name === 'pointDifferential')?.value || 0;
+              
+              whitecaps.standings.record = `${wins}-${losses}-${ties}`;
+              whitecaps.standings.points = pts;
+              whitecaps.standings.rank = rank;
+              whitecaps.standings.goalDiffOrMargin = gd;
+            }
+          }
+        }
+      }).catch(() => {});
+
+      await Promise.allSettled([nhlPromise, mlsPromise]);
     } catch {
       // Graceful fallback to verified baseline data
     } finally {

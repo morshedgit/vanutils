@@ -1,12 +1,13 @@
 ---
 import PlatformLayout from '../../layouts/PlatformLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
-import { getTeamById, getAllTeams } from '../../tools/sports-teams/services/sportsTeamsService';
+import { getTeamById, getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
 import FormBadge from '../../tools/sports-teams/components/FormBadge.astro';
 import TransitGuide from '../../tools/sports-teams/components/TransitGuide.astro';
 
 const { team: teamId } = Astro.params;
-const team = getTeamById(teamId || '');
+const { teams } = await getLiveSportsTeams();
+const team = getTeamById(teamId || '', teams);
 
 if (!team) {
   return Astro.redirect('/sports-teams');
@@ -15,7 +16,7 @@ if (!team) {
 // Edge cache for 1 minute
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
 
-const otherTeams = getAllTeams().filter((t) => t.id !== team.id);
+const otherTeams = teams.filter((t) => t.id !== team.id);
 
 const teamSchema = [
   {
