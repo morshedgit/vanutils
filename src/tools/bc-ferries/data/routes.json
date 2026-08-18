@@ -12,7 +12,7 @@
     "reverseRouteId": "SWB-TSA",
     "frequencyText": "Hourly on the hour (7:00 AM – 9:00 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T20:21:20.442Z",
+    "lastUpdated": "2026-08-18T20:21:54.796Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -204,7 +204,7 @@
     "reverseRouteId": "NAN-HSB",
     "frequencyText": "Every 2 hours (6:30 AM – 10:40 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T20:21:20.442Z",
+    "lastUpdated": "2026-08-18T20:21:54.797Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -336,7 +336,7 @@
     "reverseRouteId": "LNG-HSB",
     "frequencyText": "8-10 Daily Sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T20:21:20.442Z",
+    "lastUpdated": "2026-08-18T20:21:54.797Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -496,7 +496,7 @@
     "reverseRouteId": "DUK-TSA",
     "frequencyText": "Every 2.5 hours (5:15 AM – 10:45 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T20:21:20.442Z",
+    "lastUpdated": "2026-08-18T20:21:54.797Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -738,7 +738,7 @@
     "reverseRouteId": "BOW-HSB",
     "frequencyText": "Hourly departures",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T20:21:20.442Z",
+    "lastUpdated": "2026-08-18T20:21:54.797Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -909,7 +909,7 @@
     "crossingDurationMinutes": 55,
     "frequencyText": "4-6 daily multi-island direct & thru sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T20:21:20.442Z",
+    "lastUpdated": "2026-08-18T20:21:54.797Z",
     "isStale": false,
     "nextSailings": [
       {
