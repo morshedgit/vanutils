@@ -692,6 +692,108 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #13: Metro Vancouver Public Sports, Courts & Rec Radar (`/sports`) — Active Live / Specification
+- **Module Identifier**: `sports-facilities` (internal route `/sports` and `/sports/[facility-slug]`, e.g. `/sports/kitsilano-pool`, `/sports/hillcrest-centre`, `/sports/trout-lake-rink`, `/sports/qe-park-pickleball`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All court coordinates, counts, lighting schedules, swimming pool session modes, ice rink drop-in schedules, synthetic field floodlight timers, and turf rainout playability statuses are 100% real-world data ingested directly from official municipal and recreation databases:
+    - **City of Vancouver Open Data API**: `parks-facilities-and-features` (GeoJSON REST API - 180+ tennis courts, 50+ pickleball courts, ball diamonds, synthetic turf fields, skateparks), `swimming-pools`, `ice-rinks`, and `community-and-recreation-centres`.
+    - **Vancouver Park Board Recreation Activity Feeds**: Standardized daily/weekly drop-in schedules for public swim, length swim, public skate, stick-and-puck, and adult drop-in hockey.
+    - **Vancouver Park Board Field Playability Feed**: Real-time playability and weather rainout/snow closure updates for grass pitches and synthetic all-weather fields.
+    - **Metro Vancouver Municipal Partners**: Burnaby Rec, City of North Vancouver (NVRC), and Richmond Parks facility directories.
+  - Generating, simulating, or displaying any synthetic, mock, or fake court availability or pool operating schedules is strictly prohibited.
+- **Problem Solved**:
+  - Finding whether public tennis/pickleball courts are lighted, whether an aquatic centre is currently running a lane swim or public family swim, or whether an ice rink offers stick-and-puck today requires wading through cumbersome municipal ActiveNet tables and fragmented park board notices.
+  - Provides a sub-second, address-aware recreation radar that surfaces real-time drop-in session modes, lighting curfews, amenity breakdowns, and field rainout closures across 150+ Metro Vancouver public sports facilities.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveSportsFacilities(activity?)` implemented in `src/tools/sports-facilities/services/sportsService.ts`.
+  - Parallel queries to municipal GeoJSON endpoints and Park Board activity schedules using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: Falls back to the last-known verified recreation schedule snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (30-minute edge cache with 2-hour background SWR revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/sports`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of premier sports hubs with active session modes and lighting statuses:
+    1. *Kitsilano Beach Courts* • 🎾 8 Courts (4 Lighted) • 🌙 Lights Active until 10 PM
+    2. *Hillcrest Aquatic Centre* • 🏊 50m Indoor Pool • 🟢 Length Swim (Until 2:30 PM)
+    3. *Trout Lake Ice Rink* • ⛸️ NHL-Size Arena • 🟢 Public Skate (1:00 – 3:00 PM)
+    4. *Queen Elizabeth Park* • 🏓 8 Dedicated Pickleball • 🟢 Open / Free Drop-in
+    5. *Vancouver Aquatic Centre* • 🏊 50m + Diving Well • 🟡 Public Swim Starts 3:30 PM
+    6. *Andy Livingstone Park* • ⚽ 2 Synthetic Turf Pitches • 🟢 Pitch Open • 💡 Floodlit
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_sports-facilities')` allowing users to pin favorite neighborhood courts, pools, or rinks to their home dashboard.
+  - **Zero Visual Bloat**: No stock gym photography, promotional marketing copy, or banner clutter.
+- **Core Features**:
+  - **Activity Category Filtering**:
+    - 🎾 *Tennis & Pickleball Courts*: Court surface, lighted vs. unlighted, dedicated pickleball lines, practice walls, and Park Board 30-minute rotation rules.
+    - 🏊 *Public Aquatic Centres (Indoor & Outdoor)*: Live session mode (*Length Swim 25m/50m*, *Public Swim*, *AquaFit*), next session countdown, sauna/hot tub status, OneCard universal pass acceptance.
+    - ⛸️ *Public Ice Rinks & Arenas*: Real-time schedule (*Public Skate*, *Stick & Puck*, *Adult Drop-in Hockey*), skate rentals, and sharpening.
+    - ⚽ *Turf & Grass Athletic Fields*: Playability status (*Open*, *Restricted*, *Rainout Closure*), sunset floodlight timers (10 PM/11 PM curfews).
+    - 🏋️ *Community Fitness Centres*: Weight room hours, equipment highlights, and accessibility features.
+  - **Proximity & Night-Lighting Locator**: 1-tap browser geolocation to sort facilities by distance and identify lighted courts active after dark.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/sports-facilities/types.ts
+  export type FacilityCategory = 
+    | 'tennis_court'
+    | 'pickleball_court'
+    | 'swimming_pool'
+    | 'ice_rink'
+    | 'athletic_field'
+    | 'fitness_centre';
+
+  export type FieldPlayability = 'open' | 'restricted' | 'closed_weather' | 'maintenance';
+  export type PoolSessionMode = 'length_swim' | 'public_swim' | 'aquafit' | 'lessons_closed' | 'closed';
+  export type RinkSessionMode = 'public_skate' | 'stick_and_puck' | 'adult_hockey' | 'figure_skating' | 'dry_floor_season' | 'closed';
+
+  export interface ActiveSessionInfo {
+    currentMode: string;
+    endsAt?: string;
+    nextMode?: string;
+    nextStartsAt?: string;
+    isOpenNow: boolean;
+  }
+
+  export interface CourtSpecs {
+    totalCourts: number;
+    hasLights: boolean;
+    lightsCurfewTime?: string; // e.g. "22:00"
+    isDedicatedPickleball: boolean;
+    surfaceType: string;
+    hasPracticeWall: boolean;
+  }
+
+  export interface PoolSpecs {
+    poolLengthMeters: number;
+    isOutdoor: boolean;
+    hasHotTub: boolean;
+    hasSaunaOrSteam: boolean;
+    hasDivingBoards: boolean;
+    acceptsOneCard: boolean;
+  }
+
+  export interface SportsFacility {
+    id: string;                      // "kitsilano-pool"
+    name: string;                    // "Kitsilano Pool"
+    category: FacilityCategory;
+    address: string;
+    neighbourhood: string;
+    latitude: number;
+    longitude: number;
+    phone?: string;
+    session: ActiveSessionInfo;
+    courtDetails?: CourtSpecs;
+    poolDetails?: PoolSpecs;
+    playabilityStatus?: FieldPlayability;
+    officialScheduleUrl: string;
+    lastUpdated: string;             // ISO 8601
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Page render $< 400\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript payload $< 15\text{KB}$; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
