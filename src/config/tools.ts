@@ -127,6 +127,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'DriveBC Open511 active incident radar',
     ],
   },
+  {
+    id: 'air-quality',
+    name: 'Wildfire Smoke & AQHI',
+    shortDescription: 'Real-time Air Quality Health Index (AQHI), PM2.5 particulate levels from BAM-1020 sensors & clean-air shelters.',
+    path: '/air',
+    icon: 'wind',
+    category: 'outdoors',
+    status: 'active',
+    badgeText: 'Live Smoke Radar',
+    previewStat: {
+      value: 'AQHI 2',
+      label: 'Low Health Risk',
+      statusType: 'safe',
+    },
+    features: [
+      'BAM-1020 fine particulate (PM2.5) sensors',
+      '24-hour smoke trajectory sparklines',
+      'Air-conditioned clean-air shelter directory',
+      'Metro Vancouver wildfire smoke alerts',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

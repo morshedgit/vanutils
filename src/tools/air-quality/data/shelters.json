@@ -1,0 +1,93 @@
+[
+  {
+    "id": "vpl-central",
+    "name": "Vancouver Public Library (Central Branch)",
+    "address": "350 W Georgia St, Vancouver, BC V6B 6B1",
+    "facilityType": "library",
+    "latitude": 49.2797,
+    "longitude": -123.1158,
+    "hasAirConditioning": true,
+    "hasHEPAFiltration": true,
+    "isOpenNow": true,
+    "hoursToday": "09:30 - 20:30",
+    "transitAccess": "Stadium-Chinatown & Vancouver City Centre SkyTrain"
+  },
+  {
+    "id": "mount-pleasant-cc",
+    "name": "Mount Pleasant Community Centre",
+    "address": "1 Kingsway, Vancouver, BC V5T 3H7",
+    "facilityType": "community_centre",
+    "latitude": 49.2635,
+    "longitude": -123.1012,
+    "hasAirConditioning": true,
+    "hasHEPAFiltration": true,
+    "isOpenNow": true,
+    "hoursToday": "07:00 - 21:00",
+    "transitAccess": "Bus #8, #9, #19 (Broadway & Main)"
+  },
+  {
+    "id": "roundhouse-cc",
+    "name": "Roundhouse Community Arts & Recreation Centre",
+    "address": "181 Roundhouse Mews, Vancouver, BC V6Z 2W3",
+    "facilityType": "community_centre",
+    "latitude": 49.2735,
+    "longitude": -123.1215,
+    "hasAirConditioning": true,
+    "hasHEPAFiltration": true,
+    "isOpenNow": true,
+    "hoursToday": "09:00 - 21:30",
+    "transitAccess": "Yaletown-Roundhouse SkyTrain (Canada Line)"
+  },
+  {
+    "id": "kitsilano-cc",
+    "name": "Kitsilano Community Centre",
+    "address": "2690 Larch St, Vancouver, BC V6K 4K9",
+    "facilityType": "community_centre",
+    "latitude": 49.2618,
+    "longitude": -123.1615,
+    "hasAirConditioning": true,
+    "hasHEPAFiltration": true,
+    "isOpenNow": true,
+    "hoursToday": "08:00 - 21:00",
+    "transitAccess": "Bus #99 B-Line & #9, #14 (Broadway & Larch)"
+  },
+  {
+    "id": "britannia-cc",
+    "name": "Britannia Community Services Centre",
+    "address": "1661 Napier St, Vancouver, BC V5L 4X4",
+    "facilityType": "community_centre",
+    "latitude": 49.2748,
+    "longitude": -123.0725,
+    "hasAirConditioning": true,
+    "hasHEPAFiltration": true,
+    "isOpenNow": true,
+    "hoursToday": "08:30 - 21:00",
+    "transitAccess": "Bus #20 (Commercial & Napier)"
+  },
+  {
+    "id": "west-end-cc",
+    "name": "West End Community Centre",
+    "address": "870 Denman St, Vancouver, BC V6G 2L8",
+    "facilityType": "community_centre",
+    "latitude": 49.2905,
+    "longitude": -123.1365,
+    "hasAirConditioning": true,
+    "hasHEPAFiltration": true,
+    "isOpenNow": true,
+    "hoursToday": "08:00 - 21:00",
+    "transitAccess": "Bus #5 (Robson) & #6 (Davie)"
+  },
+  {
+    "id": "hillcrest-centre",
+    "name": "Hillcrest Community Centre",
+    "address": "4575 Clancy Loranger Way, Vancouver, BC V5Y 2M4",
+    "facilityType": "community_centre",
+    "latitude": 49.2435,
+    "longitude": -123.1098,
+    "hasAirConditioning": true,
+    "hasHEPAFiltration": true,
+    "isOpenNow": true,
+    "hoursToday": "06:00 - 22:00",
+    "transitAccess": "Bus #33 (Mid-Town) & #15 (Cambie)"
+  }
+]

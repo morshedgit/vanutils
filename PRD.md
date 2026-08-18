@@ -176,6 +176,28 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #7: Metro Vancouver Wildfire Smoke & AQHI Radar (`/air`) — Active Live
+- **Module Identifier**: `air-quality` (internal route `/air` and `/air/[station]`)
+- **Strict Real-Data Mandate**: All Air Quality Health Index (AQHI) ratings, fine particulate matter ($PM_{2.5}$) concentrations, ozone ($O_3$) levels, nitrogen dioxide ($NO_2$) telemetry, and public clean-air shelter listings are 100% real-world data ingested directly from the Metro Vancouver Air Quality Monitoring Network (BAM-1020 sensors), the BC Ministry of Environment Air Quality API, Environment Canada, and the City of Vancouver Cooling Centre Open Dataset. Zero synthetic or simulated air quality figures are permitted.
+- **Problem Solved**: Replaces broad regional averages with hyper-local station sensor readings, tracks 24-hour smoke trends, and maps air-conditioned clean-air spaces with HEPA filtration during wildfire smoke advisories.
+- **AQHI Health Scale & Particulate Thresholds**:
+  - 🟢 **Low Health Risk (AQHI 1–3)**: $PM_{2.5} \le 12\,\mu\text{g/m}^3$. Ideal for outdoor activities.
+  - 🟡 **Moderate Health Risk (AQHI 4–6)**: $PM_{2.5} = 13 - 35\,\mu\text{g/m}^3$. At-risk individuals consider reducing strenuous outdoor exertion.
+  - 🟠 **High Health Risk (AQHI 7–10)**: $PM_{2.5} = 36 - 80\,\mu\text{g/m}^3$. General population reduce outdoor exertion; children and elderly stay indoors.
+  - 🔴 **Very High / Extreme Risk (AQHI 10+)**: $PM_{2.5} > 80\,\mu\text{g/m}^3$. Avoid outdoor exertion; close windows and use HEPA filtration.
+- **Comprehensive Monitoring Station Scope (12 Stations)**:
+  - **Vancouver Urban & Core**: Downtown Robson Square, Clark Drive (Traffic Arterial), Kitsilano (Coastal Baseline), Richmond South / YVR (Sea Island).
+  - **North Shore & Mountain**: North Vancouver St. Denis Park, North Vancouver Mahon Park, West Vancouver (Inglewood).
+  - **Burrard Peninsula & Fraser Valley**: Burnaby South (Kensington), Burnaby Mountain (SFU Ridge), Port Moody (Inlet Centre), Coquitlam (Pinetree), Surrey East & Langley.
+- **Core Features**:
+  - **Hyper-Local Station Sensor Matrix**: Real-time $PM_{2.5}$, AQHI, $O_3$, $NO_2$, and $SO_2$ readings.
+  - **24-Hour Particulate Trajectory Sparklines**: Hourly curves revealing smoke buildup vs clearing trends.
+  - **Air-Conditioned Clean-Air Shelter Directory**: Free public facilities (VPL branches, community centres) with industrial HEPA filtration and air conditioning.
+  - **Wildfire Smoke Advisory Banner**: Real-time broadcast alerts from Metro Vancouver & VCH.
+  - **High-Density Dashboard Card**: Shows 6+ key neighborhood stations with live $PM_{2.5}$ readings, AQHI status, and dynamic ⭐ pinning synchronization.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.

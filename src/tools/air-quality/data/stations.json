@@ -1,0 +1,681 @@
+[
+  {
+    "id": "robson-square",
+    "name": "Downtown Vancouver (Robson Square)",
+    "shortName": "Robson Square",
+    "region": "vancouver_core",
+    "latitude": 49.2825,
+    "longitude": -123.1215,
+    "currentAQHI": 2,
+    "currentPM25": 8.4,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 8.4,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "NO2",
+        "value": 14.2,
+        "unit": "ppb",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 24.6,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 6.2,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 5.8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 9.1,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 8.7,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 8.4,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Ideal air quality for outdoor physical activities and recreation.",
+      "atRiskPopulation": "Enjoy your usual outdoor activities; no special precautions needed."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "clark-drive",
+    "name": "East Vancouver (Clark Drive & 11th Ave)",
+    "shortName": "Clark Drive",
+    "region": "vancouver_core",
+    "latitude": 49.2605,
+    "longitude": -123.0778,
+    "currentAQHI": 3,
+    "currentPM25": 16.8,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 16.8,
+        "unit": "µg/m³",
+        "status": "moderate"
+      },
+      {
+        "pollutantCode": "NO2",
+        "value": 26.4,
+        "unit": "ppb",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "PM10",
+        "value": 24.1,
+        "unit": "µg/m³",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 12.1,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 9.4,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 19.5,
+        "aqhiValue": 3
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 17.2,
+        "aqhiValue": 3
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 16.8,
+        "aqhiValue": 3
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Air quality is acceptable. Strenuous activities fine.",
+      "atRiskPopulation": "Individuals with respiratory symptoms may notice slight irritation near heavy truck corridor."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "kitsilano",
+    "name": "Kitsilano (10th & Maple St)",
+    "shortName": "Kitsilano",
+    "region": "vancouver_core",
+    "latitude": 49.2625,
+    "longitude": -123.1528,
+    "currentAQHI": 2,
+    "currentPM25": 6.2,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 6.2,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 28.1,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 5.1,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 4.8,
+        "aqhiValue": 1
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 6.9,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 6.5,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 6.2,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Clean coastal breeze. Excellent air quality for outdoor sports and beach recreation.",
+      "atRiskPopulation": "No restrictions."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "richmond-south",
+    "name": "Richmond South (Sea Island / Airport)",
+    "shortName": "Richmond South",
+    "region": "vancouver_core",
+    "latitude": 49.1912,
+    "longitude": -123.1612,
+    "currentAQHI": 2,
+    "currentPM25": 7.5,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 7.5,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "NO2",
+        "value": 16.5,
+        "unit": "ppb",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "SO2",
+        "value": 2.1,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 6,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 5.4,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 8.2,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 7.8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 7.5,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Ideal air quality for outdoor activities.",
+      "atRiskPopulation": "No precautions necessary."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "north-van-st-denis",
+    "name": "North Vancouver (St. Denis Park)",
+    "shortName": "North Van St. Denis",
+    "region": "north_shore",
+    "latitude": 49.3092,
+    "longitude": -123.0245,
+    "currentAQHI": 2,
+    "currentPM25": 7.1,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 7.1,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 31.2,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 5.5,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 5,
+        "aqhiValue": 1
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 7.8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 7.3,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 7.1,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Clear mountain and inlet air.",
+      "atRiskPopulation": "Safe for regular outdoor exertion."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "north-van-mahon",
+    "name": "North Vancouver (Mahon Park)",
+    "shortName": "North Van Mahon",
+    "region": "north_shore",
+    "latitude": 49.3245,
+    "longitude": -123.0815,
+    "currentAQHI": 2,
+    "currentPM25": 6.8,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 6.8,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "NO2",
+        "value": 11.2,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 5.2,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 4.9,
+        "aqhiValue": 1
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 7.2,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 7,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 6.8,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Ideal air quality.",
+      "atRiskPopulation": "No restrictions."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "burnaby-south",
+    "name": "Burnaby South (Kensington Park)",
+    "shortName": "Burnaby South",
+    "region": "burrard_inland",
+    "latitude": 49.2285,
+    "longitude": -122.9785,
+    "currentAQHI": 2,
+    "currentPM25": 9.2,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 9.2,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "NO2",
+        "value": 15.8,
+        "unit": "ppb",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 29.4,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 7.1,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 6.4,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 10.5,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 9.8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 9.2,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Enjoy normal outdoor activities.",
+      "atRiskPopulation": "No special precautions needed."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "burnaby-mountain",
+    "name": "Burnaby Mountain (SFU Ridge)",
+    "shortName": "Burnaby Mountain (SFU)",
+    "region": "burrard_inland",
+    "latitude": 49.2785,
+    "longitude": -122.9185,
+    "currentAQHI": 2,
+    "currentPM25": 8,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 8,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 34.2,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 6.4,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 5.9,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 8.8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 8.3,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 8,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Clean ridge-top air. Great conditions for outdoor trails.",
+      "atRiskPopulation": "No restrictions."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "port-moody",
+    "name": "Port Moody (Inlet Centre)",
+    "shortName": "Port Moody",
+    "region": "burrard_inland",
+    "latitude": 49.2825,
+    "longitude": -122.8285,
+    "currentAQHI": 2,
+    "currentPM25": 8.8,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 8.8,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 30.5,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 6.8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 6,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 9.5,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 9,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 8.8,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Ideal air quality.",
+      "atRiskPopulation": "No precautions required."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "coquitlam-pinetree",
+    "name": "Coquitlam (Pinetree Community Centre)",
+    "shortName": "Coquitlam",
+    "region": "fraser_valley",
+    "latitude": 49.2885,
+    "longitude": -122.7915,
+    "currentAQHI": 2,
+    "currentPM25": 9.5,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 9.5,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 32.1,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 7.2,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 6.8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 10.4,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 9.9,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 9.5,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Air quality is good.",
+      "atRiskPopulation": "No precautions needed."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  },
+  {
+    "id": "surrey-east",
+    "name": "Surrey East & Langley",
+    "shortName": "Surrey East",
+    "region": "fraser_valley",
+    "latitude": 49.1385,
+    "longitude": -122.7585,
+    "currentAQHI": 2,
+    "currentPM25": 10.8,
+    "riskCategory": "low",
+    "primaryPollutant": "PM2.5",
+    "pollutants": [
+      {
+        "pollutantCode": "PM25",
+        "value": 10.8,
+        "unit": "µg/m³",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "O3",
+        "value": 35.8,
+        "unit": "ppb",
+        "status": "low"
+      },
+      {
+        "pollutantCode": "NO2",
+        "value": 12.4,
+        "unit": "ppb",
+        "status": "low"
+      }
+    ],
+    "historical24h": [
+      {
+        "timestamp": "2026-08-17T00:00:00Z",
+        "pm25Value": 8,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T04:00:00Z",
+        "pm25Value": 7.2,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T08:00:00Z",
+        "pm25Value": 12.1,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T12:00:00Z",
+        "pm25Value": 11.4,
+        "aqhiValue": 2
+      },
+      {
+        "timestamp": "2026-08-17T16:00:00Z",
+        "pm25Value": 10.8,
+        "aqhiValue": 2
+      }
+    ],
+    "healthAdvice": {
+      "generalPopulation": "Good air quality.",
+      "atRiskPopulation": "No restrictions."
+    },
+    "lastSampledTime": "2026-08-18T01:56:47.785Z",
+    "isStale": false
+  }
+]

@@ -6,6 +6,7 @@ import { getLiveMountains } from '../../tools/mountain-snow/services/snowService
 import { getAllNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/carshare-parking/services/parkingEvaluator';
 import { getLiveFacilities, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
 import { getLiveCrossings } from '../../tools/bridge-traffic/services/bridgeService';
+import { getLiveStations } from '../../tools/air-quality/services/airQualityService';
 
 interface Props {
   tool: ToolMeta;
@@ -32,6 +33,9 @@ const initialFacilities = allFacilities.slice(0, 6);
 const allCrossings = tool.id === 'bridge-traffic' ? await getLiveCrossings() : [];
 const initialCrossings = allCrossings.slice(0, 6);
 
+const allStations = tool.id === 'air-quality' ? await getLiveStations() : [];
+const initialStations = allStations.slice(0, 6);
+
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const avgFreezingLevel = allMountains.length > 0
   ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
@@ -56,7 +60,8 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
       {tool.id === 'evo-parking' && '8/8 Home Zones'}
       {tool.id === 'health-wait-times' && '1h 15m Shortest ER'}
       {tool.id === 'bridge-traffic' && '2 Lanes NB Active'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'air-quality' && 'AQHI 2 Low Risk'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -185,7 +190,7 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
             </div>
             <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
               <span class="text-slate-500 dark:text-slate-400">
-                {n.id === 'ubc' ? 'Parkades Only' : 'Permit Exempt'}
+                ${n.id === 'ubc' ? 'Parkades Only' : 'Permit Exempt'}
               </span>
               {evaluation.clearanceStatus === 'safe' && (
                 <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
@@ -290,8 +295,29 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     </div>
   )}
 
+  <!-- WILDFIRE SMOKE & AQHI: High-Density Station List -->
+  {tool.id === 'air-quality' && (
+    <div id="main-card-air-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialStations.map((s) => (
+        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-station-id={s.id}>
+          <div class="truncate pr-2 font-medium">
+            <span>{s.shortName}</span>
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+            <span class="text-slate-500 dark:text-slate-400">
+              {s.currentPM25} µg/m³ PM2.5
+            </span>
+            <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> AQHI {s.currentAQHI} (Low)
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -573,7 +599,7 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
 
       grid.innerHTML = displayList.map((f) => {
         const wait = f.triageData?.waitTimeMinutes;
-        const waitStr = wait !== undefined ? (wait < 60 ? `${wait}m` : `${Math.floor(wait / 60)}h ${wait % 60}m`) : 'Active';
+        const waitStr = formatWaitTime(wait);
         const isLow = wait !== undefined && wait < 90;
         const isMod = wait !== undefined && !isLow && !(wait > 210);
 
@@ -637,8 +663,8 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
 
       grid.innerHTML = displayList.map((c) => {
         const p = c.directions.primary;
-        const isFlowing = p.delayMinutes <= 3;
-        const isMod = p.delayMinutes > 3 && p.delayMinutes <= 8;
+        const isFlowing = !(p.delayMinutes > 3);
+        const isMod = !isFlowing && !(p.delayMinutes > 8);
 
         const badgeHtml = isFlowing
           ? '<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Fast</span>'
@@ -669,5 +695,59 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     }
 
     window.addEventListener('vanutils:pinned-bridges-changed', syncMainCardBridges);
+  </script>
+)}
+
+{tool.id === 'air-quality' && (
+  <script is:inline define:vars={{ allStationsJson: JSON.stringify(allStations) }}>
+    function syncMainCardAir() {
+      const grid = document.getElementById('main-card-air-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_air');
+      const allStations = JSON.parse(allStationsJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinnedStations = allStations.filter((s) => pinnedIds.includes(s.id));
+          const unpinnedStations = allStations.filter((s) => !pinnedIds.includes(s.id));
+          displayList = [...pinnedStations, ...unpinnedStations].slice(0, 6);
+        } catch (e) {
+          displayList = allStations.slice(0, 6);
+        }
+      } else {
+        displayList = allStations.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((s) => {
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-station-id="${s.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${s.shortName}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                ${s.currentPM25} µg/m³ PM2.5
+              </span>
+              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> AQHI ${s.currentAQHI} (Low)
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardAir);
+    } else {
+      syncMainCardAir();
+    }
+
+    window.addEventListener('vanutils:pinned-air-changed', syncMainCardAir);
   </script>
 )}

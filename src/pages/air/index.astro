@@ -1,0 +1,233 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import AdvisoryBanner from '../../tools/air-quality/components/AdvisoryBanner.astro';
+import AQHIBadge from '../../tools/air-quality/components/AQHIBadge.astro';
+import FilterTabs from '../../tools/air-quality/components/FilterTabs.astro';
+import StationCard from '../../tools/air-quality/components/StationCard.astro';
+import CleanAirShelters from '../../tools/air-quality/components/CleanAirShelters.astro';
+import { getLiveStations, getAllShelters, getAirOverviewStats } from '../../tools/air-quality/services/airQualityService';
+
+// Set Edge Cache header: 10 min max age, 30 min background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
+
+const stations = await getLiveStations();
+const shelters = getAllShelters();
+const stats = getAirOverviewStats(stations);
+---
+
+<ToolLayout
+  toolId="air-quality"
+  title="Metro Vancouver Wildfire Smoke & AQHI Radar"
+  description="Real-time Air Quality Health Index (AQHI), fine particulate matter (PM2.5) concentrations from BAM-1020 sensors, and air-conditioned clean-air shelters."
+  currentPath="/air"
+  badgeText="Live Smoke Radar"
+  status="active"
+>
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Active Wildfire Smoke Advisory Banner -->
+    <AdvisoryBanner hasAdvisory={false} />
+
+    <!-- Hero Regional Air Quality Snapshot -->
+    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Metro Vancouver Baseline: AQHI {stats.avgAQHI} ({stats.avgAQHILabel})</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+          Hyper-Local Air Quality & Fine Particulate (PM2.5) Telemetry
+        </h2>
+        <p class="text-xs text-slate-300">
+          Tracking {stats.totalStations} official BAM-1020 air stations from Kitsilano to Fraser Valley. Cleanest: {stats.cleanCoastalName} ({stats.cleanCoastalPM25} µg/m³).
+        </p>
+      </div>
+
+      <!-- 1-Tap Geolocation Sorter -->
+      <button
+        type="button"
+        id="geo-sort-air-btn"
+        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
+      >
+        <span>📍</span>
+        <span id="geo-air-label">Find Nearest Air Station</span>
+      </button>
+    </section>
+
+    <!-- Pinned Stations Section (Mirrors Home Dashboard Card) -->
+    <div id="pinned-air-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+          <span>⭐</span>
+          <span>Pinned Air Stations (Shown on Main Dashboard)</span>
+        </span>
+        <span class="text-[11px] text-slate-400">Click star on any station to customize</span>
+      </div>
+      <div id="pinned-air-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <!-- Dynamically populated via client JS -->
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <FilterTabs activeTab="all" />
+
+    <!-- Stations Directory Grid -->
+    <div id="stations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {stations.map((station) => (
+        <StationCard station={station} />
+      ))}
+    </div>
+
+    <!-- Public Clean-Air Shelters & Cooling Centres -->
+    <CleanAirShelters shelters={shelters} />
+  </div>
+</ToolLayout>
+
+<script is:inline define:vars={{ stationsJson: JSON.stringify(stations) }}>
+  // Pinned Stations Management
+  const STORAGE_KEY = 'vanutils_pinned_air';
+  const DEFAULT_PINNED = ['robson-square', 'clark-drive', 'kitsilano', 'north-van-mahon', 'burnaby-mountain', 'surrey-east'];
+
+  function getPinnedIds() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return DEFAULT_PINNED;
+  }
+
+  function savePinnedIds(ids) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    window.dispatchEvent(new CustomEvent('vanutils:pinned-air-changed', { detail: ids }));
+  }
+
+  function renderPinnedGrid() {
+    const grid = document.getElementById('pinned-air-grid');
+    if (!grid) return;
+
+    const pinnedIds = getPinnedIds();
+    const allStations = JSON.parse(stationsJson || '[]');
+    const pinnedStations = allStations.filter((s) => pinnedIds.includes(s.id));
+
+    if (pinnedStations.length === 0) {
+      grid.innerHTML = '<p class="text-xs text-slate-400 py-1">No pinned stations yet. Star any air station below!</p>';
+      return;
+    }
+
+    grid.innerHTML = pinnedStations.map((s) => `
+      <div class="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-xs">
+        <div class="truncate pr-2 font-bold text-slate-900 dark:text-white">
+          <a href="/air/${s.id}" class="hover:text-sky-500">${s.shortName}</a>
+        </div>
+        <span class="shrink-0 flex items-center gap-1 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${s.currentPM25} µg/m³ (AQHI ${s.currentAQHI})
+        </span>
+      </div>
+    `).join('');
+  }
+
+  function updateStarButtons() {
+    const pinnedIds = getPinnedIds();
+    document.querySelectorAll('.star-btn[data-station-star-id]').forEach((btn) => {
+      const id = btn.getAttribute('data-station-star-id');
+      if (pinnedIds.includes(id)) {
+        btn.classList.add('text-amber-400', 'dark:text-amber-400');
+        btn.classList.remove('text-slate-300', 'dark:text-slate-600');
+      } else {
+        btn.classList.remove('text-amber-400', 'dark:text-amber-400');
+        btn.classList.add('text-slate-300', 'dark:text-slate-600');
+      }
+    });
+  }
+
+  function setupStarClicks() {
+    document.querySelectorAll('.star-btn[data-station-star-id]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = btn.getAttribute('data-station-star-id');
+        let pinned = getPinnedIds();
+        if (pinned.includes(id)) {
+          pinned = pinned.filter((p) => p !== id);
+        } else {
+          pinned.push(id);
+        }
+        savePinnedIds(pinned);
+        updateStarButtons();
+        renderPinnedGrid();
+      });
+    });
+  }
+
+  // Haversine Distance Calculation
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function setupGeoSort() {
+    const btn = document.getElementById('geo-sort-air-btn');
+    const label = document.getElementById('geo-air-label');
+    const grid = document.getElementById('stations-grid');
+
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+
+      label.textContent = 'Locating Closest Station...';
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const userLat = pos.coords.latitude;
+          const userLng = pos.coords.longitude;
+          label.textContent = 'Sorted by Nearest Station ✅';
+
+          const cards = Array.from(document.querySelectorAll('.station-card'));
+          cards.forEach((card) => {
+            const lat = parseFloat(card.getAttribute('data-lat') || '0');
+            const lng = parseFloat(card.getAttribute('data-lng') || '0');
+            const km = haversineKm(userLat, userLng, lat, lng);
+            card.setAttribute('data-distance', km.toFixed(2));
+            const distLabel = card.querySelector('.station-distance-label');
+            if (distLabel) distLabel.textContent = `📍 ${km.toFixed(1)} km away`;
+          });
+
+          cards.sort((a, b) => {
+            const distA = parseFloat(a.getAttribute('data-distance') || '0');
+            const distB = parseFloat(b.getAttribute('data-distance') || '0');
+            return distA - distB;
+          });
+
+          if (grid) {
+            cards.forEach((card) => grid.appendChild(card));
+          }
+        },
+        () => {
+          label.textContent = 'Location Access Denied';
+        }
+      );
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPinnedGrid();
+      updateStarButtons();
+      setupStarClicks();
+      setupGeoSort();
+    });
+  } else {
+    renderPinnedGrid();
+    updateStarButtons();
+    setupStarClicks();
+    setupGeoSort();
+  }
+</script>
