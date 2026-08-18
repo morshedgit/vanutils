@@ -585,74 +585,90 @@ const avgWeatherTemp = allWeatherStations.length > 0
       </div>
     )}
 
-    <!-- 14. WEATHER: Interactive Animated SVG Doppler Weather Radar Scope -->
+    <!-- 14. WEATHER: Tiny Regional Microclimate Weather Map -->
     {tool.id === 'weather-forecast' && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Doppler Radar Scope (50km)</span>
+            <span>Regional Live Weather Map</span>
           </span>
           <span class="text-sky-600 dark:text-sky-400 font-bold">
-            {avgWeatherTemp}°C Live
+            {avgWeatherTemp}°C Avg
           </span>
         </div>
 
-        <!-- Radar Scope Viewport Container -->
-        <div class="relative w-full h-24 rounded-xl bg-slate-950 border border-emerald-500/20 overflow-hidden flex items-center justify-center">
-          <!-- Animated Rotating Radar Sweep -->
-          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div class="w-44 h-44 rounded-full border border-emerald-500/20 flex items-center justify-center relative">
-              <!-- Concentric Range Rings -->
-              <div class="w-32 h-32 rounded-full border border-emerald-500/20"></div>
-              <div class="w-20 h-20 rounded-full border border-emerald-500/20"></div>
-              <div class="w-8 h-8 rounded-full border border-emerald-500/30"></div>
-              
-              <!-- Crosshairs -->
-              <div class="absolute w-full h-[1px] bg-emerald-500/20"></div>
-              <div class="absolute h-full w-[1px] bg-emerald-500/20"></div>
-              
-              <!-- Rotating Conic Sweep Beam -->
-              <div
-                class="absolute inset-0 rounded-full animate-spin"
-                style="animation-duration: 4s; background: conic-gradient(from 0deg, rgba(16, 185, 129, 0.45) 0deg, rgba(14, 165, 233, 0.15) 45deg, transparent 90deg, transparent 360deg);"
-              ></div>
-            </div>
+        <!-- Tiny Regional Weather Map Canvas -->
+        <div class="relative w-full h-[100px] rounded-xl bg-slate-950 border border-slate-800 overflow-hidden select-none">
+          <!-- Vector Map Background (Coastlines & Waterways) -->
+          <svg viewBox="0 0 340 100" class="w-full h-full absolute inset-0" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="miniWaterGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#090d16" />
+                <stop offset="100%" stop-color="#0369a1" stop-opacity="0.25" />
+              </linearGradient>
+            </defs>
+            <!-- Water Background (Strait of Georgia) -->
+            <rect width="340" height="100" fill="url(#miniWaterGrad)" />
+
+            <!-- North Shore Landmass & Mountains -->
+            <path d="M 0,0 L 340,0 L 340,32 Q 220,28 120,26 Q 40,24 0,22 Z" fill="#1e293b" opacity="0.9" />
+            <text x="8" y="12" fill="#64748b" font-size="7" font-weight="bold" letter-spacing="0.5">NORTH SHORE</text>
+
+            <!-- Burrard Inlet Water Ribbon -->
+            <path d="M 40,26 Q 160,30 260,34 L 340,36 L 340,40 Q 260,38 160,34 Q 40,30 0,28 Z" fill="#0284c7" opacity="0.4" />
+
+            <!-- Vancouver & Burnaby Peninsula -->
+            <path d="M 60,36 Q 180,38 280,42 L 340,44 L 340,74 Q 240,72 140,70 Q 50,68 40,54 Z" fill="#1e293b" opacity="0.95" />
+            <text x="145" y="56" fill="#475569" font-size="7" font-weight="bold">VANCOUVER</text>
+            <text x="260" y="56" fill="#475569" font-size="7" font-weight="bold">BURNABY</text>
+
+            <!-- Fraser River Waterway -->
+            <path d="M 40,70 Q 160,72 260,76 L 340,78 L 340,82 Q 260,80 160,76 Q 40,74 0,72 Z" fill="#0284c7" opacity="0.45" />
+
+            <!-- Richmond & Delta Landmass -->
+            <path d="M 30,76 Q 160,78 280,82 L 340,84 L 340,100 L 0,100 L 0,80 Z" fill="#1e293b" opacity="0.9" />
+            <text x="120" y="94" fill="#475569" font-size="7" font-weight="bold">RICHMOND</text>
+          </svg>
+
+          <!-- Weather Condition Chips Plotted Geographically -->
+          <!-- 1. North Vancouver / Lynn Valley -->
+          <div class="absolute top-2.5 left-[42%] -translate-x-1/2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-slate-900/90 border border-sky-500/40 text-[9px] text-white shadow-xs backdrop-blur-xs">
+            <span>⛅</span>
+            <span class="font-bold text-sky-300">17.2°</span>
+            <span class="text-[8px] text-slate-400">NVAN</span>
           </div>
 
-          <!-- Radar Station Pings / Blips -->
-          <div class="absolute inset-0 p-2 text-[9px] pointer-events-none">
-            <!-- North Shore -->
-            <div class="absolute top-2 left-[48%] -translate-x-1/2 flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              <span class="font-mono text-[8px] font-bold text-emerald-300">NVAN 17°C</span>
-            </div>
-            <!-- Downtown -->
-            <div class="absolute top-[42%] left-[45%] -translate-x-1/2 flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-              <span class="font-mono text-[8px] font-bold text-sky-200">DT 19°C</span>
-            </div>
-            <!-- YVR / Richmond -->
-            <div class="absolute bottom-2 left-[28%] flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-              <span class="font-mono text-[8px] font-bold text-amber-200">YVR 20°C</span>
-            </div>
-            <!-- SFU / Burnaby -->
-            <div class="absolute top-[38%] right-2.5 flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              <span class="font-mono text-[8px] font-bold text-emerald-200">SFU 16°C</span>
-            </div>
+          <!-- 2. Downtown / Coal Harbour -->
+          <div class="absolute top-[38%] left-[28%] -translate-x-1/2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-slate-900/90 border border-amber-500/40 text-[9px] text-white shadow-xs backdrop-blur-xs">
+            <span>☀️</span>
+            <span class="font-bold text-amber-300">19.4°</span>
+            <span class="text-[8px] text-slate-400">DT</span>
           </div>
 
-          <!-- Live Scan Status Badge -->
-          <div class="absolute bottom-1 right-1.5 z-10 px-1.5 py-0.5 rounded bg-slate-900/90 border border-emerald-500/30 text-[8px] font-mono text-emerald-400">
-            ECCC SWEEP: 0.0mm
+          <!-- 3. Burnaby Mountain / SFU -->
+          <div class="absolute top-[34%] right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-slate-900/90 border border-sky-500/40 text-[9px] text-white shadow-xs backdrop-blur-xs">
+            <span>⛅</span>
+            <span class="font-bold text-sky-300">16.5°</span>
+            <span class="text-[8px] text-slate-400">SFU</span>
+          </div>
+
+          <!-- 4. YVR Airport / Richmond -->
+          <div class="absolute bottom-1.5 left-[24%] flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-slate-900/90 border border-amber-500/40 text-[9px] text-white shadow-xs backdrop-blur-xs">
+            <span>☀️</span>
+            <span class="font-bold text-amber-300">19.8°</span>
+            <span class="text-[8px] text-slate-400">YVR</span>
+          </div>
+
+          <!-- Live Status Tag -->
+          <div class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-slate-900/90 border border-emerald-500/30 text-[8px] font-mono text-emerald-400">
+            0.0mm RAIN
           </div>
         </div>
 
         <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
-          <span>📡 Aldergrove Doppler Active</span>
-          <span>Clear Salish Sea Front</span>
+          <span>☀️ Clear / Mild Across Coast</span>
+          <span>16.5°C – 19.8°C Spread</span>
         </div>
       </div>
     )}

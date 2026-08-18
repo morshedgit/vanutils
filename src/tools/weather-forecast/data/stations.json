@@ -97,7 +97,7 @@
         "tempHighCelsius": 24,
         "tempLowCelsius": 16,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 6,
         "sunrise": "06:10",
@@ -140,7 +140,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T22:52:40.217Z",
+    "lastUpdated": "2026-08-18T22:58:26.392Z",
     "isStale": false
   },
   {
@@ -241,7 +241,7 @@
         "tempHighCelsius": 24,
         "tempLowCelsius": 16,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 6,
         "sunrise": "06:10",
@@ -284,7 +284,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T22:52:40.215Z",
+    "lastUpdated": "2026-08-18T22:58:26.391Z",
     "isStale": false
   },
   {
@@ -355,7 +355,7 @@
         "time": "22:00",
         "temperatureCelsius": 18.1,
         "precipitationMm": 0,
-        "precipitationProbabilityPercent": 0,
+        "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
@@ -385,7 +385,7 @@
         "tempHighCelsius": 24,
         "tempLowCelsius": 15,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 6,
         "sunrise": "06:10",
@@ -428,7 +428,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T22:52:40.216Z",
+    "lastUpdated": "2026-08-18T22:58:26.394Z",
     "isStale": false
   },
   {
@@ -506,7 +506,7 @@
         "time": "23:00",
         "temperatureCelsius": 17.5,
         "precipitationMm": 0,
-        "precipitationProbabilityPercent": 0,
+        "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       }
     ],
@@ -529,7 +529,7 @@
         "tempHighCelsius": 23,
         "tempLowCelsius": 15,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 6,
         "sunrise": "06:10",
@@ -572,7 +572,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T22:52:40.221Z",
+    "lastUpdated": "2026-08-18T22:58:26.395Z",
     "isStale": false
   },
   {
@@ -673,7 +673,7 @@
         "tempHighCelsius": 24,
         "tempLowCelsius": 13,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 6,
         "sunrise": "06:09",
@@ -716,7 +716,7 @@
         "sunset": "20:14"
       }
     ],
-    "lastUpdated": "2026-08-18T22:52:40.213Z",
+    "lastUpdated": "2026-08-18T22:58:26.387Z",
     "isStale": false
   },
   {
@@ -794,7 +794,7 @@
         "time": "23:00",
         "temperatureCelsius": 17.1,
         "precipitationMm": 0,
-        "precipitationProbabilityPercent": 0,
+        "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       }
     ],
@@ -817,7 +817,7 @@
         "tempHighCelsius": 23,
         "tempLowCelsius": 16,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 6,
         "sunrise": "06:11",
@@ -860,7 +860,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T22:52:40.218Z",
+    "lastUpdated": "2026-08-18T22:58:26.395Z",
     "isStale": false
   },
   {
@@ -931,7 +931,7 @@
         "time": "22:00",
         "temperatureCelsius": 19.9,
         "precipitationMm": 0,
-        "precipitationProbabilityPercent": 0,
+        "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
@@ -961,7 +961,7 @@
         "tempHighCelsius": 26,
         "tempLowCelsius": 17,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 5,
         "sunrise": "06:10",
@@ -973,7 +973,7 @@
         "tempHighCelsius": 22,
         "tempLowCelsius": 18,
         "totalPrecipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
+        "precipitationProbabilityPercent": 2,
         "condition": "overcast",
         "uvIndexMax": 6,
         "sunrise": "06:12",
@@ -1004,7 +1004,7 @@
         "sunset": "20:16"
       }
     ],
-    "lastUpdated": "2026-08-18T22:52:40.220Z",
+    "lastUpdated": "2026-08-18T22:58:26.424Z",
     "isStale": false
   }
 ]
