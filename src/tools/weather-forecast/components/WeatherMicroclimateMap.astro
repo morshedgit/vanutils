@@ -1,0 +1,396 @@
+---
+import type { WeatherStation } from '../types';
+import { getWeatherConditionMeta } from '../services/weatherService';
+
+interface Props {
+  stations: WeatherStation[];
+}
+
+const { stations } = Astro.props;
+
+// Geographic bounding box for Metro Vancouver
+const minLat = 49.10;
+const maxLat = 49.38;
+const minLng = -123.32;
+const maxLng = -122.88;
+
+const mapWidth = 800;
+const mapHeight = 500;
+
+function project(lat: number, lng: number) {
+  const x = Math.round(((lng - minLng) / (maxLng - minLng)) * (mapWidth - 80) + 40);
+  // Invert y because latitude increases upwards
+  const y = Math.round(((maxLat - lat) / (maxLat - minLat)) * (mapHeight - 80) + 40);
+  return { x, y };
+}
+
+const projectedStations = stations.map((st) => {
+  const { x, y } = project(st.latitude, st.longitude);
+  const meta = getWeatherConditionMeta(st.current.condition);
+  return {
+    ...st,
+    mapX: x,
+    mapY: y,
+    conditionMeta: meta,
+  };
+});
+---
+
+<div class="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 p-4 sm:p-5 shadow-sm space-y-4">
+  <!-- Map Header & Mode Switcher -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="text-base">🗺️</span>
+        <h3 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+          Metro Vancouver Microclimate Interactive Map
+        </h3>
+        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+          Live Telemetry
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+        Click any regional microclimate station to view 24h soundings & hourly forecast curves.
+      </p>
+    </div>
+
+    <!-- Map Metric Layer Toggle -->
+    <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0 self-start sm:self-auto" id="weather-map-layers">
+      <button
+        type="button"
+        data-layer="temp"
+        class="weather-map-layer-btn active px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs transition-all"
+      >
+        🌡️ Temperature (°C)
+      </button>
+      <button
+        type="button"
+        data-layer="precip"
+        class="weather-map-layer-btn px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all"
+      >
+        🌧️ Rain (24h)
+      </button>
+      <button
+        type="button"
+        data-layer="wind"
+        class="weather-map-layer-btn px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all"
+      >
+        💨 Wind (km/h)
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive SVG Map Canvas -->
+  <div class="relative w-full overflow-hidden rounded-xl bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border border-slate-800">
+    <svg
+      viewBox={`0 0 ${mapWidth} ${mapHeight}`}
+      class="w-full h-auto max-h-[520px] select-none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <!-- Ocean & Water Gradient -->
+        <linearGradient id="waterGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0f172a" />
+          <stop offset="100%" stop-color="#0369a1" stop-opacity="0.25" />
+        </linearGradient>
+
+        <!-- Mountain Relief Gradient -->
+        <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#334155" stop-opacity="0.6" />
+          <stop offset="100%" stop-color="#1e293b" stop-opacity="0.1" />
+        </linearGradient>
+
+        <!-- Pulse Filter -->
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+
+      <!-- Background Water (Strait of Georgia & Burrard Inlet) -->
+      <rect width={mapWidth} height={mapHeight} fill="url(#waterGrad)" />
+
+      <!-- North Shore Coast Mountain Range Outline -->
+      <path
+        d="M 40,40 Q 200,30 380,45 Q 560,35 760,50 L 760,140 Q 560,130 380,125 Q 200,120 40,110 Z"
+        fill="url(#mountainGrad)"
+        stroke="#475569"
+        stroke-width="1"
+        stroke-dasharray="3 3"
+      />
+      <text x="50" y="70" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1">NORTH SHORE COAST MOUNTAINS</text>
+
+      <!-- Coastlines & Geographic Landmasses -->
+      <!-- West Vancouver & North Shore Landmass -->
+      <path
+        d="M 40,110 Q 150,115 250,125 L 350,130 Q 500,130 760,140 L 760,40 L 40,40 Z"
+        fill="#1e293b"
+        stroke="#334155"
+        stroke-width="1.5"
+        opacity="0.85"
+      />
+
+      <!-- Burrard Inlet Waterway -->
+      <path
+        d="M 120,135 Q 280,145 420,148 Q 580,150 760,155 L 760,165 Q 580,160 420,158 Q 280,155 120,145 Z"
+        fill="#0284c7"
+        opacity="0.3"
+      />
+      <text x="440" y="153" fill="#38bdf8" font-size="9" font-family="monospace" opacity="0.6">BURRARD INLET</text>
+
+      <!-- City of Vancouver & Burnaby Peninsula Landmass -->
+      <path
+        d="M 160,160 Q 300,165 480,165 Q 650,168 760,175 L 760,340 Q 600,340 450,335 Q 280,330 160,320 L 140,240 Q 145,190 160,160 Z"
+        fill="#1e293b"
+        stroke="#334155"
+        stroke-width="1.5"
+        opacity="0.9"
+      />
+
+      <!-- English Bay Water Body -->
+      <path
+        d="M 40,160 Q 120,180 160,220 L 140,260 Q 100,220 40,200 Z"
+        fill="#0284c7"
+        opacity="0.25"
+      />
+      <text x="65" y="210" fill="#38bdf8" font-size="10" font-family="monospace" opacity="0.7">ENGLISH BAY</text>
+
+      <!-- Fraser River Main Arm & Sea Island Delta -->
+      <path
+        d="M 160,320 Q 300,330 500,335 Q 650,340 760,345 L 760,360 Q 650,355 500,350 Q 300,345 160,335 Z"
+        fill="#0284c7"
+        opacity="0.35"
+      />
+      <text x="420" y="348" fill="#38bdf8" font-size="9" font-family="monospace" opacity="0.6">FRASER RIVER (NORTH ARM)</text>
+
+      <!-- Richmond & Delta Landmass -->
+      <path
+        d="M 140,340 Q 300,350 500,355 Q 650,360 760,365 L 760,470 Q 550,470 350,465 Q 160,460 120,430 L 120,370 Q 130,350 140,340 Z"
+        fill="#1e293b"
+        stroke="#334155"
+        stroke-width="1.5"
+        opacity="0.85"
+      />
+
+      <!-- Strait of Georgia Water Label -->
+      <text x="50" y="380" fill="#38bdf8" font-size="11" font-weight="700" letter-spacing="1.5" opacity="0.5">STRAIT OF GEORGIA</text>
+
+      <!-- Geographic Municipal Boundaries (Subtle Dashed) -->
+      <line x1="480" y1="165" x2="480" y2="335" stroke="#475569" stroke-width="1" stroke-dasharray="4 4" opacity="0.4" />
+      <text x="320" y="280" fill="#64748b" font-size="12" font-weight="bold" opacity="0.4">VANCOUVER</text>
+      <text x="540" y="280" fill="#64748b" font-size="12" font-weight="bold" opacity="0.4">BURNABY</text>
+      <text x="320" y="420" fill="#64748b" font-size="12" font-weight="bold" opacity="0.4">RICHMOND</text>
+
+      <!-- Station Markers & Interactive Group Pins -->
+      {projectedStations.map((st) => (
+        <g
+          class="weather-station-pin cursor-pointer transition-transform duration-200 hover:scale-110"
+          data-station-id={st.id}
+          data-lat={st.latitude}
+          data-lng={st.longitude}
+          data-name={st.name}
+          data-temp={st.current.temperatureCelsius}
+          data-feels={st.current.feelsLikeCelsius}
+          data-precip={st.current.precipitation24hMm}
+          data-wind={`${st.current.windDirection} ${st.current.windSpeedKmh}`}
+          data-humidity={st.current.humidityPercent}
+          data-uv={st.current.uvIndex}
+          data-condition={st.conditionMeta.label}
+          data-icon={st.conditionMeta.icon}
+        >
+          <!-- Outer Radar Pulse Animation -->
+          <circle
+            cx={st.mapX}
+            cy={st.mapY}
+            r="16"
+            class="fill-sky-500/20 animate-ping"
+            style="transform-origin: center;"
+          />
+
+          <!-- Inner Station Dot -->
+          <circle
+            cx={st.mapX}
+            cy={st.mapY}
+            r="6"
+            class="fill-sky-400 stroke-white stroke-2 shadow-lg"
+          />
+
+          <!-- Station Temperature Badge Chip (Default Layer) -->
+          <g transform={`translate(${st.mapX - 42}, ${st.mapY - 32})`}>
+            <!-- Badge Container -->
+            <rect
+              width="84"
+              height="24"
+              rx="12"
+              class="fill-slate-900/90 stroke-sky-500/60 stroke-1 backdrop-blur-md shadow-md"
+            />
+
+            <!-- Metric Display (Dynamic via JS) -->
+            <text
+              x="12"
+              y="16"
+              class="station-badge-icon"
+              font-size="12"
+            >
+              {st.conditionMeta.icon}
+            </text>
+            <text
+              x="30"
+              y="16"
+              class="station-metric-text fill-white font-extrabold"
+              font-size="11"
+              data-raw-temp={`${st.current.temperatureCelsius}°C`}
+              data-raw-precip={`${st.current.precipitation24hMm}mm`}
+              data-raw-wind={`${st.current.windSpeedKmh}km/h`}
+            >
+              {st.current.temperatureCelsius}°C
+            </text>
+          </g>
+
+          <!-- Station Name Label -->
+          <text
+            x={st.mapX}
+            y={st.mapY + 20}
+            text-anchor="middle"
+            class="fill-slate-200 font-bold text-[10px] drop-shadow-md"
+          >
+            {st.shortName}
+          </text>
+        </g>
+      ))}
+    </svg>
+
+    <!-- Floating Interactive Station Hover Card / Tooltip -->
+    <div
+      id="weather-map-tooltip"
+      class="pointer-events-none absolute hidden z-20 rounded-xl bg-slate-900/95 border border-slate-700/80 p-3 shadow-xl text-white backdrop-blur-md w-56 space-y-1.5 transition-opacity duration-150 text-xs"
+    >
+      <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+        <span id="tooltip-name" class="font-bold text-sm text-sky-400">Coal Harbour</span>
+        <span id="tooltip-icon" class="text-base">☀️</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-[11px] pt-0.5">
+        <div>
+          <span class="text-slate-400">Temp:</span>
+          <strong id="tooltip-temp" class="text-white ml-1">19.4°C</strong>
+        </div>
+        <div>
+          <span class="text-slate-400">Feels:</span>
+          <span id="tooltip-feels" class="text-slate-200 ml-1">19.4°C</span>
+        </div>
+        <div>
+          <span class="text-slate-400">Wind:</span>
+          <span id="tooltip-wind" class="text-slate-200 ml-1">E 12 km/h</span>
+        </div>
+        <div>
+          <span class="text-slate-400">24h Rain:</span>
+          <span id="tooltip-precip" class="text-slate-200 ml-1">0.0mm</span>
+        </div>
+        <div>
+          <span class="text-slate-400">Humidity:</span>
+          <span id="tooltip-humidity" class="text-slate-200 ml-1">62%</span>
+        </div>
+        <div>
+          <span class="text-slate-400">UV Index:</span>
+          <span id="tooltip-uv" class="text-slate-200 ml-1">6 High</span>
+        </div>
+      </div>
+      <div class="text-[10px] text-sky-400 font-semibold pt-1 border-t border-slate-800/80 flex items-center justify-between">
+        <span>Click to view sounding</span>
+        <span>→</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Layer Mode Switching (°C Temp, Rain mm, Wind km/h)
+  const layerButtons = document.querySelectorAll('.weather-map-layer-btn');
+  const metricTexts = document.querySelectorAll<HTMLElement>('.station-metric-text');
+
+  layerButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      layerButtons.forEach((b) => {
+        b.classList.remove('active', 'bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'font-bold', 'shadow-xs');
+        b.classList.add('text-slate-600', 'dark:text-slate-300', 'font-semibold');
+      });
+
+      btn.classList.add('active', 'bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'font-bold', 'shadow-xs');
+      btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'font-semibold');
+
+      const layer = (btn as HTMLElement).dataset.layer || 'temp';
+
+      metricTexts.forEach((el) => {
+        if (layer === 'temp') {
+          el.textContent = el.dataset.rawTemp || '';
+        } else if (layer === 'precip') {
+          el.textContent = el.dataset.rawPrecip || '';
+        } else if (layer === 'wind') {
+          el.textContent = el.dataset.rawWind || '';
+        }
+      });
+    });
+  });
+
+  // Interactive Hover Tooltip & Navigation
+  const pins = document.querySelectorAll<SVGGElement>('.weather-station-pin');
+  const tooltip = document.getElementById('weather-map-tooltip');
+  const tooltipName = document.getElementById('tooltip-name');
+  const tooltipIcon = document.getElementById('tooltip-icon');
+  const tooltipTemp = document.getElementById('tooltip-temp');
+  const tooltipFeels = document.getElementById('tooltip-feels');
+  const tooltipWind = document.getElementById('tooltip-wind');
+  const tooltipPrecip = document.getElementById('tooltip-precip');
+  const tooltipHumidity = document.getElementById('tooltip-humidity');
+  const tooltipUv = document.getElementById('tooltip-uv');
+
+  pins.forEach((pin) => {
+    pin.addEventListener('mouseenter', (e) => {
+      if (!tooltip) return;
+
+      const stationId = pin.dataset.stationId || '';
+      const name = pin.dataset.name || '';
+      const temp = pin.dataset.temp || '';
+      const feels = pin.dataset.feels || '';
+      const precip = pin.dataset.precip || '';
+      const wind = pin.dataset.wind || '';
+      const humidity = pin.dataset.humidity || '';
+      const uv = pin.dataset.uv || '';
+      const icon = pin.dataset.icon || '☀️';
+
+      if (tooltipName) tooltipName.textContent = name;
+      if (tooltipIcon) tooltipIcon.textContent = icon;
+      if (tooltipTemp) tooltipTemp.textContent = `${temp}°C`;
+      if (tooltipFeels) tooltipFeels.textContent = `${feels}°C`;
+      if (tooltipWind) tooltipWind.textContent = `${wind} km/h`;
+      if (tooltipPrecip) tooltipPrecip.textContent = `${precip}mm`;
+      if (tooltipHumidity) tooltipHumidity.textContent = `${humidity}% RH`;
+      if (tooltipUv) tooltipUv.textContent = uv;
+
+      tooltip.classList.remove('hidden');
+    });
+
+    pin.addEventListener('mousemove', (e: MouseEvent) => {
+      if (!tooltip) return;
+      const rect = pin.closest('svg')?.getBoundingClientRect();
+      if (!rect) return;
+
+      const x = e.clientX - rect.left + 15;
+      const y = e.clientY - rect.top - 20;
+
+      tooltip.style.left = `${Math.min(x, rect.width - 230)}px`;
+      tooltip.style.top = `${Math.max(10, y)}px`;
+    });
+
+    pin.addEventListener('mouseleave', () => {
+      tooltip?.classList.add('hidden');
+    });
+
+    pin.addEventListener('click', () => {
+      const stationId = pin.dataset.stationId;
+      if (stationId) {
+        window.location.href = `/weather/${stationId}`;
+      }
+    });
+  });
+</script>

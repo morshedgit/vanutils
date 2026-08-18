@@ -3,6 +3,7 @@ import ToolLayout from '../../layouts/ToolLayout.astro';
 import StationCard from '../../tools/weather-forecast/components/StationCard.astro';
 import FilterTabs from '../../tools/weather-forecast/components/FilterTabs.astro';
 import WeatherAdvisoryBanner from '../../tools/weather-forecast/components/WeatherAdvisoryBanner.astro';
+import WeatherMicroclimateMap from '../../tools/weather-forecast/components/WeatherMicroclimateMap.astro';
 import { getLiveWeather, getWeatherOverviewStats } from '../../tools/weather-forecast/services/weatherService';
 
 // Set Edge Cache header: 5 min max age, 10 min background SWR revalidation
@@ -51,6 +52,9 @@ const hasActiveAdvisory = stats.activeAdvisoryCount > 0;
         <span>Find Closest Station</span>
       </button>
     </section>
+
+    <!-- Interactive Microclimate Weather Map Widget -->
+    <WeatherMicroclimateMap stations={stations} />
 
     <!-- Filter & Search Tabs -->
     <FilterTabs activeRegion="all" />
