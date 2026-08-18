@@ -5,14 +5,13 @@ import Sparkline from '../../tools/can-i-swim/components/Sparkline.astro';
 import SafetyLegend from '../../tools/can-i-swim/components/SafetyLegend.astro';
 import { getBeachById, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
 import { getStatusMeta } from '../../tools/can-i-swim/services/healthCalc';
+import JsonLd from '../../components/shared/JsonLd.astro';
 
 // Set Edge Cache header: 10 min max age, 30 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
 const { slug } = Astro.params;
 const beach = getBeachById(slug || '');
-
-import JsonLd from '../../components/shared/JsonLd.astro';
 
 if (!beach) {
   return Astro.redirect('/swim');

@@ -10,6 +10,7 @@ import { getLiveStations } from '../tools/air-quality/services/airQualityService
 import { getLiveProposals } from '../tools/civic-development/services/civicService';
 import { getLiveEvents } from '../tools/community-events/services/eventService';
 import { getLiveSchools } from '../tools/school-catchment/services/catchmentService';
+import { getLiveNews } from '../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../tools/sports-facilities/services/sportsService';
 
@@ -107,6 +108,14 @@ export const GET: APIRoute = async () => {
     const schools = await getLiveSchools();
     schools.forEach((sc) => {
       dynamicRoutes.push({ url: `${baseUrl}/schools/${sc.id}`, priority: '0.7', changefreq: 'weekly' });
+    });
+  } catch (e) {}
+
+  // Local News Articles
+  try {
+    const articles = await getLiveNews();
+    articles.forEach((a) => {
+      dynamicRoutes.push({ url: `${baseUrl}/news/${a.id}`, priority: '0.8', changefreq: 'hourly' });
     });
   } catch (e) {}
 
