@@ -12,7 +12,7 @@
     "reverseRouteId": "SWB-TSA",
     "frequencyText": "Hourly on the hour (7:00 AM – 9:00 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T17:31:16.583Z",
+    "lastUpdated": "2026-08-18T17:32:43.601Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -55,13 +55,13 @@
         "departureTime": "1:00 pm",
         "arrivalTime": "",
         "vesselName": "Spirit of Vancouver Island",
-        "deckSpacePercent": 7,
+        "deckSpacePercent": 8,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "7% Space Available"
+        "statusText": "8% Space Available"
       },
       {
         "departureTime": "2:00 pm",
@@ -115,13 +115,13 @@
         "departureTime": "6:00 pm",
         "arrivalTime": "",
         "vesselName": "Queen of New Westminster",
-        "deckSpacePercent": 0,
+        "deckSpacePercent": 100,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
-        "standbyRisk": "high",
+        "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "0% Space Available"
+        "statusText": "100% Space Available"
       },
       {
         "departureTime": "7:00 pm",
@@ -228,7 +228,7 @@
     "reverseRouteId": "NAN-HSB",
     "frequencyText": "Every 2 hours (6:30 AM – 10:40 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T17:31:16.584Z",
+    "lastUpdated": "2026-08-18T17:32:43.602Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -372,7 +372,7 @@
     "reverseRouteId": "LNG-HSB",
     "frequencyText": "8-10 Daily Sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T17:31:16.584Z",
+    "lastUpdated": "2026-08-18T17:32:43.602Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -415,13 +415,13 @@
         "departureTime": "1:20 pm",
         "arrivalTime": "",
         "vesselName": "Queen of Coquitlam",
-        "deckSpacePercent": 75,
+        "deckSpacePercent": 76,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "75% Space Available"
+        "statusText": "76% Space Available"
       },
       {
         "departureTime": "2:25 pm",
@@ -568,7 +568,7 @@
     "reverseRouteId": "DUK-TSA",
     "frequencyText": "Every 2.5 hours (5:15 AM – 10:45 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T17:31:16.584Z",
+    "lastUpdated": "2026-08-18T17:32:43.602Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -635,13 +635,13 @@
         "departureTime": "8:15 pm",
         "arrivalTime": "",
         "vesselName": "Coastal Renaissance",
-        "deckSpacePercent": 54,
+        "deckSpacePercent": 53,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "54% Space Available"
+        "statusText": "53% Space Available"
       },
       {
         "departureTime": "10:45 pm",
@@ -822,7 +822,7 @@
     "reverseRouteId": "BOW-HSB",
     "frequencyText": "Hourly departures",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T17:31:16.584Z",
+    "lastUpdated": "2026-08-18T17:32:43.602Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -1017,7 +1017,7 @@
     "crossingDurationMinutes": 55,
     "frequencyText": "4-6 daily multi-island direct & thru sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T17:31:16.584Z",
+    "lastUpdated": "2026-08-18T17:32:43.602Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -1072,13 +1072,13 @@
         "departureTime": "7:50 pm",
         "arrivalTime": "",
         "vesselName": "Salish Eagle",
-        "deckSpacePercent": 0,
+        "deckSpacePercent": 100,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
-        "standbyRisk": "high",
+        "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "0% Space Available"
+        "statusText": "100% Space Available"
       },
       {
         "departureTime": "9:10 am",
