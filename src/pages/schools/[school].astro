@@ -1,0 +1,147 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import { getLiveSchools, getSchoolById, getAllChildcares } from '../../tools/school-catchment/services/catchmentService';
+import ChildcareList from '../../tools/school-catchment/components/ChildcareList.astro';
+
+// Tiered Edge Cache: 24-hour edge TTL, 7-day background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
+
+const { school: schoolId } = Astro.params;
+const allSchools = await getLiveSchools();
+const school = getSchoolById(schoolId || '', allSchools);
+const childcares = getAllChildcares();
+
+if (!school) {
+  return Astro.redirect('/schools');
+}
+
+const categoryLabels = {
+  elementary: '🎒 Elementary School',
+  elementary_annex: '🧒 Elementary Annex',
+  secondary: '🏫 Secondary High School',
+};
+---
+
+<ToolLayout
+  toolId="school-catchment"
+  title={`${school.name} — Catchment Profile`}
+  description={`Catchment boundaries, grade spans, feeder school tracks, and programs for ${school.name}.`}
+  currentPath={`/schools/${school.id}`}
+  badgeText={`Grades ${school.gradeSpan}`}
+  status="active"
+>
+  <div class="space-y-6 max-w-4xl mx-auto">
+    <!-- Breadcrumb & Back Link -->
+    <div class="flex items-center justify-between">
+      <a
+        href="/schools"
+        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
+      >
+        <span>←</span>
+        <span>Back to Catchment Radar</span>
+      </a>
+      <span class="text-xs text-slate-400">
+        Vancouver School Board (SD39)
+      </span>
+    </div>
+
+    <!-- School Hero Header -->
+    <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-sky-400">
+            {categoryLabels[school.category]}
+          </span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-800 text-slate-200 border border-slate-700">
+            Grades {school.gradeSpan}
+          </span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">
+          {school.name}
+        </h2>
+        <p class="text-xs text-slate-300">
+          📍 {school.address} • {school.neighbourhood}
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          class="star-btn px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-amber-400 text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1.5"
+          data-school-star-id={school.id}
+        >
+          <span>⭐</span>
+          <span>Pin to Home</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- School Overview Metrics Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">School District</span>
+        <div class="text-base font-bold text-slate-900 dark:text-white">
+          Vancouver SD39
+        </div>
+        <span class="text-xs text-slate-400">Public School System</span>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">Catchment Feeder Track</span>
+        <div class="text-base font-bold text-sky-600 dark:text-sky-400">
+          {school.feederSecondary || school.feederElementary || 'Primary High School'}
+        </div>
+        <span class="text-xs text-slate-400">Designated progression path</span>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">Contact Office</span>
+        <div class="text-base font-bold text-slate-900 dark:text-white">
+          {school.phone}
+        </div>
+        <span class="text-xs text-slate-400">Main administration</span>
+      </div>
+    </div>
+
+    <!-- Programs Offered -->
+    <section class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+      <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+        <span>📘</span>
+        <span>Academic & District Choice Programs</span>
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        {school.programs.map((p) => (
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 font-bold text-slate-800 dark:text-slate-200">
+            {p === 'early_french_immersion' && '🇫🇷 Early French Immersion (K–7 / 8–12)'}
+            {p === 'late_french_immersion' && '🇫🇷 Late French Immersion (Grades 6–7)'}
+            {p === 'ib' && '🎓 International Baccalaureate (IB Diploma Programme)'}
+            {p === 'english_regular' && '📘 Standard English Catchment Curriculum'}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Childcares Nearby -->
+    <ChildcareList childcares={childcares.slice(0, 2)} />
+
+    <!-- Official Registration Portal Links -->
+    <div class="flex flex-wrap items-center gap-3 pt-2">
+      <a
+        href="https://www.vsb.bc.ca/page/5195/student-registration"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shadow-sm transition-colors"
+      >
+        VSB Student Registration Portal →
+      </a>
+      <a
+        href={school.websiteUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors"
+      >
+        Official School Website →
+      </a>
+    </div>
+  </div>
+</ToolLayout>

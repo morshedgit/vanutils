@@ -7,6 +7,9 @@ import { getAllNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/car
 import { getLiveFacilities, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
 import { getLiveCrossings } from '../../tools/bridge-traffic/services/bridgeService';
 import { getLiveStations } from '../../tools/air-quality/services/airQualityService';
+import { getLiveProposals } from '../../tools/civic-development/services/civicService';
+import { getLiveEvents } from '../../tools/community-events/services/eventService';
+import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
 
 interface Props {
   tool: ToolMeta;
@@ -36,6 +39,15 @@ const initialCrossings = allCrossings.slice(0, 6);
 const allStations = tool.id === 'air-quality' ? await getLiveStations() : [];
 const initialStations = allStations.slice(0, 6);
 
+const allProposals = tool.id === 'civic-development' ? await getLiveProposals() : [];
+const initialProposals = allProposals.slice(0, 6);
+
+const allEvents = tool.id === 'community-events' ? await getLiveEvents() : [];
+const initialEvents = allEvents.slice(0, 6);
+
+const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
+const initialSchools = allSchools.slice(0, 6);
+
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const avgFreezingLevel = allMountains.length > 0
   ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
@@ -61,7 +73,10 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
       {tool.id === 'health-wait-times' && '1h 15m Shortest ER'}
       {tool.id === 'bridge-traffic' && '2 Lanes NB Active'}
       {tool.id === 'air-quality' && 'AQHI 2 Low Risk'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'civic-development' && '38 Broadway Towers'}
+      {tool.id === 'community-events' && '6 Free This Week'}
+      {tool.id === 'school-catchment' && 'VSB SD39 Catchments'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -316,8 +331,75 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     </div>
   )}
 
+  <!-- CIVIC DEVELOPMENT: High-Density Rezoning & Towers List -->
+  {tool.id === 'civic-development' && (
+    <div id="main-card-civic-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialProposals.map((p) => (
+        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-proposal-id={p.id}>
+          <div class="truncate pr-2 font-medium">
+            <span>{p.address}</span>
+            <span class="text-[11px] text-slate-400 ml-1">({p.storeys} Storeys)</span>
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+            <span class="text-slate-500 dark:text-slate-400">
+              {p.units.totalUnits} Units
+            </span>
+            <span class="text-sky-600 dark:text-sky-400 font-bold">
+              {p.proposedFSR} FSR
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  <!-- COMMUNITY EVENTS: High-Density Free Local Events List -->
+  {tool.id === 'community-events' && (
+    <div id="main-card-events-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialEvents.map((e) => {
+        const d = new Date(e.startDateTime);
+        return (
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-event-id={e.id}>
+            <div class="truncate pr-2 font-medium">
+              <span>{e.title}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                {d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' })}
+              </span>
+              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 100% Free
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+
+  <!-- SCHOOL CATCHMENT: High-Density VSB Schools List -->
+  {tool.id === 'school-catchment' && (
+    <div id="main-card-schools-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialSchools.map((s) => (
+        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-school-id={s.id}>
+          <div class="truncate pr-2 font-medium">
+            <span>{s.name}</span>
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+            <span class="text-slate-500 dark:text-slate-400">
+              Grades {s.gradeSpan}
+            </span>
+            <span class="text-sky-600 dark:text-sky-400 font-bold">
+              {s.programs.includes('early_french_immersion') ? '🇫🇷 French' : '📘 English'}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -749,5 +831,169 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     }
 
     window.addEventListener('vanutils:pinned-air-changed', syncMainCardAir);
+  </script>
+)}
+
+{tool.id === 'civic-development' && (
+  <script is:inline define:vars={{ allProposalsJson: JSON.stringify(allProposals) }}>
+    function syncMainCardCivic() {
+      const grid = document.getElementById('main-card-civic-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_civic-development');
+      const allProposals = JSON.parse(allProposalsJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinned = allProposals.filter((p) => pinnedIds.includes(p.id));
+          const unpinned = allProposals.filter((p) => !pinnedIds.includes(p.id));
+          displayList = [...pinned, ...unpinned].slice(0, 6);
+        } catch (e) {
+          displayList = allProposals.slice(0, 6);
+        }
+      } else {
+        displayList = allProposals.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((p) => {
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-proposal-id="${p.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${p.address}</span>
+              <span class="text-[11px] text-slate-400 ml-1">(${p.storeys} Storeys)</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                ${p.units.totalUnits} Units
+              </span>
+              <span class="text-sky-600 dark:text-sky-400 font-bold">
+                ${p.proposedFSR} FSR
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardCivic);
+    } else {
+      syncMainCardCivic();
+    }
+
+    window.addEventListener('vanutils:pinned-civic-changed', syncMainCardCivic);
+  </script>
+)}
+
+{tool.id === 'community-events' && (
+  <script is:inline define:vars={{ allEventsJson: JSON.stringify(allEvents) }}>
+    function syncMainCardEvents() {
+      const grid = document.getElementById('main-card-events-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_community-events');
+      const allEvents = JSON.parse(allEventsJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinned = allEvents.filter((e) => pinnedIds.includes(e.id));
+          const unpinned = allEvents.filter((e) => !pinnedIds.includes(e.id));
+          displayList = [...pinned, ...unpinned].slice(0, 6);
+        } catch (e) {
+          displayList = allEvents.slice(0, 6);
+        }
+      } else {
+        displayList = allEvents.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((e) => {
+        const d = new Date(e.startDateTime);
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-event-id="${e.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${e.title}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                ${d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' })}
+              </span>
+              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 100% Free
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardEvents);
+    } else {
+      syncMainCardEvents();
+    }
+
+    window.addEventListener('vanutils:pinned-events-changed', syncMainCardEvents);
+  </script>
+)}
+
+{tool.id === 'school-catchment' && (
+  <script is:inline define:vars={{ allSchoolsJson: JSON.stringify(allSchools) }}>
+    function syncMainCardSchools() {
+      const grid = document.getElementById('main-card-schools-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_school-catchment');
+      const allSchools = JSON.parse(allSchoolsJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinned = allSchools.filter((s) => pinnedIds.includes(s.id));
+          const unpinned = allSchools.filter((s) => !pinnedIds.includes(s.id));
+          displayList = [...pinned, ...unpinned].slice(0, 6);
+        } catch (e) {
+          displayList = allSchools.slice(0, 6);
+        }
+      } else {
+        displayList = allSchools.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((s) => {
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-school-id="${s.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${s.name}</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                Grades ${s.gradeSpan}
+              </span>
+              <span class="text-sky-600 dark:text-sky-400 font-bold">
+                ${s.programs.includes('early_french_immersion') ? '🇫🇷 French' : '📘 English'}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardSchools);
+    } else {
+      syncMainCardSchools();
+    }
+
+    window.addEventListener('vanutils:pinned-schools-changed', syncMainCardSchools);
   </script>
 )}
