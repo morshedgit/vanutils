@@ -1,0 +1,196 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import MarketConditionBadge from '../../tools/housing-market/components/MarketConditionBadge.astro';
+import MortgageRadar from '../../tools/housing-market/components/MortgageRadar.astro';
+import SubmarketCard from '../../tools/housing-market/components/SubmarketCard.astro';
+import FilterTabs from '../../tools/housing-market/components/FilterTabs.astro';
+import { getLiveMarketHeartbeat, formatCurrency, formatPercent } from '../../tools/housing-market/services/marketService';
+
+// Tiered Edge Cache: 24-hour edge TTL, 7-day background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
+
+const data = await getLiveMarketHeartbeat();
+const { metroOverview, submarkets, mortgage } = data;
+---
+
+<ToolLayout
+  toolId="housing-market"
+  title="Metro Vancouver Real Estate & Rental Market Heartbeat"
+  description="Sub-50ms market liquidity telemetry, MLS® HPI benchmark prices, rental vacancy rates, and Bank of Canada mortgage benchmarks."
+  currentPath="/market"
+  badgeText="MLS® HPI & Valet API"
+  status="active"
+>
+  <div class="space-y-5 max-w-5xl mx-auto">
+    <!-- Regional Composite Market Pulse Banner -->
+    <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-sky-400">Greater Vancouver REALTORS® & CMHC Open Data</span>
+            <MarketConditionBadge condition={metroOverview.marketCondition} sar={metroOverview.salesToActiveRatio} />
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">
+            Metro Vancouver Housing & Rental Heartbeat
+          </h2>
+          <p class="text-xs text-slate-300">
+            Tracking {metroOverview.totalActiveListings} active MLS® listings, {metroOverview.totalSales} monthly sales, and regional benchmark indices across 9 submarkets.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs shrink-0 space-y-1">
+          <div class="flex justify-between gap-4 text-slate-400">
+            <span>Median Days on Market:</span>
+            <span class="font-bold text-white">{metroOverview.medianDaysOnMarket} days</span>
+          </div>
+          <div class="flex justify-between gap-4 text-slate-400">
+            <span>Regional Rental Vacancy:</span>
+            <span class="font-bold text-emerald-400">{metroOverview.rental.vacancyRatePercent}%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regional HPI Composite Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-xs">
+        {metroOverview.benchmarks.map((b) => (
+          <div class="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <span class="text-slate-400 capitalize block mb-0.5">{b.propertyType === 'all' ? 'All Residential' : b.propertyType}:</span>
+            <div class="text-sm sm:text-base font-black text-white">
+              {formatCurrency(b.benchmarkPrice)}
+            </div>
+            <span class={`text-[10px] font-bold ${b.change1MonthPercent >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              {formatPercent(b.change1MonthPercent)} MoM • {formatPercent(b.change1YearPercent)} YoY
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Bank of Canada & Mortgage Calculator Component -->
+    <MortgageRadar mortgage={mortgage} />
+
+    <!-- Pinned Submarkets Section (Mirrors Home Dashboard Card) -->
+    <div id="pinned-market-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+          <span>⭐</span>
+          <span>Pinned Submarkets (Shown on Main Dashboard)</span>
+        </span>
+        <span class="text-[11px] text-slate-400">Click star on any submarket below to customize</span>
+      </div>
+      <div id="pinned-market-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <!-- Dynamically populated via client JS -->
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <FilterTabs activeTab="all" />
+
+    <!-- Submarket Cards Grid -->
+    <div id="submarkets-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {submarkets.map((submarket) => (
+        <SubmarketCard submarket={submarket} />
+      ))}
+    </div>
+  </div>
+</ToolLayout>
+
+<script is:inline define:vars={{ submarketsJson: JSON.stringify(submarkets) }}>
+  // Pinned Submarkets Management
+  const STORAGE_KEY = 'vanutils_pinned_housing-market';
+  const DEFAULT_PINNED = [
+    'vancouver_eastside',
+    'vancouver_westside',
+    'vancouver_downtown',
+    'north_shore',
+    'burnaby',
+    'tri_cities'
+  ];
+
+  function getPinnedIds() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return DEFAULT_PINNED;
+  }
+
+  function savePinnedIds(ids) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    window.dispatchEvent(new CustomEvent('vanutils:pinned-market-changed', { detail: ids }));
+  }
+
+  function renderPinnedGrid() {
+    const grid = document.getElementById('pinned-market-grid');
+    if (!grid) return;
+
+    const pinnedIds = getPinnedIds();
+    const allSubmarkets = JSON.parse(submarketsJson || '[]');
+    const pinned = allSubmarkets.filter((s) => pinnedIds.includes(s.id));
+
+    if (pinned.length === 0) {
+      grid.innerHTML = '<p class="text-xs text-slate-400 py-1">No pinned submarkets. Star any card below to add!</p>';
+      return;
+    }
+
+    grid.innerHTML = pinned.map((s) => {
+      const condoBench = s.benchmarks.find((b) => b.propertyType === 'condo') || s.benchmarks[0];
+      return `
+        <div class="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-xs">
+          <div class="truncate pr-2 font-bold text-slate-900 dark:text-white">
+            <a href="/market/${s.id.replace(/_/g, '-')}" class="hover:text-sky-500">${s.name}</a>
+            <span class="text-[10px] text-slate-400 block">${s.salesToActiveRatio}% SAR • ${s.marketCondition}</span>
+          </div>
+          <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
+            $${Math.round(condoBench.benchmarkPrice / 1000)}k Condo
+          </span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateStarButtons() {
+    const pinnedIds = getPinnedIds();
+    document.querySelectorAll('.star-btn[data-submarket-star-id]').forEach((btn) => {
+      const id = btn.getAttribute('data-submarket-star-id');
+      if (pinnedIds.includes(id)) {
+        btn.classList.add('text-amber-400', 'dark:text-amber-400');
+        btn.classList.remove('text-slate-300', 'dark:text-slate-600');
+      } else {
+        btn.classList.remove('text-amber-400', 'dark:text-amber-400');
+        btn.classList.add('text-slate-300', 'dark:text-slate-600');
+      }
+    });
+  }
+
+  function setupStarClicks() {
+    document.querySelectorAll('.star-btn[data-submarket-star-id]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = btn.getAttribute('data-submarket-star-id');
+        let pinned = getPinnedIds();
+        if (pinned.includes(id)) {
+          pinned = pinned.filter((p) => p !== id);
+        } else {
+          pinned.push(id);
+        }
+        savePinnedIds(pinned);
+        updateStarButtons();
+        renderPinnedGrid();
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPinnedGrid();
+      updateStarButtons();
+      setupStarClicks();
+    });
+  } else {
+    renderPinnedGrid();
+    updateStarButtons();
+    setupStarClicks();
+  }
+</script>

@@ -11,6 +11,7 @@ import { getLiveProposals } from '../../tools/civic-development/services/civicSe
 import { getLiveEvents } from '../../tools/community-events/services/eventService';
 import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
 import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
+import { getLiveMarketHeartbeat, formatCurrency } from '../../tools/housing-market/services/marketService';
 
 interface Props {
   tool: ToolMeta;
@@ -52,6 +53,10 @@ const initialSchools = allSchools.slice(0, 6);
 const allArticles = tool.id === 'local-news' ? await getLiveNews() : [];
 const initialArticles = allArticles.slice(0, 6);
 
+const marketData = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
+const allSubmarkets = marketData ? [marketData.metroOverview, ...marketData.submarkets] : [];
+const initialSubmarkets = allSubmarkets.slice(0, 6);
+
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const avgFreezingLevel = allMountains.length > 0
   ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
@@ -81,7 +86,8 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
       {tool.id === 'community-events' && '6 Free This Week'}
       {tool.id === 'school-catchment' && 'VSB SD39 Catchments'}
       {tool.id === 'local-news' && 'Live News Wire'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'housing-market' && '18.4% Balanced SAR'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -206,7 +212,7 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
           <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-parking-id={n.id}>
             <div class="truncate pr-2 font-medium">
               <span>{n.name}</span>
-              <span class="text-[11px] text-slate-400 ml-1">({n.residentialPermitRules.permitZoneCode})</span>
+              <span class="text-[11px] text-slate-400 ml-1">(${n.residentialPermitRules.permitZoneCode})</span>
             </div>
             <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
               <span class="text-slate-500 dark:text-slate-400">
@@ -430,8 +436,33 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     </div>
   )}
 
+  <!-- REAL ESTATE & RENTAL MARKET: High-Density Submarket List -->
+  {tool.id === 'housing-market' && (
+    <div id="main-card-market-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialSubmarkets.map((s) => {
+        const condoBench = s.benchmarks.find((b) => b.propertyType === 'condo') || s.benchmarks[0];
+        return (
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-submarket-id={s.id}>
+            <div class="truncate pr-2 font-medium">
+              <span>{s.name.replace(' (Regional Composite)', '')}</span>
+              <span class="text-[11px] text-slate-400 ml-1">({s.salesToActiveRatio}% SAR)</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                {formatCurrency(s.rental.medianRent1Bed)}/mo rent
+              </span>
+              <span class="text-sky-600 dark:text-sky-400 font-bold">
+                ${Math.round(condoBench.benchmarkPrice / 1000)}k Condo
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -1082,5 +1113,61 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     }
 
     window.addEventListener('vanutils:pinned-news-changed', syncMainCardNews);
+  </script>
+)}
+
+{tool.id === 'housing-market' && (
+  <script is:inline define:vars={{ allSubmarketsJson: JSON.stringify(allSubmarkets) }}>
+    function syncMainCardMarket() {
+      const grid = document.getElementById('main-card-market-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_housing-market');
+      const allSubmarkets = JSON.parse(allSubmarketsJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinned = allSubmarkets.filter((s) => pinnedIds.includes(s.id));
+          const unpinned = allSubmarkets.filter((s) => !pinnedIds.includes(s.id));
+          displayList = [...pinned, ...unpinned].slice(0, 6);
+        } catch (e) {
+          displayList = allSubmarkets.slice(0, 6);
+        }
+      } else {
+        displayList = allSubmarkets.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((s) => {
+        const condoBench = s.benchmarks?.find((b) => b.propertyType === 'condo') || s.benchmarks?.[0] || { benchmarkPrice: 750000 };
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-submarket-id="${s.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${s.name.replace(' (Regional Composite)', '')}</span>
+              <span class="text-[11px] text-slate-400 ml-1">(${s.salesToActiveRatio}% SAR)</span>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                $${s.rental?.medianRent1Bed || 2650}/mo rent
+              </span>
+              <span class="text-sky-600 dark:text-sky-400 font-bold">
+                $${Math.round(condoBench.benchmarkPrice / 1000)}k Condo
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardMarket);
+    } else {
+      syncMainCardMarket();
+    }
+
+    window.addEventListener('vanutils:pinned-market-changed', syncMainCardMarket);
   </script>
 )}

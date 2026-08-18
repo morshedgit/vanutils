@@ -1,0 +1,177 @@
+---
+import type { MortgageBenchmark } from '../types';
+
+interface Props {
+  mortgage: MortgageBenchmark;
+}
+
+const { mortgage } = Astro.props;
+---
+
+<section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+  <div class="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+    <div>
+      <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+        <span>🏦</span>
+        <span>Bank of Canada & Mortgage Benchmark Radar</span>
+      </h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400">
+        Live Valet interest rate telemetry, 5-Year fixed/variable spreads, and OSFI stress test parameters.
+      </p>
+    </div>
+    <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300 border border-sky-500/20 shrink-0">
+      BoC Rate: {mortgage.bocOvernightRate}%
+    </span>
+  </div>
+
+  <!-- Rates Summary Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+      <span class="text-slate-500 dark:text-slate-400 block mb-0.5">Policy Target</span>
+      <div class="text-base font-black text-slate-900 dark:text-white">
+        {mortgage.bocOvernightRate}%
+      </div>
+      <span class="text-[10px] text-slate-400">Overnight Rate</span>
+    </div>
+
+    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+      <span class="text-slate-500 dark:text-slate-400 block mb-0.5">5-Yr Fixed Benchmark</span>
+      <div class="text-base font-black text-sky-600 dark:text-sky-400">
+        {mortgage.fixed5YearBenchmark}%
+      </div>
+      <span class="text-[10px] text-slate-400">Gov Bond: {mortgage.bondYield5Year}%</span>
+    </div>
+
+    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+      <span class="text-slate-500 dark:text-slate-400 block mb-0.5">5-Yr Variable</span>
+      <div class="text-base font-black text-indigo-600 dark:text-indigo-400">
+        {mortgage.variable5YearBenchmark}%
+      </div>
+      <span class="text-[10px] text-slate-400">Prime - 0.75%</span>
+    </div>
+
+    <div class="p-3 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/20">
+      <span class="text-amber-700 dark:text-amber-300 block mb-0.5 font-bold">OSFI Stress Test</span>
+      <div class="text-base font-black text-amber-700 dark:text-amber-300">
+        {mortgage.stressTestQualifyingRate}%
+      </div>
+      <span class="text-[10px] text-amber-600 dark:text-amber-400">Contract + 2.00%</span>
+    </div>
+  </div>
+
+  <!-- Interactive Monthly Payment Estimator -->
+  <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 space-y-3">
+    <span class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+      <span>🧮</span>
+      <span>Instant Payment & Stress Test Income Calculator</span>
+    </span>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Purchase Price</label>
+        <div class="relative">
+          <span class="absolute left-2.5 top-2 text-slate-400 font-bold">$</span>
+          <input
+            type="number"
+            id="calc-price"
+            value="750000"
+            step="10000"
+            class="w-full pl-6 pr-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Down Payment (20%)</label>
+        <div class="relative">
+          <span class="absolute left-2.5 top-2 text-slate-400 font-bold">$</span>
+          <input
+            type="number"
+            id="calc-down"
+            value="150000"
+            step="5000"
+            class="w-full pl-6 pr-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Interest Rate (%)</label>
+        <input
+          type="number"
+          id="calc-rate"
+          value={mortgage.fixed5YearBenchmark}
+          step="0.05"
+          class="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+        />
+      </div>
+    </div>
+
+    <!-- Calculated Readouts -->
+    <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-700/60 text-xs font-bold">
+      <div class="space-y-0.5">
+        <span class="text-[11px] text-slate-500 dark:text-slate-400">Monthly Payment (25y Amort):</span>
+        <span id="calc-monthly-result" class="text-sm font-black text-sky-600 dark:text-sky-400 block">$3,450 / mo</span>
+      </div>
+
+      <div class="space-y-0.5 text-right">
+        <span class="text-[11px] text-slate-500 dark:text-slate-400">Stress Test Qualifying Income:</span>
+        <span id="calc-income-result" class="text-sm font-black text-amber-600 dark:text-amber-400 block">~$142,000 / yr</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ defaultRate: mortgage.fixed5YearBenchmark }}>
+  function setupMortgageCalculator() {
+    const priceInput = document.getElementById('calc-price');
+    const downInput = document.getElementById('calc-down');
+    const rateInput = document.getElementById('calc-rate');
+    const monthlyResult = document.getElementById('calc-monthly-result');
+    const incomeResult = document.getElementById('calc-income-result');
+
+    function calculate() {
+      const price = parseFloat(priceInput?.value || '750000');
+      const down = parseFloat(downInput?.value || '150000');
+      const rate = parseFloat(rateInput?.value || defaultRate.toString());
+
+      const principal = Math.max(0, price - down);
+      const monthlyRate = (rate / 100) / 12;
+      const numberOfPayments = 25 * 12;
+
+      let monthlyPayment = 0;
+      if (monthlyRate > 0) {
+        monthlyPayment = (principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments))) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+      } else {
+        monthlyPayment = principal / numberOfPayments;
+      }
+
+      // Stress test rate is contract rate + 2.0% (minimum 5.25%)
+      const stressRate = Math.max(5.25, rate + 2.0);
+      const stressMonthlyRate = (stressRate / 100) / 12;
+      const stressPayment = (principal * (stressMonthlyRate * Math.pow(1 + stressMonthlyRate, numberOfPayments))) / (Math.pow(1 + stressMonthlyRate, numberOfPayments) - 1);
+
+      // Typical GDS limit ~32% for qualifying income
+      const qualifyingAnnualIncome = Math.round((stressPayment * 12) / 0.32);
+
+      if (monthlyResult) {
+        monthlyResult.textContent = `$${Math.round(monthlyPayment).toLocaleString()} / mo`;
+      }
+      if (incomeResult) {
+        incomeResult.textContent = `~$${qualifyingAnnualIncome.toLocaleString()} / yr`;
+      }
+    }
+
+    [priceInput, downInput, rateInput].forEach((el) => {
+      el?.addEventListener('input', calculate);
+    });
+
+    calculate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMortgageCalculator);
+  } else {
+    setupMortgageCalculator();
+  }
+</script>

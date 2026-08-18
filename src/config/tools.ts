@@ -232,6 +232,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Direct citations to primary public sources',
     ],
   },
+  {
+    id: 'housing-market',
+    name: 'Real Estate & Rental Pulse',
+    shortDescription: 'Sub-50ms market liquidity telemetry, MLS® HPI benchmark prices, rental vacancy rates & BoC mortgage rates.',
+    path: '/market',
+    icon: 'home',
+    category: 'daily_living',
+    status: 'active',
+    badgeText: 'MLS® & Rental Pulse',
+    previewStat: {
+      value: '18.4% SAR',
+      label: 'Balanced Market',
+      statusType: 'safe',
+    },
+    features: [
+      'Sales-to-Active Ratio (SAR %) liquidity gauge',
+      'MLS® HPI Condo, Townhouse & Detached indices',
+      'CMHC median rental prices & vacancy rates',
+      'Bank of Canada policy rate & payment calculator',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

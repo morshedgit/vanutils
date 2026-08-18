@@ -1,0 +1,171 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import MarketConditionBadge from '../../tools/housing-market/components/MarketConditionBadge.astro';
+import MortgageRadar from '../../tools/housing-market/components/MortgageRadar.astro';
+import { getLiveMarketHeartbeat, getSubmarketById, formatCurrency, formatPercent } from '../../tools/housing-market/services/marketService';
+
+// Tiered Edge Cache: 24-hour edge TTL, 7-day background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
+
+const { submarket: submarketSlug } = Astro.params;
+const data = await getLiveMarketHeartbeat();
+const submarket = getSubmarketById(submarketSlug || '', [data.metroOverview, ...data.submarkets]);
+
+if (!submarket) {
+  return Astro.redirect('/market');
+}
+---
+
+<ToolLayout
+  toolId="housing-market"
+  title={`${submarket.name} — Real Estate & Rental Heartbeat`}
+  description={`MLS® HPI benchmark prices, sales-to-active ratio (${submarket.salesToActiveRatio}%), rental vacancy rates, and mortgage qualification for ${submarket.name}.`}
+  currentPath={`/market/${submarket.id.replace(/_/g, '-')}`}
+  badgeText={submarket.name}
+  status="active"
+>
+  <div class="space-y-6 max-w-4xl mx-auto">
+    <!-- Breadcrumb & Back Link -->
+    <div class="flex items-center justify-between">
+      <a
+        href="/market"
+        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
+      >
+        <span>←</span>
+        <span>Back to Market Heartbeat</span>
+      </a>
+      <span class="text-xs text-slate-400">
+        GVR & CMHC Open Data
+      </span>
+    </div>
+
+    <!-- Submarket Hero Header -->
+    <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm space-y-3">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold text-sky-400">
+            {submarket.region}
+          </span>
+          <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white mt-0.5">
+            {submarket.name}
+          </h2>
+          <p class="text-xs text-slate-300">
+            {submarket.totalActiveListings} active listings • {submarket.totalSales} monthly sales • {submarket.medianDaysOnMarket} days median DOM
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <MarketConditionBadge condition={submarket.marketCondition} sar={submarket.salesToActiveRatio} />
+          <button
+            type="button"
+            class="star-btn px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-amber-400 text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1.5"
+            data-submarket-star-id={submarket.id}
+          >
+            <span>⭐</span>
+            <span>Pin</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive MLS® HPI Benchmark Price Matrix -->
+    <section class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>📈</span>
+          <span>MLS® HPI Benchmark Price Matrix & Historical Trajectory</span>
+        </h3>
+        <span class="text-xs text-slate-400">GVR Benchmark Standards</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left">
+          <thead class="text-[11px] text-slate-400 uppercase bg-slate-50 dark:bg-slate-800/60 rounded-xl">
+            <tr>
+              <th class="px-3.5 py-2.5 rounded-l-xl font-bold">Property Type</th>
+              <th class="px-3.5 py-2.5 font-bold">Benchmark Price</th>
+              <th class="px-3.5 py-2.5 font-bold">1-Month</th>
+              <th class="px-3.5 py-2.5 font-bold">6-Month</th>
+              <th class="px-3.5 py-2.5 font-bold">1-Year</th>
+              <th class="px-3.5 py-2.5 rounded-r-xl font-bold">3-Year</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
+            {submarket.benchmarks.map((b) => (
+              <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                <td class="px-3.5 py-3 font-bold text-slate-900 dark:text-white capitalize">
+                  {b.propertyType === 'all' ? 'All Residential' : b.propertyType}
+                </td>
+                <td class="px-3.5 py-3 font-black text-slate-900 dark:text-white">
+                  {formatCurrency(b.benchmarkPrice)}
+                </td>
+                <td class="px-3.5 py-3 font-semibold">
+                  <span class={b.change1MonthPercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
+                    {formatPercent(b.change1MonthPercent)}
+                  </span>
+                </td>
+                <td class="px-3.5 py-3 font-semibold">
+                  <span class={b.change6MonthPercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
+                    {formatPercent(b.change6MonthPercent)}
+                  </span>
+                </td>
+                <td class="px-3.5 py-3 font-semibold">
+                  <span class={b.change1YearPercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
+                    {formatPercent(b.change1YearPercent)}
+                  </span>
+                </td>
+                <td class="px-3.5 py-3 font-semibold">
+                  <span class={b.change3YearPercent >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
+                    {formatPercent(b.change3YearPercent)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Rental Market Telemetry -->
+    <section class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>🏠</span>
+          <span>Rental Market Telemetry (CMHC Survey & Asking Rents)</span>
+        </h3>
+        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          {submarket.rental.vacancyRatePercent}% Vacancy Rate
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-1">
+          <span class="text-slate-500 dark:text-slate-400 font-semibold">1-Bedroom Median Rent</span>
+          <div class="text-base font-black text-slate-900 dark:text-white">
+            {formatCurrency(submarket.rental.medianRent1Bed)} <span class="text-xs text-slate-400 font-normal">/ mo</span>
+          </div>
+          <span class="text-[11px] text-slate-400">~${submarket.rental.avgRentPerSqFt} / sq.ft</span>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-1">
+          <span class="text-slate-500 dark:text-slate-400 font-semibold">2-Bedroom Median Rent</span>
+          <div class="text-base font-black text-slate-900 dark:text-white">
+            {formatCurrency(submarket.rental.medianRent2Bed)} <span class="text-xs text-slate-400 font-normal">/ mo</span>
+          </div>
+          <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">{formatPercent(submarket.rental.annualRentChangePercent)} YoY</span>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-1">
+          <span class="text-slate-500 dark:text-slate-400 font-semibold">3-Bedroom Median Rent</span>
+          <div class="text-base font-black text-slate-900 dark:text-white">
+            {formatCurrency(submarket.rental.medianRent3Bed)} <span class="text-xs text-slate-400 font-normal">/ mo</span>
+          </div>
+          <span class="text-[11px] text-slate-400">Townhomes & Family Units</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mortgage Calculator -->
+    <MortgageRadar mortgage={data.mortgage} />
+  </div>
+</ToolLayout>

@@ -1,0 +1,98 @@
+---
+import type { SubmarketPulse } from '../types';
+import MarketConditionBadge from './MarketConditionBadge.astro';
+import { formatCurrency, formatPercent } from '../services/marketService';
+
+interface Props {
+  submarket: SubmarketPulse;
+}
+
+const { submarket } = Astro.props;
+const slug = submarket.id.replace(/_/g, '-');
+---
+
+<div
+  class="submarket-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-sky-500 transition-all flex flex-col justify-between"
+  data-submarket-id={submarket.id}
+  data-region={submarket.region}
+  data-condition={submarket.marketCondition}
+>
+  <div>
+    <!-- Card Header: Title, Condition & Star Pin -->
+    <div class="flex items-start justify-between gap-2 mb-3">
+      <div>
+        <span class="text-xs font-bold text-sky-600 dark:text-sky-400">
+          {submarket.region}
+        </span>
+        <a href={`/market/${slug}`} class="hover:text-sky-500 transition-colors block">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            {submarket.name}
+          </h3>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <MarketConditionBadge condition={submarket.marketCondition} sar={submarket.salesToActiveRatio} size="sm" />
+        <button
+          type="button"
+          class="star-btn p-1 rounded-lg text-slate-300 hover:text-amber-400 dark:text-slate-600 dark:hover:text-amber-400 transition-colors shrink-0"
+          data-submarket-star-id={submarket.id}
+          title="Pin to Dashboard"
+        >
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Benchmark Matrix Table -->
+    <div class="space-y-1.5 mb-3 text-xs">
+      {submarket.benchmarks.map((b) => (
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="font-bold text-slate-700 dark:text-slate-300 capitalize">
+            {b.propertyType === 'all' ? 'Composite MLS®' : b.propertyType}:
+          </span>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-slate-900 dark:text-white">
+              {formatCurrency(b.benchmarkPrice)}
+            </span>
+            <span class={`text-[11px] font-bold px-1.5 py-0.2 rounded ${b.change1MonthPercent >= 0 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' : 'bg-rose-500/15 text-rose-700 dark:text-rose-300'}`}>
+              {formatPercent(b.change1MonthPercent)} MoM
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Rental & Liquidity Pulse -->
+    <div class="p-2.5 rounded-xl bg-sky-500/10 dark:bg-sky-950/30 border border-sky-500/20 text-xs flex items-center justify-between font-semibold mb-3">
+      <div class="space-y-0.5">
+        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Median 1-Bed Rent</span>
+        <span class="font-bold text-sky-700 dark:text-sky-300">{formatCurrency(submarket.rental.medianRent1Bed)}/mo</span>
+      </div>
+      <div class="space-y-0.5 text-center">
+        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Vacancy Rate</span>
+        <span class="font-bold text-slate-800 dark:text-slate-200">{submarket.rental.vacancyRatePercent}%</span>
+      </div>
+      <div class="space-y-0.5 text-right">
+        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Active Listings</span>
+        <span class="font-bold text-slate-800 dark:text-slate-200">{submarket.totalActiveListings}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Details Link -->
+  <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/60 text-xs font-semibold">
+    <span class="text-slate-400">
+      {submarket.totalSales} sales ({submarket.medianDaysOnMarket}d DOM)
+    </span>
+    <a
+      href={`/market/${slug}`}
+      class="text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1"
+    >
+      <span>Submarket Radar</span>
+      <span>→</span>
+    </a>
+  </div>
+</div>

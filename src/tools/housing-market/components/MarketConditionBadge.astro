@@ -1,0 +1,19 @@
+---
+import type { MarketCondition } from '../types';
+import { getConditionLabel, getConditionBadgeStyle } from '../services/marketService';
+
+interface Props {
+  condition: MarketCondition;
+  sar: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { condition, sar, size = 'md' } = Astro.props;
+const label = getConditionLabel(condition);
+const style = getConditionBadgeStyle(condition);
+---
+
+<div class={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border font-bold ${style.bg} ${size === 'sm' ? 'text-[11px]' : 'text-xs'}`}>
+  <span class={`w-2 h-2 rounded-full ${style.dot} shrink-0`}></span>
+  <span>{label} ({sar.toFixed(1)}% SAR)</span>
+</div>

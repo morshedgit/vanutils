@@ -1,0 +1,75 @@
+---
+interface Props {
+  activeTab?: string;
+}
+
+const { activeTab = 'all' } = Astro.props;
+
+const tabs = [
+  { id: 'all', label: 'All Submarkets', icon: '📊' },
+  { id: 'vancouver', label: 'Vancouver City', icon: '🏙️' },
+  { id: 'north_shore', label: 'North Shore', icon: '🌲' },
+  { id: 'burnaby_richmond', label: 'Burnaby & Richmond', icon: '🚆' },
+  { id: 'suburban', label: 'Tri-Cities & Fraser Valley', icon: '🏞️' },
+];
+---
+
+<div class="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none text-xs font-semibold">
+  {tabs.map((t) => (
+    <button
+      type="button"
+      data-market-tab={t.id}
+      class={`market-filter-btn px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1.5 ${
+        t.id === activeTab
+          ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xs'
+          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+      }`}
+    >
+      <span>{t.icon}</span>
+      <span>{t.label}</span>
+    </button>
+  ))}
+</div>
+
+<script>
+  function setupMarketFilterTabs() {
+    const buttons = document.querySelectorAll('.market-filter-btn');
+    const cards = document.querySelectorAll('.submarket-card');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-market-tab');
+
+        // Update button states
+        buttons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+          b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        });
+        btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        btn.classList.add('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+
+        cards.forEach((card) => {
+          const region = card.getAttribute('data-region') || '';
+          let match = false;
+          if (tabId === 'all') match = true;
+          else if (tabId === 'vancouver' && region.includes('Vancouver')) match = true;
+          else if (tabId === 'north_shore' && region.includes('North Shore')) match = true;
+          else if (tabId === 'burnaby_richmond' && (region.includes('Burnaby') || region.includes('Richmond'))) match = true;
+          else if (tabId === 'suburban' && (region.includes('Tri-Cities') || region.includes('Fraser Valley'))) match = true;
+
+          if (match) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMarketFilterTabs);
+  } else {
+    setupMarketFilterTabs();
+  }
+</script>

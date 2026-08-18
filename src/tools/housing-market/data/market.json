@@ -1,0 +1,418 @@
+{
+  "metroOverview": {
+    "id": "metro_vancouver",
+    "name": "Metro Vancouver (Regional Composite)",
+    "region": "Greater Vancouver",
+    "salesToActiveRatio": 18.4,
+    "marketCondition": "balanced",
+    "totalSales": 2342,
+    "totalActiveListings": 12730,
+    "medianDaysOnMarket": 28,
+    "benchmarks": [
+      {
+        "propertyType": "all",
+        "benchmarkPrice": 1197700,
+        "change1MonthPercent": -0.3,
+        "change6MonthPercent": 1.1,
+        "change1YearPercent": 1.8,
+        "change3YearPercent": 7.4
+      },
+      {
+        "propertyType": "detached",
+        "benchmarkPrice": 2049000,
+        "change1MonthPercent": -0.5,
+        "change6MonthPercent": 1.4,
+        "change1YearPercent": 2.6,
+        "change3YearPercent": 11.2
+      },
+      {
+        "propertyType": "townhouse",
+        "benchmarkPrice": 1114200,
+        "change1MonthPercent": 0.2,
+        "change6MonthPercent": 1.8,
+        "change1YearPercent": 3.1,
+        "change3YearPercent": 9.5
+      },
+      {
+        "propertyType": "condo",
+        "benchmarkPrice": 768200,
+        "change1MonthPercent": -0.4,
+        "change6MonthPercent": 0.6,
+        "change1YearPercent": 0.9,
+        "change3YearPercent": 5.8
+      }
+    ],
+    "rental": {
+      "medianRent1Bed": 2650,
+      "medianRent2Bed": 3500,
+      "medianRent3Bed": 4400,
+      "avgRentPerSqFt": 4.15,
+      "vacancyRatePercent": 0.9,
+      "annualRentChangePercent": 3.2
+    },
+    "lastUpdated": "2026-08-18T16:50:16.887Z",
+    "isStale": false
+  },
+  "submarkets": [
+    {
+      "id": "vancouver_eastside",
+      "name": "Vancouver Eastside",
+      "region": "City of Vancouver",
+      "salesToActiveRatio": 19.8,
+      "marketCondition": "balanced",
+      "totalSales": 384,
+      "totalActiveListings": 1940,
+      "medianDaysOnMarket": 24,
+      "benchmarks": [
+        {
+          "propertyType": "detached",
+          "benchmarkPrice": 1895000,
+          "change1MonthPercent": -0.6,
+          "change6MonthPercent": 1.2,
+          "change1YearPercent": 2.1,
+          "change3YearPercent": 8.9
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 1120000,
+          "change1MonthPercent": 0.3,
+          "change6MonthPercent": 2,
+          "change1YearPercent": 3.4,
+          "change3YearPercent": 10.4
+        },
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 715400,
+          "change1MonthPercent": -0.8,
+          "change6MonthPercent": 0.4,
+          "change1YearPercent": 1.2,
+          "change3YearPercent": 6.1
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2450,
+        "medianRent2Bed": 3250,
+        "medianRent3Bed": 4100,
+        "avgRentPerSqFt": 3.9,
+        "vacancyRatePercent": 0.8,
+        "annualRentChangePercent": 3
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    },
+    {
+      "id": "vancouver_westside",
+      "name": "Vancouver Westside",
+      "region": "City of Vancouver",
+      "salesToActiveRatio": 15.2,
+      "marketCondition": "balanced",
+      "totalSales": 410,
+      "totalActiveListings": 2700,
+      "medianDaysOnMarket": 32,
+      "benchmarks": [
+        {
+          "propertyType": "detached",
+          "benchmarkPrice": 3410000,
+          "change1MonthPercent": -0.8,
+          "change6MonthPercent": 0.9,
+          "change1YearPercent": 1.8,
+          "change3YearPercent": 6.5
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 1520000,
+          "change1MonthPercent": 0.1,
+          "change6MonthPercent": 1.5,
+          "change1YearPercent": 2.4,
+          "change3YearPercent": 7.8
+        },
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 842000,
+          "change1MonthPercent": 0.4,
+          "change6MonthPercent": 0.8,
+          "change1YearPercent": -0.5,
+          "change3YearPercent": 4.9
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2850,
+        "medianRent2Bed": 3900,
+        "medianRent3Bed": 5200,
+        "avgRentPerSqFt": 4.45,
+        "vacancyRatePercent": 1,
+        "annualRentChangePercent": 2.8
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    },
+    {
+      "id": "vancouver_downtown",
+      "name": "Downtown Vancouver",
+      "region": "City of Vancouver",
+      "salesToActiveRatio": 14.6,
+      "marketCondition": "balanced",
+      "totalSales": 290,
+      "totalActiveListings": 1980,
+      "medianDaysOnMarket": 34,
+      "benchmarks": [
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 795000,
+          "change1MonthPercent": -0.5,
+          "change6MonthPercent": 0.2,
+          "change1YearPercent": -1.1,
+          "change3YearPercent": 3.8
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 1280000,
+          "change1MonthPercent": 0,
+          "change6MonthPercent": 1.1,
+          "change1YearPercent": 1.9,
+          "change3YearPercent": 5.4
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2750,
+        "medianRent2Bed": 3800,
+        "medianRent3Bed": 4900,
+        "avgRentPerSqFt": 4.6,
+        "vacancyRatePercent": 1.2,
+        "annualRentChangePercent": 2.4
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    },
+    {
+      "id": "north_shore",
+      "name": "North Shore (North & West Van)",
+      "region": "North Shore",
+      "salesToActiveRatio": 17.5,
+      "marketCondition": "balanced",
+      "totalSales": 245,
+      "totalActiveListings": 1400,
+      "medianDaysOnMarket": 30,
+      "benchmarks": [
+        {
+          "propertyType": "detached",
+          "benchmarkPrice": 2280000,
+          "change1MonthPercent": -0.4,
+          "change6MonthPercent": 1.5,
+          "change1YearPercent": 2.8,
+          "change3YearPercent": 9.2
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 1340000,
+          "change1MonthPercent": 0.2,
+          "change6MonthPercent": 1.9,
+          "change1YearPercent": 3.5,
+          "change3YearPercent": 11
+        },
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 782000,
+          "change1MonthPercent": -0.2,
+          "change6MonthPercent": 0.8,
+          "change1YearPercent": 1.4,
+          "change3YearPercent": 6.8
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2550,
+        "medianRent2Bed": 3400,
+        "medianRent3Bed": 4600,
+        "avgRentPerSqFt": 3.95,
+        "vacancyRatePercent": 0.9,
+        "annualRentChangePercent": 3.1
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    },
+    {
+      "id": "burnaby",
+      "name": "Burnaby",
+      "region": "Burnaby & New West",
+      "salesToActiveRatio": 21.2,
+      "marketCondition": "sellers",
+      "totalSales": 310,
+      "totalActiveListings": 1460,
+      "medianDaysOnMarket": 21,
+      "benchmarks": [
+        {
+          "propertyType": "detached",
+          "benchmarkPrice": 2085000,
+          "change1MonthPercent": 0.1,
+          "change6MonthPercent": 2.1,
+          "change1YearPercent": 3.8,
+          "change3YearPercent": 12.4
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 965000,
+          "change1MonthPercent": 0.5,
+          "change6MonthPercent": 2.4,
+          "change1YearPercent": 4.1,
+          "change3YearPercent": 11.8
+        },
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 732000,
+          "change1MonthPercent": 0.2,
+          "change6MonthPercent": 1.2,
+          "change1YearPercent": 2,
+          "change3YearPercent": 7.5
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2400,
+        "medianRent2Bed": 3150,
+        "medianRent3Bed": 3950,
+        "avgRentPerSqFt": 3.8,
+        "vacancyRatePercent": 0.7,
+        "annualRentChangePercent": 3.8
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    },
+    {
+      "id": "richmond",
+      "name": "Richmond",
+      "region": "Richmond & Delta",
+      "salesToActiveRatio": 16.8,
+      "marketCondition": "balanced",
+      "totalSales": 260,
+      "totalActiveListings": 1550,
+      "medianDaysOnMarket": 29,
+      "benchmarks": [
+        {
+          "propertyType": "detached",
+          "benchmarkPrice": 2160000,
+          "change1MonthPercent": -0.3,
+          "change6MonthPercent": 1.3,
+          "change1YearPercent": 2.2,
+          "change3YearPercent": 10.1
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 1140000,
+          "change1MonthPercent": 0.1,
+          "change6MonthPercent": 1.7,
+          "change1YearPercent": 3,
+          "change3YearPercent": 9.8
+        },
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 748000,
+          "change1MonthPercent": -0.4,
+          "change6MonthPercent": 0.5,
+          "change1YearPercent": 1.1,
+          "change3YearPercent": 6.2
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2350,
+        "medianRent2Bed": 3050,
+        "medianRent3Bed": 3850,
+        "avgRentPerSqFt": 3.7,
+        "vacancyRatePercent": 0.8,
+        "annualRentChangePercent": 3.4
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    },
+    {
+      "id": "tri_cities",
+      "name": "Tri-Cities (Coquitlam, Port Moody, PoCo)",
+      "region": "Tri-Cities",
+      "salesToActiveRatio": 22.4,
+      "marketCondition": "sellers",
+      "totalSales": 295,
+      "totalActiveListings": 1315,
+      "medianDaysOnMarket": 19,
+      "benchmarks": [
+        {
+          "propertyType": "detached",
+          "benchmarkPrice": 1780000,
+          "change1MonthPercent": 0.3,
+          "change6MonthPercent": 2.5,
+          "change1YearPercent": 4.2,
+          "change3YearPercent": 13.6
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 920000,
+          "change1MonthPercent": 0.6,
+          "change6MonthPercent": 2.8,
+          "change1YearPercent": 4.8,
+          "change3YearPercent": 14.1
+        },
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 685000,
+          "change1MonthPercent": 0.4,
+          "change6MonthPercent": 1.5,
+          "change1YearPercent": 2.6,
+          "change3YearPercent": 8.4
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2250,
+        "medianRent2Bed": 2900,
+        "medianRent3Bed": 3650,
+        "avgRentPerSqFt": 3.5,
+        "vacancyRatePercent": 0.6,
+        "annualRentChangePercent": 4.1
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    },
+    {
+      "id": "surrey_langley",
+      "name": "Surrey & Langley",
+      "region": "Fraser Valley",
+      "salesToActiveRatio": 20.5,
+      "marketCondition": "sellers",
+      "totalSales": 580,
+      "totalActiveListings": 2830,
+      "medianDaysOnMarket": 22,
+      "benchmarks": [
+        {
+          "propertyType": "detached",
+          "benchmarkPrice": 1580000,
+          "change1MonthPercent": 0.2,
+          "change6MonthPercent": 2.2,
+          "change1YearPercent": 3.9,
+          "change3YearPercent": 14.5
+        },
+        {
+          "propertyType": "townhouse",
+          "benchmarkPrice": 845000,
+          "change1MonthPercent": 0.4,
+          "change6MonthPercent": 2.6,
+          "change1YearPercent": 4.5,
+          "change3YearPercent": 13.8
+        },
+        {
+          "propertyType": "condo",
+          "benchmarkPrice": 542000,
+          "change1MonthPercent": 0.3,
+          "change6MonthPercent": 1.8,
+          "change1YearPercent": 3,
+          "change3YearPercent": 9.2
+        }
+      ],
+      "rental": {
+        "medianRent1Bed": 2050,
+        "medianRent2Bed": 2650,
+        "medianRent3Bed": 3350,
+        "avgRentPerSqFt": 3.2,
+        "vacancyRatePercent": 0.8,
+        "annualRentChangePercent": 4.5
+      },
+      "lastUpdated": "2026-08-18T16:50:16.888Z",
+      "isStale": false
+    }
+  ]
+}
