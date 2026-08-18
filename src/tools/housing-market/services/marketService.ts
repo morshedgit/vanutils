@@ -10,34 +10,40 @@ export const BASELINE_MORTGAGE: MortgageBenchmark = mortgageData as MortgageBenc
  * Dynamically loads live market data and Bank of Canada interest rates at the edge with fallback
  */
 export async function getLiveMarketHeartbeat(): Promise<MarketHeartbeatData> {
-  try {
-    const endpoint = 'https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json?recent=5';
-    const res = await edgeFetch(endpoint, { timeoutMs: 1200 });
+  const now = new Date();
+  let liveMortgage = { ...BASELINE_MORTGAGE };
 
-    if (res.status === 200) {
-      return {
-        metroOverview: {
-          ...BASELINE_MARKET.metroOverview,
-          isStale: false,
-        },
-        submarkets: BASELINE_MARKET.submarkets.map((s) => ({
-          ...s,
-          isStale: false,
-        })),
-        mortgage: {
-          ...BASELINE_MORTGAGE,
-        },
-        lastUpdated: new Date().toISOString(),
-        isStale: false,
-      };
+  try {
+    const endpoint = 'https://www.bankofcanada.ca/valet/observations/V39079/json?recent=1';
+    const res = await edgeFetch<{ observations: Array<{ v: string; d: string }> }>(endpoint, { timeoutMs: 1200 });
+
+    if (res.data && Array.isArray(res.data.observations) && res.data.observations.length > 0) {
+      const latestObs = res.data.observations[res.data.observations.length - 1];
+      const targetRate = parseFloat(latestObs.v);
+      if (!isNaN(targetRate) && targetRate > 0) {
+        const prime = targetRate + 2.2;
+        const stressRate = Math.max(5.25, prime + 1.0);
+        liveMortgage = {
+          ...liveMortgage,
+          bocOvernightRate: targetRate,
+          stressTestQualifyingRate: parseFloat(stressRate.toFixed(2)),
+          lastUpdated: latestObs.d || now.toISOString(),
+        };
+      }
     }
   } catch (e) {}
 
   return {
-    metroOverview: BASELINE_MARKET.metroOverview,
-    submarkets: BASELINE_MARKET.submarkets,
-    mortgage: BASELINE_MORTGAGE,
-    lastUpdated: new Date().toISOString(),
+    metroOverview: {
+      ...BASELINE_MARKET.metroOverview,
+      isStale: false,
+    },
+    submarkets: BASELINE_MARKET.submarkets.map((s) => ({
+      ...s,
+      isStale: false,
+    })),
+    mortgage: liveMortgage,
+    lastUpdated: now.toISOString(),
     isStale: false,
   };
 }

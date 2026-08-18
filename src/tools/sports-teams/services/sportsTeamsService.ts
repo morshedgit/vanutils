@@ -13,8 +13,8 @@ export function getAllTeams(): SportsTeam[] {
 /**
  * Retrieves a single franchise by its unique ID (e.g. 'canucks', 'whitecaps')
  */
-export function getTeamById(id: string): SportsTeam | undefined {
-  return BASELINE_TEAMS.find((t) => t.id === id);
+export function getTeamById(id: string, list: SportsTeam[] = BASELINE_TEAMS): SportsTeam | undefined {
+  return list.find((t) => t.id === id);
 }
 
 /**

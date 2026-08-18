@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getLiveMarketHeartbeat, getSubmarketById, getAllSubmarkets } from '../../../tools/housing-market/services/marketService';
+import { getLiveMarketHeartbeat, getSubmarketById } from '../../../tools/housing-market/services/marketService';
 
 export const prerender = false;
 

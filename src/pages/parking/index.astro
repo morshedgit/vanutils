@@ -3,14 +3,13 @@ import ToolLayout from '../../layouts/ToolLayout.astro';
 import FilterTabs from '../../tools/carshare-parking/components/FilterTabs.astro';
 import NeighbourhoodRadar from '../../tools/carshare-parking/components/NeighbourhoodRadar.astro';
 import SatelliteHubCard from '../../tools/carshare-parking/components/SatelliteHubCard.astro';
-import ClearanceBadge from '../../tools/carshare-parking/components/ClearanceBadge.astro';
-import { getAllNeighbourhoods, getOverallParkingStats } from '../../tools/carshare-parking/services/parkingEvaluator';
+import { getLiveNeighbourhoods, getOverallParkingStats } from '../../tools/carshare-parking/services/parkingEvaluator';
 import { getAllSatelliteLots } from '../../tools/carshare-parking/services/satelliteService';
 
 // Set Edge Cache header: 1 hour max age, 24h background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
 
-const neighbourhoods = getAllNeighbourhoods();
+const neighbourhoods = await getLiveNeighbourhoods();
 const satelliteLots = getAllSatelliteLots();
 const stats = getOverallParkingStats(neighbourhoods);
 ---

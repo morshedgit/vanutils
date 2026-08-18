@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getAllNeighbourhoods, getNeighbourhoodBySlug, evaluateNeighbourhoodSpot } from '../../../tools/carshare-parking/services/parkingEvaluator';
+import { getLiveNeighbourhoods, getNeighbourhoodBySlug, evaluateNeighbourhoodSpot } from '../../../tools/carshare-parking/services/parkingEvaluator';
 import { getAllSatelliteLots } from '../../../tools/carshare-parking/services/satelliteService';
 
 export const prerender = false;
@@ -14,8 +14,10 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
+  const allNeighbourhoods = await getLiveNeighbourhoods();
+
   if (neighbourhoodSlug) {
-    const neighbourhood = getNeighbourhoodBySlug(neighbourhoodSlug);
+    const neighbourhood = getNeighbourhoodBySlug(neighbourhoodSlug, allNeighbourhoods);
     if (!neighbourhood) {
       return new Response(JSON.stringify({ error: 'Neighbourhood not found' }), {
         status: 404,
@@ -30,7 +32,6 @@ export const GET: APIRoute = async ({ request }) => {
     });
   }
 
-  const allNeighbourhoods = getAllNeighbourhoods();
   const allLots = getAllSatelliteLots();
   const evaluations = allNeighbourhoods.map((n) => evaluateNeighbourhoodSpot(n));
 

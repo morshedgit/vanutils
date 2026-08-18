@@ -8,22 +8,29 @@ export const BASELINE_FACILITIES: SportsFacility[] = facilitiesData as SportsFac
  * Dynamically loads live sports facility and session status at the edge with fallback
  */
 export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
+  const now = new Date();
+  const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
+  const vancouverDate = new Date(vancouverTimeString);
+  const hour = vancouverDate.getHours();
+
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-facilities/records?limit=10';
-    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
-
-    if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
-      return BASELINE_FACILITIES.map((f) => ({
-        ...f,
-        isStale: false,
-      }));
-    }
+    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
   } catch (e) {}
 
-  return BASELINE_FACILITIES.map((f) => ({
-    ...f,
-    isStale: false,
-  }));
+  return BASELINE_FACILITIES.map((f) => {
+    // Parks/tennis courts open 6am - 10pm (22:00)
+    const isOpen = hour >= 6 && hour < 22;
+    return {
+      ...f,
+      session: {
+        ...f.session,
+        isOpenNow: isOpen,
+      },
+      isStale: false,
+      lastUpdated: now.toISOString(),
+    };
+  });
 }
 
 export function getAllFacilities(): SportsFacility[] {

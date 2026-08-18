@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getAllBeaches, filterBeaches, getBeachStats } from '../../../tools/can-i-swim/services/vchScraper';
+import { getLiveBeaches, filterBeaches, getBeachStats } from '../../../tools/can-i-swim/services/vchScraper';
 import type { BeachFilterOptions } from '../../../tools/can-i-swim/types';
 
 export const prerender = false;
@@ -37,7 +37,7 @@ export const GET: APIRoute = async ({ request }) => {
     userLng,
   };
 
-  const allBeaches = getAllBeaches();
+  const allBeaches = await getLiveBeaches();
   const filtered = filterBeaches(allBeaches, filterOptions);
   const stats = getBeachStats(allBeaches);
 
@@ -50,7 +50,7 @@ export const GET: APIRoute = async ({ request }) => {
         cautionBeaches: stats.caution,
         advisoryBeaches: stats.advisory,
         cleanPercentage: stats.cleanPercentage,
-        lastUpdated: '2026-08-15T10:00:00-07:00',
+        lastUpdated: new Date().toISOString(),
         dataSource: 'Vancouver Coastal Health & Fraser Health Authority Recreational Water Surveillance',
       },
       count: filtered.length,
