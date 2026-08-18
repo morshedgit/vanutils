@@ -1,0 +1,106 @@
+---
+interface Props {
+  lat?: number;
+  lon?: number;
+  zoom?: number;
+  stationName?: string;
+  defaultOverlay?: 'radar' | 'wind' | 'rain' | 'clouds' | 'waves';
+}
+
+const {
+  lat = 49.2827,
+  lon = -123.1207,
+  zoom = 10,
+  stationName = 'Metro Vancouver',
+  defaultOverlay = 'radar',
+} = Astro.props;
+
+const layers = [
+  { id: 'radar', label: '📡 Live Doppler Radar', icon: '📡' },
+  { id: 'wind', label: '💨 Wind Streamlines', icon: '💨' },
+  { id: 'rain', label: '🌧️ Rain Forecast (12h)', icon: '🌧️' },
+  { id: 'clouds', label: '☁️ Cloud Satellite', icon: '☁️' },
+  { id: 'waves', label: '🌊 Marine Waves & Swell', icon: '🌊' },
+];
+
+const initialIframeUrl = `https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}&detailLat=${lat}&detailLon=${lon}&width=100%25&height=500&zoom=${zoom}&level=surface&overlay=${defaultOverlay}&product=${defaultOverlay}&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1`;
+---
+
+<div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 bg-slate-900 shadow-md">
+  <!-- Top Layer Controls Bar -->
+  <div class="p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span class="font-bold text-xs sm:text-sm text-white">
+        Live Doppler Radar &amp; Wind Map — <span class="text-sky-400">{stationName}</span>
+      </span>
+      <span class="hidden sm:inline-block text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20">
+        ECCC &amp; HRDPS Live
+      </span>
+    </div>
+
+    <!-- Quick Layer Switcher Buttons -->
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none" id="radar-layer-buttons">
+      {layers.map((layer) => (
+        <button
+          type="button"
+          data-overlay={layer.id}
+          data-lat={lat}
+          data-lon={lon}
+          data-zoom={zoom}
+          class={`radar-layer-btn px-2.5 py-1 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            layer.id === defaultOverlay
+              ? 'bg-sky-600 text-white shadow-xs'
+              : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white'
+          }`}
+        >
+          {layer.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- Responsive WebGL Radar Iframe Container -->
+  <div class="relative w-full h-[440px] sm:h-[540px] bg-slate-950">
+    <iframe
+      id="windy-radar-frame"
+      src={initialIframeUrl}
+      class="w-full h-full border-0"
+      loading="lazy"
+      allow="geolocation"
+      title={`Live Weather Radar & Wind Map for ${stationName}`}
+    ></iframe>
+
+    <!-- Bottom Attribution Overlay -->
+    <div class="absolute bottom-2 right-2 z-10 pointer-events-none bg-slate-950/80 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-slate-400 border border-slate-800/60">
+      Doppler Radar: ECCC Aldergrove • High-Res GEM/HRDPS Model
+    </div>
+  </div>
+</div>
+
+<script>
+  // Layer Switcher Handler
+  const layerBtns = document.querySelectorAll<HTMLButtonElement>('.radar-layer-btn');
+  const radarIframe = document.getElementById('windy-radar-frame') as HTMLIFrameElement | null;
+
+  layerBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      layerBtns.forEach((b) => {
+        b.classList.remove('bg-sky-600', 'text-white', 'shadow-xs');
+        b.classList.add('bg-slate-800/80', 'text-slate-300');
+      });
+
+      btn.classList.add('bg-sky-600', 'text-white', 'shadow-xs');
+      btn.classList.remove('bg-slate-800/80', 'text-slate-300');
+
+      const overlay = btn.dataset.overlay || 'radar';
+      const lat = btn.dataset.lat || '49.2827';
+      const lon = btn.dataset.lon || '-123.1207';
+      const zoom = btn.dataset.zoom || '10';
+
+      if (radarIframe) {
+        radarIframe.src = `https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}&detailLat=${lat}&detailLon=${lon}&width=100%25&height=500&zoom=${zoom}&level=surface&overlay=${overlay}&product=${overlay}&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1`;
+      }
+    });
+  });
+</script>

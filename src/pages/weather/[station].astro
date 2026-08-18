@@ -2,6 +2,7 @@
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import WeatherBadge from '../../tools/weather-forecast/components/WeatherBadge.astro';
 import PrecipitationSparkline from '../../tools/weather-forecast/components/PrecipitationSparkline.astro';
+import InteractiveRadarMap from '../../tools/weather-forecast/components/InteractiveRadarMap.astro';
 import { getLiveWeather, getStationById, getWeatherConditionMeta } from '../../tools/weather-forecast/services/weatherService';
 
 // Set Edge Cache header: 5 min max age, 10 min background SWR revalidation
@@ -104,6 +105,14 @@ const otherStations = allStations.filter((s) => s.id !== station.id).slice(0, 3)
         </div>
       </div>
     </section>
+
+    <!-- Local Doppler Radar & Wind Streamlines -->
+    <InteractiveRadarMap
+      lat={station.latitude}
+      lon={station.longitude}
+      zoom={11}
+      stationName={station.name}
+    />
 
     <!-- 24-Hour Precipitation & Hourly Timeline -->
     <section class="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 p-5 shadow-sm space-y-4">

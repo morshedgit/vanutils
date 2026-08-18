@@ -4,6 +4,7 @@ import StationCard from '../../tools/weather-forecast/components/StationCard.ast
 import FilterTabs from '../../tools/weather-forecast/components/FilterTabs.astro';
 import WeatherAdvisoryBanner from '../../tools/weather-forecast/components/WeatherAdvisoryBanner.astro';
 import WeatherMicroclimateMap from '../../tools/weather-forecast/components/WeatherMicroclimateMap.astro';
+import InteractiveRadarMap from '../../tools/weather-forecast/components/InteractiveRadarMap.astro';
 import { getLiveWeather, getWeatherOverviewStats } from '../../tools/weather-forecast/services/weatherService';
 
 // Set Edge Cache header: 5 min max age, 10 min background SWR revalidation
@@ -23,7 +24,7 @@ const hasActiveAdvisory = stats.activeAdvisoryCount > 0;
   badgeText="Microclimate Radar"
   status="active"
 >
-  <div class="space-y-5 max-w-5xl mx-auto">
+  <div class="space-y-6 max-w-5xl mx-auto">
     <!-- Active ECCC Weather Advisory Banner -->
     <WeatherAdvisoryBanner hasAdvisory={hasActiveAdvisory} />
 
@@ -53,7 +54,10 @@ const hasActiveAdvisory = stats.activeAdvisoryCount > 0;
       </button>
     </section>
 
-    <!-- Interactive Microclimate Weather Map Widget -->
+    <!-- WebGL Doppler Weather Radar & Wind Map -->
+    <InteractiveRadarMap />
+
+    <!-- Interactive Microclimate Geographic Station Map -->
     <WeatherMicroclimateMap stations={stations} />
 
     <!-- Filter & Search Tabs -->
