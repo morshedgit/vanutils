@@ -55,6 +55,7 @@ All utility cards on the Main Dashboard (`/`) follow strict density standards:
 | **Tool #8: Development & Rezoning** | `/civic` | **Active Live** | City Open Data rezoning tracker, height/unit breakdowns, hearing calendars & comment portals. |
 | **Tool #9: Community Events Radar** | `/events` | **Active Live** | 100% Free local events, street festivals, Park Board movies, VPL talks & calendar exports. |
 | **Tool #10: School & Childcare Catchment** | `/schools` | **Active Live** | VSB SD39 English & French Immersion catchment resolver + licensed childcare VCH logs. |
+| **Tool #11: Local News & Breaking Alerts** | `/news` | **Active Live** | Sub-second civic wire, breaking weather/transit emergency banners & verified local journalism. |
 
 ---
 
