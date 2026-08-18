@@ -16,11 +16,11 @@ const contactSchema = {
     '@type': 'Organization',
     name: 'VanHeartbeat',
     url: 'https://vanheartbeat.ca',
-    email: 'contact@vanheartbeat.ca',
+    email: 'contact@vanheartbeat.com',
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'technical support',
-      email: 'contact@vanheartbeat.ca',
+      email: 'contact@vanheartbeat.com',
       areaServed: 'CA-BC',
       availableLanguage: ['English'],
     },
@@ -51,23 +51,54 @@ const contactSchema = {
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Contact Form -->
+      <!-- Contact Form Container -->
       <div class="lg:col-span-2 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-6">
-        <div id="contact-form-success" class="hidden p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs leading-relaxed">
-          <strong class="font-bold">✓ Thank you for your feedback!</strong> Your report has been submitted to the engineering team. Data corrections are reviewed promptly.
+        <!-- Success State Banner -->
+        <div id="contact-form-success" class="hidden p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-200 space-y-3">
+          <div class="flex items-center gap-2 font-bold text-base text-emerald-700 dark:text-emerald-300">
+            <span class="text-xl">✓</span>
+            <span>Thank You! Your Message Has Been Sent.</span>
+          </div>
+          <p class="text-xs sm:text-sm leading-relaxed text-emerald-700 dark:text-emerald-300/90">
+            Your submission has been dispatched directly to the engineering team (<code class="bg-emerald-500/20 px-1 py-0.5 rounded font-mono text-xs">contact@vanheartbeat.com</code>).
+          </p>
+          <div class="p-3 rounded-xl bg-white dark:bg-slate-900/80 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <span class="text-slate-600 dark:text-slate-400">Tracking Reference:</span>
+            <span id="success-reference-id" class="font-mono font-bold text-emerald-600 dark:text-emerald-400">VH-PENDING</span>
+          </div>
+          <p class="text-[11px] text-emerald-600 dark:text-emerald-400/80">
+            ⏱️ Priority data accuracy corrections for beach closures, emergency wait times, and road events are reviewed within <strong>2 hours</strong>.
+          </p>
+        </div>
+
+        <!-- Error State Banner -->
+        <div id="contact-form-error" class="hidden p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs leading-relaxed space-y-1">
+          <strong class="font-bold flex items-center gap-1.5">
+            <span>⚠️</span>
+            <span id="error-message-text">Unable to send your message.</span>
+          </strong>
+          <p>Please review the fields above or email directly to <a href="mailto:contact@vanheartbeat.com" class="font-bold underline">contact@vanheartbeat.com</a>.</p>
         </div>
 
         <form id="contact-form" class="space-y-4">
+          <!-- Honeypot anti-spam field (hidden from humans) -->
+          <div class="hidden" aria-hidden="true">
+            <label for="contact-gotcha">Do not fill this field</label>
+            <input type="text" id="contact-gotcha" name="_gotcha" tabindex="-1" autocomplete="off" />
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-1.5">
               <label for="contact-name" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                Your Name
+                Your Name <span class="text-rose-500">*</span>
               </label>
               <input
                 type="text"
                 id="contact-name"
                 name="name"
                 required
+                minlength="2"
+                maxlength="100"
                 placeholder="e.g. Alex Henderson"
                 class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all"
               />
@@ -75,7 +106,7 @@ const contactSchema = {
 
             <div class="space-y-1.5">
               <label for="contact-email" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                Email Address
+                Email Address <span class="text-rose-500">*</span>
               </label>
               <input
                 type="email"
@@ -90,42 +121,50 @@ const contactSchema = {
 
           <div class="space-y-1.5">
             <label for="contact-category" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
-              Inquiry Category
+              Inquiry Category <span class="text-rose-500">*</span>
             </label>
             <select
               id="contact-category"
               name="category"
+              required
               class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all"
             >
               <option value="data_correction">🚨 Data Discrepancy / Correction</option>
               <option value="feature_request">💡 New Micro-Utility Suggestion</option>
               <option value="agency_inquiry">🏛️ Municipal / Health Agency Inquiry</option>
               <option value="bug_report">🐞 Technical Bug Report</option>
-              <option value="general">💬 General Inquiries</option>
+              <option value="general" selected>💬 General Inquiries</option>
             </select>
           </div>
 
           <div class="space-y-1.5">
             <label for="contact-message" class="block text-xs font-bold text-slate-700 dark:text-slate-300">
-              Message / Details
+              Message / Details <span class="text-rose-500">*</span>
             </label>
             <textarea
               id="contact-message"
               name="message"
               rows="5"
               required
+              minlength="10"
+              maxlength="3000"
               placeholder="Please describe the issue or suggestion, including the specific beach, crossing, or facility if applicable..."
               class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all resize-y"
             ></textarea>
+            <div class="flex justify-between items-center text-[10px] text-slate-400">
+              <span>Minimum 10 characters</span>
+              <span id="char-counter">0 / 3000</span>
+            </div>
           </div>
 
           <button
             type="submit"
             id="contact-submit-btn"
-            class="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white transition-all shadow-xs flex items-center justify-center gap-2"
+            class="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span>Submit Feedback</span>
-            <span>→</span>
+            <span id="submit-btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            <span id="submit-btn-text">Send Message</span>
+            <span id="submit-btn-arrow">→</span>
           </button>
         </form>
       </div>
@@ -142,8 +181,8 @@ const contactSchema = {
           </p>
           <div class="pt-2 border-t border-slate-200 dark:border-slate-800 text-xs space-y-1 text-slate-500 dark:text-slate-400">
             <div>Direct Email:</div>
-            <a href="mailto:contact@vanheartbeat.ca" class="font-bold text-sky-600 dark:text-sky-400 hover:underline">
-              contact@vanheartbeat.ca
+            <a href="mailto:contact@vanheartbeat.com" class="font-bold text-sky-600 dark:text-sky-400 hover:underline">
+              contact@vanheartbeat.com
             </a>
           </div>
         </div>
@@ -163,17 +202,90 @@ const contactSchema = {
   function setupContactForm() {
     const form = document.getElementById('contact-form') as HTMLFormElement | null;
     const successMsg = document.getElementById('contact-form-success');
-    if (!form || !successMsg) return;
+    const errorMsg = document.getElementById('contact-form-error');
+    const errorText = document.getElementById('error-message-text');
+    const refDisplay = document.getElementById('success-reference-id');
+    const submitBtn = document.getElementById('contact-submit-btn') as HTMLButtonElement | null;
+    const submitText = document.getElementById('submit-btn-text');
+    const submitSpinner = document.getElementById('submit-btn-spinner');
+    const submitArrow = document.getElementById('submit-btn-arrow');
+    const msgTextarea = document.getElementById('contact-message') as HTMLTextAreaElement | null;
+    const charCounter = document.getElementById('char-counter');
 
-    form.addEventListener('submit', (e) => {
+    if (!form || !successMsg || !errorMsg || !submitBtn) return;
+
+    // Character counter listener
+    if (msgTextarea && charCounter) {
+      msgTextarea.addEventListener('input', () => {
+        const len = msgTextarea.value.length;
+        charCounter.textContent = `${len} / 3000`;
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      // Handle client-side confirmation feedback
-      form.reset();
-      form.style.display = 'none';
-      successMsg.classList.remove('hidden');
+      errorMsg.classList.add('hidden');
+
+      // Set Submitting State
+      submitBtn.disabled = true;
+      if (submitSpinner) submitSpinner.classList.remove('hidden');
+      if (submitArrow) submitArrow.classList.add('hidden');
+      if (submitText) submitText.textContent = 'Sending message...';
+
+      const formData = new FormData(form);
+      const payload = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        category: formData.get('category'),
+        message: formData.get('message'),
+        _gotcha: formData.get('_gotcha'),
+      };
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          form.reset();
+          form.classList.add('hidden');
+          if (refDisplay && data.referenceId) {
+            refDisplay.textContent = data.referenceId;
+          }
+          successMsg.classList.remove('hidden');
+        } else {
+          // Display error returned from API
+          if (errorText) {
+            errorText.textContent = data.error || 'Failed to submit form. Please check your inputs.';
+          }
+          errorMsg.classList.remove('hidden');
+          resetSubmitButton();
+        }
+      } catch (err) {
+        if (errorText) {
+          errorText.textContent = 'Network or edge connection error. Please try again or email contact@vanheartbeat.com.';
+        }
+        errorMsg.classList.remove('hidden');
+        resetSubmitButton();
+      }
     });
+
+    function resetSubmitButton() {
+      if (!submitBtn) return;
+      submitBtn.disabled = false;
+      if (submitSpinner) submitSpinner.classList.add('hidden');
+      if (submitArrow) submitArrow.classList.remove('hidden');
+      if (submitText) submitText.textContent = 'Send Message';
+    }
   }
 
   setupContactForm();
   document.addEventListener('astro:page-load', setupContactForm);
 </script>
+
