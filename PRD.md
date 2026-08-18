@@ -294,6 +294,90 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #9: Free & Local Community Events Radar (`/events`) — Active Live / Specification
+- **Module Identifier**: `community-events` (internal route `/events` and `/events/[event-slug]`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data Mandate**:
+  - All event dates, locations, descriptions, free-admission verifications, and permit notices are 100% real-world data ingested directly from the City of Vancouver Special Events & Film Permits Open Data API (`special-events-and-film-permits`), the Vancouver Park Board Activity Feed, the Vancouver Public Library (VPL) Program API, and TransLink Event Service Alerts.
+  - Zero synthetic, simulated, or mock events are permitted.
+  - Strict Non-Commercial Filter: Excludes paid nightlife, commercial trade shows, ticketed expos, and promotional spam.
+- **Problem Solved**:
+  - Finding authentic, free, all-ages, and family-friendly local events in Metro Vancouver (e.g. Park Board outdoor summer movies, neighborhood Car-Free Days, farmers' markets, cultural festivals like Khatsahlano and Greek Day, and library workshops) is difficult due to ad-heavy, paywalled commercial ticketing sites.
+  - Provides a sub-second, zero-ad community event radar with 1-tap `.ics` calendar export and transit routing.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveEvents()` implemented in `src/tools/community-events/services/eventService.ts`.
+  - Parallel queries to official municipal, Park Board, VPL, and TransLink feeds using `AbortSignal.timeout(1200)` / `AbortController`.
+  - Graceful Failover: If upstream feeds experience latency or outages, the loader immediately returns the last-known verified live event snapshot with `isStale: true` and an explicit timestamp rather than blocking page render.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (30-minute edge cache with 2-hour background revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/events`. Zero nested buttons or secondary action links.
+  - **80%+ Real Data Density**: Dedicated card space presents 6–10 live rows of verified free community events happening today and this upcoming weekend:
+    1. *Car-Free Day Commercial Dr* • Sun 12:00 PM (100% Free)
+    2. *Stanley Park Summer Cinema (Second Beach)* • Tue Dusk (Free Outdoor)
+    3. *Kitsilano Farmers Market* • Sun 10:00 AM (Free Entry)
+    4. *VPL Central Author Talk & Reading* • Thu 6:30 PM (Free)
+    5. *Greek Day on Broadway* • Sun 11:00 AM (Free Street Fest)
+    6. *Trout Lake Free Community Swim/Skate* • Sat 1:00 PM (Free Admission)
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_community-events')` allowing users to pin favorite recurring events, categories, or local venues to their home dashboard.
+  - **Zero Visual Bloat**: No decorative icons, category pills, or promotional marketing blurbs.
+- **Core Features**:
+  - **Filtered Chronological Event Feed**: 1-tap date navigation (*Today, This Weekend, Next 7 Days, This Month*).
+  - **Core Quality Filters**:
+    - 🎟️ *100% Free Admission*: Strictly filters out events requiring paid ticketing.
+    - 👨‍👩‍👧 *All-Ages / Family Friendly*: Focuses on community, youth, and family activities.
+    - 🌳 *Parks & Outdoors*: Highlights outdoor gatherings, movies, and plaza performances.
+    - 🚆 *Transit-Accessible*: Flags events within 500m of a SkyTrain station or major bus corridor.
+  - **Standardized Event Profile**:
+    - Event title and host organization (e.g. Vancouver Park Board, Kitsilano BIA)
+    - Date, start/end time, and recurring schedules
+    - Physical address, park/venue name, and neighborhood
+    - Weather contingency: "Rain or Shine" vs. "Weather Permitting"
+  - **1-Tap Calendar & Navigation Export**: Instant `.ics` calendar download (Apple / Google Calendar) and transit navigation links.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/community-events/types.ts
+  export type EventCategory = 
+    | 'street_festival' 
+    | 'park_outdoor' 
+    | 'library_talk' 
+    | 'farmers_market' 
+    | 'community_arts';
+
+  export interface TransitAccessInfo {
+    nearestSkyTrainStation?: string; // e.g. "Main Street-Science World"
+    busRoutes: string[];             // ["#99 B-Line", "#9", "#4"]
+    mobiBikeStationNearby: boolean;
+  }
+
+  export interface CommunityEvent {
+    id: string;                      // "khatsahlano-street-party-2026"
+    title: string;                   // "Khatsahlano Street Party"
+    shortDescription: string;
+    category: EventCategory;
+    organization: string;            // "Kitsilano 4th Avenue BIA"
+    venueName: string;               // "West 4th Avenue (Burrard to Macdonald)"
+    address: string;
+    neighbourhood: string;
+    latitude: number;
+    longitude: number;
+    startDateTime: string;           // ISO 8601
+    endDateTime: string;             // ISO 8601
+    isFreeAdmission: boolean;
+    isAllAges: boolean;
+    isOutdoor: boolean;
+    rainOrShine: boolean;
+    transitAccess: TransitAccessInfo;
+    officialSourceUrl: string;
+    lastUpdated: string;             // ISO 8601
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Page render $< 400\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript payload $< 15\text{KB}$; zero ad scripts or tracking pixels; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
