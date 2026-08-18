@@ -253,6 +253,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Bank of Canada policy rate & payment calculator',
     ],
   },
+  {
+    id: 'sports-courts',
+    name: 'Sports, Courts & Rec Radar',
+    shortDescription: 'Sub-second recreation radar for public tennis courts, lighted pickleball, length swimming & ice rinks.',
+    path: '/sports',
+    icon: 'sparkles',
+    category: 'outdoors',
+    status: 'active',
+    badgeText: 'Park Board Rec',
+    previewStat: {
+      value: '84 Courts',
+      label: 'Lighted & Open',
+      statusType: 'safe',
+    },
+    features: [
+      'Tennis & lighted pickleball night curfew locator',
+      'Live length swim & public pool session schedules',
+      'Ice rink public skate & drop-in hockey hours',
+      'Turf athletic field rainout & floodlight status',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

@@ -12,6 +12,7 @@ import { getLiveEvents } from '../../tools/community-events/services/eventServic
 import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
 import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat, formatCurrency } from '../../tools/housing-market/services/marketService';
+import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
 
 interface Props {
   tool: ToolMeta;
@@ -57,6 +58,9 @@ const marketData = tool.id === 'housing-market' ? await getLiveMarketHeartbeat()
 const allSubmarkets = marketData ? [marketData.metroOverview, ...marketData.submarkets] : [];
 const initialSubmarkets = allSubmarkets.slice(0, 6);
 
+const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
+const initialSportsFacilities = allSportsFacilities.slice(0, 6);
+
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const avgFreezingLevel = allMountains.length > 0
   ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
@@ -87,7 +91,8 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
       {tool.id === 'school-catchment' && 'VSB SD39 Catchments'}
       {tool.id === 'local-news' && 'Live News Wire'}
       {tool.id === 'housing-market' && '18.4% Balanced SAR'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && (tool.previewStat?.value || 'Beta')}
+      {tool.id === 'sports-courts' && '84 Public Courts'}
+      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && tool.id !== 'sports-courts' && (tool.previewStat?.value || 'Beta')}
     </span>
   </div>
 
@@ -417,7 +422,7 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
         return (
           <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-article-id={a.id}>
             <div class="truncate pr-2 font-medium">
-              <span class="font-bold text-slate-900 dark:text-white mr-1">[{a.outletName}]</span>
+              <span class="font-bold text-slate-900 dark:text-white mr-1">[${a.outletName}]</span>
               <span>{a.title}</span>
             </div>
             <div class="shrink-0 flex items-center gap-1.5 text-[11px] font-semibold">
@@ -461,8 +466,32 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     </div>
   )}
 
+  <!-- SPORTS, COURTS & REC: High-Density Sports Hubs List -->
+  {tool.id === 'sports-courts' && (
+    <div id="main-card-sports-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+      {initialSportsFacilities.map((f) => (
+        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id={f.id}>
+          <div class="truncate pr-2 font-medium">
+            <span>{f.name}</span>
+            {f.courtDetails?.hasLights && (
+              <span class="text-[10px] text-amber-500 ml-1 font-bold">💡 Lighted</span>
+            )}
+          </div>
+          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+            <span class="text-slate-500 dark:text-slate-400">
+              {f.session.currentMode.split('(')[0].trim()}
+            </span>
+            <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Open
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
   <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && (
+  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && tool.id !== 'sports-courts' && (
     <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
       {tool.features?.map((f) => (
         <div class="flex items-center gap-1.5">
@@ -1169,5 +1198,64 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
     }
 
     window.addEventListener('vanutils:pinned-market-changed', syncMainCardMarket);
+  </script>
+)}
+
+{tool.id === 'sports-courts' && (
+  <script is:inline define:vars={{ allSportsFacilitiesJson: JSON.stringify(allSportsFacilities) }}>
+    function syncMainCardSports() {
+      const grid = document.getElementById('main-card-sports-grid');
+      if (!grid) return;
+
+      const saved = localStorage.getItem('vanutils_pinned_sports-facilities');
+      const allFacilities = JSON.parse(allSportsFacilitiesJson || '[]');
+      
+      let displayList = [];
+      if (saved) {
+        try {
+          const pinnedIds = JSON.parse(saved);
+          const pinned = allFacilities.filter((f) => pinnedIds.includes(f.id));
+          const unpinned = allFacilities.filter((f) => !pinnedIds.includes(f.id));
+          displayList = [...pinned, ...unpinned].slice(0, 6);
+        } catch (e) {
+          displayList = allFacilities.slice(0, 6);
+        }
+      } else {
+        displayList = allFacilities.slice(0, 6);
+      }
+
+      if (displayList.length === 0) return;
+
+      grid.innerHTML = displayList.map((f) => {
+        const lightedTag = f.courtDetails?.hasLights
+          ? '<span class="text-[10px] text-amber-500 ml-1 font-bold">💡 Lighted</span>'
+          : '';
+
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id="${f.id}">
+            <div class="truncate pr-2 font-medium">
+              <span>${f.name}</span>
+              ${lightedTag}
+            </div>
+            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
+              <span class="text-slate-500 dark:text-slate-400">
+                ${f.session?.currentMode?.split('(')[0]?.trim() || 'Open'}
+              </span>
+              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Open
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncMainCardSports);
+    } else {
+      syncMainCardSports();
+    }
+
+    window.addEventListener('vanutils:pinned-sports-changed', syncMainCardSports);
   </script>
 )}

@@ -1,0 +1,234 @@
+[
+  {
+    "id": "kitsilano-beach-tennis",
+    "name": "Kitsilano Beach Tennis Courts",
+    "category": "tennis_court",
+    "address": "1499 Arbutus St, Vancouver, BC V6J 5T2",
+    "neighbourhood": "Kitsilano",
+    "latitude": 49.2735,
+    "longitude": -123.1535,
+    "phone": "(604) 257-8400",
+    "session": {
+      "currentMode": "Open Free Drop-in (30m Rotation)",
+      "isOpenNow": true,
+      "nextMode": "Floodlights Turn Off",
+      "nextStartsAt": "22:00"
+    },
+    "courtDetails": {
+      "totalCourts": 8,
+      "hasLights": true,
+      "lightsCurfewTime": "22:00",
+      "isDedicatedPickleball": false,
+      "surfaceType": "Hardcourt Acrylic",
+      "hasPracticeWall": true
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/tennis-courts.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.655Z",
+    "isStale": false
+  },
+  {
+    "id": "hillcrest-aquatic-centre",
+    "name": "Hillcrest Aquatic Centre",
+    "category": "swimming_pool",
+    "address": "4575 Clancy Loranger Way, Vancouver, BC V5Y 2M4",
+    "neighbourhood": "Riley Park",
+    "latitude": 49.2435,
+    "longitude": -123.1095,
+    "phone": "(604) 257-8680",
+    "session": {
+      "currentMode": "Length Swim (50m Pool)",
+      "endsAt": "14:30",
+      "nextMode": "Public & Family Swim",
+      "nextStartsAt": "15:00",
+      "isOpenNow": true
+    },
+    "poolDetails": {
+      "poolLengthMeters": 50,
+      "isOutdoor": false,
+      "hasHotTub": true,
+      "hasSaunaOrSteam": true,
+      "hasDivingBoards": true,
+      "acceptsOneCard": true
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/hillcrest-aquatic-centre.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  },
+  {
+    "id": "trout-lake-ice-rink",
+    "name": "Trout Lake Ice Rink",
+    "category": "ice_rink",
+    "address": "3360 Victoria Dr, Vancouver, BC V5N 4M4",
+    "neighbourhood": "Grandview-Woodland",
+    "latitude": 49.2555,
+    "longitude": -123.0645,
+    "phone": "(604) 257-6955",
+    "session": {
+      "currentMode": "Public Skate Session",
+      "endsAt": "15:00",
+      "nextMode": "Stick and Puck Drop-in",
+      "nextStartsAt": "15:30",
+      "isOpenNow": true
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/trout-lake-rink.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  },
+  {
+    "id": "queen-elizabeth-pickleball",
+    "name": "Queen Elizabeth Park Pickleball Courts",
+    "category": "pickleball_court",
+    "address": "4600 Cambie St, Vancouver, BC V5Y 2M9",
+    "neighbourhood": "South Cambie",
+    "latitude": 49.2415,
+    "longitude": -123.1125,
+    "phone": "(604) 257-8580",
+    "session": {
+      "currentMode": "Open Free Drop-in (Paddle Saddle Rotation)",
+      "isOpenNow": true,
+      "nextMode": "Dusk / Sunset Closure",
+      "nextStartsAt": "21:00"
+    },
+    "courtDetails": {
+      "totalCourts": 8,
+      "hasLights": false,
+      "isDedicatedPickleball": true,
+      "surfaceType": "Cushioned Acrylic",
+      "hasPracticeWall": false
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/pickleball.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  },
+  {
+    "id": "vancouver-aquatic-centre",
+    "name": "Vancouver Aquatic Centre (VAC)",
+    "category": "swimming_pool",
+    "address": "1050 Beach Ave, Vancouver, BC V6E 1T7",
+    "neighbourhood": "West End",
+    "latitude": 49.2775,
+    "longitude": -123.1365,
+    "phone": "(604) 665-3424",
+    "session": {
+      "currentMode": "Length Swim & Deep Water Diving",
+      "endsAt": "15:15",
+      "nextMode": "Public Leisure Swim",
+      "nextStartsAt": "15:30",
+      "isOpenNow": true
+    },
+    "poolDetails": {
+      "poolLengthMeters": 50,
+      "isOutdoor": false,
+      "hasHotTub": true,
+      "hasSaunaOrSteam": true,
+      "hasDivingBoards": true,
+      "acceptsOneCard": true
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/vancouver-aquatic-centre.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  },
+  {
+    "id": "andy-livingstone-park-turf",
+    "name": "Andy Livingstone Park Synthetic Turf Fields",
+    "category": "athletic_field",
+    "address": "89 Expo Blvd, Vancouver, BC V6A 3Z6",
+    "neighbourhood": "Downtown / Chinatown",
+    "latitude": 49.2785,
+    "longitude": -123.1045,
+    "phone": "(604) 257-8400",
+    "playabilityStatus": "open",
+    "session": {
+      "currentMode": "All-Weather Turf Open (Floodlit)",
+      "isOpenNow": true,
+      "nextMode": "Field Lights Curfew",
+      "nextStartsAt": "23:00"
+    },
+    "courtDetails": {
+      "totalCourts": 2,
+      "hasLights": true,
+      "lightsCurfewTime": "23:00",
+      "isDedicatedPickleball": false,
+      "surfaceType": "FieldTurf Synthetic Rubber Infill",
+      "hasPracticeWall": false
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/playing-field-status.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  },
+  {
+    "id": "stanley-park-tennis",
+    "name": "Stanley Park Tennis Pavilion & Courts",
+    "category": "tennis_court",
+    "address": "Pipeline Rd & Lagoon Dr, Vancouver, BC V6G 1Z4",
+    "neighbourhood": "West End",
+    "latitude": 49.2945,
+    "longitude": -123.1415,
+    "phone": "(604) 681-7722",
+    "session": {
+      "currentMode": "Open Free Public Play (11 Courts) + Pay-Book (6 Courts)",
+      "isOpenNow": true,
+      "nextMode": "Floodlight Curfew",
+      "nextStartsAt": "22:00"
+    },
+    "courtDetails": {
+      "totalCourts": 17,
+      "hasLights": true,
+      "lightsCurfewTime": "22:00",
+      "isDedicatedPickleball": false,
+      "surfaceType": "Hardcourt Plexipave",
+      "hasPracticeWall": true
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/stanley-park-tennis.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  },
+  {
+    "id": "britannia-ice-rink",
+    "name": "Britannia Community Ice Rink",
+    "category": "ice_rink",
+    "address": "1661 Napier St, Vancouver, BC V5L 4X4",
+    "neighbourhood": "Grandview-Woodland",
+    "latitude": 49.2745,
+    "longitude": -123.0715,
+    "phone": "(604) 718-5800",
+    "session": {
+      "currentMode": "Adult Drop-in Hockey (19+)",
+      "endsAt": "14:15",
+      "nextMode": "Public Skate & Family Session",
+      "nextStartsAt": "15:00",
+      "isOpenNow": true
+    },
+    "officialScheduleUrl": "https://britanniacentre.org/facilities/ice_rink",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  },
+  {
+    "id": "empire-fields-turf",
+    "name": "Empire Fields Synthetic Athletic Track & Pitches",
+    "category": "athletic_field",
+    "address": "2901 E Hastings St, Vancouver, BC V5K 5J1",
+    "neighbourhood": "Hastings-Sunrise",
+    "latitude": 49.2815,
+    "longitude": -123.0395,
+    "phone": "(604) 257-8400",
+    "playabilityStatus": "open",
+    "session": {
+      "currentMode": "All-Weather Synthetic Turf Open",
+      "isOpenNow": true,
+      "nextMode": "Sunset Lighting Active until 22:00",
+      "nextStartsAt": "22:00"
+    },
+    "courtDetails": {
+      "totalCourts": 2,
+      "hasLights": true,
+      "lightsCurfewTime": "22:00",
+      "isDedicatedPickleball": false,
+      "surfaceType": "Full-Size FIFA Synthetic Turf",
+      "hasPracticeWall": false
+    },
+    "officialScheduleUrl": "https://vancouver.ca/parks-recreation-culture/playing-field-status.aspx",
+    "lastUpdated": "2026-08-18T17:02:03.656Z",
+    "isStale": false
+  }
+]

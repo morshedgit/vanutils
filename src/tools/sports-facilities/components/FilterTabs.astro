@@ -1,0 +1,79 @@
+---
+interface Props {
+  activeTab?: string;
+}
+
+const { activeTab = 'all' } = Astro.props;
+
+const tabs = [
+  { id: 'all', label: 'All Sports Hubs', icon: '🏅' },
+  { id: 'tennis_court', label: 'Tennis & Pickleball', icon: '🎾' },
+  { id: 'swimming_pool', label: 'Aquatic Pools', icon: '🏊' },
+  { id: 'ice_rink', label: 'Ice Rinks & Arenas', icon: '⛸️' },
+  { id: 'athletic_field', label: 'Turf Pitches & Fields', icon: '⚽' },
+  { id: 'lighted', label: '💡 Lighted After Dark', icon: '🌙' },
+];
+---
+
+<div class="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none text-xs font-semibold">
+  {tabs.map((t) => (
+    <button
+      type="button"
+      data-sports-tab={t.id}
+      class={`sports-filter-btn px-3 py-1.5 rounded-xl border transition-all whitespace-nowrap flex items-center gap-1.5 ${
+        t.id === activeTab
+          ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-xs'
+          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+      }`}
+    >
+      <span>{t.icon}</span>
+      <span>{t.label}</span>
+    </button>
+  ))}
+</div>
+
+<script>
+  function setupSportsFilterTabs() {
+    const buttons = document.querySelectorAll('.sports-filter-btn');
+    const cards = document.querySelectorAll('.facility-card');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-sports-tab');
+
+        // Update button states
+        buttons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+          b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        });
+        btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
+        btn.classList.add('bg-slate-900', 'text-white', 'border-slate-900', 'dark:bg-white', 'dark:text-slate-900', 'dark:border-white', 'shadow-xs');
+
+        cards.forEach((card) => {
+          const cat = card.getAttribute('data-category');
+          const hasLights = card.getAttribute('data-has-lights') === 'true';
+
+          let match = false;
+          if (tabId === 'all') match = true;
+          else if (tabId === 'tennis_court' && (cat === 'tennis_court' || cat === 'pickleball_court')) match = true;
+          else if (tabId === 'swimming_pool' && cat === 'swimming_pool') match = true;
+          else if (tabId === 'ice_rink' && cat === 'ice_rink') match = true;
+          else if (tabId === 'athletic_field' && cat === 'athletic_field') match = true;
+          else if (tabId === 'lighted' && hasLights) match = true;
+
+          if (match) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSportsFilterTabs);
+  } else {
+    setupSportsFilterTabs();
+  }
+</script>

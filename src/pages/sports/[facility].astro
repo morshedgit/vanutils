@@ -1,0 +1,184 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import { getLiveSportsFacilities, getFacilityById, getCategoryMeta } from '../../tools/sports-facilities/services/sportsService';
+
+// Tiered Edge Cache: 30-minute edge TTL, 2-hour background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200');
+
+const { facility: facilityId } = Astro.params;
+const allFacilities = await getLiveSportsFacilities();
+const facility = getFacilityById(facilityId || '', allFacilities);
+
+if (!facility) {
+  return Astro.redirect('/sports');
+}
+
+const catMeta = getCategoryMeta(facility.category);
+---
+
+<ToolLayout
+  toolId="sports-courts"
+  title={`${facility.name} — Sports & Rec Radar`}
+  description={`Public drop-in schedules, active session mode (${facility.session.currentMode}), court lighting, and amenities at ${facility.name}.`}
+  currentPath={`/sports/${facility.id}`}
+  badgeText={catMeta.label}
+  status="active"
+>
+  <div class="space-y-6 max-w-4xl mx-auto">
+    <!-- Breadcrumb & Back Link -->
+    <div class="flex items-center justify-between">
+      <a
+        href="/sports"
+        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
+      >
+        <span>←</span>
+        <span>Back to Sports Radar</span>
+      </a>
+      <span class="text-xs text-slate-400">
+        Vancouver Park Board Drop-in Hub
+      </span>
+    </div>
+
+    <!-- Facility Hero Header -->
+    <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border ${catMeta.badgeBg}`}>
+            <span>{catMeta.icon}</span>
+            <span>{catMeta.label}</span>
+          </span>
+
+          {facility.courtDetails?.hasLights && (
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              💡 Lighted to {facility.courtDetails.lightsCurfewTime || '10 PM'}
+            </span>
+          )}
+        </div>
+
+        <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">
+          {facility.name}
+        </h2>
+        <p class="text-xs text-slate-300">
+          📍 {facility.address} • {facility.neighbourhood}
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          class="star-btn px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-amber-400 text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1.5"
+          data-facility-star-id={facility.id}
+        >
+          <span>⭐</span>
+          <span>Pin to Home</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Live Session & Drop-in Mode Box -->
+    <section class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>🕒</span>
+          <span>Live Session Status & Schedule Mode</span>
+        </h3>
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+          Open Now
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-1">
+          <span class="text-slate-500 dark:text-slate-400 font-semibold">Active Current Mode</span>
+          <div class="text-base font-black text-slate-900 dark:text-white">
+            {facility.session.currentMode}
+          </div>
+          {facility.session.endsAt && (
+            <span class="text-amber-600 dark:text-amber-400 font-bold block pt-1">
+              Ends at {facility.session.endsAt}
+            </span>
+          )}
+        </div>
+
+        {facility.session.nextMode && (
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-1">
+            <span class="text-slate-500 dark:text-slate-400 font-semibold">Next Scheduled Session</span>
+            <div class="text-base font-black text-sky-600 dark:text-sky-400">
+              {facility.session.nextMode}
+            </div>
+            {facility.session.nextStartsAt && (
+              <span class="text-slate-400 font-semibold block pt-1">
+                Starts at {facility.session.nextStartsAt}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Detailed Facility Specs -->
+    <section class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+        <span>⚙️</span>
+        <span>Amenity & Facility Specifications</span>
+      </h3>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        {facility.courtDetails && (
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+            <span class="text-slate-400 block mb-0.5">Court Count</span>
+            <span class="font-bold text-slate-900 dark:text-white">{facility.courtDetails.totalCourts} Total Courts</span>
+          </div>
+        )}
+
+        {facility.courtDetails?.hasLights !== undefined && (
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+            <span class="text-slate-400 block mb-0.5">Night Floodlights</span>
+            <span class="font-bold text-slate-900 dark:text-white">
+              {facility.courtDetails.hasLights ? `Active (${facility.courtDetails.lightsCurfewTime})` : 'Unlighted'}
+            </span>
+          </div>
+        )}
+
+        {facility.poolDetails && (
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+            <span class="text-slate-400 block mb-0.5">Pool Dimensions</span>
+            <span class="font-bold text-slate-900 dark:text-white">{facility.poolDetails.poolLengthMeters}m Length</span>
+          </div>
+        )}
+
+        {facility.poolDetails?.hasHotTub !== undefined && (
+          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+            <span class="text-slate-400 block mb-0.5">Sauna / Hot Tub</span>
+            <span class="font-bold text-slate-900 dark:text-white">
+              {facility.poolDetails.hasHotTub ? '✓ Available' : 'No'}
+            </span>
+          </div>
+        )}
+
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-slate-400 block mb-0.5">OneCard Universal Pass</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400">✓ Accepted</span>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-slate-400 block mb-0.5">Contact</span>
+          <span class="font-bold text-slate-900 dark:text-white">{facility.phone || '(604) 257-8400'}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outbound Park Board Schedule Link -->
+    <div class="flex items-center gap-3">
+      <a
+        href={facility.officialScheduleUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
+      >
+        <span>View Full Vancouver Park Board Schedule</span>
+        <span>↗</span>
+      </a>
+    </div>
+  </div>
+</ToolLayout>
