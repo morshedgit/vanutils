@@ -1,0 +1,20 @@
+---
+import type { MatchResult } from '../types';
+import { getFormBadgeStyle } from '../services/sportsTeamsService';
+
+interface Props {
+  result: MatchResult;
+  size?: 'sm' | 'md';
+}
+
+const { result, size = 'sm' } = Astro.props;
+const style = getFormBadgeStyle(result);
+const sizeClasses = size === 'sm' ? 'w-5 h-5 text-[10px]' : 'w-6 h-6 text-xs';
+---
+
+<span
+  class={`inline-flex items-center justify-center font-black rounded-full border ${style.bgColor} ${style.textColor} ${style.borderColor} ${sizeClasses} shrink-0 transition-transform hover:scale-110`}
+  title={`Game Result: ${result}`}
+>
+  {style.label}
+</span>

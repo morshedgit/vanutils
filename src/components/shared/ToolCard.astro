@@ -14,6 +14,7 @@ import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/news
 import { getLiveMarketHeartbeat } from '../../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
 import { getLiveWeather } from '../../tools/weather-forecast/services/weatherService';
+import { getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
 
 interface Props {
   tool: ToolMeta;
@@ -74,6 +75,10 @@ const initialWeatherStations = allWeatherStations.slice(0, 4);
 const avgWeatherTemp = allWeatherStations.length > 0
   ? Math.round((allWeatherStations.reduce((acc, s) => acc + s.current.temperatureCelsius, 0) / allWeatherStations.length) * 10) / 10
   : 19.4;
+
+const sportsTeamsData = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
+const allSportsTeams = sportsTeamsData ? sportsTeamsData.teams : [];
+const initialSportsTeams = allSportsTeams.slice(0, 4);
 ---
 
 <div
@@ -98,6 +103,7 @@ const avgWeatherTemp = allWeatherStations.length > 0
         {tool.id === 'housing-market' && '📈'}
         {tool.id === 'sports-courts' && '🎾'}
         {tool.id === 'weather-forecast' && '🌦️'}
+        {tool.id === 'sports-teams' && '🏒'}
       </span>
       <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
         {tool.name}
@@ -120,6 +126,7 @@ const avgWeatherTemp = allWeatherStations.length > 0
         {tool.id === 'housing-market' && '18.4% SAR'}
         {tool.id === 'sports-courts' && '84 Courts'}
         {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
+        {tool.id === 'sports-teams' && `${allSportsTeams.length} Pro Teams`}
       </span>
     </a>
   </div>
@@ -672,6 +679,30 @@ const avgWeatherTemp = allWeatherStations.length > 0
         </div>
       </div>
     )}
+
+    <!-- 15. MAJOR SPORTS TEAMS: Live Game Day Radar & Standings -->
+    {tool.id === 'sports-teams' && sportsTeamsData && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
+            <span>PRO FRANCHISE RADAR</span>
+          </span>
+          <span class="text-sky-600 dark:text-sky-400 font-extrabold uppercase text-[9px]">
+            {sportsTeamsData.gameDaySummary.gamesTodayCount > 0 ? `${sportsTeamsData.gameDaySummary.gamesTodayCount} GAMES TODAY` : 'NEXT GAME TONIGHT'}
+          </span>
+        </div>
+
+        {sportsTeamsData.gameDaySummary.imminentGame && (
+          <div class="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-[11px] font-bold text-sky-900 dark:text-sky-200 flex items-center justify-between">
+            <span class="truncate">⚡ {sportsTeamsData.gameDaySummary.imminentGame.teamName.replace('Vancouver ', '')} vs {sportsTeamsData.gameDaySummary.imminentGame.opponentName}</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-700 dark:text-sky-300 shrink-0 ml-1">
+              {sportsTeamsData.gameDaySummary.imminentGame.startTimePST}
+            </span>
+          </div>
+        )}
+      </div>
+    )}
   </div>
 
   <!-- COMPACT LIVE TELEMETRY ROWS WITH DIRECT MICRO-LINKING -->
@@ -969,6 +1000,31 @@ const avgWeatherTemp = allWeatherStations.length > 0
               <span class="text-slate-400">
                 {s.current.precipitation24hMm > 0 ? `🌧️ ${s.current.precipitation24hMm}mm` : '☀️ 0mm'}
               </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <!-- MAJOR SPORTS TEAMS -->
+    {tool.id === 'sports-teams' && (
+      <div class="space-y-1" id="main-card-sports-teams-grid">
+        {initialSportsTeams.map((t) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-team-id={t.id}>
+            <a href={`/sports-teams/${t.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors flex items-center gap-1.5">
+              <span>{t.emoji}</span>
+              <span class="font-bold">{t.shortName}</span>
+              <span class="text-[10px] text-slate-400 font-normal">({t.league})</span>
+            </a>
+            <div class="shrink-0 flex items-center gap-1.5 text-[11px]">
+              <span class="font-bold text-slate-700 dark:text-slate-300 text-[10px]">{t.standings.record}</span>
+              <div class="flex items-center gap-0.5">
+                {t.standings.formLast5.slice(0, 3).map((res) => (
+                  <span class={`w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold text-[8px] ${res === 'W' ? 'bg-emerald-500 text-white' : res === 'L' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white'}`}>
+                    {res}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         ))}

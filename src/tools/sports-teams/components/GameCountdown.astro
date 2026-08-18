@@ -1,0 +1,55 @@
+---
+interface Props {
+  imminentGame: {
+    teamName: string;
+    opponentName: string;
+    startTimePST: string;
+    venueName: string;
+    broadcastTV: string;
+    isHome: boolean;
+  } | null;
+  gamesTodayCount: number;
+}
+
+const { imminentGame, gamesTodayCount } = Astro.props;
+---
+
+<div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-sky-900 via-indigo-900 to-slate-900 text-white p-4 sm:p-5 border border-sky-700/40 shadow-sm">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl sm:text-3xl animate-bounce">⚡</span>
+      <div class="space-y-0.5">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-sky-500 text-white">
+            {gamesTodayCount > 0 ? `${gamesTodayCount} Game${gamesTodayCount > 1 ? 's' : ''} Today` : 'Next Matchup'}
+          </span>
+          <span class="text-xs text-sky-200 font-medium">Metro Vancouver Game Day Radar</span>
+        </div>
+        {imminentGame ? (
+          <h2 class="text-sm sm:text-base font-black tracking-tight text-white flex flex-wrap items-center gap-1.5">
+            <span>{imminentGame.teamName}</span>
+            <span class="text-sky-400 font-normal">vs</span>
+            <span>{imminentGame.opponentName}</span>
+            <span class="text-slate-400 text-xs font-normal">• {imminentGame.startTimePST}</span>
+          </h2>
+        ) : (
+          <p class="text-xs text-slate-300">No imminent games scheduled for today. Check upcoming team fixtures below.</p>
+        )}
+      </div>
+    </div>
+
+    {imminentGame && (
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-white/10 pt-3 sm:pt-0">
+        <div class="text-left sm:text-right text-xs">
+          <div class="text-sky-300 font-semibold flex items-center gap-1 sm:justify-end">
+            <span>📺</span>
+            <span>{imminentGame.broadcastTV}</span>
+          </div>
+          <div class="text-[11px] text-slate-300">
+            📍 {imminentGame.venueName} {imminentGame.isHome ? '(Home)' : '(Away)'}
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</div>

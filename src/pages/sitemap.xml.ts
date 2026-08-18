@@ -14,6 +14,7 @@ import { getLiveNews } from '../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../tools/sports-facilities/services/sportsService';
 import { getLiveWeather } from '../tools/weather-forecast/services/weatherService';
+import { getLiveSportsTeams } from '../tools/sports-teams/services/sportsTeamsService';
 
 export const GET: APIRoute = async () => {
   const baseUrl = 'https://vanheartbeat.ca';
@@ -146,6 +147,14 @@ export const GET: APIRoute = async () => {
     const weatherStations = await getLiveWeather();
     weatherStations.forEach((ws) => {
       dynamicRoutes.push({ url: `${baseUrl}/weather/${ws.id}`, priority: '0.8', changefreq: 'hourly' });
+    });
+  } catch (e) {}
+
+  // Major Sports Teams
+  try {
+    const { teams } = await getLiveSportsTeams();
+    teams.forEach((tm) => {
+      dynamicRoutes.push({ url: `${baseUrl}/sports-teams/${tm.id}`, priority: '0.8', changefreq: 'daily' });
     });
   } catch (e) {}
 

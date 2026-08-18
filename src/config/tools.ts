@@ -295,6 +295,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       '1-Tap GPS closest neighborhood station locator',
     ],
   },
+  {
+    id: 'sports-teams',
+    name: 'Major Sports Teams Radar',
+    shortDescription: 'Live scores, game day schedules, 5-game form & TV/radio broadcast channels for Canucks, Whitecaps, BC Lions & Canadians.',
+    path: '/sports-teams',
+    icon: 'trophy',
+    category: 'outdoors',
+    status: 'active',
+    badgeText: 'Live Game Radar',
+    previewStat: {
+      value: 'Canucks vs CGY',
+      label: 'Next Game • 7:00 PM',
+      statusType: 'safe',
+    },
+    features: [
+      'Real-time scores & period/quarter tracking',
+      'Visual 5-game form streak indicators (W/L/OTL)',
+      'Direct TV & Radio broadcast channel listings',
+      'Rogers Arena & BC Place SkyTrain transit wayfinding',
+    ],
+  },
 ];
 
 export const VANCOUVER_LOCATION_PRESETS: VancouverLocationPreset[] = [

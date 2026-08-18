@@ -1,0 +1,51 @@
+---
+import type { TeamVenue } from '../types';
+
+interface Props {
+  venue: TeamVenue;
+  teamName: string;
+}
+
+const { venue, teamName } = Astro.props;
+---
+
+<div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+  <div class="flex items-center gap-2">
+    <span class="text-xl">🚇</span>
+    <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+      Game Day Transit &amp; Stadium Guide: {venue.name} ({teamName})
+    </h3>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1">
+      <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+        <span>📍</span> Venue Address
+      </span>
+      <p class="text-slate-600 dark:text-slate-400">
+        {venue.address}
+      </p>
+      <div class="text-[10px] text-slate-400 font-semibold">
+        Capacity: {venue.capacity.toLocaleString()} fans
+      </div>
+    </div>
+
+    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1">
+      <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+        <span>🚆</span> Nearest SkyTrain
+      </span>
+      <p class="text-slate-600 dark:text-slate-400">
+        {venue.skytrainStation}
+      </p>
+    </div>
+
+    <div class="p-3.5 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900/40 space-y-1">
+      <span class="font-bold text-sky-900 dark:text-sky-300 flex items-center gap-1.5">
+        <span>💡</span> Pro Game Day Tip
+      </span>
+      <p class="text-sky-800 dark:text-sky-300 text-[11px] leading-relaxed">
+        {venue.transitTip}
+      </p>
+    </div>
+  </div>
+</div>

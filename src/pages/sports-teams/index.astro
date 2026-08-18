@@ -1,0 +1,328 @@
+---
+import PlatformLayout from '../../layouts/PlatformLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
+import { getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
+import TeamCard from '../../tools/sports-teams/components/TeamCard.astro';
+import GameCountdown from '../../tools/sports-teams/components/GameCountdown.astro';
+
+// Edge cache for 1 minute with 2-minute background revalidation
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+
+const { teams, gameDaySummary } = await getLiveSportsTeams();
+
+const sportsSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Vancouver Major Sports Teams Radar & Game Schedules | VanHeartbeat',
+    description: 'Live scores, upcoming game day schedules, 5-game form, standings, and TV/radio broadcast channels for all major Vancouver professional sports franchises.',
+    url: 'https://vanheartbeat.ca/sports-teams',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Sports Teams Radar', item: 'https://vanheartbeat.ca/sports-teams' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Where do the Vancouver Canucks play and what is the nearest SkyTrain station?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The Vancouver Canucks play their home games at Rogers Arena (800 Griffiths Way in Downtown Vancouver). The arena is directly accessible from the Stadium-Chinatown Station on the Expo Line.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What radio station broadcasts Vancouver Canucks games?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'All Vancouver Canucks regular season and playoff games are broadcast live on Sportsnet 650 AM with pre-game and post-game coverage.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where do Vancouver Whitecaps FC and BC Lions play?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Both Vancouver Whitecaps FC (MLS) and the BC Lions (CFL) play their home games under the retractable roof at BC Place (777 Pacific Blvd), accessible via Stadium-Chinatown Station or Yaletown-Roundhouse Station.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where do the Vancouver Canadians play baseball?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The Vancouver Canadians (High-A Northwest League affiliate of the Toronto Blue Jays) play at historic Nat Bailey Stadium located at 4601 Ontario St next to Queen Elizabeth Park.',
+        },
+      },
+    ],
+  },
+];
+---
+
+<PlatformLayout
+  title="Vancouver Major Sports Teams Radar & Game Day Schedule — VanHeartbeat"
+  description="Live scores, upcoming game day schedules, 5-game form, standings, and TV/radio broadcast channels for Canucks, Whitecaps, BC Lions, Canadians, and Warriors."
+  currentPath="/sports-teams"
+>
+  <JsonLd schema={sportsSchema} />
+
+  <div class="space-y-8 max-w-6xl mx-auto py-4 sm:py-6">
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-md bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20 text-xs font-black uppercase tracking-wider">
+            🏒 Pro Sports Radar
+          </span>
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400">
+            {teams.length} Major Franchises
+          </span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Major Sports Teams Radar
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
+          Real-time scores, standings, 5-game form, and direct TV/Radio broadcast channels for all major Vancouver professional teams.
+        </p>
+      </div>
+
+      <!-- Quick Stats Pill -->
+      <div class="flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 shadow-xs shrink-0">
+        <div class="text-center px-2">
+          <div class="text-lg font-black text-slate-900 dark:text-white">{teams.length}</div>
+          <div class="text-[10px] text-slate-500 uppercase font-bold">Pro Teams</div>
+        </div>
+        <div class="h-8 w-px bg-slate-200 dark:bg-slate-800"></div>
+        <div class="text-center px-2">
+          <div class="text-lg font-black text-emerald-600 dark:text-emerald-400">{gameDaySummary.gamesTodayCount}</div>
+          <div class="text-[10px] text-slate-500 uppercase font-bold">Games Today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Game Day Countdown & Imminent Matchup Banner -->
+    <GameCountdown imminentGame={gameDaySummary.imminentGame} gamesTodayCount={gameDaySummary.gamesTodayCount} />
+
+    <!-- Filter Bar -->
+    <div class="flex items-center justify-between gap-4 overflow-x-auto pb-2 scrollbar-none">
+      <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold shrink-0" id="league-filters">
+        <button
+          type="button"
+          class="league-filter-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs transition-all"
+          data-filter="all"
+        >
+          All Franchises
+        </button>
+        <button
+          type="button"
+          class="league-filter-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all"
+          data-filter="NHL"
+        >
+          🏒 NHL Hockey
+        </button>
+        <button
+          type="button"
+          class="league-filter-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all"
+          data-filter="MLS"
+        >
+          ⚽ MLS Soccer
+        </button>
+        <button
+          type="button"
+          class="league-filter-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all"
+          data-filter="CFL"
+        >
+          🏈 CFL Football
+        </button>
+        <button
+          type="button"
+          class="league-filter-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all"
+          data-filter="MiLB"
+        >
+          ⚾ MiLB Baseball
+        </button>
+      </div>
+
+      <span class="text-xs text-slate-400 hidden sm:inline-block shrink-0">
+        ⭐ Star any franchise to pin to your home dashboard
+      </span>
+    </div>
+
+    <!-- Teams Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="teams-grid">
+      {teams.map((team) => (
+        <TeamCard team={team} />
+      ))}
+    </div>
+
+    <!-- Stadiums & Transit Wayfinding Overview -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🏟️</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Stadiums &amp; SkyTrain Guide
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
+          <div class="font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span>Rogers Arena (Canucks / Warriors)</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 font-mono">18,910 cap</span>
+          </div>
+          <p class="text-slate-600 dark:text-slate-400">
+            <strong>Transit:</strong> Stadium-Chinatown Station (Expo Line). Direct bridge connector to Gates 10 &amp; 16.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
+          <div class="font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span>BC Place (Whitecaps / Lions)</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 font-mono">25,000+ cap</span>
+          </div>
+          <p class="text-slate-600 dark:text-slate-400">
+            <strong>Transit:</strong> Stadium-Chinatown or Yaletown-Roundhouse Station (Canada Line).
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
+          <div class="font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span>Nat Bailey Stadium (Canadians)</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 font-mono">6,500 cap</span>
+          </div>
+          <p class="text-slate-600 dark:text-slate-400">
+            <strong>Transit:</strong> King Edward Station (Canada Line) + #25 bus east or walk 15 mins through QE Park.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GEO FAQ Accordion -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Frequently Asked Questions: Vancouver Sports Telemetry
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where can I listen to Vancouver Canucks games on the radio?
+          </h3>
+          <p>
+            All Vancouver Canucks games are broadcast live on <strong>Sportsnet 650 AM</strong> (CISL) across Metro Vancouver and streamed on the Sportsnet app.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How do I watch Vancouver Whitecaps MLS matches in British Columbia?
+          </h3>
+          <p>
+            All Whitecaps FC MLS regular season and Leagues Cup matches stream live in HD on the <strong>Apple TV app (MLS Season Pass)</strong>, with select marquee matches broadcast nationally on TSN and RDS.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Are Vancouver sports scores updated live on VanHeartbeat?
+          </h3>
+          <p>
+            Yes. VanHeartbeat ingests official REST endpoints directly from the NHL Web API, MLS/ESPN scoreboards, and CFL telemetry with sub-minute edge caching during active game periods.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</PlatformLayout>
+
+<script>
+  function setupSportsTeamsPage() {
+    const filterButtons = document.querySelectorAll('.league-filter-btn');
+    const teamCards = document.querySelectorAll('#teams-grid [data-league]');
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter') || 'all';
+
+        // Update active styling
+        filterButtons.forEach((b) => {
+          b.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'shadow-xs');
+          b.classList.add('text-slate-600', 'dark:text-slate-400');
+        });
+
+        btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-900', 'dark:text-white', 'shadow-xs');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-400');
+
+        // Filter cards
+        teamCards.forEach((card) => {
+          const cardLeague = card.getAttribute('data-league');
+          if (filter === 'all' || cardLeague === filter) {
+            (card as HTMLElement).style.display = 'flex';
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Pinning handler
+    const STORAGE_KEY = 'vanutils_pinned_sports-teams';
+    const pinButtons = document.querySelectorAll('.pin-team-btn');
+
+    function getPinned(): string[] {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function updatePinIcons() {
+      const pinned = getPinned();
+      pinButtons.forEach((btn) => {
+        const teamId = btn.getAttribute('data-team-pin');
+        if (teamId && pinned.includes(teamId)) {
+          btn.classList.add('text-amber-500');
+          btn.classList.remove('text-slate-400');
+        } else {
+          btn.classList.remove('text-amber-500');
+          btn.classList.add('text-slate-400');
+        }
+      });
+    }
+
+    pinButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const teamId = btn.getAttribute('data-team-pin');
+        if (!teamId) return;
+
+        let pinned = getPinned();
+        if (pinned.includes(teamId)) {
+          pinned = pinned.filter((id) => id !== teamId);
+        } else {
+          pinned.push(teamId);
+        }
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(pinned));
+        updatePinIcons();
+        window.dispatchEvent(new CustomEvent('vanutils:pinned-sports-teams-changed', { detail: pinned }));
+      });
+    });
+
+    updatePinIcons();
+  }
+
+  setupSportsTeamsPage();
+  document.addEventListener('astro:page-load', setupSportsTeamsPage);
+</script>
