@@ -12,7 +12,7 @@
     "reverseRouteId": "SWB-TSA",
     "frequencyText": "Hourly on the hour (7:00 AM – 9:00 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:42:44.495Z",
+    "lastUpdated": "2026-08-18T21:46:30.815Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -31,13 +31,13 @@
         "departureTime": "3:00 pm",
         "arrivalTime": "",
         "vesselName": "Spirit of British Columbia",
-        "deckSpacePercent": 23,
+        "deckSpacePercent": 22,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "moderate",
         "weatherRisk": "normal",
-        "statusText": "23% Space Available"
+        "statusText": "22% Space Available"
       },
       {
         "departureTime": "4:00 pm",
@@ -127,13 +127,13 @@
         "departureTime": "7:00 am",
         "arrivalTime": "",
         "vesselName": "Spirit of British Columbia",
-        "deckSpacePercent": 45,
+        "deckSpacePercent": 44,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "45% Space Available"
+        "statusText": "44% Space Available"
       },
       {
         "departureTime": "8:00 am",
@@ -180,7 +180,7 @@
     "reverseRouteId": "NAN-HSB",
     "frequencyText": "Every 2 hours (6:30 AM – 10:40 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:42:44.496Z",
+    "lastUpdated": "2026-08-18T21:46:30.815Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -312,7 +312,7 @@
     "reverseRouteId": "LNG-HSB",
     "frequencyText": "8-10 Daily Sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:42:44.496Z",
+    "lastUpdated": "2026-08-18T21:46:30.815Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -331,25 +331,25 @@
         "departureTime": "3:40 pm",
         "arrivalTime": "",
         "vesselName": "Queen of Coquitlam",
-        "deckSpacePercent": 66,
+        "deckSpacePercent": 63,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "66% Space Available"
+        "statusText": "63% Space Available"
       },
       {
         "departureTime": "4:40 pm",
         "arrivalTime": "",
         "vesselName": "Queen of Surrey",
-        "deckSpacePercent": 70,
+        "deckSpacePercent": 71,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "70% Space Available"
+        "statusText": "71% Space Available"
       },
       {
         "departureTime": "6:05 pm",
@@ -460,7 +460,7 @@
     "reverseRouteId": "DUK-TSA",
     "frequencyText": "Every 2.5 hours (5:15 AM – 10:45 PM)",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:42:44.496Z",
+    "lastUpdated": "2026-08-18T21:46:30.815Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -503,13 +503,13 @@
         "departureTime": "5:45 pm",
         "arrivalTime": "",
         "vesselName": "Coastal Inspiration",
-        "deckSpacePercent": 14,
+        "deckSpacePercent": 12,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "high",
         "weatherRisk": "normal",
-        "statusText": "14% Space Available"
+        "statusText": "12% Space Available"
       },
       {
         "departureTime": "8:15 pm",
@@ -702,7 +702,7 @@
     "reverseRouteId": "BOW-HSB",
     "frequencyText": "Hourly departures",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:42:44.496Z",
+    "lastUpdated": "2026-08-18T21:46:30.815Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -861,7 +861,7 @@
     "crossingDurationMinutes": 55,
     "frequencyText": "4-6 daily multi-island direct & thru sailings",
     "activeNotices": [],
-    "lastUpdated": "2026-08-18T21:42:44.496Z",
+    "lastUpdated": "2026-08-18T21:46:30.815Z",
     "isStale": false,
     "nextSailings": [
       {
@@ -880,13 +880,13 @@
         "departureTime": "4:00 pm",
         "arrivalTime": "",
         "vesselName": "Salish Eagle",
-        "deckSpacePercent": 47,
+        "deckSpacePercent": 49,
         "passengerSpaceAvailable": true,
         "isCancelled": false,
         "delayMinutes": 0,
         "standbyRisk": "low",
         "weatherRisk": "normal",
-        "statusText": "47% Space Available"
+        "statusText": "49% Space Available"
       },
       {
         "departureTime": "7:50 pm",

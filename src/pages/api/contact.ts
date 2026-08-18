@@ -56,8 +56,10 @@ function checkRateLimit(clientIp: string): boolean {
   return true;
 }
 
-export const POST: APIRoute = async ({ request, clientAddress }) => {
+export const POST: APIRoute = async ({ request, clientAddress, locals }) => {
   try {
+    const runtimeEnv = (locals as any)?.runtime?.env || {};
+    const getEnv = (key: string) => runtimeEnv[key] || process.env[key];
     // 1. Identify Client IP
     const clientIp =
       request.headers.get('cf-connecting-ip') ||
@@ -258,8 +260,8 @@ To reply to the sender, reply directly to this email.
     `.trim();
 
     // 7. Email Dispatch Pipeline via Cloudflare Edge Transport
-    const targetRecipient = process.env.CONTACT_RECIPIENT_EMAIL || 'contact@vanheartbeat.com';
-    const resendApiKey = process.env.RESEND_API_KEY;
+    const targetRecipient = getEnv('CONTACT_RECIPIENT_EMAIL') || 'contact@vanheartbeat.com';
+    const resendApiKey = getEnv('RESEND_API_KEY');
 
     if (resendApiKey) {
       const emailRes = await fetch('https://api.resend.com/emails', {

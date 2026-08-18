@@ -4,24 +4,24 @@
     "name": "Cypress Mountain",
     "shortName": "Cypress (1,440m)",
     "region": "north_shore",
-    "currentFreezingLevelMeters": 4420,
+    "currentFreezingLevelMeters": 4410,
     "elevationBands": [
       {
         "label": "Base (Downhill Lodge)",
         "elevationMeters": 910,
-        "temperatureCelsius": 18.6,
+        "temperatureCelsius": 18.8,
         "precipitation": "clear"
       },
       {
         "label": "Mid-Mountain",
         "elevationMeters": 1100,
-        "temperatureCelsius": 17.4,
+        "temperatureCelsius": 17.6,
         "precipitation": "clear"
       },
       {
         "label": "Mt. Strachan Summit",
         "elevationMeters": 1440,
-        "temperatureCelsius": 15.2,
+        "temperatureCelsius": 15.4,
         "precipitation": "clear"
       }
     ],
@@ -67,7 +67,7 @@
       }
     ],
     "officialSourceUrl": "https://cypressmountain.com/downhill-conditions-and-cams",
-    "lastUpdated": "2026-08-18T21:42:45.292Z"
+    "lastUpdated": "2026-08-18T21:46:31.607Z"
   },
   {
     "id": "grouse",
@@ -79,19 +79,19 @@
       {
         "label": "Valley / Skyride Base",
         "elevationMeters": 274,
-        "temperatureCelsius": 21.9,
+        "temperatureCelsius": 22.1,
         "precipitation": "clear"
       },
       {
         "label": "Chalet Plateau",
         "elevationMeters": 1128,
-        "temperatureCelsius": 16.4,
+        "temperatureCelsius": 16.6,
         "precipitation": "clear"
       },
       {
         "label": "The Peak",
         "elevationMeters": 1250,
-        "temperatureCelsius": 15.6,
+        "temperatureCelsius": 15.8,
         "precipitation": "clear"
       }
     ],
@@ -137,7 +137,7 @@
       }
     ],
     "officialSourceUrl": "https://www.grousemountain.com/current-conditions",
-    "lastUpdated": "2026-08-18T21:42:45.294Z"
+    "lastUpdated": "2026-08-18T21:46:31.634Z"
   },
   {
     "id": "seymour",
@@ -207,31 +207,31 @@
       }
     ],
     "officialSourceUrl": "https://mtseymour.ca/today",
-    "lastUpdated": "2026-08-18T21:42:45.294Z"
+    "lastUpdated": "2026-08-18T21:46:31.634Z"
   },
   {
     "id": "whistler",
     "name": "Whistler Blackcomb",
     "shortName": "Whistler (2,284m)",
     "region": "sea_to_sky",
-    "currentFreezingLevelMeters": 4350,
+    "currentFreezingLevelMeters": 4340,
     "elevationBands": [
       {
         "label": "Whistler Village",
         "elevationMeters": 675,
-        "temperatureCelsius": 22,
+        "temperatureCelsius": 22.1,
         "precipitation": "clear"
       },
       {
         "label": "Mid-Mountain (Roundhouse)",
         "elevationMeters": 1850,
-        "temperatureCelsius": 14.3,
+        "temperatureCelsius": 14.4,
         "precipitation": "clear"
       },
       {
         "label": "Whistler Peak",
         "elevationMeters": 2284,
-        "temperatureCelsius": 11.5,
+        "temperatureCelsius": 11.6,
         "precipitation": "clear"
       }
     ],
@@ -277,6 +277,6 @@
       }
     ],
     "officialSourceUrl": "https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
-    "lastUpdated": "2026-08-18T21:42:45.293Z"
+    "lastUpdated": "2026-08-18T21:46:31.618Z"
   }
 ]

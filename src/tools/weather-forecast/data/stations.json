@@ -10,9 +10,9 @@
     "officialStationCode": "CWVF",
     "current": {
       "temperatureCelsius": 23.9,
-      "feelsLikeCelsius": 26.1,
+      "feelsLikeCelsius": 26.3,
       "condition": "sunny",
-      "humidityPercent": 63,
+      "humidityPercent": 66,
       "windSpeedKmh": 9,
       "windDirection": "WNW",
       "windGustKmh": 10,
@@ -140,7 +140,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:42:48.078Z",
+    "lastUpdated": "2026-08-18T21:46:34.134Z",
     "isStale": false
   },
   {
@@ -154,9 +154,9 @@
     "officialStationCode": "CWKB",
     "current": {
       "temperatureCelsius": 23.5,
-      "feelsLikeCelsius": 26,
+      "feelsLikeCelsius": 26.2,
       "condition": "sunny",
-      "humidityPercent": 66,
+      "humidityPercent": 69,
       "windSpeedKmh": 8,
       "windDirection": "W",
       "windGustKmh": 10,
@@ -239,7 +239,7 @@
         "date": "2026-08-19",
         "dayOfWeek": "Wednesday",
         "tempHighCelsius": 24,
-        "tempLowCelsius": 16,
+        "tempLowCelsius": 15,
         "totalPrecipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast",
@@ -284,7 +284,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:42:48.075Z",
+    "lastUpdated": "2026-08-18T21:46:34.140Z",
     "isStale": false
   },
   {
@@ -297,12 +297,12 @@
     "elevationMeters": 160,
     "officialStationCode": "CWNV",
     "current": {
-      "temperatureCelsius": 23.2,
-      "feelsLikeCelsius": 24.7,
+      "temperatureCelsius": 23.3,
+      "feelsLikeCelsius": 24.8,
       "condition": "sunny",
-      "humidityPercent": 59,
+      "humidityPercent": 60,
       "windSpeedKmh": 10,
-      "windDirection": "WSW",
+      "windDirection": "SW",
       "windGustKmh": 12,
       "pressureKpa": 100.1,
       "uvIndex": 6,
@@ -428,7 +428,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:42:48.081Z",
+    "lastUpdated": "2026-08-18T21:46:34.145Z",
     "isStale": false
   },
   {
@@ -442,12 +442,12 @@
     "officialStationCode": "CWVR",
     "current": {
       "temperatureCelsius": 22.3,
-      "feelsLikeCelsius": 24.4,
+      "feelsLikeCelsius": 24.7,
       "condition": "sunny",
-      "humidityPercent": 73,
-      "windSpeedKmh": 11,
+      "humidityPercent": 77,
+      "windSpeedKmh": 12,
       "windDirection": "WSW",
-      "windGustKmh": 13,
+      "windGustKmh": 14,
       "pressureKpa": 101.9,
       "uvIndex": 6,
       "precipitation24hMm": 0
@@ -572,7 +572,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:42:48.073Z",
+    "lastUpdated": "2026-08-18T21:46:34.144Z",
     "isStale": false
   },
   {
@@ -585,13 +585,13 @@
     "elevationMeters": 365,
     "officialStationCode": "CWBM",
     "current": {
-      "temperatureCelsius": 23.1,
-      "feelsLikeCelsius": 24,
+      "temperatureCelsius": 23.2,
+      "feelsLikeCelsius": 24.1,
       "condition": "sunny",
-      "humidityPercent": 56,
+      "humidityPercent": 57,
       "windSpeedKmh": 11,
       "windDirection": "W",
-      "windGustKmh": 14,
+      "windGustKmh": 15,
       "pressureKpa": 97.8,
       "uvIndex": 6,
       "precipitation24hMm": 0
@@ -716,7 +716,7 @@
         "sunset": "20:14"
       }
     ],
-    "lastUpdated": "2026-08-18T21:42:48.077Z",
+    "lastUpdated": "2026-08-18T21:46:34.142Z",
     "isStale": false
   },
   {
@@ -729,11 +729,11 @@
     "elevationMeters": 2,
     "officialStationCode": "CWRS",
     "current": {
-      "temperatureCelsius": 22.1,
-      "feelsLikeCelsius": 23.8,
+      "temperatureCelsius": 22.2,
+      "feelsLikeCelsius": 24,
       "condition": "sunny",
-      "humidityPercent": 69,
-      "windSpeedKmh": 11,
+      "humidityPercent": 71,
+      "windSpeedKmh": 12,
       "windDirection": "WSW",
       "windGustKmh": 13,
       "pressureKpa": 101.9,
@@ -860,7 +860,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:42:48.082Z",
+    "lastUpdated": "2026-08-18T21:46:34.143Z",
     "isStale": false
   },
   {
@@ -876,7 +876,7 @@
       "temperatureCelsius": 23.7,
       "feelsLikeCelsius": 25.9,
       "condition": "sunny",
-      "humidityPercent": 61,
+      "humidityPercent": 62,
       "windSpeedKmh": 8,
       "windDirection": "SSW",
       "windGustKmh": 8,
@@ -1004,7 +1004,7 @@
         "sunset": "20:16"
       }
     ],
-    "lastUpdated": "2026-08-18T21:42:48.106Z",
+    "lastUpdated": "2026-08-18T21:46:34.141Z",
     "isStale": false
   }
 ]

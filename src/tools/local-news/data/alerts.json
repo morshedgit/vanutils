@@ -5,7 +5,7 @@
     "source": "eccc_weather",
     "outletName": "Environment Canada",
     "severity": "warning",
-    "timestamp": "2026-08-18T21:42:46.840Z",
+    "timestamp": "2026-08-18T21:46:33.032Z",
     "summary": "Northwest winds 25 to 35 knots developing over the Strait of Georgia. Marine vessels and coastal ferry sailings should monitor conditions.",
     "actionUrl": "https://weather.gc.ca/warnings/report_e.html?bc42",
     "isStale": false
