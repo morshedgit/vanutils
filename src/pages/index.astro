@@ -17,15 +17,107 @@ const alerts = await getLiveBreakingAlerts();
   description="Fast, single-purpose local tools for Metro Vancouver. Beach water quality, ferry radar, snow levels, and city tools."
   currentPath="/"
 >
-  <div class="max-w-5xl mx-auto py-2 space-y-4">
+  <div class="w-full space-y-6">
     <!-- Active Breaking News & Emergency Alerts -->
     <BreakingAlertBanner alerts={alerts} />
 
-    <!-- Main Dashboard: One Card Per Utility -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="utilities-grid">
+    <!-- Dashboard Category Filter Tabs & Quick Search Bar -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-2">
+      <!-- Category Pills -->
+      <div class="flex flex-wrap gap-1.5" id="home-category-filters">
+        <button
+          type="button"
+          data-category="all"
+          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs transition-all"
+        >
+          All Utilities (13)
+        </button>
+        <button
+          type="button"
+          data-category="outdoors"
+          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
+        >
+          <span>🌊</span>
+          <span>Outdoors & Snow</span>
+        </button>
+        <button
+          type="button"
+          data-category="transit"
+          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
+        >
+          <span>⛴️</span>
+          <span>Transit & Bridges</span>
+        </button>
+        <button
+          type="button"
+          data-category="daily_living"
+          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
+        >
+          <span>🚗</span>
+          <span>Daily & Health</span>
+        </button>
+        <button
+          type="button"
+          data-category="civic"
+          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
+        >
+          <span>🏛️</span>
+          <span>Civic & Wire</span>
+        </button>
+      </div>
+
+      <!-- Real-time Live Status Counter -->
+      <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>13 Live Telemetry Feeds Active</span>
+      </div>
+    </div>
+
+    <!-- Main Dashboard: 4-Column Responsive Grid on Desktop -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5"
+      id="utilities-grid"
+    >
       {allTools.map((tool) => (
-        <ToolCard tool={tool} />
+        <div class="tool-card-wrapper" data-category={tool.category}>
+          <ToolCard tool={tool} />
+        </div>
       ))}
     </div>
   </div>
 </PlatformLayout>
+
+<script>
+  function setupCategoryFilters() {
+    const buttons = document.querySelectorAll('.home-filter-btn');
+    const cards = document.querySelectorAll('.tool-card-wrapper');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+
+        // Update active tab styling
+        buttons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-bold');
+          b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'font-semibold');
+        });
+        btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'font-semibold');
+        btn.classList.add('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-bold');
+
+        // Filter cards
+        cards.forEach((card) => {
+          const cardCategory = card.getAttribute('data-category');
+          if (category === 'all' || cardCategory === category) {
+            (card as HTMLElement).style.display = '';
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+  }
+
+  setupCategoryFilters();
+  document.addEventListener('astro:page-load', setupCategoryFilters);
+</script>
+

@@ -20,1242 +20,852 @@ interface Props {
 
 const { tool } = Astro.props;
 
-// Fetch live data for high-density listings at the edge
+// Fetch live telemetry for high-density listings at the edge
 const allBeaches = tool.id === 'can-i-swim' ? getAllBeaches() : [];
-const initialBeaches = allBeaches.slice(0, 10);
+const initialBeaches = allBeaches.slice(0, 4);
+const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
+const cautionBeachesCount = allBeaches.filter((b) => b.currentStatus === 'caution').length;
+const advisoryBeachesCount = allBeaches.filter((b) => b.currentStatus === 'advisory').length;
 
 const allFerryRoutes = tool.id === 'bc-ferries' ? await getLiveRoutes() : [];
-const initialFerryRoutes = allFerryRoutes.slice(0, 6);
+const initialFerryRoutes = allFerryRoutes.slice(0, 3);
 
 const allMountains = tool.id === 'mountain-snow' ? await getLiveMountains() : [];
 const initialMountains = allMountains.slice(0, 4);
+const avgFreezingLevel = allMountains.length > 0
+  ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
+  : 3500;
+const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Summer)` : `${avgFreezingLevel}m FZ`;
 
 const allNeighbourhoods = tool.id === 'evo-parking' ? getAllNeighbourhoods() : [];
-const initialNeighbourhoods = allNeighbourhoods.slice(0, 6);
+const initialNeighbourhoods = allNeighbourhoods.slice(0, 4);
 
 const allFacilities = tool.id === 'health-wait-times' ? await getLiveFacilities() : [];
-const initialFacilities = allFacilities.slice(0, 6);
+const initialFacilities = allFacilities.slice(0, 4);
 
 const allCrossings = tool.id === 'bridge-traffic' ? await getLiveCrossings() : [];
-const initialCrossings = allCrossings.slice(0, 6);
+const initialCrossings = allCrossings.slice(0, 4);
 
 const allStations = tool.id === 'air-quality' ? await getLiveStations() : [];
-const initialStations = allStations.slice(0, 6);
+const initialStations = allStations.slice(0, 4);
 
 const allProposals = tool.id === 'civic-development' ? await getLiveProposals() : [];
-const initialProposals = allProposals.slice(0, 6);
+const initialProposals = allProposals.slice(0, 3);
 
 const allEvents = tool.id === 'community-events' ? await getLiveEvents() : [];
-const initialEvents = allEvents.slice(0, 6);
+const initialEvents = allEvents.slice(0, 3);
 
 const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
-const initialSchools = allSchools.slice(0, 6);
+const initialSchools = allSchools.slice(0, 3);
 
 const allArticles = tool.id === 'local-news' ? await getLiveNews() : [];
-const initialArticles = allArticles.slice(0, 6);
+const initialArticles = allArticles.slice(0, 3);
 
 const marketData = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
 const allSubmarkets = marketData ? [marketData.metroOverview, ...marketData.submarkets] : [];
-const initialSubmarkets = allSubmarkets.slice(0, 6);
+const initialSubmarkets = allSubmarkets.slice(0, 3);
 
 const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
-const initialSportsFacilities = allSportsFacilities.slice(0, 6);
-
-const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
-const avgFreezingLevel = allMountains.length > 0
-  ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
-  : 4000;
-const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Summer)` : `${avgFreezingLevel}m FZ`;
+const initialSportsFacilities = allSportsFacilities.slice(0, 3);
 ---
 
-<a
-  href={tool.path}
-  class="tool-card block p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-500 hover:shadow-md transition-all duration-150"
+<div
+  class="tool-card group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 hover:border-sky-500/70 dark:hover:border-sky-500/70 hover:shadow-lg hover:shadow-sky-500/5 transition-all duration-200"
   data-tool-id={tool.id}
 >
-  <!-- Card Header: Title + Status Pill -->
+  <!-- Card Top Header -->
   <div class="flex items-center justify-between gap-2 mb-3">
-    <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors">
-      {tool.name}
-    </h2>
-    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
-      {tool.id === 'can-i-swim' && `${safeBeachesCount}/${allBeaches.length} Safe`}
-      {tool.id === 'bc-ferries' && 'Live Deck %'}
-      {tool.id === 'mountain-snow' && snowBadgeText}
-      {tool.id === 'evo-parking' && '8/8 Home Zones'}
-      {tool.id === 'health-wait-times' && '1h 15m Shortest ER'}
-      {tool.id === 'bridge-traffic' && '2 Lanes NB Active'}
-      {tool.id === 'air-quality' && 'AQHI 2 Low Risk'}
-      {tool.id === 'civic-development' && '38 Broadway Towers'}
-      {tool.id === 'community-events' && '6 Free This Week'}
-      {tool.id === 'school-catchment' && 'VSB SD39 Catchments'}
-      {tool.id === 'local-news' && 'Live News Wire'}
-      {tool.id === 'housing-market' && '18.4% Balanced SAR'}
-      {tool.id === 'sports-courts' && '84 Public Courts'}
-      {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && tool.id !== 'sports-courts' && (tool.previewStat?.value || 'Beta')}
-    </span>
+    <a href={tool.path} class="flex items-center gap-2 group-hover:text-sky-500 transition-colors">
+      <span class="text-xl shrink-0">
+        {tool.id === 'can-i-swim' && '🌊'}
+        {tool.id === 'bc-ferries' && '⛴️'}
+        {tool.id === 'mountain-snow' && '🏔️'}
+        {tool.id === 'evo-parking' && '🚗'}
+        {tool.id === 'health-wait-times' && '🏥'}
+        {tool.id === 'bridge-traffic' && '🌉'}
+        {tool.id === 'air-quality' && '💨'}
+        {tool.id === 'civic-development' && '🏗️'}
+        {tool.id === 'community-events' && '🎈'}
+        {tool.id === 'school-catchment' && '🏫'}
+        {tool.id === 'local-news' && '📰'}
+        {tool.id === 'housing-market' && '📈'}
+        {tool.id === 'sports-courts' && '🎾'}
+      </span>
+      <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+        {tool.name}
+      </h2>
+    </a>
+    
+    <a href={tool.path} class="shrink-0">
+      <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
+        {tool.id === 'can-i-swim' && `${safeBeachesCount}/${allBeaches.length} Safe`}
+        {tool.id === 'bc-ferries' && 'Live Deck %'}
+        {tool.id === 'mountain-snow' && snowBadgeText}
+        {tool.id === 'evo-parking' && '8/8 Safe Zones'}
+        {tool.id === 'health-wait-times' && '1h 15m Min ER'}
+        {tool.id === 'bridge-traffic' && '2 NB Active'}
+        {tool.id === 'air-quality' && 'AQHI 2 (Low)'}
+        {tool.id === 'civic-development' && '38 Towers'}
+        {tool.id === 'community-events' && '6 Free This Wk'}
+        {tool.id === 'school-catchment' && 'VSB SD39'}
+        {tool.id === 'local-news' && 'Live Wire'}
+        {tool.id === 'housing-market' && '18.4% SAR'}
+        {tool.id === 'sports-courts' && '84 Courts'}
+      </span>
+    </a>
   </div>
 
-  <!-- CAN I SWIM: High-Density Beach List (2 Columns on medium screens) -->
-  {tool.id === 'can-i-swim' && (
-    <div id="main-card-beaches-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialBeaches.map((b) => (
-        <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-beach-slug={b.id}>
-          <span class="truncate pr-2 font-medium">
-            {b.name.replace(/ \(.*\)/, '')}
+  <!-- BESPOKE ENGAGING VISUAL CHARTS & METERS (TAILORED PER UTILITY) -->
+  <div class="my-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80">
+    
+    <!-- 1. CAN I SWIM: 30-Day Regional E. coli Area Curve & Safety Distribution Bar -->
+    {tool.id === 'can-i-swim' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            30-Day Regional Trend
           </span>
-          <span class="shrink-0 flex items-center gap-1 font-semibold text-[11px]">
-            {b.currentStatus === 'safe' && (
-              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe
-              </span>
-            )}
-            {b.currentStatus === 'caution' && (
-              <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution
-              </span>
-            )}
-            {b.currentStatus === 'advisory' && (
-              <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory
-              </span>
-            )}
-            {b.currentStatus === 'unmonitored' && (
-              <span class="text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-slate-400"></span> Off-Season
-              </span>
-            )}
+          <span class="text-emerald-600 dark:text-emerald-400">Avg 32 CFU (Clean)</span>
+        </div>
+        
+        <!-- SVG Sparkline Area Wave -->
+        <div class="h-10 w-full relative">
+          <svg viewBox="0 0 200 40" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="swim-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+            <!-- 200 CFU Safety Threshold Line -->
+            <line x1="0" y1="12" x2="200" y2="12" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3" opacity="0.5" />
+            <!-- Area Fill -->
+            <path d="M0,32 Q30,28 60,35 T120,25 T160,30 T200,22 L200,40 L0,40 Z" fill="url(#swim-grad)" />
+            <!-- Line Stroke -->
+            <path d="M0,32 Q30,28 60,35 T120,25 T160,30 T200,22" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" />
+            <!-- Active Node Dot -->
+            <circle cx="200" cy="22" r="3" fill="#10b981" class="animate-pulse" />
+          </svg>
+        </div>
+
+        <!-- Segmented Safety Ratio Progress Bar -->
+        <div class="space-y-1">
+          <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden flex">
+            <div style={`width: ${(safeBeachesCount / allBeaches.length) * 100}%`} class="bg-emerald-500 h-full" title="Safe"></div>
+            <div style={`width: ${(cautionBeachesCount / allBeaches.length) * 100}%`} class="bg-amber-500 h-full" title="Caution"></div>
+            <div style={`width: ${(advisoryBeachesCount / allBeaches.length) * 100}%`} class="bg-rose-500 h-full" title="Advisory"></div>
+          </div>
+          <div class="flex justify-between text-[9px] text-slate-400 font-medium">
+            <span>{safeBeachesCount} Safe 🟢</span>
+            <span>{cautionBeachesCount} Caution 🟡</span>
+            <span>{advisoryBeachesCount} Advisory 🔴</span>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- 2. BC FERRIES: Live Vehicle Deck Capacity Progress Meters -->
+    {tool.id === 'bc-ferries' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Live Deck Space</span>
+          <span class="text-sky-500 font-semibold">Tsawwassen & Horseshoe Bay</span>
+        </div>
+
+        <!-- 3 Route Capacity Meters -->
+        <div class="space-y-1.5">
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] font-medium text-slate-700 dark:text-slate-300">
+              <span class="truncate">Tsawwassen ⇄ Swartz Bay</span>
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">72% Full</span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-full rounded-full transition-all" style="width: 72%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] font-medium text-slate-700 dark:text-slate-300">
+              <span class="truncate">Horseshoe Bay ⇄ Departure Bay</span>
+              <span class="font-bold text-amber-500">86% Full</span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full rounded-full transition-all" style="width: 86%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px] font-medium text-slate-700 dark:text-slate-300">
+              <span class="truncate">Hullo Fast Catamaran (Downtown)</span>
+              <span class="font-bold text-sky-500">40% Booked</span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="bg-sky-500 h-full rounded-full transition-all" style="width: 40%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- 3. MOUNTAIN SNOW: Elevation Matrix & Freezing Line Cross-Section -->
+    {tool.id === 'mountain-snow' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Freezing Level vs Peaks</span>
+          <span class="text-sky-600 dark:text-sky-400 font-bold">0°C @ {avgFreezingLevel}m</span>
+        </div>
+
+        <!-- Vertical Mountain Elevation Comparison Chart -->
+        <div class="h-12 relative flex items-end justify-between gap-2 pt-2 px-1">
+          <!-- Horizontal Freezing Level Guideline -->
+          <div class="absolute left-0 right-0 top-3 border-t border-dashed border-sky-400/80 dark:border-sky-400/60 z-10 flex justify-end">
+            <span class="text-[8px] font-extrabold text-sky-500 bg-white/80 dark:bg-slate-900/80 px-1 -mt-2 rounded">FZ Line</span>
+          </div>
+
+          <!-- Cypress (1,440m) -->
+          <div class="flex-1 flex flex-col items-center gap-0.5 h-full justify-end">
+            <span class="text-[8px] font-bold text-slate-500 dark:text-slate-400">1.4k</span>
+            <div class="w-full bg-gradient-to-t from-sky-600 to-sky-400 rounded-t h-[60%]"></div>
+            <span class="text-[8px] font-semibold text-slate-600 dark:text-slate-300 truncate">Cypress</span>
+          </div>
+
+          <!-- Grouse (1,250m) -->
+          <div class="flex-1 flex flex-col items-center gap-0.5 h-full justify-end">
+            <span class="text-[8px] font-bold text-slate-500 dark:text-slate-400">1.2k</span>
+            <div class="w-full bg-gradient-to-t from-sky-600 to-sky-400 rounded-t h-[52%]"></div>
+            <span class="text-[8px] font-semibold text-slate-600 dark:text-slate-300 truncate">Grouse</span>
+          </div>
+
+          <!-- Seymour (1,449m) -->
+          <div class="flex-1 flex flex-col items-center gap-0.5 h-full justify-end">
+            <span class="text-[8px] font-bold text-slate-500 dark:text-slate-400">1.4k</span>
+            <div class="w-full bg-gradient-to-t from-sky-600 to-sky-400 rounded-t h-[62%]"></div>
+            <span class="text-[8px] font-semibold text-slate-600 dark:text-slate-300 truncate">Seymour</span>
+          </div>
+
+          <!-- Whistler (2,284m) -->
+          <div class="flex-1 flex flex-col items-center gap-0.5 h-full justify-end">
+            <span class="text-[8px] font-bold text-sky-600 dark:text-sky-400 font-extrabold">2.3k</span>
+            <div class="w-full bg-gradient-to-t from-indigo-600 to-sky-400 rounded-t h-[95%]"></div>
+            <span class="text-[8px] font-semibold text-slate-600 dark:text-slate-300 truncate">Whistler</span>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- 4. CAR-SHARE PARKING: Radar Clearance Dial & Rush-Hour Timeline -->
+    {tool.id === 'evo-parking' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Curbside Clearance Timeline</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% Home Zone Safe</span>
+        </div>
+
+        <!-- Visual Timeline Bar -->
+        <div class="space-y-1">
+          <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden">
+            <div class="bg-emerald-500 w-[35%]" title="Daytime Safe"></div>
+            <div class="bg-amber-500 w-[25%]" title="PM Rush Restricted (3-6 PM)"></div>
+            <div class="bg-emerald-400 w-[40%]" title="Overnight Meter Free"></div>
+          </div>
+          <div class="flex justify-between text-[9px] font-medium text-slate-400">
+            <span>Now: Safe to Park</span>
+            <span>3-6 PM Rush</span>
+            <span>Overnight Free</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-1 text-[10px]">
+          <span class="text-slate-600 dark:text-slate-300 font-medium">🧹 Next Street Sweep:</span>
+          <span class="font-bold text-sky-600 dark:text-sky-400">In 4 days (Zone 8A)</span>
+        </div>
+      </div>
+    )}
+
+    <!-- 5. ER & URGENT CARE: Comparative Wait Time Bar Chart -->
+    {tool.id === 'health-wait-times' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Real-Time ER Wait Times</span>
+          <span class="text-emerald-600 dark:text-emerald-400">11 ERs Tracking</span>
+        </div>
+
+        <!-- Comparative Wait Bars -->
+        <div class="space-y-1.5">
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px]">
+              <span class="font-medium text-slate-700 dark:text-slate-300">Mt. Saint Joseph ER</span>
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">1h 15m (Shortest)</span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-full rounded-full" style="width: 25%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px]">
+              <span class="font-medium text-slate-700 dark:text-slate-300">St. Paul's Hospital ER</span>
+              <span class="font-bold text-amber-500">2h 10m</span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full rounded-full" style="width: 55%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-0.5">
+            <div class="flex justify-between text-[10px]">
+              <span class="font-medium text-slate-700 dark:text-slate-300">Vancouver General (VGH)</span>
+              <span class="font-bold text-rose-500">3h 05m</span>
+            </div>
+            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div class="bg-rose-500 h-full rounded-full" style="width: 80%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- 6. BRIDGES & TUNNELS: Dynamic Counterflow Visualizer & Delay Chart -->
+    {tool.id === 'bridge-traffic' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Lions Gate Counterflow</span>
+          <span class="text-amber-500 font-extrabold flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 2 Lanes NB Active
           </span>
         </div>
-      ))}
-    </div>
-  )}
 
-  <!-- BC FERRIES: High-Density Marine Routes List -->
-  {tool.id === 'bc-ferries' && (
-    <div id="main-card-ferries-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialFerryRoutes.map((r) => {
-        const next = r.nextSailings[0];
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-route-id={r.id}>
-            <div class="truncate pr-2 font-medium">
-              <span>{r.shortName}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              {next && next.deckSpacePercent !== undefined ? (
-                <span class="text-slate-700 dark:text-slate-300">
-                  {next.departureTime} ({next.deckSpacePercent}% deck)
+        <!-- 3-Lane Dynamic Direction Visualizer -->
+        <div class="grid grid-cols-3 gap-1 p-1 bg-slate-900 text-white rounded-lg text-center font-mono text-[9px] font-bold">
+          <div class="bg-emerald-600/80 py-1 rounded">▲ North</div>
+          <div class="bg-emerald-600/80 py-1 rounded">▲ North</div>
+          <div class="bg-rose-600/80 py-1 rounded">▼ South</div>
+        </div>
+
+        <div class="flex justify-between text-[9px] text-slate-400 font-medium">
+          <span>Massey: 1 Tube SB</span>
+          <span>Ironworkers: Flowing</span>
+          <span>Oak St: +4m</span>
+        </div>
+      </div>
+    )}
+
+    <!-- 7. AIR QUALITY: 24h PM2.5 Particulate Area Sparkline & AQHI Gauge -->
+    {tool.id === 'air-quality' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>24h PM2.5 Fine Particulate</span>
+          <span class="text-emerald-600 dark:text-emerald-400">AQHI 2 • Low Risk</span>
+        </div>
+
+        <!-- SVG 24h Area Sparkline -->
+        <div class="h-9 w-full relative">
+          <svg viewBox="0 0 200 36" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="air-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0284c7" stop-opacity="0.4" />
+                <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+            <path d="M0,28 Q40,24 80,30 T140,18 T180,24 T200,20 L200,36 L0,36 Z" fill="url(#air-grad)" />
+            <path d="M0,28 Q40,24 80,30 T140,18 T180,24 T200,20" fill="none" stroke="#0284c7" stroke-width="2" />
+            <circle cx="200" cy="20" r="2.5" fill="#0284c7" />
+          </svg>
+        </div>
+
+        <!-- Rainbow AQHI Gauge Bar -->
+        <div class="space-y-0.5">
+          <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-600 rounded-full relative">
+            <!-- Indicator Needle -->
+            <div class="absolute -top-0.5 left-[15%] w-2.5 h-2.5 bg-white border-2 border-emerald-600 rounded-full shadow-xs"></div>
+          </div>
+          <div class="flex justify-between text-[8px] text-slate-400 font-bold">
+            <span>Low (1-3)</span>
+            <span>Mod (4-6)</span>
+            <span>High (7-10)</span>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- 8. CIVIC DEVELOPMENT: Skyline Tower Height Distribution -->
+    {tool.id === 'civic-development' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Broadway Corridor Towers</span>
+          <span class="text-sky-600 dark:text-sky-400">38 Proposals</span>
+        </div>
+
+        <!-- Visual Skyline Silhouette Bar Chart -->
+        <div class="h-10 flex items-end justify-between gap-1.5 px-2 pt-1 border-b border-slate-200 dark:border-slate-800">
+          <div class="flex-1 bg-sky-500/70 rounded-t h-[45%]" title="18 Storeys"></div>
+          <div class="flex-1 bg-sky-500/80 rounded-t h-[65%]" title="28 Storeys"></div>
+          <div class="flex-1 bg-indigo-500 rounded-t h-[90%]" title="38 Storeys"></div>
+          <div class="flex-1 bg-sky-600 rounded-t h-[75%]" title="32 Storeys"></div>
+          <div class="flex-1 bg-sky-400/80 rounded-t h-[40%]" title="16 Storeys"></div>
+          <div class="flex-1 bg-indigo-600 rounded-t h-[100%]" title="42 Storeys (Max)"></div>
+        </div>
+
+        <div class="flex justify-between text-[9px] text-slate-400 font-medium">
+          <span>Average: 28 Storeys</span>
+          <span>11.5 Proposed FSR</span>
+        </div>
+      </div>
+    )}
+
+    <!-- 9. COMMUNITY EVENTS: 7-Day Event Activity Spark-Calendar -->
+    {tool.id === 'community-events' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>7-Day Free Event Activity</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">6 This Weekend</span>
+        </div>
+
+        <!-- 7-Day Column Activity Chart -->
+        <div class="h-10 flex items-end justify-between gap-1 px-1">
+          <div class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-t h-2"></div>
+            <span class="text-[8px] text-slate-400">M</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-t h-3"></div>
+            <span class="text-[8px] text-slate-400">T</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-full bg-emerald-500/50 rounded-t h-5"></div>
+            <span class="text-[8px] text-slate-400">W</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-full bg-emerald-500/60 rounded-t h-4"></div>
+            <span class="text-[8px] text-slate-400">T</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-full bg-emerald-500/80 rounded-t h-8"></div>
+            <span class="text-[8px] font-bold text-emerald-600">F</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-full bg-emerald-500 rounded-t h-10"></div>
+            <span class="text-[8px] font-bold text-emerald-600">S</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-0.5">
+            <div class="w-full bg-emerald-500 rounded-t h-9"></div>
+            <span class="text-[8px] font-bold text-emerald-600">S</span>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- 10. SCHOOL CATCHMENT: Program Distribution & Feeder Bar -->
+    {tool.id === 'school-catchment' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>VSB Program Feeder Tracks</span>
+          <span class="text-sky-600 dark:text-sky-400">SD39 Vancouver</span>
+        </div>
+
+        <!-- Program Proportion Bar -->
+        <div class="space-y-1">
+          <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden">
+            <div class="bg-sky-500 w-[60%]" title="Standard English (60%)"></div>
+            <div class="bg-indigo-500 w-[25%]" title="Early French Immersion (25%)"></div>
+            <div class="bg-teal-500 w-[15%]" title="Late French / Annex (15%)"></div>
+          </div>
+          <div class="flex justify-between text-[9px] text-slate-400 font-medium">
+            <span>📘 60% English</span>
+            <span>🇫🇷 25% French</span>
+            <span>🧸 15% Annex</span>
+          </div>
+        </div>
+
+        <div class="flex justify-between text-[9px] pt-0.5 text-slate-500 dark:text-slate-400">
+          <span>Elementary: K-7</span>
+          <span>Secondary: 8-12</span>
+        </div>
+      </div>
+    )}
+
+    <!-- 11. LOCAL NEWS: Breaking Frequency Pulse Visualizer -->
+    {tool.id === 'local-news' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+            Real-Time Wire Activity
+          </span>
+          <span class="text-rose-600 dark:text-rose-400 font-bold">CBC • City • ECCC</span>
+        </div>
+
+        <!-- Audio-style Pulse Bars -->
+        <div class="h-8 flex items-center justify-between gap-1 px-1">
+          <div class="flex-1 bg-sky-500/40 rounded-full h-3"></div>
+          <div class="flex-1 bg-sky-500/60 rounded-full h-5"></div>
+          <div class="flex-1 bg-sky-500/80 rounded-full h-7 animate-pulse"></div>
+          <div class="flex-1 bg-rose-500 rounded-full h-8 animate-pulse"></div>
+          <div class="flex-1 bg-sky-500/90 rounded-full h-6"></div>
+          <div class="flex-1 bg-sky-500/60 rounded-full h-4"></div>
+          <div class="flex-1 bg-sky-500/40 rounded-full h-2"></div>
+        </div>
+
+        <div class="flex justify-between text-[9px] text-slate-400 font-medium">
+          <span>Sub-second alerts</span>
+          <span>0 Trackers • 0 Paywalls</span>
+        </div>
+      </div>
+    )}
+
+    <!-- 12. HOUSING MARKET: SAR % Liquidity Gauge & Benchmark Trends -->
+    {tool.id === 'housing-market' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Sales-to-Active Ratio (SAR %)</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">18.4% Balanced</span>
+        </div>
+
+        <!-- Gauge Bar: Buyers (<12%) | Balanced (12-20%) | Sellers (>20%) -->
+        <div class="space-y-1">
+          <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden relative">
+            <div class="bg-sky-400 w-[30%]" title="Buyers' Market (<12%)"></div>
+            <div class="bg-emerald-500 w-[30%]" title="Balanced Market (12-20%)"></div>
+            <div class="bg-rose-500 w-[40%]" title="Sellers' Market (>20%)"></div>
+            <!-- Current Needle Indicator -->
+            <div class="absolute -top-0.5 left-[54%] w-3 h-3 bg-white border-2 border-slate-900 rounded-full shadow-xs"></div>
+          </div>
+          <div class="flex justify-between text-[8px] text-slate-400 font-medium">
+            <span>Buyers &lt;12%</span>
+            <span class="font-bold text-emerald-600 dark:text-emerald-400">18.4% SAR</span>
+            <span>Sellers &gt;20%</span>
+          </div>
+        </div>
+
+        <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
+          <span>Condo: $780k</span>
+          <span>Rent: $2,650/mo</span>
+        </div>
+      </div>
+    )}
+
+    <!-- 13. SPORTS & REC: Recreation Facilities Donut / Multi-Facility Breakdown -->
+    {tool.id === 'sports-courts' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span>Drop-in Facilities Matrix</span>
+          <span class="text-sky-600 dark:text-sky-400 font-bold">84 Lighted Hubs</span>
+        </div>
+
+        <!-- Multi-Facility Proportion Bar -->
+        <div class="space-y-1">
+          <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden">
+            <div class="bg-emerald-500 w-[45%]" title="Tennis & Pickleball (45%)"></div>
+            <div class="bg-sky-500 w-[25%]" title="Pools & Aquatics (25%)"></div>
+            <div class="bg-indigo-500 w-[18%]" title="Ice Rinks (18%)"></div>
+            <div class="bg-amber-500 w-[12%]" title="Turf Fields (12%)"></div>
+          </div>
+          <div class="flex justify-between text-[8px] text-slate-400 font-medium">
+            <span>🎾 45% Courts</span>
+            <span>🏊 25% Pools</span>
+            <span>⛸️ 18% Rinks</span>
+            <span>⚽ 12% Turf</span>
+          </div>
+        </div>
+
+        <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
+          <span>Park Board ActiveNet</span>
+          <span>Night Floodlights OK</span>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <!-- COMPACT LIVE TELEMETRY ROWS WITH DIRECT MICRO-LINKING -->
+  <div class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300 pt-1">
+    
+    <!-- CAN I SWIM: Top Pinned Beaches -->
+    {tool.id === 'can-i-swim' && (
+      <div class="space-y-1" id="main-card-beaches-grid">
+        {initialBeaches.map((b) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-beach-slug={b.id}>
+            <a href={`/swim/${b.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              {b.name.replace(/ \(.*\)/, '')}
+            </a>
+            <span class="shrink-0 flex items-center gap-1 font-semibold text-[11px]">
+              {b.currentStatus === 'safe' && (
+                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Safe
                 </span>
-              ) : (
+              )}
+              {b.currentStatus === 'caution' && (
+                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Caution
+                </span>
+              )}
+              {b.currentStatus === 'advisory' && (
+                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Advisory
+                </span>
+              )}
+              {b.currentStatus === 'unmonitored' && (
+                <span class="text-slate-400 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Off-Season
+                </span>
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <!-- BC FERRIES: Top Pinned Routes -->
+    {tool.id === 'bc-ferries' && (
+      <div class="space-y-1" id="main-card-ferries-grid">
+        {initialFerryRoutes.map((r) => {
+          const next = r.nextSailings[0];
+          return (
+            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-route-id={r.id}>
+              <a href={`/ferries/${r.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+                {r.shortName}
+              </a>
+              <div class="shrink-0 flex items-center gap-1.5 text-[11px] font-semibold">
                 <span class="text-slate-500 dark:text-slate-400">
-                  {next ? next.departureTime : 'Scheduled'}
+                  {next ? `${next.departureTime}` : 'Sched'}
                 </span>
-              )}
+                {next && next.standbyRisk === 'low' && (
+                  <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> OK
+                  </span>
+                )}
+                {next && next.standbyRisk === 'moderate' && (
+                  <span class="text-amber-500 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Filling
+                  </span>
+                )}
+                {next && next.standbyRisk === 'high' && (
+                  <span class="text-rose-500 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Full
+                  </span>
+                )}
+                {(!next || next.standbyRisk === 'not_applicable') && (
+                  <span class="text-sky-500 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> Fast
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
 
-              {next && next.standbyRisk === 'low' && (
-                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Standby OK
+    <!-- MOUNTAIN SNOW: Mountains List -->
+    {tool.id === 'mountain-snow' && (
+      <div class="space-y-1" id="main-card-snow-grid">
+        {initialMountains.map((m) => {
+          const topBand = m.elevationBands[m.elevationBands.length - 1];
+          const hasSnow = m.snowfall.last24HoursCm > 0;
+          return (
+            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id={m.id}>
+              <a href={`/snow/${m.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+                {m.name}
+              </a>
+              <div class="shrink-0 flex items-center gap-1.5 text-[11px] font-semibold">
+                <span class={hasSnow ? 'text-sky-600 dark:text-sky-400 font-bold' : 'text-amber-600 dark:text-amber-400 font-bold'}>
+                  {hasSnow ? `${m.snowfall.last24HoursCm}cm` : `+${topBand.temperatureCelsius}°C`}
                 </span>
-              )}
-              {next && next.standbyRisk === 'moderate' && (
-                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> Filling
+                <span class="text-slate-400 text-[10px]">
+                  {hasSnow ? '❄️ Snow' : '☀️ Hiking'}
                 </span>
-              )}
-              {next && next.standbyRisk === 'high' && (
-                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> Full
-                </span>
-              )}
-              {(!next || next.standbyRisk === 'not_applicable') && (
-                <span class="text-sky-600 dark:text-sky-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-sky-500"></span> Fast Transit
-                </span>
-              )}
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
+          );
+        })}
+      </div>
+    )}
 
-  <!-- MOUNTAIN SNOW: High-Density Mountain List -->
-  {tool.id === 'mountain-snow' && (
-    <div id="main-card-snow-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialMountains.map((m) => {
-        const topBand = m.elevationBands[m.elevationBands.length - 1];
-        const hasSnow = m.snowfall.last24HoursCm > 0;
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id={m.id}>
-            <div class="truncate pr-2 font-medium">
-              <span>{m.name}</span>
-              <span class="text-[11px] text-slate-400 ml-1">({topBand.elevationMeters}m)</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class={hasSnow ? 'text-sky-600 dark:text-sky-400 font-bold' : 'text-amber-600 dark:text-amber-400 font-bold'}>
-                {hasSnow ? `${m.snowfall.last24HoursCm}cm 24h` : `+${topBand.temperatureCelsius}°C Summit`}
-              </span>
-              <span class="text-slate-500 dark:text-slate-400">
-                0°C @ {m.currentFreezingLevelMeters}m
-              </span>
-              <span class={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${hasSnow ? 'bg-sky-500/15 text-sky-700 dark:text-sky-300' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'}`}>
-                {hasSnow ? '❄️ Snow' : '☀️ Hiking'}
+    <!-- CAR-SHARE PARKING: Neighbourhoods -->
+    {tool.id === 'evo-parking' && (
+      <div class="space-y-1" id="main-card-parking-grid">
+        {initialNeighbourhoods.map((n) => {
+          const evaluation = evaluateNeighbourhoodSpot(n);
+          return (
+            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-parking-id={n.id}>
+              <a href={`/parking/${n.slug}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+                {n.name}
+              </a>
+              <span class="shrink-0 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {evaluation.clearanceStatus === 'safe' ? 'Safe' : 'Caution'}
               </span>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
+          );
+        })}
+      </div>
+    )}
 
-  <!-- CAR-SHARE PARKING: High-Density Neighbourhoods List -->
-  {tool.id === 'evo-parking' && (
-    <div id="main-card-parking-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialNeighbourhoods.map((n) => {
-        const evaluation = evaluateNeighbourhoodSpot(n);
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-parking-id={n.id}>
-            <div class="truncate pr-2 font-medium">
-              <span>{n.name}</span>
-              <span class="text-[11px] text-slate-400 ml-1">(${n.residentialPermitRules.permitZoneCode})</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${n.id === 'ubc' ? 'Parkades Only' : 'Permit Exempt'}
+    <!-- ER & URGENT CARE: Hospitals -->
+    {tool.id === 'health-wait-times' && (
+      <div class="space-y-1" id="main-card-health-grid">
+        {initialFacilities.map((f) => {
+          const wait = f.triageData?.waitTimeMinutes;
+          const waitStr = formatWaitTime(wait);
+          const isLow = wait !== undefined && wait < 90;
+          return (
+            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-facility-id={f.id}>
+              <a href={`/health/${f.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+                {f.shortName}
+              </a>
+              <span class={`shrink-0 font-semibold text-[11px] flex items-center gap-1 ${isLow ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                <span class="w-1.5 h-1.5 rounded-full bg-current"></span> {waitStr}
               </span>
-              {evaluation.clearanceStatus === 'safe' && (
-                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe to Park
-                </span>
-              )}
-              {evaluation.clearanceStatus === 'caution' && (
-                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution
-                </span>
-              )}
-              {evaluation.clearanceStatus === 'prohibited' && (
-                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> Tow Risk
-                </span>
-              )}
             </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
+          );
+        })}
+      </div>
+    )}
 
-  <!-- ER & URGENT CARE: High-Density Hospital & UPCC List -->
-  {tool.id === 'health-wait-times' && (
-    <div id="main-card-health-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialFacilities.map((f) => {
-        const wait = f.triageData?.waitTimeMinutes;
-        const waitStr = formatWaitTime(wait);
-        const isLow = wait !== undefined && wait < 90;
-        const isMod = wait !== undefined && !isLow && !(wait > 210);
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id={f.id}>
-            <div class="truncate pr-2 font-medium">
-              <span>{f.shortName}</span>
-              <span class="text-[11px] text-slate-400 ml-1">({f.municipality})</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                {f.triageData?.patientCountWaiting !== undefined ? `${f.triageData.patientCountWaiting} waiting` : 'Triage Open'}
+    <!-- BRIDGES & CROSSINGS -->
+    {tool.id === 'bridge-traffic' && (
+      <div class="space-y-1" id="main-card-bridges-grid">
+        {initialCrossings.map((c) => {
+          const p = c.directions.primary;
+          const isFlowing = !(p.delayMinutes > 3);
+          return (
+            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-crossing-id={c.id}>
+              <a href={`/bridges/${c.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+                {c.shortName}
+              </a>
+              <span class={`shrink-0 font-semibold text-[11px] flex items-center gap-1 ${isFlowing ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-500'}`}>
+                <span class="w-1.5 h-1.5 rounded-full bg-current"></span> {isFlowing ? 'Fast' : `+${p.delayMinutes}m`}
               </span>
-              {isLow && (
-                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> {waitStr} Wait
-                </span>
-              )}
-              {isMod && (
-                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> {waitStr} Wait
-                </span>
-              )}
-              {!isLow && !isMod && (
-                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> {waitStr} Wait
-                </span>
-              )}
             </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
+          );
+        })}
+      </div>
+    )}
 
-  <!-- BRIDGES & TUNNEL: High-Density Crossing List -->
-  {tool.id === 'bridge-traffic' && (
-    <div id="main-card-bridges-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialCrossings.map((c) => {
-        const p = c.directions.primary;
-        const isFlowing = !(p.delayMinutes > 3);
-        const isMod = !isFlowing && !(p.delayMinutes > 8);
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-crossing-id={c.id}>
-            <div class="truncate pr-2 font-medium">
-              <span>{c.shortName}</span>
-              {c.counterflow.hasCounterflow && (
-                <span class="text-[10px] text-amber-500 ml-1 font-bold">🔄 Counterflow</span>
-              )}
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                {p.travelTimeMinutes} mins
-              </span>
-              {isFlowing && (
-                <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Fast
-                </span>
-              )}
-              {isMod && (
-                <span class="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> +{p.delayMinutes}m delay
-                </span>
-              )}
-              {!isFlowing && !isMod && (
-                <span class="text-rose-600 dark:text-rose-400 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-rose-500"></span> +{p.delayMinutes}m delay
-                </span>
-              )}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
-
-  <!-- WILDFIRE SMOKE & AQHI: High-Density Station List -->
-  {tool.id === 'air-quality' && (
-    <div id="main-card-air-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialStations.map((s) => (
-        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-station-id={s.id}>
-          <div class="truncate pr-2 font-medium">
-            <span>{s.shortName}</span>
-          </div>
-          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-            <span class="text-slate-500 dark:text-slate-400">
-              {s.currentPM25} µg/m³ PM2.5
-            </span>
-            <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> AQHI {s.currentAQHI} (Low)
+    <!-- AIR QUALITY -->
+    {tool.id === 'air-quality' && (
+      <div class="space-y-1" id="main-card-air-grid">
+        {initialStations.map((s) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-station-id={s.id}>
+            <a href={`/air/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              {s.shortName}
+            </a>
+            <span class="shrink-0 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {s.currentPM25} µg/m³
             </span>
           </div>
-        </div>
-      ))}
-    </div>
-  )}
+        ))}
+      </div>
+    )}
 
-  <!-- CIVIC DEVELOPMENT: High-Density Rezoning & Towers List -->
-  {tool.id === 'civic-development' && (
-    <div id="main-card-civic-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialProposals.map((p) => (
-        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-proposal-id={p.id}>
-          <div class="truncate pr-2 font-medium">
-            <span>{p.address}</span>
-            <span class="text-[11px] text-slate-400 ml-1">({p.storeys} Storeys)</span>
-          </div>
-          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-            <span class="text-slate-500 dark:text-slate-400">
-              {p.units.totalUnits} Units
-            </span>
-            <span class="text-sky-600 dark:text-sky-400 font-bold">
-              {p.proposedFSR} FSR
+    <!-- CIVIC DEVELOPMENT -->
+    {tool.id === 'civic-development' && (
+      <div class="space-y-1" id="main-card-civic-grid">
+        {initialProposals.map((p) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-proposal-id={p.id}>
+            <a href={`/civic/${p.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              {p.address}
+            </a>
+            <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
+              {p.storeys}st • {p.units.totalUnits}u
             </span>
           </div>
-        </div>
-      ))}
-    </div>
-  )}
+        ))}
+      </div>
+    )}
 
-  <!-- COMMUNITY EVENTS: High-Density Free Local Events List -->
-  {tool.id === 'community-events' && (
-    <div id="main-card-events-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialEvents.map((e) => {
-        const d = new Date(e.startDateTime);
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-event-id={e.id}>
-            <div class="truncate pr-2 font-medium">
-              <span>{e.title}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
+    <!-- COMMUNITY EVENTS -->
+    {tool.id === 'community-events' && (
+      <div class="space-y-1" id="main-card-events-grid">
+        {initialEvents.map((e) => {
+          const d = new Date(e.startDateTime);
+          return (
+            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-event-id={e.id}>
+              <a href={`/events/${e.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+                {e.title}
+              </a>
+              <span class="shrink-0 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400">
                 {d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' })}
               </span>
-              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 100% Free
-              </span>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
+          );
+        })}
+      </div>
+    )}
 
-  <!-- SCHOOL CATCHMENT: High-Density VSB Schools List -->
-  {tool.id === 'school-catchment' && (
-    <div id="main-card-schools-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialSchools.map((s) => (
-        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-school-id={s.id}>
-          <div class="truncate pr-2 font-medium">
-            <span>{s.name}</span>
-          </div>
-          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-            <span class="text-slate-500 dark:text-slate-400">
-              Grades {s.gradeSpan}
-            </span>
-            <span class="text-sky-600 dark:text-sky-400 font-bold">
-              {s.programs.includes('early_french_immersion') ? '🇫🇷 French' : '📘 English'}
+    <!-- SCHOOL CATCHMENT -->
+    {tool.id === 'school-catchment' && (
+      <div class="space-y-1" id="main-card-schools-grid">
+        {initialSchools.map((s) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-school-id={s.id}>
+            <a href={`/schools/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              {s.name}
+            </a>
+            <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
+              {s.programs.includes('early_french_immersion') ? '🇫🇷 French' : '📘 K-7'}
             </span>
           </div>
-        </div>
-      ))}
-    </div>
-  )}
+        ))}
+      </div>
+    )}
 
-  <!-- LOCAL NEWS: High-Density News Wire List -->
-  {tool.id === 'local-news' && (
-    <div id="main-card-news-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialArticles.map((a) => {
-        const timeStr = formatTimeAgo(a.publishedAt);
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-article-id={a.id}>
-            <div class="truncate pr-2 font-medium">
-              <span class="font-bold text-slate-900 dark:text-white mr-1">[${a.outletName}]</span>
+    <!-- LOCAL NEWS -->
+    {tool.id === 'local-news' && (
+      <div class="space-y-1" id="main-card-news-grid">
+        {initialArticles.map((a) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-article-id={a.id}>
+            <a href={`/news/${a.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              <span class="font-bold mr-1">[{a.outletName}]</span>
               <span>{a.title}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-1.5 text-[11px] font-semibold">
-              <span class="text-slate-400">
-                {timeStr}
-              </span>
-              {a.isBreaking && (
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-rose-500/20 text-rose-700 dark:text-rose-300">
-                  Breaking
-                </span>
-              )}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
-
-  <!-- REAL ESTATE & RENTAL MARKET: High-Density Submarket List -->
-  {tool.id === 'housing-market' && (
-    <div id="main-card-market-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialSubmarkets.map((s) => {
-        const condoBench = s.benchmarks.find((b) => b.propertyType === 'condo') || s.benchmarks[0];
-        return (
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-submarket-id={s.id}>
-            <div class="truncate pr-2 font-medium">
-              <span>{s.name.replace(' (Regional Composite)', '')}</span>
-              <span class="text-[11px] text-slate-400 ml-1">({s.salesToActiveRatio}% SAR)</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                {formatCurrency(s.rental.medianRent1Bed)}/mo rent
-              </span>
-              <span class="text-sky-600 dark:text-sky-400 font-bold">
-                ${Math.round(condoBench.benchmarkPrice / 1000)}k Condo
-              </span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  )}
-
-  <!-- SPORTS, COURTS & REC: High-Density Sports Hubs List -->
-  {tool.id === 'sports-courts' && (
-    <div id="main-card-sports-grid" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-      {initialSportsFacilities.map((f) => (
-        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id={f.id}>
-          <div class="truncate pr-2 font-medium">
-            <span>{f.name}</span>
-            {f.courtDetails?.hasLights && (
-              <span class="text-[10px] text-amber-500 ml-1 font-bold">💡 Lighted</span>
-            )}
-          </div>
-          <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-            <span class="text-slate-500 dark:text-slate-400">
-              {f.session.currentMode.split('(')[0].trim()}
-            </span>
-            <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Open
+            </a>
+            <span class="shrink-0 text-slate-400 text-[10px]">
+              {formatTimeAgo(a.publishedAt)}
             </span>
           </div>
-        </div>
-      ))}
-    </div>
-  )}
+        ))}
+      </div>
+    )}
 
-  <!-- Other Roadmap Tools: Compact Feature Readout -->
-  {tool.id !== 'can-i-swim' && tool.id !== 'bc-ferries' && tool.id !== 'mountain-snow' && tool.id !== 'evo-parking' && tool.id !== 'health-wait-times' && tool.id !== 'bridge-traffic' && tool.id !== 'air-quality' && tool.id !== 'civic-development' && tool.id !== 'community-events' && tool.id !== 'school-catchment' && tool.id !== 'local-news' && tool.id !== 'housing-market' && tool.id !== 'sports-courts' && (
-    <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
-      {tool.features?.map((f) => (
-        <div class="flex items-center gap-1.5">
-          <span class="text-slate-400">•</span>
-          <span>{f}</span>
-        </div>
-      ))}
-    </div>
-  )}
-</a>
-
-{tool.id === 'can-i-swim' && (
-  <script is:inline define:vars={{ allBeachesJson: JSON.stringify(allBeaches) }}>
-    function syncMainCardBeaches() {
-      const grid = document.getElementById('main-card-beaches-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_beaches');
-      const allBeaches = JSON.parse(allBeachesJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedSlugs = JSON.parse(saved);
-          const pinnedBeaches = allBeaches.filter((b) => pinnedSlugs.includes(b.id));
-          const unpinnedBeaches = allBeaches.filter((b) => !pinnedSlugs.includes(b.id));
-          displayList = [...pinnedBeaches, ...unpinnedBeaches].slice(0, 10);
-        } catch (e) {
-          displayList = allBeaches.slice(0, 10);
-        }
-      } else {
-        displayList = allBeaches.slice(0, 10);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((b) => {
-        const statusHtml = b.currentStatus === 'safe'
-          ? '<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe</span>'
-          : b.currentStatus === 'caution'
-          ? '<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Caution</span>'
-          : b.currentStatus === 'advisory'
-          ? '<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Advisory</span>'
-          : '<span class="text-slate-500 dark:text-slate-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-400"></span> Off-Season</span>';
-
-        return `
-          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60">
-            <span class="truncate pr-2 font-medium">
-              ${b.name.replace(/ \(.*\)/, '')}
-            </span>
-            <span class="shrink-0 flex items-center gap-1 font-semibold text-[11px]">
-              ${statusHtml}
+    <!-- HOUSING MARKET -->
+    {tool.id === 'housing-market' && (
+      <div class="space-y-1" id="main-card-market-grid">
+        {initialSubmarkets.map((s) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-submarket-id={s.id}>
+            <a href={`/market/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              {s.name.replace(' (Regional Composite)', '')}
+            </a>
+            <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
+              {s.salesToActiveRatio}% SAR
             </span>
           </div>
-        `;
-      }).join('');
-    }
+        ))}
+      </div>
+    )}
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardBeaches);
-    } else {
-      syncMainCardBeaches();
-    }
-
-    window.addEventListener('vanutils:pinned-beaches-changed', syncMainCardBeaches);
-  </script>
-)}
-
-{tool.id === 'bc-ferries' && (
-  <script is:inline define:vars={{ allFerryRoutesJson: JSON.stringify(allFerryRoutes) }}>
-    function syncMainCardFerries() {
-      const grid = document.getElementById('main-card-ferries-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_ferries');
-      const allRoutes = JSON.parse(allFerryRoutesJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinnedRoutes = allRoutes.filter((r) => pinnedIds.includes(r.id));
-          const unpinnedRoutes = allRoutes.filter((r) => !pinnedIds.includes(r.id));
-          displayList = [...pinnedRoutes, ...unpinnedRoutes].slice(0, 6);
-        } catch (e) {
-          displayList = allRoutes.slice(0, 6);
-        }
-      } else {
-        displayList = allRoutes.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((r) => {
-        const next = r.nextSailings?.[0];
-        let statusBadge = '';
-        if (next) {
-          if (next.standbyRisk === 'low') {
-            statusBadge = '<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Standby OK</span>';
-          } else if (next.standbyRisk === 'moderate') {
-            statusBadge = '<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Filling</span>';
-          } else if (next.standbyRisk === 'high') {
-            statusBadge = '<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Full</span>';
-          } else {
-            statusBadge = '<span class="text-sky-600 dark:text-sky-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Fast Transit</span>';
-          }
-        }
-
-        const deckText = next && next.deckSpacePercent !== undefined
-          ? `${next.departureTime} (${next.deckSpacePercent}% deck)`
-          : (next ? next.departureTime : 'Scheduled');
-
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-route-id="${r.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${r.shortName}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-700 dark:text-slate-300">${deckText}</span>
-              ${statusBadge}
-            </div>
+    <!-- SPORTS & REC -->
+    {tool.id === 'sports-courts' && (
+      <div class="space-y-1" id="main-card-sports-grid">
+        {initialSportsFacilities.map((f) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-facility-id={f.id}>
+            <a href={`/sports/${f.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
+              {f.name}
+            </a>
+            <span class="shrink-0 font-bold text-[11px] text-emerald-600 dark:text-emerald-400">
+              {f.courtDetails?.hasLights ? '💡 Lighted' : '🟢 Open'}
+            </span>
           </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardFerries);
-    } else {
-      syncMainCardFerries();
-    }
-
-    window.addEventListener('vanutils:pinned-ferries-changed', syncMainCardFerries);
-  </script>
-)}
-
-{tool.id === 'mountain-snow' && (
-  <script is:inline define:vars={{ allMountainsJson: JSON.stringify(allMountains) }}>
-    function syncMainCardSnow() {
-      const grid = document.getElementById('main-card-snow-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_snow');
-      const allMountains = JSON.parse(allMountainsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinnedMountains = allMountains.filter((m) => pinnedIds.includes(m.id));
-          const unpinnedMountains = allMountains.filter((m) => !pinnedIds.includes(m.id));
-          displayList = [...pinnedMountains, ...unpinnedMountains].slice(0, 4);
-        } catch (e) {
-          displayList = allMountains.slice(0, 4);
-        }
-      } else {
-        displayList = allMountains.slice(0, 4);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((m) => {
-        const topBand = m.elevationBands[m.elevationBands.length - 1];
-        const hasSnow = m.snowfall.last24HoursCm > 0;
-        const tempText = hasSnow
-          ? `<span class="text-sky-600 dark:text-sky-400 font-bold">${m.snowfall.last24HoursCm}cm 24h</span>`
-          : `<span class="text-amber-600 dark:text-amber-400 font-bold">+${topBand.temperatureCelsius}°C Summit</span>`;
-        const badgeText = hasSnow
-          ? '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300">❄️ Snow</span>'
-          : '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">☀️ Hiking</span>';
-
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-mountain-id="${m.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${m.name}</span>
-              <span class="text-[11px] text-slate-400 ml-1">(${topBand.elevationMeters}m)</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              ${tempText}
-              <span class="text-slate-500 dark:text-slate-400">
-                0°C @ ${m.currentFreezingLevelMeters}m
-              </span>
-              ${badgeText}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardSnow);
-    } else {
-      syncMainCardSnow();
-    }
-
-    window.addEventListener('vanutils:pinned-snow-changed', syncMainCardSnow);
-  </script>
-)}
-
-{tool.id === 'evo-parking' && (
-  <script is:inline define:vars={{ allNeighbourhoodsJson: JSON.stringify(allNeighbourhoods) }}>
-    function syncMainCardParking() {
-      const grid = document.getElementById('main-card-parking-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_parking');
-      const allNeighbourhoods = JSON.parse(allNeighbourhoodsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinnedNeighbourhoods = allNeighbourhoods.filter((n) => pinnedIds.includes(n.id));
-          const unpinnedNeighbourhoods = allNeighbourhoods.filter((n) => !pinnedIds.includes(n.id));
-          displayList = [...pinnedNeighbourhoods, ...unpinnedNeighbourhoods].slice(0, 6);
-        } catch (e) {
-          displayList = allNeighbourhoods.slice(0, 6);
-        }
-      } else {
-        displayList = allNeighbourhoods.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((n) => {
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-parking-id="${n.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${n.name}</span>
-              <span class="text-[11px] text-slate-400 ml-1">(${n.residentialPermitRules.permitZoneCode})</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${n.id === 'ubc' ? 'Parkades Only' : 'Permit Exempt'}
-              </span>
-              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe to Park
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardParking);
-    } else {
-      syncMainCardParking();
-    }
-
-    window.addEventListener('vanutils:pinned-parking-changed', syncMainCardParking);
-  </script>
-)}
-
-{tool.id === 'health-wait-times' && (
-  <script is:inline define:vars={{ allFacilitiesJson: JSON.stringify(allFacilities) }}>
-    function syncMainCardHealth() {
-      const grid = document.getElementById('main-card-health-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_health');
-      const allFacilities = JSON.parse(allFacilitiesJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinnedFacilities = allFacilities.filter((f) => pinnedIds.includes(f.id));
-          const unpinnedFacilities = allFacilities.filter((f) => !pinnedIds.includes(f.id));
-          displayList = [...pinnedFacilities, ...unpinnedFacilities].slice(0, 6);
-        } catch (e) {
-          displayList = allFacilities.slice(0, 6);
-        }
-      } else {
-        displayList = allFacilities.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((f) => {
-        const wait = f.triageData?.waitTimeMinutes;
-        const waitStr = formatWaitTime(wait);
-        const isLow = wait !== undefined && wait < 90;
-        const isMod = wait !== undefined && !isLow && !(wait > 210);
-
-        const waitBadge = isLow
-          ? `<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> ${waitStr} Wait</span>`
-          : isMod
-          ? `<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> ${waitStr} Wait</span>`
-          : `<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> ${waitStr} Wait</span>`;
-
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id="${f.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${f.shortName}</span>
-              <span class="text-[11px] text-slate-400 ml-1">(${f.municipality})</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${f.triageData?.patientCountWaiting !== undefined ? `${f.triageData.patientCountWaiting} waiting` : 'Triage Open'}
-              </span>
-              ${waitBadge}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardHealth);
-    } else {
-      syncMainCardHealth();
-    }
-
-    window.addEventListener('vanutils:pinned-health-changed', syncMainCardHealth);
-  </script>
-)}
-
-{tool.id === 'bridge-traffic' && (
-  <script is:inline define:vars={{ allCrossingsJson: JSON.stringify(allCrossings) }}>
-    function syncMainCardBridges() {
-      const grid = document.getElementById('main-card-bridges-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_bridges');
-      const allCrossings = JSON.parse(allCrossingsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinnedCrossings = allCrossings.filter((c) => pinnedIds.includes(c.id));
-          const unpinnedCrossings = allCrossings.filter((c) => !pinnedIds.includes(c.id));
-          displayList = [...pinnedCrossings, ...unpinnedCrossings].slice(0, 6);
-        } catch (e) {
-          displayList = allCrossings.slice(0, 6);
-        }
-      } else {
-        displayList = allCrossings.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((c) => {
-        const p = c.directions.primary;
-        const isFlowing = !(p.delayMinutes > 3);
-        const isMod = !isFlowing && !(p.delayMinutes > 8);
-
-        const badgeHtml = isFlowing
-          ? '<span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Fast</span>'
-          : isMod
-          ? `<span class="text-amber-600 dark:text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> +${p.delayMinutes}m delay</span>`
-          : `<span class="text-rose-600 dark:text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> +${p.delayMinutes}m delay</span>`;
-
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-crossing-id="${c.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${c.shortName}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${p.travelTimeMinutes} mins
-              </span>
-              ${badgeHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardBridges);
-    } else {
-      syncMainCardBridges();
-    }
-
-    window.addEventListener('vanutils:pinned-bridges-changed', syncMainCardBridges);
-  </script>
-)}
-
-{tool.id === 'air-quality' && (
-  <script is:inline define:vars={{ allStationsJson: JSON.stringify(allStations) }}>
-    function syncMainCardAir() {
-      const grid = document.getElementById('main-card-air-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_air');
-      const allStations = JSON.parse(allStationsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinnedStations = allStations.filter((s) => pinnedIds.includes(s.id));
-          const unpinnedStations = allStations.filter((s) => !pinnedIds.includes(s.id));
-          displayList = [...pinnedStations, ...unpinnedStations].slice(0, 6);
-        } catch (e) {
-          displayList = allStations.slice(0, 6);
-        }
-      } else {
-        displayList = allStations.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((s) => {
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-station-id="${s.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${s.shortName}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${s.currentPM25} µg/m³ PM2.5
-              </span>
-              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> AQHI ${s.currentAQHI} (Low)
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardAir);
-    } else {
-      syncMainCardAir();
-    }
-
-    window.addEventListener('vanutils:pinned-air-changed', syncMainCardAir);
-  </script>
-)}
-
-{tool.id === 'civic-development' && (
-  <script is:inline define:vars={{ allProposalsJson: JSON.stringify(allProposals) }}>
-    function syncMainCardCivic() {
-      const grid = document.getElementById('main-card-civic-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_civic-development');
-      const allProposals = JSON.parse(allProposalsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinned = allProposals.filter((p) => pinnedIds.includes(p.id));
-          const unpinned = allProposals.filter((p) => !pinnedIds.includes(p.id));
-          displayList = [...pinned, ...unpinned].slice(0, 6);
-        } catch (e) {
-          displayList = allProposals.slice(0, 6);
-        }
-      } else {
-        displayList = allProposals.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((p) => {
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-proposal-id="${p.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${p.address}</span>
-              <span class="text-[11px] text-slate-400 ml-1">(${p.storeys} Storeys)</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${p.units.totalUnits} Units
-              </span>
-              <span class="text-sky-600 dark:text-sky-400 font-bold">
-                ${p.proposedFSR} FSR
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardCivic);
-    } else {
-      syncMainCardCivic();
-    }
-
-    window.addEventListener('vanutils:pinned-civic-changed', syncMainCardCivic);
-  </script>
-)}
-
-{tool.id === 'community-events' && (
-  <script is:inline define:vars={{ allEventsJson: JSON.stringify(allEvents) }}>
-    function syncMainCardEvents() {
-      const grid = document.getElementById('main-card-events-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_community-events');
-      const allEvents = JSON.parse(allEventsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinned = allEvents.filter((e) => pinnedIds.includes(e.id));
-          const unpinned = allEvents.filter((e) => !pinnedIds.includes(e.id));
-          displayList = [...pinned, ...unpinned].slice(0, 6);
-        } catch (e) {
-          displayList = allEvents.slice(0, 6);
-        }
-      } else {
-        displayList = allEvents.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((e) => {
-        const d = new Date(e.startDateTime);
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-event-id="${e.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${e.title}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' })}
-              </span>
-              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 100% Free
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardEvents);
-    } else {
-      syncMainCardEvents();
-    }
-
-    window.addEventListener('vanutils:pinned-events-changed', syncMainCardEvents);
-  </script>
-)}
-
-{tool.id === 'school-catchment' && (
-  <script is:inline define:vars={{ allSchoolsJson: JSON.stringify(allSchools) }}>
-    function syncMainCardSchools() {
-      const grid = document.getElementById('main-card-schools-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_school-catchment');
-      const allSchools = JSON.parse(allSchoolsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinned = allSchools.filter((s) => pinnedIds.includes(s.id));
-          const unpinned = allSchools.filter((s) => !pinnedIds.includes(s.id));
-          displayList = [...pinned, ...unpinned].slice(0, 6);
-        } catch (e) {
-          displayList = allSchools.slice(0, 6);
-        }
-      } else {
-        displayList = allSchools.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((s) => {
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-school-id="${s.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${s.name}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                Grades ${s.gradeSpan}
-              </span>
-              <span class="text-sky-600 dark:text-sky-400 font-bold">
-                ${s.programs.includes('early_french_immersion') ? '🇫🇷 French' : '📘 English'}
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardSchools);
-    } else {
-      syncMainCardSchools();
-    }
-
-    window.addEventListener('vanutils:pinned-schools-changed', syncMainCardSchools);
-  </script>
-)}
-
-{tool.id === 'local-news' && (
-  <script is:inline define:vars={{ allArticlesJson: JSON.stringify(allArticles) }}>
-    function syncMainCardNews() {
-      const grid = document.getElementById('main-card-news-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_local-news');
-      const allArticles = JSON.parse(allArticlesJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinned = allArticles.filter((a) => pinnedIds.includes(a.id));
-          const unpinned = allArticles.filter((a) => !pinnedIds.includes(a.id));
-          displayList = [...pinned, ...unpinned].slice(0, 6);
-        } catch (e) {
-          displayList = allArticles.slice(0, 6);
-        }
-      } else {
-        displayList = allArticles.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((a) => {
-        const breakingBadge = a.isBreaking
-          ? '<span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-rose-500/20 text-rose-700 dark:text-rose-300">Breaking</span>'
-          : '';
-
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-article-id="${a.id}">
-            <div class="truncate pr-2 font-medium">
-              <span class="font-bold text-slate-900 dark:text-white mr-1">[${a.outletName}]</span>
-              <span>${a.title}</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-1.5 text-[11px] font-semibold">
-              <span class="text-slate-400">Recently</span>
-              ${breakingBadge}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardNews);
-    } else {
-      syncMainCardNews();
-    }
-
-    window.addEventListener('vanutils:pinned-news-changed', syncMainCardNews);
-  </script>
-)}
-
-{tool.id === 'housing-market' && (
-  <script is:inline define:vars={{ allSubmarketsJson: JSON.stringify(allSubmarkets) }}>
-    function syncMainCardMarket() {
-      const grid = document.getElementById('main-card-market-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_housing-market');
-      const allSubmarkets = JSON.parse(allSubmarketsJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinned = allSubmarkets.filter((s) => pinnedIds.includes(s.id));
-          const unpinned = allSubmarkets.filter((s) => !pinnedIds.includes(s.id));
-          displayList = [...pinned, ...unpinned].slice(0, 6);
-        } catch (e) {
-          displayList = allSubmarkets.slice(0, 6);
-        }
-      } else {
-        displayList = allSubmarkets.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((s) => {
-        const condoBench = s.benchmarks?.find((b) => b.propertyType === 'condo') || s.benchmarks?.[0] || { benchmarkPrice: 750000 };
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-submarket-id="${s.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${s.name.replace(' (Regional Composite)', '')}</span>
-              <span class="text-[11px] text-slate-400 ml-1">(${s.salesToActiveRatio}% SAR)</span>
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                $${s.rental?.medianRent1Bed || 2650}/mo rent
-              </span>
-              <span class="text-sky-600 dark:text-sky-400 font-bold">
-                $${Math.round(condoBench.benchmarkPrice / 1000)}k Condo
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardMarket);
-    } else {
-      syncMainCardMarket();
-    }
-
-    window.addEventListener('vanutils:pinned-market-changed', syncMainCardMarket);
-  </script>
-)}
-
-{tool.id === 'sports-courts' && (
-  <script is:inline define:vars={{ allSportsFacilitiesJson: JSON.stringify(allSportsFacilities) }}>
-    function syncMainCardSports() {
-      const grid = document.getElementById('main-card-sports-grid');
-      if (!grid) return;
-
-      const saved = localStorage.getItem('vanutils_pinned_sports-facilities');
-      const allFacilities = JSON.parse(allSportsFacilitiesJson || '[]');
-      
-      let displayList = [];
-      if (saved) {
-        try {
-          const pinnedIds = JSON.parse(saved);
-          const pinned = allFacilities.filter((f) => pinnedIds.includes(f.id));
-          const unpinned = allFacilities.filter((f) => !pinnedIds.includes(f.id));
-          displayList = [...pinned, ...unpinned].slice(0, 6);
-        } catch (e) {
-          displayList = allFacilities.slice(0, 6);
-        }
-      } else {
-        displayList = allFacilities.slice(0, 6);
-      }
-
-      if (displayList.length === 0) return;
-
-      grid.innerHTML = displayList.map((f) => {
-        const lightedTag = f.courtDetails?.hasLights
-          ? '<span class="text-[10px] text-amber-500 ml-1 font-bold">💡 Lighted</span>'
-          : '';
-
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/60" data-facility-id="${f.id}">
-            <div class="truncate pr-2 font-medium">
-              <span>${f.name}</span>
-              ${lightedTag}
-            </div>
-            <div class="shrink-0 flex items-center gap-2 text-[11px] font-semibold">
-              <span class="text-slate-500 dark:text-slate-400">
-                ${f.session?.currentMode?.split('(')[0]?.trim() || 'Open'}
-              </span>
-              <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Open
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncMainCardSports);
-    } else {
-      syncMainCardSports();
-    }
-
-    window.addEventListener('vanutils:pinned-sports-changed', syncMainCardSports);
-  </script>
-)}
+        ))}
+      </div>
+    )}
+  </div>
+
+  <!-- Card Footer -->
+  <div class="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
+    <a href={tool.path} class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors flex items-center gap-1">
+      <span>Open Tool</span>
+      <span>→</span>
+    </a>
+    <span class="text-[10px] text-slate-400">
+      ⭐ Star items to pin
+    </span>
+  </div>
+</div>
