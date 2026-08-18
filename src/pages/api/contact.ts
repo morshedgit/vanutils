@@ -259,11 +259,26 @@ ${cleanMessage}
 To reply to the sender, reply directly to this email.
     `.trim();
 
-    // 7. Email Dispatch Pipeline via Cloudflare Edge Transport
+    // 7. Email Dispatch Pipeline via Native Cloudflare Email Worker Binding
     const targetRecipient = getEnv('CONTACT_RECIPIENT_EMAIL') || 'contact@vanheartbeat.com';
+    const emailBinding = runtimeEnv.EMAIL;
     const resendApiKey = getEnv('RESEND_API_KEY');
 
-    if (resendApiKey) {
+    if (emailBinding && typeof emailBinding.send === 'function') {
+      try {
+        await emailBinding.send({
+          to: targetRecipient,
+          from: 'contact@vanheartbeat.com',
+          replyTo: cleanEmail,
+          subject: subject,
+          html: htmlContent,
+          text: textContent,
+        });
+        console.log(`[CloudflareEmailSuccess] Dispatched alert ${referenceId} via env.EMAIL binding to ${targetRecipient}`);
+      } catch (cfErr: any) {
+        console.error('[CloudflareEmailError]', cfErr?.message || cfErr);
+      }
+    } else if (resendApiKey) {
       const emailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {

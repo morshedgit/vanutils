@@ -140,7 +140,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:46:34.134Z",
+    "lastUpdated": "2026-08-18T21:50:23.772Z",
     "isStale": false
   },
   {
@@ -284,7 +284,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:46:34.140Z",
+    "lastUpdated": "2026-08-18T21:50:23.776Z",
     "isStale": false
   },
   {
@@ -363,7 +363,7 @@
         "temperatureCelsius": 18.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 0,
-        "condition": "sunny"
+        "condition": "mostly_sunny"
       }
     ],
     "daily": [
@@ -428,7 +428,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:46:34.145Z",
+    "lastUpdated": "2026-08-18T21:50:23.778Z",
     "isStale": false
   },
   {
@@ -572,7 +572,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:46:34.144Z",
+    "lastUpdated": "2026-08-18T21:50:23.773Z",
     "isStale": false
   },
   {
@@ -716,7 +716,7 @@
         "sunset": "20:14"
       }
     ],
-    "lastUpdated": "2026-08-18T21:46:34.142Z",
+    "lastUpdated": "2026-08-18T21:50:23.774Z",
     "isStale": false
   },
   {
@@ -860,7 +860,7 @@
         "sunset": "20:15"
       }
     ],
-    "lastUpdated": "2026-08-18T21:46:34.143Z",
+    "lastUpdated": "2026-08-18T21:50:23.780Z",
     "isStale": false
   },
   {
@@ -1004,7 +1004,7 @@
         "sunset": "20:16"
       }
     ],
-    "lastUpdated": "2026-08-18T21:46:34.141Z",
+    "lastUpdated": "2026-08-18T21:50:23.775Z",
     "isStale": false
   }
 ]

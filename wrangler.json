@@ -9,6 +9,11 @@
     "binding": "ASSETS",
     "exclude": ["_worker.js/**", "_worker.js"]
   },
+  "send_email": [
+    {
+      "name": "EMAIL"
+    }
+  ],
   "build": {
     "command": "npm run build"
   }
