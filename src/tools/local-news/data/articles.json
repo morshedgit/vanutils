@@ -6,7 +6,7 @@
     "source": "cbc_vancouver",
     "outletName": "CBC Vancouver",
     "category": "transit_infrastructure",
-    "publishedAt": "2026-08-19T15:43:33.816Z",
+    "publishedAt": "2026-08-19T15:53:11.942Z",
     "url": "https://www.cbc.ca/news/canada/british-columbia/broadway-subway-testing-update-2026",
     "isBreaking": true,
     "isStale": false
@@ -18,7 +18,7 @@
     "source": "city_of_vancouver",
     "outletName": "City of Vancouver",
     "category": "housing_development",
-    "publishedAt": "2026-08-19T15:43:33.816Z",
+    "publishedAt": "2026-08-19T15:53:11.942Z",
     "url": "https://vancouver.ca/news-calendar/council-approves-rental-protections-2026.aspx",
     "isBreaking": false,
     "isStale": false
@@ -30,7 +30,7 @@
     "source": "translink",
     "outletName": "TransLink",
     "category": "transit_infrastructure",
-    "publishedAt": "2026-08-19T15:43:33.816Z",
+    "publishedAt": "2026-08-19T15:53:11.942Z",
     "url": "https://www.translink.ca/news/2026/august/seabus-summer-service-boost",
     "isBreaking": false,
     "isStale": false
@@ -42,7 +42,7 @@
     "source": "eccc_weather",
     "outletName": "Environment Canada",
     "category": "weather_hazards",
-    "publishedAt": "2026-08-19T15:43:33.816Z",
+    "publishedAt": "2026-08-19T15:53:11.942Z",
     "url": "https://weather.gc.ca/marine/forecast_e.html?site=03100",
     "isBreaking": false,
     "isStale": false
@@ -54,7 +54,7 @@
     "source": "metro_vancouver",
     "outletName": "Metro Vancouver",
     "category": "civic_politics",
-    "publishedAt": "2026-08-19T15:43:33.816Z",
+    "publishedAt": "2026-08-19T15:53:11.942Z",
     "url": "https://metrovancouver.org/media-room/reservoir-status-update-august-2026",
     "isBreaking": false,
     "isStale": false
@@ -66,7 +66,7 @@
     "source": "city_of_vancouver",
     "outletName": "Vancouver Park Board",
     "category": "parks_community",
-    "publishedAt": "2026-08-19T15:43:33.816Z",
+    "publishedAt": "2026-08-19T15:53:11.942Z",
     "url": "https://vancouver.ca/parks-recreation-culture/kits-pool-upgrade-completion.aspx",
     "isBreaking": false,
     "isStale": false

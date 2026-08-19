@@ -1,7 +1,7 @@
 import type { ToolMeta, VancouverLocationPreset } from '../types/shared';
 
 export const TOOLS_REGISTRY: ToolMeta[] = [
-  // --- ROW 1: CRITICAL DAILY VITALS & TRANSIT ---
+  // --- ROW 1: TOP DAILY VITALS, SPORTS & TRANSIT ---
   {
     id: 'weather-forecast',
     name: 'Microclimate Weather Radar',
@@ -21,6 +21,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       '24-Hour hourly rain accumulation sparklines',
       'Environment Canada active weather alert ribbon',
       '1-Tap GPS closest neighborhood station locator',
+    ],
+  },
+  {
+    id: 'sports-teams',
+    name: 'Major Sports Teams Radar',
+    shortDescription: 'Live scores, game day schedules, 5-game form & TV/radio broadcast channels for Canucks, Whitecaps, BC Lions & Canadians.',
+    path: '/sports-teams',
+    icon: 'trophy',
+    category: 'outdoors',
+    status: 'active',
+    badgeText: 'Live Game Radar',
+    previewStat: {
+      value: 'Canucks vs CGY',
+      label: 'Next Game • 7:00 PM',
+      statusType: 'safe',
+    },
+    features: [
+      'Real-time scores & period/quarter tracking',
+      'Visual 5-game form streak indicators (W/L/OTL)',
+      'Direct TV & Radio broadcast channel listings',
+      'Rogers Arena & BC Place SkyTrain transit wayfinding',
     ],
   },
   {
@@ -65,6 +86,8 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'DriveBC approach highway webcams',
     ],
   },
+
+  // --- ROW 2: EMERGENCY CARE & MOBILITY ---
   {
     id: 'health-wait-times',
     name: 'ER & Urgent Care Radar',
@@ -86,8 +109,6 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       '11 Hospital ERs & 9 Urgent Care Centres',
     ],
   },
-
-  // --- ROW 2: MOBILITY & ENVIRONMENTAL HEALTH ---
   {
     id: 'evo-parking',
     name: 'Car-Share Safe Parking',
@@ -151,6 +172,8 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       '12h/24h snow stake accumulations',
     ],
   },
+
+  // --- ROW 3: OUTDOORS, RECREATION & REAL ESTATE ---
   {
     id: 'can-i-swim',
     name: 'Can I Swim?',
@@ -172,8 +195,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Nearest clean beach sorting',
     ],
   },
-
-  // --- ROW 3: CITY PULSE, SPORTS & REAL ESTATE ---
+  {
+    id: 'sports-courts',
+    name: 'Sports, Courts & Rec Radar',
+    shortDescription: 'Sub-second recreation radar for public tennis courts, lighted pickleball, length swimming & ice rinks.',
+    path: '/sports',
+    icon: 'sparkles',
+    category: 'outdoors',
+    status: 'active',
+    badgeText: 'Park Board Rec',
+    previewStat: {
+      value: '84 Courts',
+      label: 'Lighted & Open',
+      statusType: 'safe',
+    },
+    features: [
+      'Tennis & lighted pickleball night curfew locator',
+      'Live length swim & public pool session schedules',
+      'Ice rink public skate & drop-in hockey hours',
+      'Turf athletic field rainout & floodlight status',
+    ],
+  },
   {
     id: 'local-news',
     name: 'Local News & Alerts',
@@ -196,27 +238,6 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     ],
   },
   {
-    id: 'sports-teams',
-    name: 'Major Sports Teams Radar',
-    shortDescription: 'Live scores, game day schedules, 5-game form & TV/radio broadcast channels for Canucks, Whitecaps, BC Lions & Canadians.',
-    path: '/sports-teams',
-    icon: 'trophy',
-    category: 'outdoors',
-    status: 'active',
-    badgeText: 'Live Game Radar',
-    previewStat: {
-      value: 'Canucks vs CGY',
-      label: 'Next Game • 7:00 PM',
-      statusType: 'safe',
-    },
-    features: [
-      'Real-time scores & period/quarter tracking',
-      'Visual 5-game form streak indicators (W/L/OTL)',
-      'Direct TV & Radio broadcast channel listings',
-      'Rogers Arena & BC Place SkyTrain transit wayfinding',
-    ],
-  },
-  {
     id: 'housing-market',
     name: 'Real Estate & Rental Pulse',
     shortDescription: 'Sub-50ms market liquidity telemetry, MLS® HPI benchmark prices, rental vacancy rates & BoC mortgage rates.',
@@ -235,27 +256,6 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'MLS® HPI Condo, Townhouse & Detached indices',
       'CMHC median rental prices & vacancy rates',
       'Bank of Canada policy rate & payment calculator',
-    ],
-  },
-  {
-    id: 'sports-courts',
-    name: 'Sports, Courts & Rec Radar',
-    shortDescription: 'Sub-second recreation radar for public tennis courts, lighted pickleball, length swimming & ice rinks.',
-    path: '/sports',
-    icon: 'sparkles',
-    category: 'outdoors',
-    status: 'active',
-    badgeText: 'Park Board Rec',
-    previewStat: {
-      value: '84 Courts',
-      label: 'Lighted & Open',
-      statusType: 'safe',
-    },
-    features: [
-      'Tennis & lighted pickleball night curfew locator',
-      'Live length swim & public pool session schedules',
-      'Ice rink public skate & drop-in hockey hours',
-      'Turf athletic field rainout & floodlight status',
     ],
   },
 
