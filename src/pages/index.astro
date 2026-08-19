@@ -12,6 +12,11 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-re
 const allTools = TOOLS_REGISTRY;
 const alerts = await getLiveBreakingAlerts();
 
+const outdoorsCount = allTools.filter((t) => t.category === 'outdoors').length;
+const transitCount = allTools.filter((t) => t.category === 'transit').length;
+const healthCount = allTools.filter((t) => t.category === 'daily_living').length;
+const civicCount = allTools.filter((t) => t.category === 'civic').length;
+
 const websiteSchema = [
   {
     '@context': 'https://schema.org',
@@ -46,103 +51,145 @@ const websiteSchema = [
 >
   <JsonLd schema={websiteSchema} />
 
-  <div class="w-full space-y-6">
+  <div class="w-full space-y-2.5">
     <!-- Active Breaking News & Emergency Alerts -->
-    <BreakingAlertBanner alerts={alerts} />
+    {alerts.length > 0 && <BreakingAlertBanner alerts={alerts} />}
 
-    <!-- SEO Primary Heading & Live Header -->
-    <div class="space-y-1">
-      <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-        Metro Vancouver Live Civic Pulse & Telemetry
-      </h1>
-      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-        Sub-second public data, beach water quality, ferry radar, snow levels, and emergency wait times.
-      </p>
-    </div>
-
-    <!-- Dashboard Category Filter Tabs & Quick Search Bar -->
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-2">
-
-      <!-- Category Pills -->
-      <div class="flex flex-wrap gap-1.5" id="home-category-filters">
-        <button
-          type="button"
-          data-category="all"
-          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs transition-all"
-        >
-          All Utilities ({allTools.length})
-        </button>
-        <button
-          type="button"
-          data-category="outdoors"
-          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
-        >
-          <span>🌊</span>
-          <span>Outdoors & Snow</span>
-        </button>
-        <button
-          type="button"
-          data-category="transit"
-          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
-        >
-          <span>⛴️</span>
-          <span>Transit & Bridges</span>
-        </button>
-        <button
-          type="button"
-          data-category="daily_living"
-          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
-        >
-          <span>🚗</span>
-          <span>Daily & Health</span>
-        </button>
-        <button
-          type="button"
-          data-category="civic"
-          class="home-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center gap-1.5"
-        >
-          <span>🏛️</span>
-          <span>Civic & Wire</span>
-        </button>
-      </div>
-
-      <!-- Real-time Live Status Counter -->
-      <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>{allTools.length} Live Telemetry Feeds Active</span>
-      </div>
-    </div>
-
-    <!-- Main Dashboard: 4-Column Responsive Grid on Desktop -->
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5"
-      id="utilities-grid"
-    >
-      {allTools.map((tool) => (
-        <div class="tool-card-wrapper" data-category={tool.category}>
-          <ToolCard tool={tool} />
+    <!-- Layout: Left Sidebar + Main High-Density Grid -->
+    <div class="flex flex-col lg:flex-row gap-3.5 lg:gap-4 items-start w-full">
+      
+      <!-- Sticky Left Anchor Sidebar (Desktop) -->
+      <aside class="hidden lg:flex flex-col w-44 xl:w-48 shrink-0 sticky top-14 self-start bg-white dark:bg-slate-900/80 rounded-xl border border-slate-200/80 dark:border-slate-800/80 p-2.5 shadow-xs space-y-3">
+        <div class="space-y-1">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2">Category</div>
+          <nav class="space-y-0.5" id="desktop-category-filters">
+            <button
+              type="button"
+              data-category="all"
+              class="home-filter-btn w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-900 transition-all text-left"
+            >
+              <span>All Utilities</span>
+              <span class="text-[10px] opacity-75 font-mono">{allTools.length}</span>
+            </button>
+            <button
+              type="button"
+              data-category="outdoors"
+              class="home-filter-btn w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left"
+            >
+              <span>Outdoors & Snow</span>
+              <span class="text-[10px] opacity-60 font-mono">{outdoorsCount}</span>
+            </button>
+            <button
+              type="button"
+              data-category="transit"
+              class="home-filter-btn w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left"
+            >
+              <span>Transit & Roads</span>
+              <span class="text-[10px] opacity-60 font-mono">{transitCount}</span>
+            </button>
+            <button
+              type="button"
+              data-category="daily_living"
+              class="home-filter-btn w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left"
+            >
+              <span>Daily & Health</span>
+              <span class="text-[10px] opacity-60 font-mono">{healthCount}</span>
+            </button>
+            <button
+              type="button"
+              data-category="civic"
+              class="home-filter-btn w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all text-left"
+            >
+              <span>Civic & Wire</span>
+              <span class="text-[10px] opacity-60 font-mono">{civicCount}</span>
+            </button>
+          </nav>
         </div>
-      ))}
+
+        <!-- Telemetry Status Feed Badge -->
+        <div class="pt-2 border-t border-slate-100 dark:border-slate-800/60 flex items-center gap-1.5 px-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>{allTools.length} Live Feeds Active</span>
+        </div>
+      </aside>
+
+      <!-- Main High-Density Grid Area -->
+      <section class="flex-1 w-full space-y-2.5">
+        <!-- Mobile/Tablet Category Scroll Strip (Zero Icons, Compact) -->
+        <div class="lg:hidden flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar" id="mobile-category-filters">
+          <button
+            type="button"
+            data-category="all"
+            class="home-filter-btn shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-900 transition-all"
+          >
+            All ({allTools.length})
+          </button>
+          <button
+            type="button"
+            data-category="outdoors"
+            class="home-filter-btn shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 transition-all"
+          >
+            Outdoors ({outdoorsCount})
+          </button>
+          <button
+            type="button"
+            data-category="transit"
+            class="home-filter-btn shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 transition-all"
+          >
+            Transit ({transitCount})
+          </button>
+          <button
+            type="button"
+            data-category="daily_living"
+            class="home-filter-btn shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 transition-all"
+          >
+            Daily ({healthCount})
+          </button>
+          <button
+            type="button"
+            data-category="civic"
+            class="home-filter-btn shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 transition-all"
+          >
+            Civic ({civicCount})
+          </button>
+        </div>
+
+        <!-- 3/4-Column High-Density Grid (Starts immediately at Top) -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-3.5"
+          id="utilities-grid"
+        >
+          {allTools.map((tool) => (
+            <div class="tool-card-wrapper" data-category={tool.category}>
+              <ToolCard tool={tool} />
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   </div>
 </PlatformLayout>
 
 <script>
   function setupCategoryFilters() {
-    const buttons = document.querySelectorAll('.home-filter-btn');
+    const allButtons = document.querySelectorAll('.home-filter-btn');
     const cards = document.querySelectorAll('.tool-card-wrapper');
 
-    buttons.forEach((btn) => {
+    allButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         const category = btn.getAttribute('data-category');
 
-        // Update active tab styling
-        buttons.forEach((b) => {
-          b.classList.remove('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-bold');
-          b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'font-semibold');
+        // Update all desktop and mobile buttons matching this category
+        allButtons.forEach((b) => {
+          const isMatch = b.getAttribute('data-category') === category;
+          if (isMatch) {
+            b.classList.remove('text-slate-600', 'dark:text-slate-300', 'font-semibold', 'bg-white', 'dark:bg-slate-900');
+            b.classList.add('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-bold');
+          } else {
+            b.classList.remove('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-bold');
+            b.classList.add('text-slate-600', 'dark:text-slate-300', 'font-semibold');
+          }
         });
-        btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'font-semibold');
-        btn.classList.add('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900', 'font-bold');
 
         // Filter cards
         cards.forEach((card) => {
@@ -158,17 +205,16 @@ const websiteSchema = [
   }
 
   function setupWholeCardClicks() {
-    document.querySelectorAll<HTMLElement>('.tool-card').forEach((card) => {
+    const cards = document.querySelectorAll('.tool-card-wrapper');
+    cards.forEach((card) => {
       card.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
-        // If clicking a specific sub-route deep link, let it proceed
-        const subLink = target.closest('a');
-        if (subLink && subLink.getAttribute('href') && !subLink.classList.contains('tool-card-main-link')) {
+        if (target.closest('a') || target.closest('button')) {
           return;
         }
-        const toolPath = card.getAttribute('data-tool-path');
-        if (toolPath) {
-          window.location.href = toolPath;
+        const primaryLink = card.querySelector('a') as HTMLAnchorElement | null;
+        if (primaryLink && primaryLink.href) {
+          window.location.href = primaryLink.href;
         }
       });
     });
@@ -176,9 +222,9 @@ const websiteSchema = [
 
   setupCategoryFilters();
   setupWholeCardClicks();
+
   document.addEventListener('astro:page-load', () => {
     setupCategoryFilters();
     setupWholeCardClicks();
   });
 </script>
-
