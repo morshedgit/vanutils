@@ -93,27 +93,9 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
   <a href={tool.path} class="tool-card-main-link absolute inset-0 z-0 rounded-2xl" aria-label={`Open ${tool.name}`}></a>
 
   <!-- Card Top Header -->
-  <div class="relative z-10 flex items-center justify-between gap-2 mb-3">
-    <a href={tool.path} class="flex items-center gap-2 group-hover:text-sky-500 transition-colors">
-      <span class="text-xl shrink-0">
-        {tool.id === 'can-i-swim' && '🌊'}
-        {tool.id === 'bc-ferries' && '⛴️'}
-        {tool.id === 'mountain-snow' && '🏔️'}
-        {tool.id === 'evo-parking' && '🚗'}
-        {tool.id === 'health-wait-times' && '🏥'}
-        {tool.id === 'bridge-traffic' && '🌉'}
-        {tool.id === 'air-quality' && '💨'}
-        {tool.id === 'civic-development' && '🏗️'}
-        {tool.id === 'community-events' && '🎈'}
-        {tool.id === 'school-catchment' && '🏫'}
-        {tool.id === 'local-news' && '📰'}
-        {tool.id === 'housing-market' && '📈'}
-        {tool.id === 'sports-courts' && '🎾'}
-        {tool.id === 'weather-forecast' && '🌦️'}
-        {tool.id === 'sports-teams' && '🏒'}
-        {tool.id === 'sales-events' && '🏷️'}
-      </span>
-      <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+  <div class="relative z-10 flex items-center justify-between gap-2 mb-2.5">
+    <a href={tool.path} class="flex items-center gap-1.5 group-hover:text-sky-500 transition-colors">
+      <h2 class="text-sm font-bold text-slate-900 dark:text-white leading-tight">
         {tool.name}
       </h2>
     </a>
