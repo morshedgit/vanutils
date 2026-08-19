@@ -15,13 +15,13 @@ const {
   title = 'VanHeartbeat — Metro Vancouver Live Civic Pulse & Telemetry',
   description = 'Ultra-lightweight, sub-second hyper-local civic telemetry for Metro Vancouver residents. Beach water quality, ferry standby, mountain snow lines, ER wait times and more.',
   currentPath = '/',
-  ogImage = 'https://vanheartbeat.ca/og-banner.svg',
+  ogImage = 'https://vanheartbeat.com/og-banner.svg',
   canonicalUrl,
   type = 'website',
 } = Astro.props;
 
 const fullTitle = title.includes('VanHeartbeat') ? title : `${title} | VanHeartbeat`;
-const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanheartbeat.ca' : `https://vanheartbeat.ca${currentPath.replace(/\/$/, '')}`);
+const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanheartbeat.com' : `https://vanheartbeat.com${currentPath.replace(/\/$/, '')}`);
 ---
 
 <!doctype html>

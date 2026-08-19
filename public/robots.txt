@@ -2,4 +2,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://vanheartbeat.com/sitemap.xml
-Sitemap: https://vanheartbeat.ca/sitemap.xml

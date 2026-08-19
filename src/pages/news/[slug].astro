@@ -25,7 +25,7 @@ const articleSchema = [
     headline: article.title,
     description: article.summary,
     datePublished: article.publishedAt,
-    url: `https://vanheartbeat.ca/news/${article.id}`,
+    url: `https://vanheartbeat.com/news/${article.id}`,
     author: {
       '@type': 'Organization',
       name: article.outletName,
@@ -33,16 +33,16 @@ const articleSchema = [
     publisher: {
       '@type': 'Organization',
       name: 'VanHeartbeat News Wire',
-      url: 'https://vanheartbeat.ca',
+      url: 'https://vanheartbeat.com',
     },
   },
   {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Local News Wire', item: 'https://vanheartbeat.ca/news' },
-      { '@type': 'ListItem', position: 3, name: article.title, item: `https://vanheartbeat.ca/news/${article.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'Local News Wire', item: 'https://vanheartbeat.com/news' },
+      { '@type': 'ListItem', position: 3, name: article.title, item: `https://vanheartbeat.com/news/${article.id}` },
     ],
   },
 ];

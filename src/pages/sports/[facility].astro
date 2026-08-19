@@ -22,7 +22,7 @@ const facilitySchema = [
     '@type': 'SportsActivityLocation',
     name: facility.name,
     description: `Public drop-in schedules, active session mode (${facility.session.currentMode}), court lighting, and amenities at ${facility.name}.`,
-    url: `https://vanheartbeat.ca/sports/${facility.id}`,
+    url: `https://vanheartbeat.com/sports/${facility.id}`,
     address: {
       '@type': 'PostalAddress',
       streetAddress: facility.address,
@@ -35,9 +35,9 @@ const facilitySchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Sports Courts Radar', item: 'https://vanheartbeat.ca/sports' },
-      { '@type': 'ListItem', position: 3, name: facility.name, item: `https://vanheartbeat.ca/sports/${facility.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'Sports Courts Radar', item: 'https://vanheartbeat.com/sports' },
+      { '@type': 'ListItem', position: 3, name: facility.name, item: `https://vanheartbeat.com/sports/${facility.id}` },
     ],
   },
 ];

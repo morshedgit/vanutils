@@ -28,7 +28,7 @@ const mountainSchema = [
     '@type': 'SkiResort',
     name: mountain.name,
     description: `Real-time coastal freezing level, snow conditions, road status, and live webcams for ${mountain.name}.`,
-    url: `https://vanheartbeat.ca/snow/${mountain.id}`,
+    url: `https://vanheartbeat.com/snow/${mountain.id}`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: mountain.region === 'north_shore' ? 'North Vancouver' : 'Whistler',
@@ -40,9 +40,9 @@ const mountainSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Mountain Snow Line', item: 'https://vanheartbeat.ca/snow' },
-      { '@type': 'ListItem', position: 3, name: mountain.name, item: `https://vanheartbeat.ca/snow/${mountain.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'Mountain Snow Line', item: 'https://vanheartbeat.com/snow' },
+      { '@type': 'ListItem', position: 3, name: mountain.name, item: `https://vanheartbeat.com/snow/${mountain.id}` },
     ],
   },
 ];

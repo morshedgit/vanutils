@@ -25,7 +25,7 @@ const stationSchema = [
     '@type': 'Place',
     name: `${station.name} Meteorological Station`,
     description: `Live temperature (${station.current.temperatureCelsius}°C), 24-hour precipitation curve, wind speeds, humidity, and 7-day forecast for ${station.name}.`,
-    url: `https://vanheartbeat.ca/weather/${station.id}`,
+    url: `https://vanheartbeat.com/weather/${station.id}`,
     geo: {
       '@type': 'GeoCoordinates',
       latitude: station.latitude,
@@ -42,9 +42,9 @@ const stationSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Weather Radar', item: 'https://vanheartbeat.ca/weather' },
-      { '@type': 'ListItem', position: 3, name: station.name, item: `https://vanheartbeat.ca/weather/${station.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'Weather Radar', item: 'https://vanheartbeat.com/weather' },
+      { '@type': 'ListItem', position: 3, name: station.name, item: `https://vanheartbeat.com/weather/${station.id}` },
     ],
   },
 ];

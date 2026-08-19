@@ -42,15 +42,15 @@ const eventSchema = [
       '@type': 'Organization',
       name: event.organization,
     },
-    url: `https://vanheartbeat.ca/events/${event.id}`,
+    url: `https://vanheartbeat.com/events/${event.id}`,
   },
   {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Community Events', item: 'https://vanheartbeat.ca/events' },
-      { '@type': 'ListItem', position: 3, name: event.title, item: `https://vanheartbeat.ca/events/${event.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'Community Events', item: 'https://vanheartbeat.com/events' },
+      { '@type': 'ListItem', position: 3, name: event.title, item: `https://vanheartbeat.com/events/${event.id}` },
     ],
   },
 ];

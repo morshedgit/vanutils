@@ -27,7 +27,7 @@ const parkingSchema = [
     '@type': 'ParkingFacility',
     name: `${neighbourhood.name} Car-Share Parking Zone`,
     description: `Live parking clearance, residential permit exemption rules, street sweeping schedule, and rush-hour tow lanes for ${neighbourhood.name}, ${neighbourhood.municipality}.`,
-    url: `https://vanheartbeat.ca/parking/${neighbourhood.slug}`,
+    url: `https://vanheartbeat.com/parking/${neighbourhood.slug}`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: neighbourhood.name,
@@ -39,9 +39,9 @@ const parkingSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Car-Share Parking Radar', item: 'https://vanheartbeat.ca/parking' },
-      { '@type': 'ListItem', position: 3, name: neighbourhood.name, item: `https://vanheartbeat.ca/parking/${neighbourhood.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'Car-Share Parking Radar', item: 'https://vanheartbeat.com/parking' },
+      { '@type': 'ListItem', position: 3, name: neighbourhood.name, item: `https://vanheartbeat.com/parking/${neighbourhood.slug}` },
     ],
   },
 ];

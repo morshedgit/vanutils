@@ -236,7 +236,7 @@ export const POST: APIRoute = async ({ request, clientAddress, locals }) => {
     <div class="message-box">${cleanMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
 
     <div class="footer">
-      This notification was automatically dispatched from the VanHeartbeat Edge Server (vanheartbeat.ca/contact).<br>
+      This notification was automatically dispatched from the VanHeartbeat Edge Server (vanheartbeat.com/contact).<br>
       To respond directly to the submitter, simply hit <strong>Reply</strong> in your email client.
     </div>
   </div>
@@ -286,7 +286,7 @@ To reply to the sender, reply directly to this email.
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'VanHeartbeat Alerts <telemetry@vanheartbeat.ca>',
+          from: 'VanHeartbeat Alerts <telemetry@vanheartbeat.com>',
           to: [targetRecipient],
           reply_to: cleanEmail,
           subject: subject,

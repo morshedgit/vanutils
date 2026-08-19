@@ -28,7 +28,7 @@ const schoolSchema = [
     '@type': 'School',
     name: school.name,
     description: `Catchment boundaries, grade spans, feeder school tracks, and programs for ${school.name}.`,
-    url: `https://vanheartbeat.ca/schools/${school.id}`,
+    url: `https://vanheartbeat.com/schools/${school.id}`,
     address: {
       '@type': 'PostalAddress',
       streetAddress: school.address,
@@ -41,9 +41,9 @@ const schoolSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'School Catchments', item: 'https://vanheartbeat.ca/schools' },
-      { '@type': 'ListItem', position: 3, name: school.name, item: `https://vanheartbeat.ca/schools/${school.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'School Catchments', item: 'https://vanheartbeat.com/schools' },
+      { '@type': 'ListItem', position: 3, name: school.name, item: `https://vanheartbeat.com/schools/${school.id}` },
     ],
   },
 ];

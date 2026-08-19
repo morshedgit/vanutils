@@ -24,7 +24,7 @@ const stationSchema = [
     '@type': 'Place',
     name: `${station.name} Air Quality Station`,
     description: `Real-time PM2.5 particulate levels, AQHI rating, 24h historical trends, and health advice for ${station.name}.`,
-    url: `https://vanheartbeat.ca/air/${station.id}`,
+    url: `https://vanheartbeat.com/air/${station.id}`,
     geo: {
       '@type': 'GeoCoordinates',
       latitude: station.latitude,
@@ -41,9 +41,9 @@ const stationSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
-      { '@type': 'ListItem', position: 2, name: 'Air Quality Radar', item: 'https://vanheartbeat.ca/air' },
-      { '@type': 'ListItem', position: 3, name: station.name, item: `https://vanheartbeat.ca/air/${station.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
+      { '@type': 'ListItem', position: 2, name: 'Air Quality Radar', item: 'https://vanheartbeat.com/air' },
+      { '@type': 'ListItem', position: 3, name: station.name, item: `https://vanheartbeat.com/air/${station.id}` },
     ],
   },
 ];
