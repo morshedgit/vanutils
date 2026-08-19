@@ -1,6 +1,7 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
+import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import WaitTimeBadge from '../../tools/health-wait-times/components/WaitTimeBadge.astro';
 import EmergencyDisclaimer from '../../tools/health-wait-times/components/EmergencyDisclaimer.astro';
 import { getLiveFacilities, getFacilityById, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
@@ -25,6 +26,7 @@ const facilitySchema = [
     '@type': facility.facilityType === 'emergency_department' ? 'Hospital' : 'MedicalClinic',
     name: facility.name,
     description: `Real-time wait times and urgent medical care for ${facility.name} in ${facility.municipality}, BC.`,
+    url: `https://vanheartbeat.ca/health/${facility.id}`,
     address: {
       '@type': 'PostalAddress',
       streetAddress: facility.address,
@@ -43,10 +45,34 @@ const facilitySchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
-      { '@type': 'ListItem', position: 2, name: 'Health Wait Times', item: 'https://vanheartbeat.com/health' },
-      { '@type': 'ListItem', position: 3, name: facility.name, item: `https://vanheartbeat.com/health/${facility.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Health Wait Times', item: 'https://vanheartbeat.ca/health' },
+      { '@type': 'ListItem', position: 3, name: facility.name, item: `https://vanheartbeat.ca/health/${facility.id}` },
     ],
+  },
+];
+
+const relatedItems: RelatedItem[] = [
+  {
+    title: 'Hospital & Clinic Car-Share Parking',
+    subtitle: 'Permit exemptions and emergency stall rules',
+    href: '/parking',
+    badge: 'Parking',
+    icon: '🚗',
+  },
+  {
+    title: 'TransLink & Public Health News',
+    subtitle: 'Hospital access routes & health alerts',
+    href: '/news',
+    badge: 'Wire',
+    icon: '📰',
+  },
+  {
+    title: 'Hyper-Local Weather Radar',
+    subtitle: 'Precipitation, UV and air temperatures',
+    href: '/weather',
+    badge: 'Doppler',
+    icon: '🌦️',
   },
 ];
 ---
@@ -174,6 +200,9 @@ const facilitySchema = [
         </p>
       </div>
     </section>
+
+    <!-- Connected Cross-Utility Telemetry -->
+    <RelatedTelemetry items={relatedItems} />
 
     <!-- 1-Tap Navigation & Official Portal Links -->
     <div class="flex flex-col sm:flex-row gap-3 pt-2">

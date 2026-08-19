@@ -22,7 +22,7 @@ const proposalSchema = [
     '@type': 'GovernmentPermit',
     name: `Rezoning Application: ${proposal.address}`,
     description: `Proposal details, storeys, FSR density, unit mix, and public hearing schedule for ${proposal.address}.`,
-    url: `https://vanheartbeat.com/civic/${proposal.id}`,
+    url: `https://vanheartbeat.ca/civic/${proposal.id}`,
     permitAudience: {
       '@type': 'AdministrativeArea',
       name: proposal.neighbourhood,
@@ -32,9 +32,9 @@ const proposalSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
-      { '@type': 'ListItem', position: 2, name: 'Development & Rezoning', item: 'https://vanheartbeat.com/civic' },
-      { '@type': 'ListItem', position: 3, name: proposal.address, item: `https://vanheartbeat.com/civic/${proposal.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Development & Rezoning', item: 'https://vanheartbeat.ca/civic' },
+      { '@type': 'ListItem', position: 3, name: proposal.address, item: `https://vanheartbeat.ca/civic/${proposal.id}` },
     ],
   },
 ];

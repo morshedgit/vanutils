@@ -1,4 +1,26 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vanheartbeat.com/sitemap.xml
+# Dedicated AI & Search Engine Manifests
+Sitemap: https://vanheartbeat.ca/sitemap.xml
+LLMs-Txt: https://vanheartbeat.ca/llms.txt
+
+# Friendly Search & AI Indexers
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: ClaudeBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+

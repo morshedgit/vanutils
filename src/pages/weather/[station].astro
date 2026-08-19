@@ -1,6 +1,7 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
+import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import WeatherBadge from '../../tools/weather-forecast/components/WeatherBadge.astro';
 import PrecipitationSparkline from '../../tools/weather-forecast/components/PrecipitationSparkline.astro';
 import InteractiveRadarMap from '../../tools/weather-forecast/components/InteractiveRadarMap.astro';
@@ -25,7 +26,7 @@ const stationSchema = [
     '@type': 'Place',
     name: `${station.name} Meteorological Station`,
     description: `Live temperature (${station.current.temperatureCelsius}°C), 24-hour precipitation curve, wind speeds, humidity, and 7-day forecast for ${station.name}.`,
-    url: `https://vanheartbeat.com/weather/${station.id}`,
+    url: `https://vanheartbeat.ca/weather/${station.id}`,
     geo: {
       '@type': 'GeoCoordinates',
       latitude: station.latitude,
@@ -42,10 +43,34 @@ const stationSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
-      { '@type': 'ListItem', position: 2, name: 'Weather Radar', item: 'https://vanheartbeat.com/weather' },
-      { '@type': 'ListItem', position: 3, name: station.name, item: `https://vanheartbeat.com/weather/${station.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Weather Radar', item: 'https://vanheartbeat.ca/weather' },
+      { '@type': 'ListItem', position: 3, name: station.name, item: `https://vanheartbeat.ca/weather/${station.id}` },
     ],
+  },
+];
+
+const relatedItems: RelatedItem[] = [
+  {
+    title: 'Mountain Snow Line & Freezing Levels',
+    subtitle: 'Cypress, Grouse, Seymour & Whistler 0°C soundings',
+    href: '/snow',
+    badge: 'Mountain',
+    icon: '🏔️',
+  },
+  {
+    title: 'Vancouver Beach Water Quality',
+    subtitle: 'E. coli bacteria counts & swimming advisories',
+    href: '/swim',
+    badge: 'VCH Safe',
+    icon: '🌊',
+  },
+  {
+    title: 'Bridge & Tunnel Traffic Radar',
+    subtitle: 'Real-time crossing delays & approach webcams',
+    href: '/bridges',
+    badge: 'DriveBC',
+    icon: '🌉',
   },
 ];
 ---
@@ -211,6 +236,9 @@ const stationSchema = [
         })}
       </div>
     </section>
+
+    <!-- Connected Cross-Utility Telemetry -->
+    <RelatedTelemetry items={relatedItems} />
 
     <!-- Nearby Microclimate Comparison -->
     <section class="space-y-3">

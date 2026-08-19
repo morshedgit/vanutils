@@ -21,7 +21,7 @@ export const GET: APIRoute = async ({ request }) => {
   const reqUrl = new URL(request.url);
   const host = reqUrl.host;
   const protocol = reqUrl.protocol;
-  const baseUrl = host ? `${protocol}//${host}` : 'https://vanheartbeat.com';
+  const baseUrl = host ? `${protocol}//${host}` : 'https://vanheartbeat.ca';
   const now = new Date().toISOString();
 
   // 1. Static Root & Tool Hub Routes

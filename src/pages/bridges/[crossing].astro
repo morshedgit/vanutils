@@ -1,6 +1,7 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
+import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import CounterflowDiagram from '../../tools/bridge-traffic/components/CounterflowDiagram.astro';
 import WebcamGrid from '../../tools/bridge-traffic/components/WebcamGrid.astro';
 import IncidentsBanner from '../../tools/bridge-traffic/components/IncidentsBanner.astro';
@@ -22,13 +23,28 @@ const r = crossing.directions.reverse;
 const pMeta = getStatusMeta(p.status);
 const rMeta = getStatusMeta(r.status);
 
+const wikidataMap: Record<string, string[]> = {
+  'lions-gate': ['https://en.wikipedia.org/wiki/Lions_Gate_Bridge', 'https://www.wikidata.org/wiki/Q1048892'],
+  'ironworkers': ['https://en.wikipedia.org/wiki/Ironworkers_Memorial_Second_Narrows_Crossing', 'https://www.wikidata.org/wiki/Q1673147'],
+  'massey-tunnel': ['https://en.wikipedia.org/wiki/George_Massey_Tunnel', 'https://www.wikidata.org/wiki/Q5542217'],
+  'alex-fraser': ['https://en.wikipedia.org/wiki/Alex_Fraser_Bridge', 'https://www.wikidata.org/wiki/Q4717015'],
+  'port-mann': ['https://en.wikipedia.org/wiki/Port_Mann_Bridge', 'https://www.wikidata.org/wiki/Q2104768'],
+  'pattullo': ['https://en.wikipedia.org/wiki/Pattullo_Bridge', 'https://www.wikidata.org/wiki/Q7148564'],
+  'knight-street': ['https://en.wikipedia.org/wiki/Knight_Street_Bridge', 'https://www.wikidata.org/wiki/Q6422268'],
+  'oak-street': ['https://en.wikipedia.org/wiki/Oak_Street_Bridge', 'https://www.wikidata.org/wiki/Q7073740'],
+  'arthur-laing': ['https://en.wikipedia.org/wiki/Arthur_Laing_Bridge', 'https://www.wikidata.org/wiki/Q4799480'],
+  'burrard': ['https://en.wikipedia.org/wiki/Burrard_Street_Bridge', 'https://www.wikidata.org/wiki/Q1016408'],
+  'granville': ['https://en.wikipedia.org/wiki/Granville_Street_Bridge', 'https://www.wikidata.org/wiki/Q5596951'],
+};
+
 const crossingSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'CivicStructure',
     name: crossing.name,
     description: `Real-time travel times, delay deltas, active counterflow lane directions, and DriveBC webcams for ${crossing.name}.`,
-    url: `https://vanheartbeat.com/bridges/${crossing.id}`,
+    url: `https://vanheartbeat.ca/bridges/${crossing.id}`,
+    sameAs: wikidataMap[crossing.id] || [],
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Metro Vancouver',
@@ -40,10 +56,34 @@ const crossingSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
-      { '@type': 'ListItem', position: 2, name: 'Bridges & Tunnels Radar', item: 'https://vanheartbeat.com/bridges' },
-      { '@type': 'ListItem', position: 3, name: crossing.name, item: `https://vanheartbeat.com/bridges/${crossing.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Bridges & Tunnels Radar', item: 'https://vanheartbeat.ca/bridges' },
+      { '@type': 'ListItem', position: 3, name: crossing.name, item: `https://vanheartbeat.ca/bridges/${crossing.id}` },
     ],
+  },
+];
+
+const relatedItems: RelatedItem[] = [
+  {
+    title: 'BC Ferries Standby Radar',
+    subtitle: 'Terminal deck space & sailing status',
+    href: '/ferries',
+    badge: 'BC Ferries',
+    icon: '⛴️',
+  },
+  {
+    title: 'Microclimate Weather Radar',
+    subtitle: 'Wind gusts, fog & road temperatures',
+    href: '/weather',
+    badge: 'Live Radar',
+    icon: '🌦️',
+  },
+  {
+    title: 'Metro Vancouver Air Quality',
+    subtitle: 'Highway corridor BAM-1020 sensors',
+    href: '/air',
+    badge: 'AQHI',
+    icon: '💨',
   },
 ];
 ---
@@ -154,6 +194,9 @@ const crossingSchema = [
     {crossing.webcams.length > 0 && (
       <WebcamGrid webcams={crossing.webcams} crossingName={crossing.name} />
     )}
+
+    <!-- Connected Cross-Utility Telemetry -->
+    <RelatedTelemetry items={relatedItems} />
 
     <!-- Official Portal Citation -->
     <div class="pt-2">

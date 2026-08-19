@@ -1,6 +1,7 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
+import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import { getLiveSchools, getSchoolById, getAllChildcares } from '../../tools/school-catchment/services/catchmentService';
 import ChildcareList from '../../tools/school-catchment/components/ChildcareList.astro';
 
@@ -28,7 +29,11 @@ const schoolSchema = [
     '@type': 'School',
     name: school.name,
     description: `Catchment boundaries, grade spans, feeder school tracks, and programs for ${school.name}.`,
-    url: `https://vanheartbeat.com/schools/${school.id}`,
+    url: `https://vanheartbeat.ca/schools/${school.id}`,
+    sameAs: [
+      'https://en.wikipedia.org/wiki/School_District_39_Vancouver',
+      'https://www.wikidata.org/wiki/Q7432174',
+    ],
     address: {
       '@type': 'PostalAddress',
       streetAddress: school.address,
@@ -41,10 +46,34 @@ const schoolSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
-      { '@type': 'ListItem', position: 2, name: 'School Catchments', item: 'https://vanheartbeat.com/schools' },
-      { '@type': 'ListItem', position: 3, name: school.name, item: `https://vanheartbeat.com/schools/${school.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'School Catchments', item: 'https://vanheartbeat.ca/schools' },
+      { '@type': 'ListItem', position: 3, name: school.name, item: `https://vanheartbeat.ca/schools/${school.id}` },
     ],
+  },
+];
+
+const relatedItems: RelatedItem[] = [
+  {
+    title: 'Neighbourhood Housing Benchmarks',
+    subtitle: 'MLS® HPI price benchmarks & rental vacancies',
+    href: '/market',
+    badge: 'Housing',
+    icon: '📈',
+  },
+  {
+    title: 'Civic Development & Rezoning',
+    subtitle: 'Broadway Plan and local community proposals',
+    href: '/civic',
+    badge: 'Civic',
+    icon: '🏛️',
+  },
+  {
+    title: 'Residential Parking Permit Zones',
+    subtitle: 'School zone parking & car-share drop-off rules',
+    href: '/parking',
+    badge: 'Parking',
+    icon: '🚗',
   },
 ];
 ---
@@ -152,6 +181,9 @@ const schoolSchema = [
 
     <!-- Childcares Nearby -->
     <ChildcareList childcares={childcares.slice(0, 2)} />
+
+    <!-- Connected Cross-Utility Telemetry -->
+    <RelatedTelemetry items={relatedItems} />
 
     <!-- Official Registration Portal Links -->
     <div class="flex flex-wrap items-center gap-3 pt-2">

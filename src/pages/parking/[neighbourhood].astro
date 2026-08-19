@@ -1,6 +1,7 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
+import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import ClearanceBadge from '../../tools/carshare-parking/components/ClearanceBadge.astro';
 import SweepingCountdown from '../../tools/carshare-parking/components/SweepingCountdown.astro';
 import RushHourNotice from '../../tools/carshare-parking/components/RushHourNotice.astro';
@@ -27,7 +28,7 @@ const parkingSchema = [
     '@type': 'ParkingFacility',
     name: `${neighbourhood.name} Car-Share Parking Zone`,
     description: `Live parking clearance, residential permit exemption rules, street sweeping schedule, and rush-hour tow lanes for ${neighbourhood.name}, ${neighbourhood.municipality}.`,
-    url: `https://vanheartbeat.com/parking/${neighbourhood.slug}`,
+    url: `https://vanheartbeat.ca/parking/${neighbourhood.slug}`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: neighbourhood.name,
@@ -39,10 +40,34 @@ const parkingSchema = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
-      { '@type': 'ListItem', position: 2, name: 'Car-Share Parking Radar', item: 'https://vanheartbeat.com/parking' },
-      { '@type': 'ListItem', position: 3, name: neighbourhood.name, item: `https://vanheartbeat.com/parking/${neighbourhood.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Car-Share Parking Radar', item: 'https://vanheartbeat.ca/parking' },
+      { '@type': 'ListItem', position: 3, name: neighbourhood.name, item: `https://vanheartbeat.ca/parking/${neighbourhood.slug}` },
     ],
+  },
+];
+
+const relatedItems: RelatedItem[] = [
+  {
+    title: 'TransLink & Traffic News',
+    subtitle: 'Street closures, transit reroutes & civic alerts',
+    href: '/news',
+    badge: 'Wire',
+    icon: '📰',
+  },
+  {
+    title: 'Vancouver Sports Teams Schedule',
+    subtitle: 'Game day stadium transit & event parking',
+    href: '/sports-teams',
+    badge: 'Sports',
+    icon: '🏒',
+  },
+  {
+    title: 'Free Community Festivals',
+    subtitle: 'Car-free day zones and street party locations',
+    href: '/events',
+    badge: 'Events',
+    icon: '🎉',
   },
 ];
 ---
@@ -175,5 +200,7 @@ const parkingSchema = [
         ))}
       </div>
     </section>
+    <!-- Connected Cross-Utility Telemetry -->
+    <RelatedTelemetry items={relatedItems} />
   </div>
 </ToolLayout>

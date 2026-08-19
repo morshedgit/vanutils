@@ -1,6 +1,7 @@
 ---
 import PlatformLayout from '../../layouts/PlatformLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
+import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import { getTeamById, getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
 import FormBadge from '../../tools/sports-teams/components/FormBadge.astro';
 import TransitGuide from '../../tools/sports-teams/components/TransitGuide.astro';
@@ -18,6 +19,16 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-re
 
 const otherTeams = teams.filter((t) => t.id !== team.id);
 
+const wikidataTeamMap: Record<string, string[]> = {
+  canucks: ['https://en.wikipedia.org/wiki/Vancouver_Canucks', 'https://www.wikidata.org/wiki/Q192525'],
+  whitecaps: ['https://en.wikipedia.org/wiki/Vancouver_Whitecaps_FC', 'https://www.wikidata.org/wiki/Q639891'],
+  lions: ['https://en.wikipedia.org/wiki/BC_Lions', 'https://www.wikidata.org/wiki/Q795761'],
+  canadians: ['https://en.wikipedia.org/wiki/Vancouver_Canadians', 'https://www.wikidata.org/wiki/Q1474288'],
+  giants: ['https://en.wikipedia.org/wiki/Vancouver_Giants', 'https://www.wikidata.org/wiki/Q1429031'],
+  bandits: ['https://en.wikipedia.org/wiki/Vancouver_Bandits', 'https://www.wikidata.org/wiki/Q55075073'],
+  rise: ['https://en.wikipedia.org/wiki/Vancouver_Rise_FC', 'https://www.wikidata.org/wiki/Q126284379'],
+};
+
 const teamSchema = [
   {
     '@context': 'https://schema.org',
@@ -28,6 +39,7 @@ const teamSchema = [
       '@type': 'SportsOrganization',
       name: team.leagueFullName,
     },
+    sameAs: wikidataTeamMap[team.id] || [],
     homeLocation: {
       '@type': 'Place',
       name: team.venue.name,
@@ -39,16 +51,40 @@ const teamSchema = [
         addressCountry: 'CA',
       },
     },
-    url: `https://vanheartbeat.com/sports-teams/${team.id}`,
+    url: `https://vanheartbeat.ca/sports-teams/${team.id}`,
   },
   {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.com' },
-      { '@type': 'ListItem', position: 2, name: 'Sports Teams', item: 'https://vanheartbeat.com/sports-teams' },
-      { '@type': 'ListItem', position: 3, name: team.name, item: `https://vanheartbeat.com/sports-teams/${team.id}` },
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Sports Teams', item: 'https://vanheartbeat.ca/sports-teams' },
+      { '@type': 'ListItem', position: 3, name: team.name, item: `https://vanheartbeat.ca/sports-teams/${team.id}` },
     ],
+  },
+];
+
+const relatedItems: RelatedItem[] = [
+  {
+    title: 'Downtown Event Parking',
+    subtitle: 'Car-share permit zones & rush-hour towing',
+    href: '/parking',
+    badge: 'Parking',
+    icon: '🚗',
+  },
+  {
+    title: 'TransLink & Civic News',
+    subtitle: 'Stadium SkyTrain service alerts & updates',
+    href: '/news',
+    badge: 'Wire',
+    icon: '📰',
+  },
+  {
+    title: 'Free Community Events',
+    subtitle: 'Pre-game festivals & Vancouver fan zones',
+    href: '/events',
+    badge: 'Events',
+    icon: '🎉',
   },
 ];
 ---
@@ -233,6 +269,9 @@ const teamSchema = [
 
     <!-- Stadium & Transit Wayfinding -->
     <TransitGuide venue={team.venue} teamName={team.name} />
+
+    <!-- Connected Cross-Utility Telemetry -->
+    <RelatedTelemetry items={relatedItems} />
 
     <!-- Other Vancouver Sports Teams Carousel / Grid -->
     <div class="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
