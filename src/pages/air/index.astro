@@ -1,7 +1,7 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import AdvisoryBanner from '../../tools/air-quality/components/AdvisoryBanner.astro';
-import AQHIBadge from '../../tools/air-quality/components/AQHIBadge.astro';
 import FilterTabs from '../../tools/air-quality/components/FilterTabs.astro';
 import StationCard from '../../tools/air-quality/components/StationCard.astro';
 import CleanAirShelters from '../../tools/air-quality/components/CleanAirShelters.astro';
@@ -13,6 +13,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-r
 const stations = await getLiveStations();
 const shelters = getAllShelters();
 const stats = getAirOverviewStats(stations);
+
+const airSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Metro Vancouver Wildfire Smoke & AQHI Radar — VanHeartbeat',
+    description: 'Real-time Air Quality Health Index (AQHI), fine particulate matter (PM2.5) concentrations from BAM-1020 sensors, and air-conditioned clean-air shelters.',
+    url: 'https://vanheartbeat.ca/air',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Air Quality & Smoke Radar', item: 'https://vanheartbeat.ca/air' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What PM2.5 level triggers a Metro Vancouver Wildfire Smoke Advisory?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Metro Vancouver issues a regional Air Quality Advisory when 24-hour rolling average concentrations of fine particulate matter (PM2.5) exceed 25 µg/m³ or when widespread wildfire smoke causes persistent high AQHI readings (7+).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where are clean-air public cooling shelters located during smoke events in Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Public community centres and Vancouver Public Library branches (such as Central Library on Georgia St, Mount Pleasant CC, and Britannia CC) operate as clean-air shelters equipped with high-efficiency commercial HEPA filtration and air conditioning.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does AQHI differ from raw PM2.5 measurements?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The Air Quality Health Index (AQHI) is a scale from 1 to 10+ indicating acute health risk calculated from a combination of PM2.5, ground-level ozone (O3), and nitrogen dioxide (NO2). PM2.5 specifically measures microscopic airborne particles in micrograms per cubic meter (µg/m³).',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -23,6 +71,8 @@ const stats = getAirOverviewStats(stations);
   badgeText="Live Smoke Radar"
   status="active"
 >
+  <JsonLd schema={airSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Active Wildfire Smoke Advisory Banner -->
     <AdvisoryBanner hasAdvisory={false} />
@@ -79,6 +129,45 @@ const stats = getAirOverviewStats(stations);
 
     <!-- Public Clean-Air Shelters & Cooling Centres -->
     <CleanAirShelters shelters={shelters} />
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Air Quality &amp; Wildfire Smoke: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            What PM2.5 level triggers a Metro Vancouver Wildfire Smoke Advisory?
+          </h3>
+          <p>
+            Metro Vancouver issues a regional Air Quality Advisory when 24-hour rolling average concentrations of fine particulate matter (PM2.5) exceed 25 µg/m³ or when widespread wildfire smoke causes persistent high AQHI readings (7+).
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where are clean-air public cooling shelters located during smoke events in Vancouver?
+          </h3>
+          <p>
+            Public community centres and Vancouver Public Library branches (such as Central Library on Georgia St, Mount Pleasant CC, and Britannia CC) operate as clean-air shelters equipped with high-efficiency commercial HEPA filtration and air conditioning.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How does AQHI differ from raw PM2.5 measurements?
+          </h3>
+          <p>
+            The Air Quality Health Index (AQHI) is a scale from 1 to 10+ indicating acute health risk calculated from a combination of PM2.5, ground-level ozone (O3), and nitrogen dioxide (NO2). PM2.5 specifically measures microscopic airborne particles in micrograms per cubic meter (µg/m³).
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </ToolLayout>
 

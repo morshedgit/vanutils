@@ -10,36 +10,53 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-r
 
 const beaches = getAllBeaches();
 
-const swimFaqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What is the safe E. coli limit for swimming in Vancouver beaches?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Vancouver Coastal Health (VCH) sets the safe recreational swimming standard at a 30-day geometric mean under 200 E. coli per 100mL of water. A single sample exceeding 400 E. coli per 100mL or geometric mean above 200 triggers an official swimming advisory.',
+const swimSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Can I Swim Today? Vancouver Beach Water Quality — VanHeartbeat',
+    description: 'Real-time Metro Vancouver beach water quality and safety status based on Vancouver Coastal Health & Fraser Health surveillance.',
+    url: 'https://vanheartbeat.ca/swim',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Can I Swim Water Radar', item: 'https://vanheartbeat.ca/swim' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the safe E. coli limit for swimming in Vancouver beaches?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Vancouver Coastal Health (VCH) sets the safe recreational swimming standard at a 30-day geometric mean under 200 E. coli per 100mL of water. A single sample exceeding 400 E. coli per 100mL or geometric mean above 200 triggers an official swimming advisory.',
+        },
       },
-    },
-    {
-      '@type': 'Question',
-      name: 'How often is beach water quality tested in Metro Vancouver?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Water samples are collected weekly throughout the primary recreational season (May through September) by Vancouver Coastal Health and Fraser Health across 31 Metro Vancouver saltwater and freshwater beach sites.',
+      {
+        '@type': 'Question',
+        name: 'How often is beach water quality tested in Metro Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Water samples are collected weekly throughout the primary recreational season (May through September) by Vancouver Coastal Health and Fraser Health across 31 Metro Vancouver saltwater and freshwater beach sites.',
+        },
       },
-    },
-    {
-      '@type': 'Question',
-      name: 'What causes swimming advisories at Vancouver beaches?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Elevated bacterial levels are typically caused by stormwater runoff following heavy rainfall, agricultural/urban drainage, tidal stagnation during heatwaves, or high concentrations of waterfowl and domestic animals.',
+      {
+        '@type': 'Question',
+        name: 'What causes swimming advisories at Vancouver beaches?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Elevated bacterial levels are typically caused by stormwater runoff following heavy rainfall, agricultural/urban drainage, tidal stagnation during heatwaves, or high concentrations of waterfowl and domestic animals.',
+        },
       },
-    },
-  ],
-};
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -50,7 +67,7 @@ const swimFaqSchema = {
   badgeText="Live Water Radar"
   status="active"
 >
-  <JsonLd schema={swimFaqSchema} />
+  <JsonLd schema={swimSchema} />
 
   <div class="space-y-4 max-w-4xl mx-auto">
     <!-- Pinned Main Beaches Quick Bar (Customizable for Home Card) -->

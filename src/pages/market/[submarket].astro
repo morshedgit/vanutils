@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import MarketConditionBadge from '../../tools/housing-market/components/MarketConditionBadge.astro';
 import MortgageRadar from '../../tools/housing-market/components/MortgageRadar.astro';
 import { getLiveMarketHeartbeat, getSubmarketById, formatCurrency, formatPercent } from '../../tools/housing-market/services/marketService';
@@ -14,6 +15,29 @@ const submarket = getSubmarketById(submarketSlug || '', [data.metroOverview, ...
 if (!submarket) {
   return Astro.redirect('/market');
 }
+
+const submarketSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FinancialProduct',
+    name: `${submarket.name} Real Estate & MLS® HPI Benchmark`,
+    description: `MLS® HPI benchmark prices, sales-to-active ratio (${submarket.salesToActiveRatio}%), rental vacancy rates, and mortgage qualification for ${submarket.name}.`,
+    url: `https://vanheartbeat.ca/market/${submarket.id.replace(/_/g, '-')}`,
+    areaServed: {
+      '@type': 'AdministrativeArea',
+      name: submarket.name,
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Real Estate Radar', item: 'https://vanheartbeat.ca/market' },
+      { '@type': 'ListItem', position: 3, name: submarket.name, item: `https://vanheartbeat.ca/market/${submarket.id.replace(/_/g, '-')}` },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -24,20 +48,22 @@ if (!submarket) {
   badgeText={submarket.name}
   status="active"
 >
+  <JsonLd schema={submarketSchema} />
+
   <div class="space-y-6 max-w-4xl mx-auto">
-    <!-- Breadcrumb & Back Link -->
-    <div class="flex items-center justify-between">
-      <a
-        href="/market"
-        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
-      >
-        <span>←</span>
-        <span>Back to Market Heartbeat</span>
-      </a>
+    <!-- 3-Tier Visual Breadcrumb Navigation -->
+    <nav aria-label="Breadcrumb" class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanHeartbeat</a>
+        <span>/</span>
+        <a href="/market" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Real Estate Radar</a>
+        <span>/</span>
+        <span class="text-slate-900 dark:text-white truncate">{submarket.name}</span>
+      </div>
       <span class="text-xs text-slate-400">
-        GVR & CMHC Open Data
+        GVR &amp; CMHC Open Data
       </span>
-    </div>
+    </nav>
 
     <!-- Submarket Hero Header -->
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm space-y-3">

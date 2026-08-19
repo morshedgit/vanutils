@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import FilterTabs from '../../tools/sports-facilities/components/FilterTabs.astro';
 import FacilityCard from '../../tools/sports-facilities/components/FacilityCard.astro';
 import { getLiveSportsFacilities, getSportsOverviewStats } from '../../tools/sports-facilities/services/sportsService';
@@ -9,6 +10,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-
 
 const facilities = await getLiveSportsFacilities();
 const stats = getSportsOverviewStats(facilities);
+
+const sportsSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Metro Vancouver Public Sports, Courts & Rec Radar — VanHeartbeat',
+    description: 'Sub-second recreation radar for public tennis courts, lighted pickleball, length swimming schedules, and ice rink drop-ins.',
+    url: 'https://vanheartbeat.ca/sports',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Sports Courts & Rec Radar', item: 'https://vanheartbeat.ca/sports' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Where are public tennis and pickleball courts with night lighting located in Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Lighted public court facilities operating until 10:00 PM include Kitsilano Beach Park, Queen Elizabeth Park, and Stanley Park Tennis Courts.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Are public tennis and pickleball courts in Vancouver free to use?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. All Vancouver Park Board public tennis and outdoor pickleball courts are 100% free on a first-come, first-served basis, with a standard 30-minute rotation rule when players are waiting.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do public indoor swimming and rink drop-in schedules work in Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Public community pools (like Hillcrest and Vancouver Aquatic Centre) and ice rinks (like Trout Lake and Sunset) operate specific designated sessions for public swim/skate, length swimming, and sensory-friendly times via the Vancouver Park Board Flexipass system.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -19,6 +68,8 @@ const stats = getSportsOverviewStats(facilities);
   badgeText="Park Board ActiveNet"
   status="active"
 >
+  <JsonLd schema={sportsSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Hero Header with Geolocation Distance Sorter -->
     <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -68,6 +119,45 @@ const stats = getSportsOverviewStats(facilities);
       {facilities.map((facility) => (
         <FacilityCard facility={facility} />
       ))}
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Public Sports, Courts &amp; Rinks: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where are public tennis and pickleball courts with night lighting located in Vancouver?
+          </h3>
+          <p>
+            Lighted public court facilities operating until 10:00 PM include Kitsilano Beach Park, Queen Elizabeth Park, and Stanley Park Tennis Courts.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Are public tennis and pickleball courts in Vancouver free to use?
+          </h3>
+          <p>
+            Yes. All Vancouver Park Board public tennis and outdoor pickleball courts are 100% free on a first-come, first-served basis, with a standard 30-minute rotation rule when players are waiting.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How do public indoor swimming and rink drop-in schedules work in Vancouver?
+          </h3>
+          <p>
+            Public community pools (like Hillcrest and Vancouver Aquatic Centre) and ice rinks (like Trout Lake and Sunset) operate specific designated sessions for public swim/skate, length swimming, and sensory-friendly times via the Vancouver Park Board Flexipass system.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </ToolLayout>

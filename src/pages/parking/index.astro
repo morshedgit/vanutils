@@ -1,9 +1,9 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import FilterTabs from '../../tools/carshare-parking/components/FilterTabs.astro';
 import NeighbourhoodRadar from '../../tools/carshare-parking/components/NeighbourhoodRadar.astro';
 import SatelliteHubCard from '../../tools/carshare-parking/components/SatelliteHubCard.astro';
-import ClearanceBadge from '../../tools/carshare-parking/components/ClearanceBadge.astro';
 import { getAllNeighbourhoods, getOverallParkingStats } from '../../tools/carshare-parking/services/parkingEvaluator';
 import { getAllSatelliteLots } from '../../tools/carshare-parking/services/satelliteService';
 
@@ -13,6 +13,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-
 const neighbourhoods = getAllNeighbourhoods();
 const satelliteLots = getAllSatelliteLots();
 const stats = getOverallParkingStats(neighbourhoods);
+
+const parkingSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Car-Share Safe Parking & Street Sweeping Radar — VanHeartbeat',
+    description: 'Instant 3-second parking clearance for Evo and Modo drivers. Avoid $150–$350+ towing fines from rush-hour lanes, street sweeping, and permit zones.',
+    url: 'https://vanheartbeat.ca/parking',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Car-Share Parking Radar', item: 'https://vanheartbeat.ca/parking' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Where can I legally park an Evo car-share vehicle in Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Evo vehicles can be parked in City of Vancouver "Residential Permit Only" and "Resident Parking Only" zones inside the Home Zone, city-metered spots (where permitted), and designated partner parkades (YVR, UBC, SFU).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can you park an Evo in a street sweeping or rush hour lane?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'No. Car-share vehicles are NOT exempt from street sweeping closures, rush-hour no-stopping restrictions (e.g. West Georgia, Broadway, Burrard), or temporary construction signs. Violations result in immediate towing at the driver expense.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does parking at YVR Airport work with Evo and Modo?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Evo operates dedicated parking stalls at YVR Airport Park\'N Fly (6380 Miller Rd) with a free 24/7 terminal shuttle bus. Modo vehicles must be returned to their designated home location.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -23,6 +71,8 @@ const stats = getOverallParkingStats(neighbourhoods);
   badgeText="Live Parking Radar"
   status="active"
 >
+  <JsonLd schema={parkingSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Hero: 1-Tap Geolocation Instant Clearance Bar -->
     <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm space-y-3">
@@ -104,6 +154,45 @@ const stats = getOverallParkingStats(neighbourhoods);
         {satelliteLots.map((lot) => (
           <SatelliteHubCard lot={lot} />
         ))}
+      </div>
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Car-Share Parking: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where can I legally park an Evo car-share vehicle in Vancouver?
+          </h3>
+          <p>
+            Evo vehicles can be parked in City of Vancouver "Residential Permit Only" and "Resident Parking Only" zones inside the Home Zone, city-metered spots (where permitted), and designated partner parkades (YVR, UBC, SFU).
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Can you park an Evo in a street sweeping or rush hour lane?
+          </h3>
+          <p>
+            No. Car-share vehicles are NOT exempt from street sweeping closures, rush-hour no-stopping restrictions (e.g. West Georgia, Broadway, Burrard), or temporary construction signs. Violations result in immediate towing at the driver's expense.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How does parking at YVR Airport work with Evo and Modo?
+          </h3>
+          <p>
+            Evo operates dedicated parking stalls at YVR Airport Park'N Fly (6380 Miller Rd) with a free 24/7 terminal shuttle bus. Modo vehicles must be returned to their designated home location.
+          </p>
+        </div>
       </div>
     </div>
   </div>

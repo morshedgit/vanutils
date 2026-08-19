@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import PublicHearingBanner from '../../tools/civic-development/components/PublicHearingBanner.astro';
 import FilterTabs from '../../tools/civic-development/components/FilterTabs.astro';
 import ProposalCard from '../../tools/civic-development/components/ProposalCard.astro';
@@ -10,6 +11,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-
 
 const proposals = await getLiveProposals();
 const stats = getCivicOverviewStats(proposals);
+
+const civicSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Vancouver Development & Rezoning Radar — VanHeartbeat',
+    description: 'Sub-second visibility into proposed towers, rezoning applications, below-market housing, and public hearing schedules across Vancouver.',
+    url: 'https://vanheartbeat.ca/civic',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Development & Rezoning Radar', item: 'https://vanheartbeat.ca/civic' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the Broadway Plan in Vancouver and how does it affect rezoning?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The Broadway Plan is a 30-year civic framework guiding rapid transit-oriented development along the Broadway Subway corridor (from Clark Drive to Vine Street), enabling high-density residential towers up to 30–40 storeys with secured rental and below-market housing requirements.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How can Vancouver residents participate in public hearings for rezoning applications?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Residents can register to speak in person at City Hall or via telephone, or submit written comments directly to Mayor and Council through the City of Vancouver public hearing portal.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What does Floor Space Ratio (FSR) mean in Vancouver development proposals?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Floor Space Ratio (FSR) is the ratio of total allowable building floor area to the site area. For example, an FSR of 10.0 on a 10,000 sq ft lot permits up to 100,000 sq ft of total interior building space.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -20,6 +69,8 @@ const stats = getCivicOverviewStats(proposals);
   badgeText="Active Proposals"
   status="active"
 >
+  <JsonLd schema={civicSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Active Public Hearings Notice -->
     <PublicHearingBanner proposals={proposals} />
@@ -72,6 +123,45 @@ const stats = getCivicOverviewStats(proposals);
       {proposals.map((proposal) => (
         <ProposalCard proposal={proposal} />
       ))}
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Development &amp; Rezoning: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            What is the Broadway Plan in Vancouver and how does it affect rezoning?
+          </h3>
+          <p>
+            The Broadway Plan is a 30-year civic framework guiding rapid transit-oriented development along the Broadway Subway corridor (from Clark Drive to Vine Street), enabling high-density residential towers up to 30–40 storeys with secured rental and below-market housing requirements.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How can Vancouver residents participate in public hearings for rezoning applications?
+          </h3>
+          <p>
+            Residents can register to speak in person at City Hall or via telephone, or submit written comments directly to Mayor and Council through the City of Vancouver public hearing portal.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            What does Floor Space Ratio (FSR) mean in Vancouver development proposals?
+          </h3>
+          <p>
+            Floor Space Ratio (FSR) is the ratio of total allowable building floor area to the site area. For example, an FSR of 10.0 on a 10,000 sq ft lot permits up to 100,000 sq ft of total interior building space.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </ToolLayout>

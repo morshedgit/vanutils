@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import FilterTabs from '../../tools/mountain-snow/components/FilterTabs.astro';
 import MountainCard from '../../tools/mountain-snow/components/MountainCard.astro';
 import WebcamMatrix from '../../tools/mountain-snow/components/WebcamMatrix.astro';
@@ -11,6 +12,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 const mountains = await getLiveMountains();
 const stats = getSnowOverviewStats(mountains);
 const allWebcams = mountains.flatMap((m) => m.webcams);
+
+const snowSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Vancouver Mountain Snow Line & Freezing Levels — VanHeartbeat',
+    description: 'Real-time coastal rain/snow line, freezing level elevation matrix, DriveBC road conditions, and live webcams for Cypress, Grouse, Seymour, and Whistler.',
+    url: 'https://vanheartbeat.ca/snow',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Mountain Snow Line', item: 'https://vanheartbeat.ca/snow' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Are winter tires or chains legally required to drive up Cypress or Mount Seymour?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. Under BC Ministry of Transportation (MOTI) regulations, winter tires marked with M+S or the 3-Peak Mountain Snowflake symbol with minimum 3.5mm tread depth are legally required from October 1 to April 30 on Cypress Bowl Road and Mount Seymour Parkway.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What does the 0°C freezing level elevation mean for skiing and hiking?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The freezing level is the altitude at which the atmospheric temperature drops below 0°C. Precipitation above this elevation falls as snow, while precipitation below falls as rain or mixed slush.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How far are the North Shore mountains from Downtown Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Grouse Mountain is approximately 15 minutes away via Lions Gate Bridge. Mount Seymour and Cypress Mountain are both approximately 30 minutes away by car or shuttle bus.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -21,6 +70,8 @@ const allWebcams = mountains.flatMap((m) => m.webcams);
   badgeText="Live Snow Radar"
   status="active"
 >
+  <JsonLd schema={snowSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Freezing Level & Snow Hero -->
     <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -81,6 +132,45 @@ const allWebcams = mountains.flatMap((m) => m.webcams);
     <section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3 shadow-xs">
       <WebcamMatrix webcams={allWebcams.slice(0, 4)} mountainName="All Mountains" />
     </section>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          North Shore Mountains &amp; Snow: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Are winter tires or chains legally required to drive up Cypress or Mount Seymour?
+          </h3>
+          <p>
+            Yes. Under BC Ministry of Transportation (MOTI) regulations, winter tires marked with M+S or the 3-Peak Mountain Snowflake symbol with minimum 3.5mm tread depth are legally required from October 1 to April 30 on Cypress Bowl Road and Mount Seymour Parkway.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            What does the 0°C freezing level elevation mean for skiing and hiking?
+          </h3>
+          <p>
+            The freezing level is the altitude at which the atmospheric temperature drops below 0°C. Precipitation above this elevation falls as snow, while precipitation below falls as rain or mixed slush.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How far are the North Shore mountains from Downtown Vancouver?
+          </h3>
+          <p>
+            Grouse Mountain is approximately 15 minutes away via Lions Gate Bridge. Mount Seymour and Cypress Mountain are both approximately 30 minutes away by car or shuttle bus.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </ToolLayout>
 

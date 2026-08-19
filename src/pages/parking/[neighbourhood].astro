@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import ClearanceBadge from '../../tools/carshare-parking/components/ClearanceBadge.astro';
 import SweepingCountdown from '../../tools/carshare-parking/components/SweepingCountdown.astro';
 import RushHourNotice from '../../tools/carshare-parking/components/RushHourNotice.astro';
@@ -19,6 +20,31 @@ if (!neighbourhood) {
 
 const evaluation = evaluateNeighbourhoodSpot(neighbourhood);
 const nearbyLots = neighbourhood.satelliteLotsNearby.map((id) => getSatelliteLotById(id)).filter(Boolean);
+
+const parkingSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ParkingFacility',
+    name: `${neighbourhood.name} Car-Share Parking Zone`,
+    description: `Live parking clearance, residential permit exemption rules, street sweeping schedule, and rush-hour tow lanes for ${neighbourhood.name}, ${neighbourhood.municipality}.`,
+    url: `https://vanheartbeat.ca/parking/${neighbourhood.slug}`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: neighbourhood.name,
+      addressRegion: 'BC',
+      addressCountry: 'CA',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Car-Share Parking Radar', item: 'https://vanheartbeat.ca/parking' },
+      { '@type': 'ListItem', position: 3, name: neighbourhood.name, item: `https://vanheartbeat.ca/parking/${neighbourhood.slug}` },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -29,20 +55,22 @@ const nearbyLots = neighbourhood.satelliteLotsNearby.map((id) => getSatelliteLot
   badgeText="Neighbourhood Radar"
   status="active"
 >
+  <JsonLd schema={parkingSchema} />
+
   <div class="space-y-6 max-w-5xl mx-auto">
-    <!-- Breadcrumb & Back Link -->
-    <div class="flex items-center justify-between">
-      <a
-        href="/parking"
-        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
-      >
-        <span>←</span>
-        <span>Back to Parking Radar</span>
-      </a>
+    <!-- 3-Tier Visual Breadcrumb Navigation -->
+    <nav aria-label="Breadcrumb" class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanHeartbeat</a>
+        <span>/</span>
+        <a href="/parking" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Parking Radar</a>
+        <span>/</span>
+        <span class="text-slate-900 dark:text-white truncate">{neighbourhood.name}</span>
+      </div>
       <span class="text-xs text-slate-400">
         {neighbourhood.municipality} • {neighbourhood.insideHomeZone ? '🚗 In Home Zone' : '❌ Out of Zone'}
       </span>
-    </div>
+    </nav>
 
     <!-- Hero Clearance Card -->
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

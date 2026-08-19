@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import CounterflowDiagram from '../../tools/bridge-traffic/components/CounterflowDiagram.astro';
 import WebcamGrid from '../../tools/bridge-traffic/components/WebcamGrid.astro';
 import IncidentsBanner from '../../tools/bridge-traffic/components/IncidentsBanner.astro';
@@ -20,6 +21,31 @@ const p = crossing.directions.primary;
 const r = crossing.directions.reverse;
 const pMeta = getStatusMeta(p.status);
 const rMeta = getStatusMeta(r.status);
+
+const crossingSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CivicStructure',
+    name: crossing.name,
+    description: `Real-time travel times, delay deltas, active counterflow lane directions, and DriveBC webcams for ${crossing.name}.`,
+    url: `https://vanheartbeat.ca/bridges/${crossing.id}`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Metro Vancouver',
+      addressRegion: 'BC',
+      addressCountry: 'CA',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Bridges & Tunnels Radar', item: 'https://vanheartbeat.ca/bridges' },
+      { '@type': 'ListItem', position: 3, name: crossing.name, item: `https://vanheartbeat.ca/bridges/${crossing.id}` },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -30,22 +56,24 @@ const rMeta = getStatusMeta(r.status);
   badgeText={crossing.highwayNumber || 'Metro Crossing'}
   status="active"
 >
+  <JsonLd schema={crossingSchema} />
+
   <div class="space-y-6 max-w-5xl mx-auto">
-    <!-- Breadcrumb & Back Link -->
-    <div class="flex items-center justify-between">
-      <a
-        href="/bridges"
-        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
-      >
-        <span>←</span>
-        <span>Back to Bridges Radar</span>
-      </a>
+    <!-- 3-Tier Visual Breadcrumb Navigation -->
+    <nav aria-label="Breadcrumb" class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanHeartbeat</a>
+        <span>/</span>
+        <a href="/bridges" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Bridges Radar</a>
+        <span>/</span>
+        <span class="text-slate-900 dark:text-white truncate">{crossing.name}</span>
+      </div>
       <span class="text-xs text-slate-400">
         {crossing.region === 'burrard_inlet' && 'Burrard Inlet (North Shore)'}
         {crossing.region === 'false_creek' && 'False Creek (Downtown)'}
         {crossing.region === 'fraser_river' && 'Fraser River'}
       </span>
-    </div>
+    </nav>
 
     <!-- Active Incidents if present -->
     <IncidentsBanner incidents={crossing.activeIncidents} />

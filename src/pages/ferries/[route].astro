@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import StandbyGauge from '../../tools/bc-ferries/components/StandbyGauge.astro';
 import WebcamGrid from '../../tools/bc-ferries/components/WebcamGrid.astro';
 import { getLiveRoutes, getRouteById } from '../../tools/bc-ferries/services/ferryService';
@@ -19,6 +20,31 @@ if (!route) {
 const reverseRoute = route.reverseRouteId ? getRouteById(route.reverseRouteId, allLive) : undefined;
 const nextSailing = route.nextSailings[0];
 const standbyMeta = nextSailing ? getStandbyMeta(nextSailing.standbyRisk) : undefined;
+
+const routeSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TouristInformationCenter',
+    name: `${route.name} Marine Route`,
+    description: `Real-time vehicle deck space, standby odds, sailing status, and DriveBC approach webcams for ${route.name}.`,
+    url: `https://vanheartbeat.ca/ferries/${route.id}`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: route.originTerminal,
+      addressRegion: 'BC',
+      addressCountry: 'CA',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Ferry Standby Radar', item: 'https://vanheartbeat.ca/ferries' },
+      { '@type': 'ListItem', position: 3, name: route.name, item: `https://vanheartbeat.ca/ferries/${route.id}` },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -29,7 +55,18 @@ const standbyMeta = nextSailing ? getStandbyMeta(nextSailing.standbyRisk) : unde
   badgeText={route.provider === 'bc-ferries' ? 'BC Ferries' : route.provider.toUpperCase()}
   status="active"
 >
+  <JsonLd schema={routeSchema} />
+
   <div class="space-y-6 max-w-4xl mx-auto">
+    <!-- 3-Tier Visual Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+      <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanHeartbeat</a>
+      <span>/</span>
+      <a href="/ferries" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Ferry Standby</a>
+      <span>/</span>
+      <span class="text-slate-900 dark:text-white truncate">{route.name}</span>
+    </nav>
+
     <!-- Header Route Card -->
     <section class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

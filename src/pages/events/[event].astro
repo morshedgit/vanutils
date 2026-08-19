@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import { getLiveEvents, getEventById, getCategoryMeta } from '../../tools/community-events/services/eventService';
 
 // Tiered Edge Cache: 30-minute edge TTL, 2-hour background revalidation
@@ -16,6 +17,43 @@ if (!event) {
 const catMeta = getCategoryMeta(event.category);
 const startDate = new Date(event.startDateTime);
 const endDate = new Date(event.endDateTime);
+
+const eventSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    description: event.shortDescription,
+    startDate: event.startDateTime,
+    endDate: event.endDateTime,
+    isAccessibleForFree: true,
+    location: {
+      '@type': 'Place',
+      name: event.venueName,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: event.address,
+        addressLocality: event.neighbourhood,
+        addressRegion: 'BC',
+        addressCountry: 'CA',
+      },
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: event.organization,
+    },
+    url: `https://vanheartbeat.ca/events/${event.id}`,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Community Events', item: 'https://vanheartbeat.ca/events' },
+      { '@type': 'ListItem', position: 3, name: event.title, item: `https://vanheartbeat.ca/events/${event.id}` },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -26,20 +64,22 @@ const endDate = new Date(event.endDateTime);
   badgeText="100% Free Admission"
   status="active"
 >
+  <JsonLd schema={eventSchema} />
+
   <div class="space-y-6 max-w-4xl mx-auto">
-    <!-- Breadcrumb & Back Link -->
-    <div class="flex items-center justify-between">
-      <a
-        href="/events"
-        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
-      >
-        <span>←</span>
-        <span>Back to Events Radar</span>
-      </a>
+    <!-- 3-Tier Visual Breadcrumb Navigation -->
+    <nav aria-label="Breadcrumb" class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanHeartbeat</a>
+        <span>/</span>
+        <a href="/events" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Events Radar</a>
+        <span>/</span>
+        <span class="text-slate-900 dark:text-white truncate">{event.title}</span>
+      </div>
       <span class="text-xs text-slate-400">
         Hosted by {event.organization}
       </span>
-    </div>
+    </nav>
 
     <!-- Event Hero Header -->
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

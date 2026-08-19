@@ -20,51 +20,62 @@ if (!sale) {
   return Astro.redirect('/sales');
 }
 
-const jsonLdEvent = {
-  '@context': 'https://schema.org',
-  '@type': 'SaleEvent',
-  name: sale.name,
-  description: `${sale.name} featuring ${sale.discountRange} on ${sale.brand} at ${sale.venueName}.`,
-  startDate: sale.startDate,
-  endDate: sale.endDate,
-  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  eventStatus: 'https://schema.org/EventScheduled',
-  location: {
-    '@type': 'Place',
-    name: sale.venueName,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: sale.venueAddress,
-      addressLocality: sale.municipality,
-      addressRegion: 'BC',
-      addressCountry: 'CA',
+const saleSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SaleEvent',
+    name: sale.name,
+    description: `${sale.name} featuring ${sale.discountRange} on ${sale.brand} at ${sale.venueName}.`,
+    startDate: sale.startDate,
+    endDate: sale.endDate,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    location: {
+      '@type': 'Place',
+      name: sale.venueName,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: sale.venueAddress,
+        addressLocality: sale.municipality,
+        addressRegion: 'BC',
+        addressCountry: 'CA',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: sale.latitude,
+        longitude: sale.longitude,
+      },
     },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: sale.latitude,
-      longitude: sale.longitude,
+    organizer: {
+      '@type': 'Organization',
+      name: sale.brand,
+      url: sale.officialSourceUrl,
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'CAD',
+      availability: 'https://schema.org/InStock',
+      url: sale.ticketUrl || sale.officialSourceUrl,
     },
   },
-  organizer: {
-    '@type': 'Organization',
-    name: sale.brand,
-    url: sale.officialSourceUrl,
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Warehouse Sales', item: 'https://vanheartbeat.ca/sales' },
+      { '@type': 'ListItem', position: 3, name: sale.name, item: `https://vanheartbeat.ca/sales/${sale.id}` },
+    ],
   },
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'CAD',
-    availability: 'https://schema.org/InStock',
-    url: sale.ticketUrl || sale.officialSourceUrl,
-  },
-};
+];
 ---
 
 <PlatformLayout
   title={`${sale.name} (${sale.startDate}–${sale.endDate}) | VanHeartbeat`}
   description={`Dates, lineup advice, bag policy, discounts & parking for ${sale.name} at ${sale.venueName}.`}
 >
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLdEvent)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(saleSchema)} />
 
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
     <!-- Breadcrumb Navigation -->

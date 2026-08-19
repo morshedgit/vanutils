@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import FilterTabs from '../../tools/school-catchment/components/FilterTabs.astro';
 import SchoolCard from '../../tools/school-catchment/components/SchoolCard.astro';
 import ChildcareList from '../../tools/school-catchment/components/ChildcareList.astro';
@@ -11,6 +12,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while
 const schools = await getLiveSchools();
 const childcares = getAllChildcares();
 const stats = getSchoolsOverviewStats(schools, childcares);
+
+const schoolsSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'VSB School Catchment & Licensed Childcare Navigator — VanHeartbeat',
+    description: 'Sub-50ms lookup for Vancouver School District (SD39) Elementary, Annex, and Secondary school catchments, French Immersion feeder tracks, and licensed daycares.',
+    url: 'https://vanheartbeat.ca/schools',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'School Catchments & Childcare', item: 'https://vanheartbeat.ca/schools' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How do Vancouver School Board (SD39) catchments determine student registration?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Every residential address in Vancouver belongs to a designated elementary and secondary school catchment. In-catchment students receive priority placement, followed by cross-boundary applicants subject to school capacity.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does French Immersion kindergarten registration work in Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Early French Immersion (Kindergarten to Grade 7) operates via a centralized district-wide lottery application window open in January through the Vancouver School Board website.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where can I find licensed $10-a-day childcare centres in Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Vancouver Coastal Health (VCH) regularly inspects licensed daycares. Participating $10-a-day child care sites and school-age childcare spaces located on VSB school grounds are tracked in our live directory.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -21,6 +70,8 @@ const stats = getSchoolsOverviewStats(schools, childcares);
   badgeText="VSB SD39 Catchments"
   status="active"
 >
+  <JsonLd schema={schoolsSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Hero Stats & 1-Tap Geolocation Sorter -->
     <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -74,6 +125,45 @@ const stats = getSchoolsOverviewStats(schools, childcares);
 
     <!-- Licensed Childcare Directory -->
     <ChildcareList childcares={childcares} />
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Schools &amp; Childcare: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How do Vancouver School Board (SD39) catchments determine student registration?
+          </h3>
+          <p>
+            Every residential address in Vancouver belongs to a designated elementary and secondary school catchment. In-catchment students receive priority placement, followed by cross-boundary applicants subject to school capacity.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How does French Immersion kindergarten registration work in Vancouver?
+          </h3>
+          <p>
+            Early French Immersion (Kindergarten to Grade 7) operates via a centralized district-wide lottery application window open in January through the Vancouver School Board website.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where can I find licensed $10-a-day childcare centres in Vancouver?
+          </h3>
+          <p>
+            Vancouver Coastal Health (VCH) regularly inspects licensed daycares. Participating $10-a-day child care sites and school-age childcare spaces located on VSB school grounds are tracked in our live directory.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </ToolLayout>
 

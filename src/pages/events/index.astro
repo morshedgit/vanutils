@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import FilterTabs from '../../tools/community-events/components/FilterTabs.astro';
 import EventCard from '../../tools/community-events/components/EventCard.astro';
 import { getLiveEvents, getEventsOverviewStats } from '../../tools/community-events/services/eventService';
@@ -9,6 +10,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-
 
 const events = await getLiveEvents();
 const stats = getEventsOverviewStats(events);
+
+const eventsSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Free & Local Community Events Radar — VanHeartbeat',
+    description: 'Sub-second radar for 100% free, all-ages, and family-friendly local street festivals, outdoor movies, and community events across Metro Vancouver.',
+    url: 'https://vanheartbeat.ca/events',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Community Events Radar', item: 'https://vanheartbeat.ca/events' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Are all events listed on the VanHeartbeat Events Radar free to attend?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. VanHeartbeat enforces a strict 100% Free Non-Commercial rule. Only free community street festivals, public park film screenings, civic cultural celebrations, and public library workshops are featured.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where do free outdoor movie screenings take place in Vancouver during summer?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Free outdoor movies take place weekly at Stanley Park (Ceperley Meadow), Downtown Vancouver (Vancouver Art Gallery Plaza), and Sunset Beach during July and August.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do I reach Vancouver community festival sites via SkyTrain?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Most major community festivals (Car-Free Days, Greek Day, Italian Day) are located within a short 5 to 10 minute walk of Millennium Line and Expo Line SkyTrain stations.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -19,6 +68,8 @@ const stats = getEventsOverviewStats(events);
   badgeText="100% Free Events"
   status="active"
 >
+  <JsonLd schema={eventsSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Hero Stats & 1-Tap Geolocation Sorter -->
     <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -68,6 +119,45 @@ const stats = getEventsOverviewStats(events);
       {events.map((event) => (
         <EventCard event={event} />
       ))}
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Free Community Events in Vancouver: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Are all events listed on the VanHeartbeat Events Radar free to attend?
+          </h3>
+          <p>
+            Yes. VanHeartbeat enforces a strict 100% Free Non-Commercial rule. Only free community street festivals, public park film screenings, civic cultural celebrations, and public library workshops are featured.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where do free outdoor movie screenings take place in Vancouver during summer?
+          </h3>
+          <p>
+            Free outdoor movies take place weekly at Stanley Park (Ceperley Meadow), Downtown Vancouver (Vancouver Art Gallery Plaza), and Sunset Beach during July and August.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How do I reach Vancouver community festival sites via SkyTrain?
+          </h3>
+          <p>
+            Most major community festivals (Car-Free Days, Greek Day, Italian Day) are located within a short 5 to 10 minute walk of Millennium Line and Expo Line SkyTrain stations.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </ToolLayout>

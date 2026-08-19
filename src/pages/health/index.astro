@@ -1,7 +1,7 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import EmergencyDisclaimer from '../../tools/health-wait-times/components/EmergencyDisclaimer.astro';
-import WaitTimeBadge from '../../tools/health-wait-times/components/WaitTimeBadge.astro';
 import TriageGuide from '../../tools/health-wait-times/components/TriageGuide.astro';
 import FilterTabs from '../../tools/health-wait-times/components/FilterTabs.astro';
 import FacilityCard from '../../tools/health-wait-times/components/FacilityCard.astro';
@@ -12,6 +12,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 
 const facilities = await getLiveFacilities();
 const stats = getHealthOverviewStats(facilities);
+
+const healthSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalWebPage',
+    name: 'Metro Vancouver ER & Urgent Care Wait Times — VanHeartbeat',
+    description: 'Real-time emergency department wait times and Urgent & Primary Care Centre (UPCC) capacity for VGH, St. Paul\'s, Mount Saint Joseph, and Fraser Health.',
+    url: 'https://vanheartbeat.ca/health',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'ER & Urgent Care Radar', item: 'https://vanheartbeat.ca/health' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the difference between an Urgent and Primary Care Centre (UPCC) and an Emergency Room?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'UPCCs provide same-day care for non-life-threatening urgent health concerns (sprains, minor burns, cuts needing stitches, ear infections, severe colds). Hospital Emergency Departments (ERs) provide 24/7 care for life-threatening conditions (chest pain, stroke symptoms, severe breathing difficulties, major trauma).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How are hospital ER wait times calculated in British Columbia?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Wait times represent the estimated duration from initial triage nurse assessment to being examined by a physician. Patients are seen based on clinical urgency (CTAS triage score), not order of arrival.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Do I need a BC Services Card / MSP to visit an Urgent Care Centre?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Residents should bring their BC Services Card / Personal Health Number (PHN). Visitors or non-residents can also receive urgent care, subject to out-of-province or non-resident billing fees.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -22,6 +70,8 @@ const stats = getHealthOverviewStats(facilities);
   badgeText="Live ER Radar"
   status="active"
 >
+  <JsonLd schema={healthSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Mandatory Medical Emergency Disclaimer -->
     <EmergencyDisclaimer />
@@ -77,6 +127,45 @@ const stats = getHealthOverviewStats(facilities);
       {facilities.map((facility) => (
         <FacilityCard facility={facility} />
       ))}
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Hospital ER &amp; Urgent Care: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            What is the difference between an Urgent and Primary Care Centre (UPCC) and an Emergency Room?
+          </h3>
+          <p>
+            UPCCs provide same-day care for non-life-threatening urgent health concerns (sprains, minor burns, cuts needing stitches, ear infections, severe colds). Hospital Emergency Departments (ERs) provide 24/7 care for life-threatening conditions (chest pain, stroke symptoms, severe breathing difficulties, major trauma).
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How are hospital ER wait times calculated in British Columbia?
+          </h3>
+          <p>
+            Wait times represent the estimated duration from initial triage nurse assessment to being examined by a physician. Patients are seen based on clinical urgency (CTAS triage score), not order of arrival.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Do I need a BC Services Card / MSP to visit an Urgent Care Centre?
+          </h3>
+          <p>
+            Residents should bring their BC Services Card / Personal Health Number (PHN). Visitors or non-residents can also receive urgent care, subject to out-of-province or non-resident billing fees.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </ToolLayout>

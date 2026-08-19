@@ -12,15 +12,31 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-re
 const allTools = TOOLS_REGISTRY;
 const alerts = await getLiveBreakingAlerts();
 
-const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'VanHeartbeat',
-  alternateName: 'Vancouver Live Civic Telemetry & Vital Signs',
-  url: 'https://vanheartbeat.ca',
-  description: 'Ultra-fast, single-purpose live civic telemetry, vital signs, and public data for Metro Vancouver residents.',
-  inLanguage: 'en-CA',
-};
+const websiteSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'VanHeartbeat',
+    alternateName: 'Vancouver Live Civic Telemetry & Vital Signs',
+    url: 'https://vanheartbeat.ca',
+    description: 'Ultra-fast, single-purpose live civic telemetry, vital signs, and public data for Metro Vancouver residents.',
+    inLanguage: 'en-CA',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'VanHeartbeat',
+    url: 'https://vanheartbeat.ca',
+    logo: 'https://vanheartbeat.ca/favicon.svg',
+    description: 'Real-time open civic pulse and telemetry platform for Metro Vancouver, British Columbia.',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Vancouver',
+      addressRegion: 'BC',
+      addressCountry: 'CA',
+    },
+  },
+];
 ---
 
 <PlatformLayout

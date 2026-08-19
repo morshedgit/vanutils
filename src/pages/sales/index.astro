@@ -1,5 +1,6 @@
 ---
 import PlatformLayout from '../../layouts/PlatformLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import { getLiveSalesEvents, getSalesOverviewStats } from '../../tools/sales-events/services/salesService';
 import SaleCard from '../../tools/sales-events/components/SaleCard.astro';
 import FilterTabs from '../../tools/sales-events/components/FilterTabs.astro';
@@ -12,12 +13,62 @@ const stats = await getSalesOverviewStats();
 
 const activeSales = allSales.filter((s) => s.status === 'active_now');
 const upcomingSales = allSales.filter((s) => s.status === 'upcoming');
+
+const salesSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Metro Vancouver Warehouse, Sample Sales & Local Deals Radar — VanHeartbeat',
+    description: 'Real-time verified warehouse sales, designer sample sales, factory clearances & outdoor gear swaps across Vancouver, North Shore & Burnaby.',
+    url: 'https://vanheartbeat.ca/sales',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Warehouse & Sample Sales', item: 'https://vanheartbeat.ca/sales' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Where do major warehouse and sample sales take place in Metro Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Major sales typically happen at the Vancouver Convention Centre, PNE Forum, Cloverdale Agriplex, and brand headquarters across Mount Pleasant, Strathcona, and Richmond.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Are warehouse and sample sale entries in Vancouver free?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Most warehouse and sample sales offer free public walk-in admission. Certain high-demand drops (such as Arc\'teryx or Aritzia) may offer optional VIP ticketed time slots or queue lineups.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What payment methods are typically accepted at Vancouver warehouse sales?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Most warehouse sales accept Credit Cards (Visa, Mastercard) and Debit/Interac. Many modern sample sales are cashless and do not accept cash or personal cheques.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <PlatformLayout
   title="Metro Vancouver Warehouse, Sample Sales & Local Deals Radar | VanHeartbeat"
   description="Real-time verified warehouse sales, designer sample sales, factory clearances & outdoor gear swaps across Vancouver, North Shore & Burnaby."
 >
+  <JsonLd schema={salesSchema} />
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
     <!-- Header Breadcrumbs & Title -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -140,6 +191,45 @@ const upcomingSales = allSales.filter((s) => s.status === 'upcoming');
         {upcomingSales.map((sale) => (
           <SaleCard sale={sale} />
         ))}
+      </div>
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Warehouse &amp; Sample Sales: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where do major warehouse and sample sales take place in Metro Vancouver?
+          </h3>
+          <p>
+            Major sales typically happen at the Vancouver Convention Centre, PNE Forum, Cloverdale Agriplex, and brand headquarters across Mount Pleasant, Strathcona, and Richmond.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Are warehouse and sample sale entries in Vancouver free?
+          </h3>
+          <p>
+            Most warehouse and sample sales offer free public walk-in admission. Certain high-demand drops (such as Arc'teryx or Aritzia) may offer optional VIP ticketed time slots or queue lineups.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            What payment methods are typically accepted at Vancouver warehouse sales?
+          </h3>
+          <p>
+            Most warehouse sales accept Credit Cards (Visa, Mastercard) and Debit/Interac. Many modern sample sales are cashless and do not accept cash or personal cheques.
+          </p>
+        </div>
       </div>
     </div>
   </div>

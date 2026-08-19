@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import BreakingAlertBanner from '../../tools/local-news/components/BreakingAlertBanner.astro';
 import FilterTabs from '../../tools/local-news/components/FilterTabs.astro';
 import ArticleCard from '../../tools/local-news/components/ArticleCard.astro';
@@ -11,6 +12,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-r
 const articles = await getLiveNews();
 const alerts = await getLiveBreakingAlerts();
 const stats = getNewsOverviewStats(articles, alerts);
+
+const newsSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Metro Vancouver Local News & Breaking Alert Radar — VanHeartbeat',
+    description: 'Sub-second, zero-ad local civic news wire, breaking weather warnings, transit alerts, and City Council updates.',
+    url: 'https://vanheartbeat.ca/news',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Local News Wire', item: 'https://vanheartbeat.ca/news' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Where does VanHeartbeat source its local news reports and civic alerts?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'VanHeartbeat syndicates verified RSS and REST feeds directly from CBC British Columbia, City of Vancouver Official Media Releases, TransLink Service Alerts, and Environment Canada Weather Warnings.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is the news wire free from paywalls and tracking ads?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. VanHeartbeat operates on a zero-clutter, non-paywalled principle, displaying only factual editorial summaries and direct links to original official source documents.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How quickly are emergency weather alerts updated on the platform?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Breaking meteorological warnings from Environment and Climate Change Canada (ECCC) are ingested and edge-cached with a 5-minute polling interval.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -21,6 +70,8 @@ const stats = getNewsOverviewStats(articles, alerts);
   badgeText="Live Wire"
   status="active"
 >
+  <JsonLd schema={newsSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Breaking News & Emergency Alert Ribbon -->
     <BreakingAlertBanner alerts={alerts} />
@@ -73,6 +124,45 @@ const stats = getNewsOverviewStats(articles, alerts);
       {articles.map((article) => (
         <ArticleCard article={article} />
       ))}
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Metro Vancouver News Wire: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where does VanHeartbeat source its local news reports and civic alerts?
+          </h3>
+          <p>
+            VanHeartbeat syndicates verified RSS and REST feeds directly from CBC British Columbia, City of Vancouver Official Media Releases, TransLink Service Alerts, and Environment Canada Weather Warnings.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Is the news wire free from paywalls and tracking ads?
+          </h3>
+          <p>
+            Yes. VanHeartbeat operates on a zero-clutter, non-paywalled principle, displaying only factual editorial summaries and direct links to original official source documents.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How quickly are emergency weather alerts updated on the platform?
+          </h3>
+          <p>
+            Breaking meteorological warnings from Environment and Climate Change Canada (ECCC) are ingested and edge-cached with a 5-minute polling interval.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </ToolLayout>

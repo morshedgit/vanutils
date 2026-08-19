@@ -13,28 +13,45 @@ const crossings = await getLiveCrossings();
 const stats = getBridgeOverviewStats(crossings);
 const allIncidents = crossings.flatMap((c) => c.activeIncidents);
 
-const bridgesFaqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'When does the Lions Gate Bridge counterflow lane switch directions?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'The Lions Gate Bridge center lane direction is dynamically controlled by the BC Ministry of Transportation based on real-time traffic volume. It generally prioritizes Southbound into Downtown during the morning commute (6:00 AM – 9:30 AM) and Northbound into West/North Vancouver during the afternoon rush (3:00 PM – 7:00 PM).',
+const bridgesSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Vancouver Bridges & Tunnel Bottleneck Radar — VanHeartbeat',
+    description: 'Live crossing delays, dynamic counterflow lane directions (Lions Gate, Massey Tunnel, Alex Fraser), and synchronized DriveBC approach webcams.',
+    url: 'https://vanheartbeat.ca/bridges',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Bridges & Tunnels Radar', item: 'https://vanheartbeat.ca/bridges' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'When does the Lions Gate Bridge counterflow lane switch directions?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The Lions Gate Bridge center lane direction is dynamically controlled by the BC Ministry of Transportation based on real-time traffic volume. It generally prioritizes Southbound into Downtown during the morning commute (6:00 AM – 9:30 AM) and Northbound into West/North Vancouver during the afternoon rush (3:00 PM – 7:00 PM).',
+        },
       },
-    },
-    {
-      '@type': 'Question',
-      name: 'How are bridge crossing delays measured in Metro Vancouver?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Crossing travel times and delays are calculated continuously using DriveBC Open511 telemetry, automated speed sensors, and approach corridor transit data across the 10 primary Metro Vancouver crossings.',
+      {
+        '@type': 'Question',
+        name: 'How are bridge crossing delays measured in Metro Vancouver?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Crossing travel times and delays are calculated continuously using DriveBC Open511 telemetry, automated speed sensors, and approach corridor transit data across the 10 primary Metro Vancouver crossings.',
+        },
       },
-    },
-  ],
-};
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -45,7 +62,7 @@ const bridgesFaqSchema = {
   badgeText="Live Crossing Radar"
   status="active"
 >
-  <JsonLd schema={bridgesFaqSchema} />
+  <JsonLd schema={bridgesSchema} />
 
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Active Incidents / Stalls Alert -->

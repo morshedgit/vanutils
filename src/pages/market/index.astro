@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import MarketConditionBadge from '../../tools/housing-market/components/MarketConditionBadge.astro';
 import MortgageRadar from '../../tools/housing-market/components/MortgageRadar.astro';
 import SubmarketCard from '../../tools/housing-market/components/SubmarketCard.astro';
@@ -11,6 +12,54 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while
 
 const data = await getLiveMarketHeartbeat();
 const { metroOverview, submarkets, mortgage } = data;
+
+const marketSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Metro Vancouver Real Estate & Rental Market Heartbeat — VanHeartbeat',
+    description: 'Sub-50ms market liquidity telemetry, MLS® HPI benchmark prices, rental vacancy rates, and Bank of Canada mortgage benchmarks.',
+    url: 'https://vanheartbeat.ca/market',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Housing & Mortgage Radar', item: 'https://vanheartbeat.ca/market' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What does the Sales-to-Active Ratio (SAR %) mean in Vancouver real estate?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The Sales-to-Active Ratio measures market liquidity. A ratio below 12% indicates a Buyer\'s Market (downward pressure on home prices), 12% to 20% indicates a Balanced Market, and above 20% indicates a Seller\'s Market (upward price pressure).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Where are official MLS® HPI benchmark home prices sourced from?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Benchmark prices and market metrics are syndicated from Greater Vancouver REALTORS® (GVR) MLS® Home Price Index and CMHC official housing market data.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does the Bank of Canada policy interest rate impact Vancouver variable mortgages?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Changes to the Bank of Canada policy rate directly adjust the prime lending rate at chartered banks. For every 25-basis-point (0.25%) cut, variable mortgage payments typically decrease by roughly $15 per month per $100,000 borrowed.',
+        },
+      },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -21,6 +70,8 @@ const { metroOverview, submarkets, mortgage } = data;
   badgeText="MLS® HPI & Valet API"
   status="active"
 >
+  <JsonLd schema={marketSchema} />
+
   <div class="space-y-5 max-w-5xl mx-auto">
     <!-- Regional Composite Market Pulse Banner -->
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm space-y-4">
@@ -91,6 +142,45 @@ const { metroOverview, submarkets, mortgage } = data;
       {submarkets.map((submarket) => (
         <SubmarketCard submarket={submarket} />
       ))}
+    </div>
+
+    <!-- FAQ Accordion for SEO & GEO -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">💬</span>
+        <h2 class="text-base font-black text-slate-900 dark:text-white tracking-tight">
+          Vancouver Real Estate &amp; Mortgages: Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            What does the Sales-to-Active Ratio (SAR %) mean in Vancouver real estate?
+          </h3>
+          <p>
+            The Sales-to-Active Ratio measures market liquidity. A ratio below 12% indicates a Buyer's Market (downward pressure on home prices), 12% to 20% indicates a Balanced Market, and above 20% indicates a Seller's Market (upward price pressure).
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            Where are official MLS® HPI benchmark home prices sourced from?
+          </h3>
+          <p>
+            Benchmark prices and market metrics are syndicated from Greater Vancouver REALTORS® (GVR) MLS® Home Price Index and CMHC official housing market data.
+          </p>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <h3 class="font-bold text-slate-900 dark:text-white text-xs">
+            How does the Bank of Canada policy interest rate impact Vancouver variable mortgages?
+          </h3>
+          <p>
+            Changes to the Bank of Canada policy rate directly adjust the prime lending rate at chartered banks. For every 25-basis-point (0.25%) cut, variable mortgage payments typically decrease by roughly $15 per month per $100,000 borrowed.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </ToolLayout>

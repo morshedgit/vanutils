@@ -1,5 +1,6 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import JsonLd from '../../components/shared/JsonLd.astro';
 import AQHIBadge from '../../tools/air-quality/components/AQHIBadge.astro';
 import AdvisoryBanner from '../../tools/air-quality/components/AdvisoryBanner.astro';
 import CleanAirShelters from '../../tools/air-quality/components/CleanAirShelters.astro';
@@ -16,6 +17,36 @@ const shelters = getAllShelters();
 if (!station) {
   return Astro.redirect('/air');
 }
+
+const stationSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    name: `${station.name} Air Quality Station`,
+    description: `Real-time PM2.5 particulate levels, AQHI rating, 24h historical trends, and health advice for ${station.name}.`,
+    url: `https://vanheartbeat.ca/air/${station.id}`,
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: station.latitude,
+      longitude: station.longitude,
+    },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: station.name,
+      addressRegion: 'BC',
+      addressCountry: 'CA',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
+      { '@type': 'ListItem', position: 2, name: 'Air Quality Radar', item: 'https://vanheartbeat.ca/air' },
+      { '@type': 'ListItem', position: 3, name: station.name, item: `https://vanheartbeat.ca/air/${station.id}` },
+    ],
+  },
+];
 ---
 
 <ToolLayout
@@ -26,20 +57,22 @@ if (!station) {
   badgeText={`AQHI ${station.currentAQHI}`}
   status="active"
 >
+  <JsonLd schema={stationSchema} />
+
   <div class="space-y-6 max-w-5xl mx-auto">
-    <!-- Breadcrumb & Back Link -->
-    <div class="flex items-center justify-between">
-      <a
-        href="/air"
-        class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-500 transition-colors"
-      >
-        <span>←</span>
-        <span>Back to Air Quality Radar</span>
-      </a>
+    <!-- 3-Tier Visual Breadcrumb Navigation -->
+    <nav aria-label="Breadcrumb" class="flex items-center justify-between">
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <a href="/" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">VanHeartbeat</a>
+        <span>/</span>
+        <a href="/air" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Air Quality Radar</a>
+        <span>/</span>
+        <span class="text-slate-900 dark:text-white truncate">{station.name}</span>
+      </div>
       <span class="text-xs text-slate-400">
         BAM-1020 Continuous Sensor • Metro Vancouver
       </span>
-    </div>
+    </nav>
 
     <!-- Active Advisory Banner -->
     <AdvisoryBanner hasAdvisory={false} />
