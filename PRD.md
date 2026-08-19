@@ -918,6 +918,74 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 
 ---
 
+### Tool #15: Metro Vancouver Warehouse, Sample Sales & Local Deals Radar (`/sales`) — Active Live / Specification
+- **Module Identifier**: `sales-events` (internal route `/sales` and `/sales/[sale-slug]`, e.g. `/sales/aritzia-warehouse-sale-2026`, `/sales/arcteryx-factory-sale`, `/sales/herschel-sample-sale`, `/sales/mec-gear-swap-vancouver`)
+- **Target Platform**: Astro 5 on Cloudflare Pages (Server-Side Edge Rendering `output: "server"`)
+- **Strict Real-Data & Anti-Spam Mandate**:
+  - All sale dates, venue addresses, admission requirements, discount tiers, lineup guidelines, and payment policies are 100% real-world data ingested directly from official venue booking calendars (Vancouver Convention Centre, PNE Forum, Croatian Cultural Centre, Italian Cultural Centre, Heritage Hall), verified brand event portals (Aritzia, Arc'teryx, Herschel, Duer, Tentree), and community gear swap registries (MEC, Vancouver Ski Swap, VanDusen Plant Sale).
+  - Generating, simulating, or linking to synthetic coupon codes, spam affiliate vouchers, or fake discounts is strictly prohibited.
+- **Problem Solved**:
+  - Finding verified dates, opening hour queues, ticket requirements vs. general walk-in, bag check rules, communal fitting room setup, and payment restrictions for Vancouver warehouse and sample sales is fragmented across social media rumors and spam coupon sites.
+  - Delivers a sub-second, zero-ad radar with 1-tap calendar synchronization (.ics), lineup advice, transit routes, and parking maximums.
+- **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
+  - Asynchronous loader `getLiveSalesEvents(category?)` implemented in `src/tools/sales-events/services/salesService.ts` using `AbortSignal.timeout(1200)` and verified snapshot fallback with `isStale: true`.
+- **Tiered Edge Caching Matrix**:
+  - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (Medium-Low Volatility: 30-minute edge cache with 2-hour SWR revalidation).
+- **The Zero-Fluff, High-Density Dashboard Card Standard**:
+  - **100% Clickable Container (`<a>`)**: Entire card is a single link navigating directly to `/sales`. Zero nested buttons.
+  - **80%+ Real Data Density**: Dedicated card space displays 6 live upcoming warehouse / sample sale rows.
+  - **⭐ Pinning Synchronization**: Supports client-side pinning via `localStorage.getItem('vanutils_pinned_sales-events')`.
+- **Data Schema & TypeScript Interfaces**:
+  ```typescript
+  // src/tools/sales-events/types.ts
+  export type SaleCategory = 'fashion_apparel' | 'outdoor_gear' | 'home_garden' | 'indie_artisan' | 'kids_family';
+  export type EntryType = 'free_walkin' | 'timed_ticket' | 'paid_vip';
+  export type PaymentMethod = 'credit_debit_only' | 'cash_card' | 'all_payments';
+
+  export interface SaleDateSchedule {
+    date: string;
+    dayOfWeek: string;
+    openTime: string;
+    closeTime: string;
+    notes?: string;
+  }
+
+  export interface SalesEvent {
+    id: string;
+    name: string;
+    brand: string;
+    category: SaleCategory;
+    startDate: string;
+    endDate: string;
+    status: 'upcoming' | 'active_now' | 'concluded';
+    discountRange: string;
+    entryType: EntryType;
+    ticketUrl?: string;
+    venueName: string;
+    venueAddress: string;
+    hallDetails?: string;
+    municipality: string;
+    latitude: number;
+    longitude: number;
+    transitAccess: string;
+    parkingInfo: string;
+    schedule: SaleDateSchedule[];
+    lineupAdvice: string;
+    bagPolicy: string;
+    paymentPolicy: PaymentMethod;
+    fittingRoomInfo: string;
+    returnPolicy: string;
+    officialSourceUrl: string;
+    featuredItems: string[];
+    lastUpdated: string;
+    isStale: boolean;
+  }
+  ```
+- **Performance Budget**:
+  - Page render $< 400\text{ms}$; Edge TTFB $< 50\text{ms}$; Client JavaScript payload $< 15\text{KB}$; Lighthouse 95+ target.
+
+---
+
 ## 5. Multi-Tool Expansion Protocol
 When expanding the platform with a new utility:
 1. **Module Scaffolding**: Create `src/tools/<tool-id>/` with `types.ts`, `data/`, `services/`, and `components/`.
