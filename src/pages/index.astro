@@ -93,7 +93,7 @@ const websiteSchema = {
       <!-- Real-time Live Status Counter -->
       <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>13 Live Telemetry Feeds Active</span>
+        <span>{allTools.length} Live Telemetry Feeds Active</span>
       </div>
     </div>
 
@@ -141,7 +141,28 @@ const websiteSchema = {
     });
   }
 
+  function setupWholeCardClicks() {
+    document.querySelectorAll<HTMLElement>('.tool-card').forEach((card) => {
+      card.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        // If clicking a specific sub-route deep link, let it proceed
+        const subLink = target.closest('a');
+        if (subLink && subLink.getAttribute('href') && !subLink.classList.contains('tool-card-main-link')) {
+          return;
+        }
+        const toolPath = card.getAttribute('data-tool-path');
+        if (toolPath) {
+          window.location.href = toolPath;
+        }
+      });
+    });
+  }
+
   setupCategoryFilters();
-  document.addEventListener('astro:page-load', setupCategoryFilters);
+  setupWholeCardClicks();
+  document.addEventListener('astro:page-load', () => {
+    setupCategoryFilters();
+    setupWholeCardClicks();
+  });
 </script>
 

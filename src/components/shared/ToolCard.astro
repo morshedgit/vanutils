@@ -82,11 +82,15 @@ const initialSportsTeams = allSportsTeams.slice(0, 4);
 ---
 
 <div
-  class="tool-card group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 hover:border-sky-500/70 dark:hover:border-sky-500/70 hover:shadow-lg hover:shadow-sky-500/5 transition-all duration-200"
+  class="tool-card group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 hover:border-sky-500/70 dark:hover:border-sky-500/70 hover:shadow-lg hover:shadow-sky-500/5 transition-all duration-200 cursor-pointer"
   data-tool-id={tool.id}
+  data-tool-path={tool.path}
 >
+  <!-- Full-Card Clickable Anchor -->
+  <a href={tool.path} class="tool-card-main-link absolute inset-0 z-0 rounded-2xl" aria-label={`Open ${tool.name}`}></a>
+
   <!-- Card Top Header -->
-  <div class="flex items-center justify-between gap-2 mb-3">
+  <div class="relative z-10 flex items-center justify-between gap-2 mb-3">
     <a href={tool.path} class="flex items-center gap-2 group-hover:text-sky-500 transition-colors">
       <span class="text-xl shrink-0">
         {tool.id === 'can-i-swim' && '🌊'}
