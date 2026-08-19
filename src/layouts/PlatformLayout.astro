@@ -88,6 +88,17 @@ const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanhea
         } catch (e) {}
       })();
     </script>
+
+    <!-- Global CSS Utilities -->
+    <style is:global>
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
   </head>
   <body class="min-h-screen bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased font-sans flex flex-col selection:bg-sky-500 selection:text-white transition-colors duration-150">
     <!-- Platform Header -->
