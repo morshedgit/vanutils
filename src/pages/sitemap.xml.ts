@@ -15,6 +15,7 @@ import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketS
 import { getLiveSportsFacilities } from '../tools/sports-facilities/services/sportsService';
 import { getLiveWeather } from '../tools/weather-forecast/services/weatherService';
 import { getLiveSportsTeams } from '../tools/sports-teams/services/sportsTeamsService';
+import { getLiveSalesEvents } from '../tools/sales-events/services/salesService';
 
 export const GET: APIRoute = async () => {
   const baseUrl = 'https://vanheartbeat.ca';
@@ -155,6 +156,14 @@ export const GET: APIRoute = async () => {
     const { teams } = await getLiveSportsTeams();
     teams.forEach((tm) => {
       dynamicRoutes.push({ url: `${baseUrl}/sports-teams/${tm.id}`, priority: '0.8', changefreq: 'daily' });
+    });
+  } catch (e) {}
+
+  // Warehouse & Sample Sales
+  try {
+    const sales = await getLiveSalesEvents();
+    sales.forEach((sl) => {
+      dynamicRoutes.push({ url: `${baseUrl}/sales/${sl.id}`, priority: '0.8', changefreq: 'daily' });
     });
   } catch (e) {}
 

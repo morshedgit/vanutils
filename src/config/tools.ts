@@ -259,7 +259,28 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     ],
   },
 
-  // --- ROW 4: COMMUNITY & CIVIC ---
+  // --- ROW 4: COMMUNITY, DEALS & CIVIC (PERFECT 4x4 GRID) ---
+  {
+    id: 'sales-events',
+    name: 'Warehouse & Sample Sales',
+    shortDescription: 'Verified Metro Vancouver warehouse sales, brand sample pop-ups, outdoor gear swaps & line-up advice.',
+    path: '/sales',
+    icon: 'sparkles',
+    category: 'daily_living',
+    status: 'active',
+    badgeText: 'Sales Radar',
+    previewStat: {
+      value: 'Up to 80%',
+      label: 'Off MSRP Deals',
+      statusType: 'safe',
+    },
+    features: [
+      '100% verified authentic in-person sales',
+      'Historical queue & peak line-up advice',
+      '1-Tap Google & Apple .ics calendar export',
+      'Bag check rules & fitting room intelligence',
+    ],
+  },
   {
     id: 'community-events',
     name: 'Free & Local Events',

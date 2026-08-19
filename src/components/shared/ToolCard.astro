@@ -15,6 +15,7 @@ import { getLiveMarketHeartbeat } from '../../tools/housing-market/services/mark
 import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
 import { getLiveWeather } from '../../tools/weather-forecast/services/weatherService';
 import { getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
+import { getLiveSalesEvents } from '../../tools/sales-events/services/salesService';
 
 interface Props {
   tool: ToolMeta;
@@ -52,20 +53,19 @@ const allStations = tool.id === 'air-quality' ? await getLiveStations() : [];
 const initialStations = allStations.slice(0, 4);
 
 const allProposals = tool.id === 'civic-development' ? await getLiveProposals() : [];
-const initialProposals = allProposals.slice(0, 3);
+const initialProposals = allProposals.slice(0, 4);
 
 const allEvents = tool.id === 'community-events' ? await getLiveEvents() : [];
-const initialEvents = allEvents.slice(0, 3);
+const initialEvents = allEvents.slice(0, 4);
 
 const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
-const initialSchools = allSchools.slice(0, 3);
+const initialSchools = allSchools.slice(0, 4);
 
-const allArticles = tool.id === 'local-news' ? await getLiveNews() : [];
-const initialArticles = allArticles.slice(0, 3);
+const allNews = tool.id === 'local-news' ? await getLiveNews() : [];
+const initialNews = allNews.slice(0, 4);
 
-const marketData = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
-const allSubmarkets = marketData ? [marketData.metroOverview, ...marketData.submarkets] : [];
-const initialSubmarkets = allSubmarkets.slice(0, 3);
+const marketHeartbeat = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
+const initialSubmarkets = marketHeartbeat ? marketHeartbeat.submarkets.slice(0, 4) : [];
 
 const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
 const initialSportsFacilities = allSportsFacilities.slice(0, 3);
@@ -79,6 +79,9 @@ const avgWeatherTemp = allWeatherStations.length > 0
 const sportsTeamsData = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
 const allSportsTeams = sportsTeamsData ? sportsTeamsData.teams : [];
 const initialSportsTeams = allSportsTeams.slice(0, 4);
+
+const allSalesEvents = tool.id === 'sales-events' ? await getLiveSalesEvents() : [];
+const initialSalesEvents = allSalesEvents.slice(0, 4);
 ---
 
 <div
@@ -108,6 +111,7 @@ const initialSportsTeams = allSportsTeams.slice(0, 4);
         {tool.id === 'sports-courts' && '🎾'}
         {tool.id === 'weather-forecast' && '🌦️'}
         {tool.id === 'sports-teams' && '🏒'}
+        {tool.id === 'sales-events' && '🏷️'}
       </span>
       <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
         {tool.name}
@@ -131,6 +135,7 @@ const initialSportsTeams = allSportsTeams.slice(0, 4);
         {tool.id === 'sports-courts' && '84 Courts'}
         {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
         {tool.id === 'sports-teams' && `${allSportsTeams.length} Pro Teams`}
+        {tool.id === 'sales-events' && `${allSalesEvents.length} Verified Sales`}
       </span>
     </a>
   </div>
@@ -656,6 +661,33 @@ const initialSportsTeams = allSportsTeams.slice(0, 4);
         )}
       </div>
     )}
+
+    <!-- 16. WAREHOUSE & SAMPLE SALES: Live Sales Radar & Next Major Drop -->
+    {tool.id === 'sales-events' && (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+          <span class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+            <span>VERIFIED WAREHOUSE &amp; SAMPLE SALES</span>
+          </span>
+          <span class="text-rose-600 dark:text-rose-400 font-extrabold uppercase text-[9px]">
+            UP TO 80% OFF
+          </span>
+        </div>
+
+        <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-[11px] font-bold text-rose-950 dark:text-rose-200 flex items-center justify-between">
+          <span class="truncate">🔥 Aritzia Annual Warehouse Sale</span>
+          <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-700 dark:text-rose-300 shrink-0 ml-1">
+            Aug 27–Sep 1
+          </span>
+        </div>
+
+        <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
+          <span>🏷️ 8 In-Person Sales Scheduled</span>
+          <span>Zero Affiliate Ads</span>
+        </div>
+      </div>
+    )}
   </div>
 
   <!-- COMPACT LIVE TELEMETRY ROWS WITH DIRECT MICRO-LINKING -->
@@ -892,7 +924,7 @@ const initialSportsTeams = allSportsTeams.slice(0, 4);
     <!-- LOCAL NEWS -->
     {tool.id === 'local-news' && (
       <div class="space-y-1" id="main-card-news-grid">
-        {initialArticles.map((a) => (
+        {initialNews.map((a) => (
           <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-article-id={a.id}>
             <a href={`/news/${a.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
               <span class="font-bold mr-1">[{a.outletName}]</span>
@@ -978,6 +1010,26 @@ const initialSportsTeams = allSportsTeams.slice(0, 4);
                   </span>
                 ))}
               </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <!-- WAREHOUSE & SAMPLE SALES -->
+    {tool.id === 'sales-events' && (
+      <div class="space-y-1" id="main-card-sales-grid">
+        {initialSalesEvents.map((s) => (
+          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-sale-id={s.id}>
+            <a href={`/sales/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors flex items-center gap-1.5">
+              <span>{s.category === 'outdoor_gear' ? '🏔️' : s.category === 'home_garden' ? '🪴' : '👗'}</span>
+              <span class="font-bold truncate">{s.brand}</span>
+              <span class="text-[10px] text-slate-400 font-normal">({s.startDate.slice(5)})</span>
+            </a>
+            <div class="shrink-0 flex items-center gap-1.5 text-[11px]">
+              <span class="font-extrabold text-rose-600 dark:text-rose-400 text-[10px] bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
+                {s.discountRange}
+              </span>
             </div>
           </div>
         ))}

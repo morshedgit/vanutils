@@ -1,0 +1,102 @@
+---
+import type { SalesEvent } from '../types';
+
+interface Props {
+  sale: SalesEvent;
+}
+
+const { sale } = Astro.props;
+
+const categoryIcons: Record<string, string> = {
+  fashion_apparel: '👗',
+  outdoor_gear: '🏔️',
+  home_garden: '🪴',
+  indie_artisan: '🎨',
+  kids_family: '🧸',
+};
+
+const entryBadges: Record<string, { label: string; bg: string; text: string }> = {
+  free_walkin: { label: 'Free Walk-in', bg: 'bg-emerald-500/10 dark:bg-emerald-500/20', text: 'text-emerald-700 dark:text-emerald-300 border-emerald-500/30' },
+  timed_ticket: { label: 'Timed Pass Req.', bg: 'bg-amber-500/10 dark:bg-amber-500/20', text: 'text-amber-700 dark:text-amber-300 border-amber-500/30' },
+  paid_vip: { label: 'Paid VIP / Entry', bg: 'bg-indigo-500/10 dark:bg-indigo-500/20', text: 'text-indigo-700 dark:text-indigo-300 border-indigo-500/30' },
+};
+
+const entryBadge = entryBadges[sale.entryType] || entryBadges.free_walkin;
+---
+
+<a
+  href={`/sales/${sale.id}`}
+  class="group flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 hover:border-sky-500/70 dark:hover:border-sky-500/70 hover:shadow-lg hover:shadow-sky-500/5 transition-all duration-200"
+  data-sale-id={sale.id}
+  data-category={sale.category}
+>
+  <!-- Card Header -->
+  <div>
+    <div class="flex items-start justify-between gap-2 mb-2">
+      <div class="flex items-center gap-2">
+        <span class="text-xl shrink-0">{categoryIcons[sale.category] || '🏷️'}</span>
+        <div>
+          <span class="text-[10px] font-bold tracking-wider text-sky-600 dark:text-sky-400 uppercase">
+            {sale.brand}
+          </span>
+          <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight group-hover:text-sky-500 transition-colors">
+            {sale.name}
+          </h3>
+        </div>
+      </div>
+
+      <!-- Discount Badge -->
+      <span class="shrink-0 px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 whitespace-nowrap">
+        {sale.discountRange}
+      </span>
+    </div>
+
+    <!-- Date Range & Status Strip -->
+    <div class="my-2.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
+      <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-[11px]">
+        <span>📅</span>
+        <span>{sale.startDate} — {sale.endDate}</span>
+      </div>
+      <span class={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${entryBadge.bg} ${entryBadge.text}`}>
+        {entryBadge.label}
+      </span>
+    </div>
+
+    <!-- Venue & Location Info -->
+    <div class="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+      <div class="flex items-center gap-1.5 truncate">
+        <span class="text-slate-400">📍</span>
+        <span class="font-medium text-slate-800 dark:text-slate-200 truncate">{sale.venueName}</span>
+      </div>
+      <div class="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+        <span class="text-slate-400">🚇</span>
+        <span class="truncate">{sale.transitAccess}</span>
+      </div>
+    </div>
+
+    <!-- Featured Items Sample Tags -->
+    <div class="mt-3 flex flex-wrap gap-1">
+      {sale.featuredItems.slice(0, 3).map((item) => (
+        <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          {item}
+        </span>
+      ))}
+      {sale.featuredItems.length > 3 && (
+        <span class="text-[9px] font-medium px-1 py-0.5 text-slate-400">
+          +{sale.featuredItems.length - 3} more
+        </span>
+      )}
+    </div>
+  </div>
+
+  <!-- Card Footer -->
+  <div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
+    <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 group-hover:text-sky-500 transition-colors flex items-center gap-1">
+      <span>Queue &amp; Sale Details</span>
+      <span>→</span>
+    </span>
+    <span class="text-[10px] font-medium text-slate-400">
+      {sale.paymentPolicy === 'credit_debit_only' ? '💳 No Cash' : '💵 Cash/Cards'}
+    </span>
+  </div>
+</a>

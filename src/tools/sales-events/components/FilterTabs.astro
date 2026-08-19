@@ -1,0 +1,96 @@
+---
+interface Props {
+  activeCategory?: string;
+}
+
+const { activeCategory = 'all' } = Astro.props;
+
+const categories = [
+  { id: 'all', label: 'All Sales', icon: '🏷️' },
+  { id: 'fashion_apparel', label: 'Fashion & Apparel', icon: '👗' },
+  { id: 'outdoor_gear', label: 'Outdoor & Ski Gear', icon: '🏔️' },
+  { id: 'home_garden', label: 'Home & Garden', icon: '🪴' },
+];
+---
+
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 my-4">
+  <!-- Category Filter Buttons -->
+  <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none" id="sales-filter-tabs">
+    {categories.map((cat) => (
+      <button
+        type="button"
+        data-category={cat.id}
+        class={`sales-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+          cat.id === activeCategory
+            ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+        }`}
+      >
+        <span>{cat.icon}</span>
+        <span>{cat.label}</span>
+      </button>
+    ))}
+  </div>
+
+  <!-- Search Input Bar -->
+  <div class="relative w-full sm:w-64 shrink-0">
+    <input
+      type="text"
+      id="sales-search-input"
+      placeholder="Search brand, venue, item..."
+      class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 outline-hidden transition-all"
+    />
+    <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400">🔍</span>
+  </div>
+</div>
+
+<script>
+  function setupSalesFiltering() {
+    const buttons = document.querySelectorAll('.sales-filter-btn');
+    const searchInput = document.getElementById('sales-search-input') as HTMLInputElement | null;
+    const cards = document.querySelectorAll('[data-sale-id]');
+
+    let currentCat = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+      cards.forEach((card) => {
+        const cat = card.getAttribute('data-category');
+        const text = card.textContent?.toLowerCase() || '';
+
+        const matchesCat = currentCat === 'all' || cat === currentCat;
+        const matchesSearch = !searchQuery || text.includes(searchQuery);
+
+        if (matchesCat && matchesSearch) {
+          (card as HTMLElement).style.display = '';
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900');
+          b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+        });
+        btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+        btn.classList.add('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900');
+
+        currentCat = btn.getAttribute('data-category') || 'all';
+        applyFilters();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        searchQuery = searchInput.value.trim().toLowerCase();
+        applyFilters();
+      });
+    }
+  }
+
+  setupSalesFiltering();
+  document.addEventListener('astro:page-load', setupSalesFiltering);
+</script>

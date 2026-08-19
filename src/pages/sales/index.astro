@@ -1,0 +1,146 @@
+---
+import PlatformLayout from '../../layouts/PlatformLayout.astro';
+import { getLiveSalesEvents, getSalesOverviewStats } from '../../tools/sales-events/services/salesService';
+import SaleCard from '../../tools/sales-events/components/SaleCard.astro';
+import FilterTabs from '../../tools/sales-events/components/FilterTabs.astro';
+
+// Edge SSR caching policy (30m edge cache, 2h SWR)
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200');
+
+const allSales = await getLiveSalesEvents();
+const stats = await getSalesOverviewStats();
+
+const activeSales = allSales.filter((s) => s.status === 'active_now');
+const upcomingSales = allSales.filter((s) => s.status === 'upcoming');
+---
+
+<PlatformLayout
+  title="Metro Vancouver Warehouse, Sample Sales & Local Deals Radar | VanHeartbeat"
+  description="Real-time verified warehouse sales, designer sample sales, factory clearances & outdoor gear swaps across Vancouver, North Shore & Burnaby."
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+    <!-- Header Breadcrumbs & Title -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
+          <a href="/" class="hover:text-sky-500 transition-colors">VanHeartbeat</a>
+          <span>/</span>
+          <span class="text-slate-800 dark:text-slate-200 font-semibold">Sales Radar</span>
+        </nav>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+          <span>🏷️</span>
+          <span>Warehouse &amp; Sample Sales Radar</span>
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl">
+          100% verified Metro Vancouver warehouse sales, brand sample pop-ups &amp; community gear swaps. Zero spam, zero affiliate ads.
+        </p>
+      </div>
+
+      <!-- Live Badge Counter -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="px-3 py-1.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300">
+            {allSales.length} Verified Sales
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- High-Density Overview KPI Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800">
+        <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+          Active Now
+        </span>
+        <div class="flex items-baseline gap-2">
+          <span class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+            {stats.activeSalesCount}
+          </span>
+          <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+            Live Today
+          </span>
+        </div>
+      </div>
+
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800">
+        <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+          Upcoming Season
+        </span>
+        <div class="flex items-baseline gap-2">
+          <span class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+            {stats.upcomingThisMonth}
+          </span>
+          <span class="text-[10px] text-sky-600 dark:text-sky-400 font-bold">
+            Scheduled
+          </span>
+        </div>
+      </div>
+
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800">
+        <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+          Avg Discount Tier
+        </span>
+        <div class="flex items-baseline gap-2">
+          <span class="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400">
+            Up to 80%
+          </span>
+          <span class="text-[10px] text-slate-400 font-medium">Off MSRP</span>
+        </div>
+      </div>
+
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800">
+        <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+          Next Major Drop
+        </span>
+        <div class="truncate">
+          <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate block">
+            {stats.nextMajorSaleName}
+          </span>
+          <span class="text-[10px] text-sky-600 dark:text-sky-400 font-semibold">
+            {stats.nextMajorSaleDate}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter Bar & Live Search -->
+    <FilterTabs />
+
+    <!-- Active Now Section (If Any) -->
+    {activeSales.length > 0 && (
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            Doors Open Today (Active Now)
+          </h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {activeSales.map((sale) => (
+            <SaleCard sale={sale} />
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Upcoming Sales Grid -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>📅</span>
+          <span>Upcoming Warehouse &amp; Sample Sales</span>
+        </h2>
+        <span class="text-xs text-slate-500 dark:text-slate-400">
+          Chronological Order
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5" id="sales-grid">
+        {upcomingSales.map((sale) => (
+          <SaleCard sale={sale} />
+        ))}
+      </div>
+    </div>
+  </div>
+</PlatformLayout>

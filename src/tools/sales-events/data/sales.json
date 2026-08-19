@@ -1,0 +1,475 @@
+[
+  {
+    "id": "aritzia-warehouse-sale-2026",
+    "name": "Aritzia Annual Warehouse Sale",
+    "brand": "Aritzia",
+    "category": "fashion_apparel",
+    "startDate": "2026-08-27",
+    "endDate": "2026-09-01",
+    "status": "upcoming",
+    "discountRange": "50% - 70% Off",
+    "entryType": "free_walkin",
+    "venueName": "Vancouver Convention Centre (West Building)",
+    "venueAddress": "1055 Canada Place, Vancouver, BC V6C 0C3",
+    "hallDetails": "Exhibition Halls A & B (Underground Level)",
+    "municipality": "Vancouver",
+    "latitude": 49.2891,
+    "longitude": -123.1172,
+    "transitAccess": "3 min walk from Waterfront SkyTrain (Expo & Canada Line)",
+    "parkingInfo": "VCC West Parkade ($24 daily max) or Cordova Parkade",
+    "schedule": [
+      {
+        "date": "2026-08-27",
+        "dayOfWeek": "Thursday",
+        "openTime": "07:00",
+        "closeTime": "21:00",
+        "notes": "Opening Day - doors open early 7 AM"
+      },
+      {
+        "date": "2026-08-28",
+        "dayOfWeek": "Friday",
+        "openTime": "07:00",
+        "closeTime": "21:00",
+        "notes": "Major inventory restock"
+      },
+      {
+        "date": "2026-08-29",
+        "dayOfWeek": "Saturday",
+        "openTime": "07:00",
+        "closeTime": "21:00",
+        "notes": "Peak weekend crowds"
+      },
+      {
+        "date": "2026-08-30",
+        "dayOfWeek": "Sunday",
+        "openTime": "09:00",
+        "closeTime": "19:00",
+        "notes": "Further mid-sale markdowns"
+      },
+      {
+        "date": "2026-08-31",
+        "dayOfWeek": "Monday",
+        "openTime": "09:00",
+        "closeTime": "19:00",
+        "notes": "Labour Day Holiday - final deep reductions"
+      },
+      {
+        "date": "2026-09-01",
+        "dayOfWeek": "Tuesday",
+        "openTime": "09:00",
+        "closeTime": "18:00",
+        "notes": "Final Clearance - additional 20% off selected racks"
+      }
+    ],
+    "lineupAdvice": "Peak queues start at 5:30 AM on opening Thursday/Friday. For minimal wait, visit between 2:00 PM and 5:00 PM on weekday afternoons.",
+    "bagPolicy": "Strict bag check: No backpacks, large totes, or luggage permitted inside. Free mandatory coat & bag check available at entrance.",
+    "paymentPolicy": "credit_debit_only",
+    "fittingRoomInfo": "Communal fitting rooms only. Undergarments/base layers recommended for trying on over clothes.",
+    "returnPolicy": "Final sale on all merchandise. No refunds, returns, or price adjustments.",
+    "officialSourceUrl": "https://www.vancouverconventioncentre.com/events",
+    "featuredItems": [
+      "Wilfred Coats",
+      "Super Puff Parkas",
+      "Babaton Slacks",
+      "Denim Forum",
+      "Sunday Best"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  },
+  {
+    "id": "arcteryx-factory-outlet-sale",
+    "name": "Arc'teryx Factory Outlet Sale",
+    "brand": "Arc'teryx",
+    "category": "outdoor_gear",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-21",
+    "status": "upcoming",
+    "discountRange": "40% - 70% Off",
+    "entryType": "timed_ticket",
+    "ticketUrl": "https://outlet.arcteryx.com",
+    "venueName": "Arc'teryx Factory Store (Dollarton)",
+    "venueAddress": "2155 Dollarton Hwy, North Vancouver, BC V7H 3B8",
+    "hallDetails": "Main Warehouse & Outdoor Tent Compound",
+    "municipality": "North Vancouver",
+    "latitude": 49.3094,
+    "longitude": -123.0125,
+    "transitAccess": "Bus #212 or #214 from Phibbs Exchange (10 min ride)",
+    "parkingInfo": "Free on-site customer parking and overflow street parking along Riverside Dr",
+    "schedule": [
+      {
+        "date": "2026-09-18",
+        "dayOfWeek": "Friday",
+        "openTime": "09:00",
+        "closeTime": "20:00",
+        "notes": "Timed ticket slots (1h browsing windows)"
+      },
+      {
+        "date": "2026-09-19",
+        "dayOfWeek": "Saturday",
+        "openTime": "09:00",
+        "closeTime": "19:00",
+        "notes": "Morning inventory refresh"
+      },
+      {
+        "date": "2026-09-20",
+        "dayOfWeek": "Sunday",
+        "openTime": "10:00",
+        "closeTime": "18:00",
+        "notes": "Walk-in standby queue based on capacity"
+      },
+      {
+        "date": "2026-09-21",
+        "dayOfWeek": "Monday",
+        "openTime": "10:00",
+        "closeTime": "17:00",
+        "notes": "Final Day - sample prototypes & discontinued colorways"
+      }
+    ],
+    "lineupAdvice": "Reserve a free timed entry pass online 48 hours prior to skip the general standby line.",
+    "bagPolicy": "Small personal purses and fanny packs permitted. Large backpacks must be checked in vehicle.",
+    "paymentPolicy": "credit_debit_only",
+    "fittingRoomInfo": "Individual fitting cubicles available with 4-item limit per session.",
+    "returnPolicy": "All sales final. Factory second blemishes clearly marked on tags.",
+    "officialSourceUrl": "https://outlet.arcteryx.com/vancouver-factory-sale",
+    "featuredItems": [
+      "Beta AR GORE-TEX Shells",
+      "Atom Heavyweight Hoodies",
+      "Cerium Down Jackets",
+      "Norvan Trail Running",
+      "Gamma Softshell Pants"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  },
+  {
+    "id": "herschel-sample-sale",
+    "name": "Herschel Supply Co. Sample Sale",
+    "brand": "Herschel Supply Co.",
+    "category": "fashion_apparel",
+    "startDate": "2026-10-03",
+    "endDate": "2026-10-05",
+    "status": "upcoming",
+    "discountRange": "50% - 80% Off",
+    "entryType": "free_walkin",
+    "venueName": "Heritage Hall (Main Street)",
+    "venueAddress": "3102 Main St, Vancouver, BC V5T 3G7",
+    "hallDetails": "Grand Ballroom Level",
+    "municipality": "Vancouver",
+    "latitude": 49.2575,
+    "longitude": -123.1009,
+    "transitAccess": "Bus #3 (Main St) or #9 / #99 B-Line (Broadway) 5 min walk",
+    "parkingInfo": "Metered street parking along Main St & East 15th Ave",
+    "schedule": [
+      {
+        "date": "2026-10-03",
+        "dayOfWeek": "Saturday",
+        "openTime": "10:00",
+        "closeTime": "18:00",
+        "notes": "Opening morning - large luggage & travel gear drop"
+      },
+      {
+        "date": "2026-10-04",
+        "dayOfWeek": "Sunday",
+        "openTime": "10:00",
+        "closeTime": "17:00",
+        "notes": "Backpack & accessory restock"
+      },
+      {
+        "date": "2026-10-05",
+        "dayOfWeek": "Monday",
+        "openTime": "11:00",
+        "closeTime": "16:00",
+        "notes": "Final Day - bundle deals (Buy 2 Get 1 Free)"
+      }
+    ],
+    "lineupAdvice": "Morning lineup along East 15th Ave moves quickly. Arrive around 11:30 AM for steady entry without peak queues.",
+    "bagPolicy": "Clear bags provided at entrance for shopping. Personal backpacks tagged upon arrival.",
+    "paymentPolicy": "credit_debit_only",
+    "fittingRoomInfo": "No apparel fitting rooms. Outerwear mirror stations only.",
+    "returnPolicy": "Final sale on all backpacks, luggage, and apparel.",
+    "officialSourceUrl": "https://heritagehall.bc.ca/events-calendar",
+    "featuredItems": [
+      "Little America Backpacks",
+      "Trade Hard-Shell Luggage",
+      "Novel Duffle Bags",
+      "Tech Daypacks",
+      "Apparel & Headwear"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  },
+  {
+    "id": "vancouver-ski-snowboard-swap",
+    "name": "Vancouver Ski & Snowboard Swap",
+    "brand": "Canadian Ski Patrol (CSP)",
+    "category": "outdoor_gear",
+    "startDate": "2026-10-17",
+    "endDate": "2026-10-19",
+    "status": "upcoming",
+    "discountRange": "30% - 70% Off",
+    "entryType": "paid_vip",
+    "ticketUrl": "https://vancouverskiswap.com",
+    "venueName": "PNE Forum",
+    "venueAddress": "2901 E Hastings St, Vancouver, BC V5K 5J1",
+    "hallDetails": "PNE Forum Main Arena",
+    "municipality": "Vancouver",
+    "latitude": 49.2842,
+    "longitude": -123.0425,
+    "transitAccess": "Bus #14, #16, or R5 RapidBus directly to Hastings at Renfrew",
+    "parkingInfo": "PNE Lot 6 ($15 event flat rate) or neighborhood residential zones",
+    "schedule": [
+      {
+        "date": "2026-10-17",
+        "dayOfWeek": "Saturday",
+        "openTime": "09:00",
+        "closeTime": "17:00",
+        "notes": "$5 Early Bird Admission supports volunteer Ski Patrol"
+      },
+      {
+        "date": "2026-10-18",
+        "dayOfWeek": "Sunday",
+        "openTime": "10:00",
+        "closeTime": "16:00",
+        "notes": "Consignment price markdowns (25% off tagged prices)"
+      },
+      {
+        "date": "2026-10-19",
+        "dayOfWeek": "Monday",
+        "openTime": "10:00",
+        "closeTime": "14:00",
+        "notes": "Final Clearance & uncollected gear return"
+      }
+    ],
+    "lineupAdvice": "Early Saturday ticket holders get first pick of freshly certified ski and snowboard bindings. On-site certified technicians adjust DIN settings.",
+    "bagPolicy": "Skis and poles must be checked at the safety gear staging rack upon entry.",
+    "paymentPolicy": "all_payments",
+    "fittingRoomInfo": "Boot fitting benches with certified boot fitters on site.",
+    "returnPolicy": "All gear sold AS-IS inspected by Canadian Ski Patrol safety team. Final sale.",
+    "officialSourceUrl": "https://www.pne.ca/events",
+    "featuredItems": [
+      "All-Mountain Skis",
+      "Freeride Snowboards",
+      "GORE-TEX Snow Jackets",
+      "Ski & Snowboard Boots",
+      "Youth Winter Packages"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  },
+  {
+    "id": "vandusen-fall-plant-sale",
+    "name": "VanDusen Botanical Garden Fall Plant Sale",
+    "brand": "VanDusen Botanical Garden",
+    "category": "home_garden",
+    "startDate": "2026-09-13",
+    "endDate": "2026-09-13",
+    "status": "upcoming",
+    "discountRange": "20% - 50% Off",
+    "entryType": "free_walkin",
+    "venueName": "VanDusen Botanical Garden (Floral Hall)",
+    "venueAddress": "5251 Oak St, Vancouver, BC V6M 4H1",
+    "hallDetails": "Floral Hall & Garden Courtyard",
+    "municipality": "Vancouver",
+    "latitude": 49.2396,
+    "longitude": -123.1293,
+    "transitAccess": "Bus #17 (Oak St at West 37th Ave) directly at entrance",
+    "parkingInfo": "Free visitor parking lot on West 37th Ave (limited capacity during sale)",
+    "schedule": [
+      {
+        "date": "2026-09-13",
+        "dayOfWeek": "Sunday",
+        "openTime": "10:00",
+        "closeTime": "16:00",
+        "notes": "One day only - master gardeners on site for consultation"
+      }
+    ],
+    "lineupAdvice": "Arrive with your own wagon or transport box. Lineup begins at 9:15 AM at the Floral Hall gate.",
+    "bagPolicy": "Bring your own cardboard boxes, plastic flats, or garden wagons.",
+    "paymentPolicy": "all_payments",
+    "fittingRoomInfo": "Not applicable (plant holding area available while shopping).",
+    "returnPolicy": "Living plant material is final sale.",
+    "officialSourceUrl": "https://vandusengarden.org/events",
+    "featuredItems": [
+      "Pacific Northwest Perennials",
+      "Spring Flowering Bulbs",
+      "Rare Rhododendrons",
+      "Native Ferns",
+      "Artisanal Organic Compost"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  },
+  {
+    "id": "duer-denim-pop-up-sale",
+    "name": "DUER Performance Denim Pop-up Warehouse Sale",
+    "brand": "DUER",
+    "category": "fashion_apparel",
+    "startDate": "2026-11-07",
+    "endDate": "2026-11-09",
+    "status": "upcoming",
+    "discountRange": "40% - 65% Off",
+    "entryType": "free_walkin",
+    "venueName": "Croatian Cultural Centre",
+    "venueAddress": "3250 Commercial Dr, Vancouver, BC V5N 4E4",
+    "hallDetails": "Room B & Exhibition Hall",
+    "municipality": "Vancouver",
+    "latitude": 49.2562,
+    "longitude": -123.0694,
+    "transitAccess": "5 min walk from Commercial-Broadway SkyTrain Station",
+    "parkingInfo": "Free spacious on-site parking lot behind the cultural centre",
+    "schedule": [
+      {
+        "date": "2026-11-07",
+        "dayOfWeek": "Saturday",
+        "openTime": "10:00",
+        "closeTime": "18:00",
+        "notes": "First pick of stretch denim & performance trousers"
+      },
+      {
+        "date": "2026-11-08",
+        "dayOfWeek": "Sunday",
+        "openTime": "11:00",
+        "closeTime": "17:00",
+        "notes": "Mid-sale restock of commuter joggers & jackets"
+      },
+      {
+        "date": "2026-11-09",
+        "dayOfWeek": "Monday",
+        "openTime": "11:00",
+        "closeTime": "16:00",
+        "notes": "Final Day - 3 for $150 special bundle tables"
+      }
+    ],
+    "lineupAdvice": "Commercial-Broadway SkyTrain access makes transit the fastest way to arrive. Lines are brisk with minimal wait times.",
+    "bagPolicy": "Coat check available. Small personal bags allowed.",
+    "paymentPolicy": "credit_debit_only",
+    "fittingRoomInfo": "Individual fitting cubicles with mirror corridor.",
+    "returnPolicy": "Final sale on all warehouse and sample stock.",
+    "officialSourceUrl": "https://croatiancentre.com/events",
+    "featuredItems": [
+      "No Sweat Pants",
+      "Performance Denim Jeans",
+      "Live Lite Commuter Shorts",
+      "Stay Dry Jackets",
+      "Merino Technical Tops"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  },
+  {
+    "id": "le-creuset-factory-sale",
+    "name": "Le Creuset Factory-to-Table Clearance",
+    "brand": "Le Creuset",
+    "category": "home_garden",
+    "startDate": "2026-10-23",
+    "endDate": "2026-10-26",
+    "status": "upcoming",
+    "discountRange": "40% - 60% Off",
+    "entryType": "timed_ticket",
+    "ticketUrl": "https://www.lecreuset.ca",
+    "venueName": "Vancouver Convention Centre (East Building)",
+    "venueAddress": "999 Canada Place, Vancouver, BC V6C 3T4",
+    "hallDetails": "East Exhibition Hall B",
+    "municipality": "Vancouver",
+    "latitude": 49.2885,
+    "longitude": -123.1119,
+    "transitAccess": "3 min walk from Waterfront SkyTrain Station",
+    "parkingInfo": "Canada Place underground parking ($26 daily maximum)",
+    "schedule": [
+      {
+        "date": "2026-10-23",
+        "dayOfWeek": "Friday",
+        "openTime": "10:00",
+        "closeTime": "19:00",
+        "notes": "VIP mystery box sessions (ticketed)"
+      },
+      {
+        "date": "2026-10-24",
+        "dayOfWeek": "Saturday",
+        "openTime": "09:00",
+        "closeTime": "19:00",
+        "notes": "Cast iron, stoneware & enameled cookware"
+      },
+      {
+        "date": "2026-10-25",
+        "dayOfWeek": "Sunday",
+        "openTime": "10:00",
+        "closeTime": "18:00",
+        "notes": "Specialty Dutch oven colorways & bakers"
+      },
+      {
+        "date": "2026-10-26",
+        "dayOfWeek": "Monday",
+        "openTime": "10:00",
+        "closeTime": "15:00",
+        "notes": "Final Day - deep stoneware discounts"
+      }
+    ],
+    "lineupAdvice": "Ticketed time slots ensure zero outdoor queue. Have your digital barcode ready at the East Building entrance.",
+    "bagPolicy": "Heavy-duty shopping carts provided. Heavy items delivered to loading staging area.",
+    "paymentPolicy": "credit_debit_only",
+    "fittingRoomInfo": "Not applicable.",
+    "returnPolicy": "All cast iron and stoneware sales final. First-quality and factory seconds clearly designated.",
+    "officialSourceUrl": "https://www.vancouverconventioncentre.com/events",
+    "featuredItems": [
+      "Round French Ovens (5.3L)",
+      "Signature Skillets",
+      "Heritage Stoneware Casseroles",
+      "Enameled Tea Kettles",
+      "Silicone Kitchen Utensils"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  },
+  {
+    "id": "mec-vancouver-gear-swap",
+    "name": "MEC Vancouver Annual Snow & Bike Gear Swap",
+    "brand": "MEC (Mountain Equipment Company)",
+    "category": "outdoor_gear",
+    "startDate": "2026-09-26",
+    "endDate": "2026-09-27",
+    "status": "upcoming",
+    "discountRange": "40% - 75% Off",
+    "entryType": "free_walkin",
+    "venueName": "MEC Vancouver Flagship (Olympic Village)",
+    "venueAddress": "111 E 2nd Ave, Vancouver, BC V5T 1B4",
+    "hallDetails": "Rooftop Deck & Community Multi-Purpose Room",
+    "municipality": "Vancouver",
+    "latitude": 49.2697,
+    "longitude": -123.1039,
+    "transitAccess": "5 min walk from Main St-Science World or Olympic Village SkyTrain",
+    "parkingInfo": "Underground customer parking at MEC (1h free with purchase)",
+    "schedule": [
+      {
+        "date": "2026-09-26",
+        "dayOfWeek": "Saturday",
+        "openTime": "09:00",
+        "closeTime": "17:00",
+        "notes": "Member consignment drop & primary gear swap"
+      },
+      {
+        "date": "2026-09-27",
+        "dayOfWeek": "Sunday",
+        "openTime": "10:00",
+        "closeTime": "16:00",
+        "notes": "Final markdowns & sample clearance tables"
+      }
+    ],
+    "lineupAdvice": "Queue forms on the 2nd Ave ramp before 8:30 AM. Bike racks are plentiful outside the entrance.",
+    "bagPolicy": "Shopping bags provided. Used gear brought for trade-in must be tagged at ground desk.",
+    "paymentPolicy": "all_payments",
+    "fittingRoomInfo": "Store fitting rooms available on 1st & 2nd floors.",
+    "returnPolicy": "Gear swap consignment items are final sale.",
+    "officialSourceUrl": "https://www.mec.ca/en/stores/vancouver",
+    "featuredItems": [
+      "Touring & Gravel Bikes",
+      "GORE-TEX Mountaineering Shells",
+      "4-Season Tents",
+      "Down Sleeping Bags",
+      "Climbing Harnesses & Hardware"
+    ],
+    "lastUpdated": "2026-08-19T16:12:09.647Z",
+    "isStale": false
+  }
+]

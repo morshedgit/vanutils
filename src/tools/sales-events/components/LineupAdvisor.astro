@@ -1,0 +1,61 @@
+---
+import type { SalesEvent } from '../types';
+
+interface Props {
+  sale: SalesEvent;
+}
+
+const { sale } = Astro.props;
+---
+
+<div class="p-4 sm:p-5 rounded-2xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 space-y-3">
+  <div class="flex items-center gap-2">
+    <span class="text-lg">⏱️</span>
+    <h3 class="text-sm sm:text-base font-bold text-amber-900 dark:text-amber-200">
+      Lineup Radar &amp; Venue Guidelines
+    </h3>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+    <!-- Queue Advice -->
+    <div class="p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-500/10 space-y-1">
+      <span class="font-bold text-amber-800 dark:text-amber-300 block text-[11px] uppercase tracking-wider">
+        Queue Dynamics
+      </span>
+      <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+        {sale.lineupAdvice}
+      </p>
+    </div>
+
+    <!-- Bag & Entry Policy -->
+    <div class="p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-500/10 space-y-1">
+      <span class="font-bold text-amber-800 dark:text-amber-300 block text-[11px] uppercase tracking-wider">
+        Bag &amp; Stroller Policy
+      </span>
+      <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+        {sale.bagPolicy}
+      </p>
+    </div>
+
+    <!-- Fitting Rooms -->
+    <div class="p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-500/10 space-y-1">
+      <span class="font-bold text-amber-800 dark:text-amber-300 block text-[11px] uppercase tracking-wider">
+        Fitting Rooms
+      </span>
+      <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+        {sale.fittingRoomInfo}
+      </p>
+    </div>
+
+    <!-- Payment & Returns -->
+    <div class="p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-500/10 space-y-1">
+      <span class="font-bold text-amber-800 dark:text-amber-300 block text-[11px] uppercase tracking-wider">
+        Payment &amp; Final Sale Policy
+      </span>
+      <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+        {sale.paymentPolicy === 'credit_debit_only' ? 'Credit & Debit ONLY (Cash not accepted).' : 'All standard payment methods accepted.'}
+        {' '}{sale.returnPolicy}
+      </p>
+    </div>
+  </div>
+</div>

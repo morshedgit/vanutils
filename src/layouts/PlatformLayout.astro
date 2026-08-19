@@ -25,7 +25,7 @@ const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanhea
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en-CA" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,7 +34,17 @@ const resolvedCanonical = canonicalUrl || (currentPath === '/' ? 'https://vanhea
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="canonical" href={resolvedCanonical} />
+    <link rel="alternate" href={resolvedCanonical} hreflang="en-CA" />
     <meta name="theme-color" content="#0284c7" />
+
+    <!-- Search Engine & Robot Indexing Directives -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Local Geographic Grounding (Vancouver / BC / Canada) -->
+    <meta name="geo.region" content="CA-BC" />
+    <meta name="geo.placename" content="Vancouver" />
+    <meta name="geo.position" content="49.2827;-123.1207" />
+    <meta name="ICBM" content="49.2827, -123.1207" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
