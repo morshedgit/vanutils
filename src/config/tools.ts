@@ -87,7 +87,7 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     ],
   },
 
-  // --- ROW 2: EMERGENCY CARE & MOBILITY ---
+  // --- ROW 2: EMERGENCY CARE, DEALS & MOBILITY ---
   {
     id: 'health-wait-times',
     name: 'ER & Urgent Care Radar',
@@ -107,6 +107,27 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Total Time to Care (Drive + Wait) calculator',
       'Clinical ER vs. UPCC triage selector',
       '11 Hospital ERs & 9 Urgent Care Centres',
+    ],
+  },
+  {
+    id: 'sales-events',
+    name: 'Warehouse & Sample Sales',
+    shortDescription: 'Verified Metro Vancouver warehouse sales, brand sample pop-ups, outdoor gear swaps & line-up advice.',
+    path: '/sales',
+    icon: 'sparkles',
+    category: 'daily_living',
+    status: 'active',
+    badgeText: 'Sales Radar',
+    previewStat: {
+      value: 'Up to 80%',
+      label: 'Off MSRP Deals',
+      statusType: 'safe',
+    },
+    features: [
+      '100% verified authentic in-person sales',
+      'Historical queue & peak line-up advice',
+      '1-Tap Google & Apple .ics calendar export',
+      'Bag check rules & fitting room intelligence',
     ],
   },
   {
@@ -151,6 +172,8 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Metro Vancouver wildfire smoke alerts',
     ],
   },
+
+  // --- ROW 3: OUTDOORS, RECREATION & LOCAL NEWS ---
   {
     id: 'mountain-snow',
     name: 'Mountain Snow Line',
@@ -172,8 +195,6 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       '12h/24h snow stake accumulations',
     ],
   },
-
-  // --- ROW 3: OUTDOORS, RECREATION & REAL ESTATE ---
   {
     id: 'can-i-swim',
     name: 'Can I Swim?',
@@ -237,6 +258,8 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'Direct citations to primary public sources',
     ],
   },
+
+  // --- ROW 4: HOUSING, COMMUNITY & CIVIC ---
   {
     id: 'housing-market',
     name: 'Real Estate & Rental Pulse',
@@ -256,29 +279,6 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
       'MLS® HPI Condo, Townhouse & Detached indices',
       'CMHC median rental prices & vacancy rates',
       'Bank of Canada policy rate & payment calculator',
-    ],
-  },
-
-  // --- ROW 4: COMMUNITY, DEALS & CIVIC (PERFECT 4x4 GRID) ---
-  {
-    id: 'sales-events',
-    name: 'Warehouse & Sample Sales',
-    shortDescription: 'Verified Metro Vancouver warehouse sales, brand sample pop-ups, outdoor gear swaps & line-up advice.',
-    path: '/sales',
-    icon: 'sparkles',
-    category: 'daily_living',
-    status: 'active',
-    badgeText: 'Sales Radar',
-    previewStat: {
-      value: 'Up to 80%',
-      label: 'Off MSRP Deals',
-      statusType: 'safe',
-    },
-    features: [
-      '100% verified authentic in-person sales',
-      'Historical queue & peak line-up advice',
-      '1-Tap Google & Apple .ics calendar export',
-      'Bag check rules & fitting room intelligence',
     ],
   },
   {
