@@ -51,6 +51,9 @@ const websiteSchema = [
 >
   <JsonLd schema={websiteSchema} />
 
+  <!-- Semantic, Accessible H1 for SEO/GEO Grounding & Document Hierarchy -->
+  <h1 class="sr-only">Metro Vancouver Live Civic Pulse & Real-Time Public Telemetry</h1>
+
   <div class="w-full space-y-2.5">
     <!-- Active Breaking News & Emergency Alerts -->
     {alerts.length > 0 && <BreakingAlertBanner alerts={alerts} />}
