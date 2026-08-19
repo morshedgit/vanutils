@@ -17,8 +17,11 @@ import { getLiveWeather } from '../tools/weather-forecast/services/weatherServic
 import { getLiveSportsTeams } from '../tools/sports-teams/services/sportsTeamsService';
 import { getLiveSalesEvents } from '../tools/sales-events/services/salesService';
 
-export const GET: APIRoute = async () => {
-  const baseUrl = 'https://vanheartbeat.ca';
+export const GET: APIRoute = async ({ request }) => {
+  const reqUrl = new URL(request.url);
+  const host = reqUrl.host;
+  const protocol = reqUrl.protocol;
+  const baseUrl = host ? `${protocol}//${host}` : 'https://vanheartbeat.com';
   const now = new Date().toISOString();
 
   // 1. Static Root & Tool Hub Routes
