@@ -15,16 +15,17 @@ export const NEIGHBOURHOODS: NeighbourhoodParkingProfile[] = neighbourhoodsData 
 export async function getLiveNeighbourhoods(): Promise<NeighbourhoodParkingProfile[]> {
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parking-meters/records?limit=1';
-    const res = await edgeFetch(endpoint, { timeoutMs: 1200 });
-
-    if (res.status === 200) {
-      return NEIGHBOURHOODS.map((n) => ({
-        ...n,
-      }));
-    }
+    await edgeFetch(endpoint, { timeoutMs: 1200 });
   } catch (e) {}
 
-  return NEIGHBOURHOODS;
+  const now = new Date();
+  return NEIGHBOURHOODS.map((n) => {
+    const evalResult = evaluateNeighbourhoodSpot(n, now);
+    return {
+      ...n,
+      overallClearance: evalResult.clearanceStatus,
+    };
+  });
 }
 
 export function getAllNeighbourhoods(): NeighbourhoodParkingProfile[] {

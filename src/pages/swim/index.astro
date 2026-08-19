@@ -3,12 +3,12 @@ import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
 import BeachCard from '../../tools/can-i-swim/components/BeachCard.astro';
 import FilterBar from '../../tools/can-i-swim/components/FilterBar.astro';
-import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
+import { getLiveBeaches } from '../../tools/can-i-swim/services/vchScraper';
 
 // Set Edge Cache header: 10 min max age, 30 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
-const beaches = getAllBeaches();
+const beaches = await getLiveBeaches();
 
 const swimSchema = [
   {

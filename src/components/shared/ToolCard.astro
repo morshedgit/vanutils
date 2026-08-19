@@ -1,9 +1,9 @@
 ---
 import type { ToolMeta } from '../../types/shared';
-import { getAllBeaches } from '../../tools/can-i-swim/services/vchScraper';
+import { getLiveBeaches } from '../../tools/can-i-swim/services/vchScraper';
 import { getLiveRoutes } from '../../tools/bc-ferries/services/ferryService';
 import { getLiveMountains } from '../../tools/mountain-snow/services/snowService';
-import { getAllNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/carshare-parking/services/parkingEvaluator';
+import { getLiveNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/carshare-parking/services/parkingEvaluator';
 import { getLiveFacilities, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
 import { getLiveCrossings } from '../../tools/bridge-traffic/services/bridgeService';
 import { getLiveStations } from '../../tools/air-quality/services/airQualityService';
@@ -24,7 +24,7 @@ interface Props {
 const { tool } = Astro.props;
 
 // Fetch live telemetry for high-density listings at the edge
-const allBeaches = tool.id === 'can-i-swim' ? getAllBeaches() : [];
+const allBeaches = tool.id === 'can-i-swim' ? await getLiveBeaches() : [];
 const initialBeaches = allBeaches.slice(0, 4);
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const cautionBeachesCount = allBeaches.filter((b) => b.currentStatus === 'caution').length;
@@ -40,7 +40,7 @@ const avgFreezingLevel = allMountains.length > 0
   : 3500;
 const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Summer)` : `${avgFreezingLevel}m FZ`;
 
-const allNeighbourhoods = tool.id === 'evo-parking' ? getAllNeighbourhoods() : [];
+const allNeighbourhoods = tool.id === 'evo-parking' ? await getLiveNeighbourhoods() : [];
 const initialNeighbourhoods = allNeighbourhoods.slice(0, 4);
 
 const allFacilities = tool.id === 'health-wait-times' ? await getLiveFacilities() : [];

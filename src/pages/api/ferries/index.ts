@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getAllRoutes } from '../../../tools/bc-ferries/services/ferryService';
+import { getLiveRoutes } from '../../../tools/bc-ferries/services/ferryService';
 import type { RouteCategory, FerryProvider } from '../../../tools/bc-ferries/types';
 
 export const prerender = false;
@@ -10,7 +10,7 @@ export const GET: APIRoute = async ({ request }) => {
   const category = url.searchParams.get('category') as RouteCategory | null;
   const search = url.searchParams.get('search')?.toLowerCase();
 
-  let routes = getAllRoutes();
+  let routes = await getLiveRoutes();
 
   if (provider) {
     routes = routes.filter((r) => r.provider === provider);

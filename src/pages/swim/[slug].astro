@@ -3,7 +3,7 @@ import PlatformLayout from '../../layouts/PlatformLayout.astro';
 import StatusBadge from '../../components/shared/StatusBadge.astro';
 import Sparkline from '../../tools/can-i-swim/components/Sparkline.astro';
 import SafetyLegend from '../../tools/can-i-swim/components/SafetyLegend.astro';
-import { getBeachById, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
+import { getLiveBeaches, getBeachById, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
 import { getStatusMeta } from '../../tools/can-i-swim/services/healthCalc';
 import JsonLd from '../../components/shared/JsonLd.astro';
 
@@ -11,7 +11,8 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
 const { slug } = Astro.params;
-const beach = getBeachById(slug || '');
+const allBeaches = await getLiveBeaches();
+const beach = getBeachById(slug || '', allBeaches);
 
 if (!beach) {
   return Astro.redirect('/swim');

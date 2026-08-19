@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getAllMountains } from '../../../tools/mountain-snow/services/snowService';
+import { getLiveMountains } from '../../../tools/mountain-snow/services/snowService';
 import type { MountainRegion } from '../../../tools/mountain-snow/types';
 
 export const prerender = false;
@@ -9,7 +9,7 @@ export const GET: APIRoute = async ({ request }) => {
   const region = url.searchParams.get('region') as MountainRegion | null;
   const search = url.searchParams.get('search')?.toLowerCase();
 
-  let mountains = getAllMountains();
+  let mountains = await getLiveMountains();
 
   if (region && region !== 'all') {
     mountains = mountains.filter((m) => m.region === region);

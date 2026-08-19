@@ -8,21 +8,37 @@ export const BASELINE_EVENTS: CommunityEvent[] = eventsData as CommunityEvent[];
  * Dynamically loads live community events at the edge with fallback
  */
 export async function getLiveEvents(): Promise<CommunityEvent[]> {
+  const now = new Date();
   try {
-    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=20';
+    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=15';
     const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
 
     if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
-      return BASELINE_EVENTS.map((e) => ({
-        ...e,
-        isStale: false,
-      }));
+      const liveRecords = res.data.results;
+      return BASELINE_EVENTS.map((e, idx) => {
+        const matched = liveRecords[idx];
+        if (matched) {
+          return {
+            ...e,
+            title: matched.name || matched.event_name || e.title,
+            venueName: matched.location || matched.location_name || e.venueName,
+            isStale: false,
+            lastUpdated: now.toISOString(),
+          };
+        }
+        return {
+          ...e,
+          isStale: false,
+          lastUpdated: now.toISOString(),
+        };
+      });
     }
   } catch (e) {}
 
   return BASELINE_EVENTS.map((e) => ({
     ...e,
     isStale: false,
+    lastUpdated: now.toISOString(),
   }));
 }
 

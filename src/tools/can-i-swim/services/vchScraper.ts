@@ -11,15 +11,43 @@ export const BEACHES: Beach[] = beachesData as Beach[];
  */
 export async function getLiveBeaches(): Promise<Beach[]> {
   try {
-    const endpoint = 'https://gis.metrovancouver.org/arcgis/rest/services/Hosted/Beach_Site/FeatureServer/8/query?where=1%3D1&outFields=*&f=json&outSR=4326';
-    const res = await edgeFetch<{ features: Array<{ attributes: Record<string, any> }> }>(endpoint, { timeoutMs: 1200 });
+    const endpoint =
+      'https://gis.metrovancouver.org/arcgis/rest/services/Hosted/Beach_Site/FeatureServer/8/query?where=1%3D1&outFields=*&f=json&outSR=4326';
+    const res = await edgeFetch<{
+      features: Array<{ attributes: Record<string, any>; geometry?: { x: number; y: number } }>;
+    }>(endpoint, { timeoutMs: 1200 });
 
     if (res.data && Array.isArray(res.data.features) && res.data.features.length > 0) {
-      // Successfully reached ArcGIS live endpoint
-      return BEACHES.map((b) => ({
-        ...b,
-        isStale: false,
-      }));
+      const liveFeatures = res.data.features;
+      return BEACHES.map((b) => {
+        const matched = liveFeatures.find((f) => {
+          const siteName = (f.attributes?.Site_Name || f.attributes?.SiteName || f.attributes?.Name || '').toLowerCase();
+          return siteName.includes(b.name.toLowerCase()) || b.name.toLowerCase().includes(siteName);
+        });
+
+        if (matched) {
+          const attr = matched.attributes;
+          const eColi = typeof attr.EColi === 'number' ? attr.EColi : b.latestSample.eColiCount;
+          let status: 'safe' | 'caution' | 'advisory' = 'safe';
+          if (eColi > 400) status = 'advisory';
+          else if (eColi > 200) status = 'caution';
+
+          return {
+            ...b,
+            currentStatus: status,
+            latestSample: {
+              ...b.latestSample,
+              eColiCount: eColi,
+            },
+            isStale: false,
+          };
+        }
+
+        return {
+          ...b,
+          isStale: false,
+        };
+      });
     }
   } catch (e) {}
 

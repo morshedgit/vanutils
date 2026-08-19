@@ -8,20 +8,49 @@ export const BASELINE_FACILITIES: HealthcareFacility[] = facilitiesData as Healt
  * Dynamically fetches live hospital emergency wait times at the edge with fallback
  */
 export async function getLiveFacilities(): Promise<HealthcareFacility[]> {
+  const now = new Date();
+  const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
+  const vancouverDate = new Date(vancouverTimeString);
+  const hour = vancouverDate.getHours();
+
   try {
-    const res = await edgeFetch('https://edwaittimes.ca/api/facilities', { timeoutMs: 1200 });
+    const res = await edgeFetch<any[]>('https://edwaittimes.ca/api/facilities', { timeoutMs: 1200 });
     if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-      return BASELINE_FACILITIES.map((f) => ({
-        ...f,
-        isStale: false,
-      }));
+      const liveData = res.data;
+      return BASELINE_FACILITIES.map((f) => {
+        const matched = liveData.find((ld: any) => ld.name?.toLowerCase().includes(f.name.toLowerCase()) || ld.id === f.id);
+        const currentWait = matched && typeof matched.waitTimeMinutes === 'number' ? matched.waitTimeMinutes : f.triageData?.waitTimeMinutes;
+        const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
+
+        return {
+          ...f,
+          triageData: f.triageData && currentWait !== undefined
+            ? {
+                ...f.triageData,
+                waitTimeMinutes: currentWait,
+                lastUpdated: now.toISOString(),
+                isStale: false,
+              }
+            : f.triageData,
+          hours: {
+            ...f.hours,
+            isCurrentlyOpen: isOpen,
+          },
+        };
+      });
     }
   } catch (e) {}
 
-  return BASELINE_FACILITIES.map((f) => ({
-    ...f,
-    isStale: false,
-  }));
+  return BASELINE_FACILITIES.map((f) => {
+    const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
+    return {
+      ...f,
+      hours: {
+        ...f.hours,
+        isCurrentlyOpen: isOpen,
+      },
+    };
+  });
 }
 
 export function getAllFacilities(): HealthcareFacility[] {
