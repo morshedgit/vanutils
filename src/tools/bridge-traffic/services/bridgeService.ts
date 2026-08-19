@@ -138,10 +138,33 @@ export async function getLiveCrossings(): Promise<BridgeCrossing[]> {
       : c.counterflow;
 
     const incidents = liveIncidentsByCrossing[c.id] || c.activeIncidents || [];
+    const hasMajor = incidents.some((i) => i.severity === 'major');
+    const hasMinor = incidents.some((i) => i.severity === 'minor');
+
+    const incidentDelay = hasMajor ? 14 : (hasMinor ? 6 : 0);
+    const dynamicStatus: TrafficStatus = hasMajor ? 'heavy' : (hasMinor ? 'moderate' : c.directions.primary.status);
+
+    const primaryTraffic = {
+      ...c.directions.primary,
+      delayMinutes: c.directions.primary.delayMinutes + incidentDelay,
+      travelTimeMinutes: c.directions.primary.normalTimeMinutes + c.directions.primary.delayMinutes + incidentDelay,
+      status: dynamicStatus,
+    };
+
+    const reverseTraffic = {
+      ...c.directions.reverse,
+      delayMinutes: c.directions.reverse.delayMinutes + (hasMajor ? 8 : 0),
+      travelTimeMinutes: c.directions.reverse.normalTimeMinutes + c.directions.reverse.delayMinutes + (hasMajor ? 8 : 0),
+      status: hasMajor ? 'moderate' : c.directions.reverse.status,
+    };
 
     return {
       ...c,
       counterflow,
+      directions: {
+        primary: primaryTraffic,
+        reverse: reverseTraffic,
+      },
       activeIncidents: incidents,
       lastUpdated: nowIso,
     };

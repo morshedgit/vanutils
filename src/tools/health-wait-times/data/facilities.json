@@ -11,11 +11,11 @@
     "longitude": -123.0945,
     "phone": "(604) 874-1141",
     "triageData": {
-      "waitTimeMinutes": 75,
-      "patientCountWaiting": 8,
-      "patientCountTreating": 14,
+      "waitTimeMinutes": 83,
+      "patientCountWaiting": 7,
+      "patientCountTreating": 10,
       "intensity": "low",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-19T17:46:32.663Z",
       "isStale": false
     },
     "hours": {
@@ -49,11 +49,11 @@
     "longitude": -123.1298,
     "phone": "(604) 682-2344",
     "triageData": {
-      "waitTimeMinutes": 165,
-      "patientCountWaiting": 24,
-      "patientCountTreating": 38,
-      "intensity": "moderate",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "waitTimeMinutes": 86,
+      "patientCountWaiting": 7,
+      "patientCountTreating": 11,
+      "intensity": "low",
+      "lastUpdated": "2026-08-19T17:46:32.659Z",
       "isStale": false
     },
     "hours": {
@@ -86,11 +86,11 @@
     "longitude": -123.1245,
     "phone": "(604) 875-4111",
     "triageData": {
-      "waitTimeMinutes": 195,
-      "patientCountWaiting": 32,
-      "patientCountTreating": 54,
+      "waitTimeMinutes": 158,
+      "patientCountWaiting": 13,
+      "patientCountTreating": 20,
       "intensity": "moderate",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-19T17:46:32.658Z",
       "isStale": false
     },
     "hours": {
@@ -123,11 +123,11 @@
     "longitude": -123.1258,
     "phone": "(604) 875-2345",
     "triageData": {
-      "waitTimeMinutes": 120,
-      "patientCountWaiting": 16,
-      "patientCountTreating": 28,
+      "waitTimeMinutes": 117,
+      "patientCountWaiting": 10,
+      "patientCountTreating": 15,
       "intensity": "moderate",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-19T17:46:32.658Z",
       "isStale": false
     },
     "hours": {
@@ -160,11 +160,11 @@
     "longitude": -123.1294,
     "phone": "(604) 416-1811",
     "triageData": {
-      "waitTimeMinutes": 45,
-      "patientCountWaiting": 6,
-      "patientCountTreating": 12,
-      "intensity": "low",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "waitTimeMinutes": 241,
+      "patientCountWaiting": 20,
+      "patientCountTreating": 30,
+      "intensity": "high",
+      "lastUpdated": "2026-08-19T17:46:32.663Z",
       "isStale": false
     },
     "hours": {
@@ -199,11 +199,11 @@
     "longitude": -123.2458,
     "phone": "(604) 822-7121",
     "triageData": {
-      "waitTimeMinutes": 55,
-      "patientCountWaiting": 7,
+      "waitTimeMinutes": 110,
+      "patientCountWaiting": 9,
       "patientCountTreating": 14,
-      "intensity": "low",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "intensity": "moderate",
+      "lastUpdated": "2026-08-19T17:46:32.658Z",
       "isStale": false
     },
     "hours": {
@@ -239,11 +239,11 @@
     "longitude": -123.0678,
     "phone": "(604) 988-3131",
     "triageData": {
-      "waitTimeMinutes": 140,
-      "patientCountWaiting": 18,
-      "patientCountTreating": 30,
+      "waitTimeMinutes": 154,
+      "patientCountWaiting": 13,
+      "patientCountTreating": 19,
       "intensity": "moderate",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-19T17:46:32.663Z",
       "isStale": false
     },
     "hours": {
@@ -277,11 +277,11 @@
     "longitude": -123.1492,
     "phone": "(604) 278-9721",
     "triageData": {
-      "waitTimeMinutes": 150,
-      "patientCountWaiting": 20,
-      "patientCountTreating": 32,
+      "waitTimeMinutes": 175,
+      "patientCountWaiting": 15,
+      "patientCountTreating": 22,
       "intensity": "moderate",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-19T17:46:32.663Z",
       "isStale": false
     },
     "hours": {
@@ -317,7 +317,7 @@
       "patientCountWaiting": 26,
       "patientCountTreating": 40,
       "intensity": "moderate",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-17T17:00:03.472Z",
       "isStale": false
     },
     "hours": {
@@ -353,7 +353,7 @@
       "patientCountWaiting": 35,
       "patientCountTreating": 58,
       "intensity": "high",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-17T17:00:03.472Z",
       "isStale": false
     },
     "hours": {
@@ -391,7 +391,7 @@
       "patientCountWaiting": 42,
       "patientCountTreating": 65,
       "intensity": "high",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-17T17:00:03.472Z",
       "isStale": false
     },
     "hours": {
@@ -429,7 +429,7 @@
       "patientCountWaiting": 12,
       "patientCountTreating": 22,
       "intensity": "moderate",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-17T17:00:03.473Z",
       "isStale": false
     },
     "hours": {
@@ -465,7 +465,7 @@
       "patientCountWaiting": 5,
       "patientCountTreating": 10,
       "intensity": "low",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "lastUpdated": "2026-08-19T17:48:41.140Z",
       "isStale": false
     },
     "hours": {
@@ -500,11 +500,11 @@
     "longitude": -123.0812,
     "phone": "(604) 983-6700",
     "triageData": {
-      "waitTimeMinutes": 50,
-      "patientCountWaiting": 6,
-      "patientCountTreating": 12,
-      "intensity": "low",
-      "lastUpdated": "2026-08-19T17:07:37.881Z",
+      "waitTimeMinutes": 277,
+      "patientCountWaiting": 23,
+      "patientCountTreating": 35,
+      "intensity": "high",
+      "lastUpdated": "2026-08-19T17:46:32.663Z",
       "isStale": false
     },
     "hours": {

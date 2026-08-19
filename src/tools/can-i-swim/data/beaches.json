@@ -32,20 +32,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
+        "eColiCount": 18,
+        "singleSampleCount": 16,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 16,
-        "singleSampleCount": 14,
+        "eColiCount": 18,
+        "singleSampleCount": 16,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 17,
-        "singleSampleCount": 15,
+        "eColiCount": 18,
+        "singleSampleCount": 16,
         "status": "safe"
       },
       {
@@ -56,8 +56,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 19,
-        "singleSampleCount": 17,
+        "eColiCount": 18,
+        "singleSampleCount": 16,
         "status": "safe"
       }
     ]
@@ -95,20 +95,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 37,
-        "singleSampleCount": 42,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 40,
-        "singleSampleCount": 46,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
@@ -119,8 +119,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 43,
-        "singleSampleCount": 50,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       }
     ]
@@ -157,20 +157,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 17,
-        "singleSampleCount": 19,
+        "eColiCount": 22,
+        "singleSampleCount": 25,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 19,
-        "singleSampleCount": 22,
+        "eColiCount": 22,
+        "singleSampleCount": 25,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 21,
-        "singleSampleCount": 24,
+        "eColiCount": 22,
+        "singleSampleCount": 25,
         "status": "safe"
       },
       {
@@ -181,8 +181,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 23,
-        "singleSampleCount": 26,
+        "eColiCount": 22,
+        "singleSampleCount": 25,
         "status": "safe"
       }
     ]
@@ -220,20 +220,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 18,
-        "singleSampleCount": 15,
+        "eColiCount": 24,
+        "singleSampleCount": 20,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 21,
-        "singleSampleCount": 17,
+        "eColiCount": 24,
+        "singleSampleCount": 20,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 23,
-        "singleSampleCount": 19,
+        "eColiCount": 24,
+        "singleSampleCount": 20,
         "status": "safe"
       },
       {
@@ -244,8 +244,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 25,
-        "singleSampleCount": 21,
+        "eColiCount": 24,
+        "singleSampleCount": 20,
         "status": "safe"
       }
     ]
@@ -283,20 +283,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 24,
-        "singleSampleCount": 27,
+        "eColiCount": 32,
+        "singleSampleCount": 36,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 28,
-        "singleSampleCount": 31,
+        "eColiCount": 32,
+        "singleSampleCount": 36,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 31,
-        "singleSampleCount": 34,
+        "eColiCount": 32,
+        "singleSampleCount": 36,
         "status": "safe"
       },
       {
@@ -307,8 +307,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 33,
-        "singleSampleCount": 37,
+        "eColiCount": 32,
+        "singleSampleCount": 36,
         "status": "safe"
       }
     ]
@@ -345,20 +345,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 33,
-        "singleSampleCount": 36,
+        "eColiCount": 44,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
+        "eColiCount": 44,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 42,
-        "singleSampleCount": 46,
+        "eColiCount": 44,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
@@ -369,8 +369,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 45,
-        "singleSampleCount": 50,
+        "eColiCount": 44,
+        "singleSampleCount": 48,
         "status": "safe"
       }
     ]
@@ -408,20 +408,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 19,
-        "singleSampleCount": 21,
+        "eColiCount": 25,
+        "singleSampleCount": 28,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 22,
-        "singleSampleCount": 24,
+        "eColiCount": 25,
+        "singleSampleCount": 28,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 24,
-        "singleSampleCount": 27,
+        "eColiCount": 25,
+        "singleSampleCount": 28,
         "status": "safe"
       },
       {
@@ -432,8 +432,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 26,
-        "singleSampleCount": 29,
+        "eColiCount": 25,
+        "singleSampleCount": 28,
         "status": "safe"
       }
     ]
@@ -471,20 +471,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 26,
-        "singleSampleCount": 29,
+        "eColiCount": 35,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 31,
-        "singleSampleCount": 33,
+        "eColiCount": 35,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 33,
-        "singleSampleCount": 36,
+        "eColiCount": 35,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
@@ -495,8 +495,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 36,
-        "singleSampleCount": 39,
+        "eColiCount": 35,
+        "singleSampleCount": 38,
         "status": "safe"
       }
     ]
@@ -533,20 +533,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
+        "eColiCount": 14,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 12,
-        "singleSampleCount": 10,
+        "eColiCount": 14,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 13,
-        "singleSampleCount": 11,
+        "eColiCount": 14,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
@@ -595,20 +595,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
+        "eColiCount": 15,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 13,
-        "singleSampleCount": 10,
+        "eColiCount": 15,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 14,
-        "singleSampleCount": 11,
+        "eColiCount": 15,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
@@ -658,20 +658,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 29,
-        "singleSampleCount": 32,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 33,
-        "singleSampleCount": 37,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 36,
-        "singleSampleCount": 40,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       },
       {
@@ -682,8 +682,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 39,
-        "singleSampleCount": 43,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       }
     ]
@@ -720,20 +720,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 29,
-        "singleSampleCount": 32,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 33,
-        "singleSampleCount": 37,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 36,
-        "singleSampleCount": 40,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       },
       {
@@ -744,8 +744,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 39,
-        "singleSampleCount": 43,
+        "eColiCount": 38,
+        "singleSampleCount": 42,
         "status": "safe"
       }
     ]
@@ -782,20 +782,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 37,
-        "singleSampleCount": 42,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 40,
-        "singleSampleCount": 46,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       },
       {
@@ -806,8 +806,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 43,
-        "singleSampleCount": 50,
+        "eColiCount": 42,
+        "singleSampleCount": 48,
         "status": "safe"
       }
     ]
@@ -845,20 +845,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
+        "eColiCount": 45,
+        "singleSampleCount": 50,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 39,
-        "singleSampleCount": 44,
+        "eColiCount": 45,
+        "singleSampleCount": 50,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 43,
-        "singleSampleCount": 48,
+        "eColiCount": 45,
+        "singleSampleCount": 50,
         "status": "safe"
       },
       {
@@ -869,8 +869,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 46,
-        "singleSampleCount": 52,
+        "eColiCount": 45,
+        "singleSampleCount": 50,
         "status": "safe"
       }
     ]
@@ -908,20 +908,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 17,
-        "singleSampleCount": 14,
+        "eColiCount": 22,
+        "singleSampleCount": 19,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 19,
-        "singleSampleCount": 17,
+        "eColiCount": 22,
+        "singleSampleCount": 19,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 21,
-        "singleSampleCount": 18,
+        "eColiCount": 22,
+        "singleSampleCount": 19,
         "status": "safe"
       },
       {
@@ -932,8 +932,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 23,
-        "singleSampleCount": 20,
+        "eColiCount": 22,
+        "singleSampleCount": 19,
         "status": "safe"
       }
     ]
@@ -971,20 +971,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 20,
-        "singleSampleCount": 23,
+        "eColiCount": 26,
+        "singleSampleCount": 30,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 23,
-        "singleSampleCount": 26,
+        "eColiCount": 26,
+        "singleSampleCount": 30,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 25,
-        "singleSampleCount": 29,
+        "eColiCount": 26,
+        "singleSampleCount": 30,
         "status": "safe"
       },
       {
@@ -995,8 +995,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 27,
-        "singleSampleCount": 31,
+        "eColiCount": 26,
+        "singleSampleCount": 30,
         "status": "safe"
       }
     ]
@@ -1033,20 +1033,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 15,
-        "singleSampleCount": 17,
+        "eColiCount": 20,
+        "singleSampleCount": 22,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 17,
-        "singleSampleCount": 19,
+        "eColiCount": 20,
+        "singleSampleCount": 22,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 19,
-        "singleSampleCount": 21,
+        "eColiCount": 20,
+        "singleSampleCount": 22,
         "status": "safe"
       },
       {
@@ -1057,8 +1057,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 21,
-        "singleSampleCount": 23,
+        "eColiCount": 20,
+        "singleSampleCount": 22,
         "status": "safe"
       }
     ]
@@ -1095,20 +1095,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 21,
-        "singleSampleCount": 24,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 24,
-        "singleSampleCount": 28,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 27,
-        "singleSampleCount": 31,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       },
       {
@@ -1119,8 +1119,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 29,
-        "singleSampleCount": 33,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       }
     ]
@@ -1158,20 +1158,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 26,
-        "singleSampleCount": 29,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 30,
-        "singleSampleCount": 33,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
@@ -1182,8 +1182,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 35,
-        "singleSampleCount": 39,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       }
     ]
@@ -1220,14 +1220,14 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 8,
-        "singleSampleCount": 7,
+        "eColiCount": 11,
+        "singleSampleCount": 9,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 10,
-        "singleSampleCount": 8,
+        "eColiCount": 11,
+        "singleSampleCount": 9,
         "status": "safe"
       },
       {
@@ -1282,20 +1282,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 27,
-        "singleSampleCount": 34,
+        "eColiCount": 36,
+        "singleSampleCount": 45,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 31,
-        "singleSampleCount": 39,
+        "eColiCount": 36,
+        "singleSampleCount": 45,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 34,
-        "singleSampleCount": 43,
+        "eColiCount": 36,
+        "singleSampleCount": 45,
         "status": "safe"
       },
       {
@@ -1306,8 +1306,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 37,
-        "singleSampleCount": 46,
+        "eColiCount": 36,
+        "singleSampleCount": 45,
         "status": "safe"
       }
     ]
@@ -1344,20 +1344,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 24,
-        "singleSampleCount": 26,
+        "eColiCount": 32,
+        "singleSampleCount": 35,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 28,
-        "singleSampleCount": 31,
+        "eColiCount": 32,
+        "singleSampleCount": 35,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 31,
-        "singleSampleCount": 33,
+        "eColiCount": 32,
+        "singleSampleCount": 35,
         "status": "safe"
       },
       {
@@ -1368,8 +1368,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 33,
-        "singleSampleCount": 36,
+        "eColiCount": 32,
+        "singleSampleCount": 35,
         "status": "safe"
       }
     ]
@@ -1407,20 +1407,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 11,
-        "singleSampleCount": 11,
+        "eColiCount": 15,
+        "singleSampleCount": 14,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 13,
-        "singleSampleCount": 12,
+        "eColiCount": 15,
+        "singleSampleCount": 14,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 14,
-        "singleSampleCount": 13,
+        "eColiCount": 15,
+        "singleSampleCount": 14,
         "status": "safe"
       },
       {
@@ -1470,20 +1470,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 10,
-        "singleSampleCount": 9,
+        "eColiCount": 13,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 11,
-        "singleSampleCount": 10,
+        "eColiCount": 13,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 12,
-        "singleSampleCount": 11,
+        "eColiCount": 13,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
@@ -1533,32 +1533,32 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 107,
-        "singleSampleCount": 210,
-        "status": "safe"
+        "eColiCount": 142,
+        "singleSampleCount": 280,
+        "status": "caution"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 124,
-        "singleSampleCount": 244,
+        "eColiCount": 142,
+        "singleSampleCount": 280,
         "status": "caution"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 136,
-        "singleSampleCount": 268,
+        "eColiCount": 142,
+        "singleSampleCount": 280,
         "status": "caution"
       },
       {
         "date": "2026-08-08",
         "eColiCount": 142,
-        "singleSampleCount": 279,
+        "singleSampleCount": 280,
         "status": "caution"
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 147,
-        "singleSampleCount": 289,
+        "eColiCount": 142,
+        "singleSampleCount": 280,
         "status": "caution"
       }
     ]
@@ -1595,20 +1595,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 16,
-        "singleSampleCount": 14,
+        "eColiCount": 21,
+        "singleSampleCount": 18,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 18,
-        "singleSampleCount": 16,
+        "eColiCount": 21,
+        "singleSampleCount": 18,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 20,
-        "singleSampleCount": 17,
+        "eColiCount": 21,
+        "singleSampleCount": 18,
         "status": "safe"
       },
       {
@@ -1619,8 +1619,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 22,
-        "singleSampleCount": 19,
+        "eColiCount": 21,
+        "singleSampleCount": 18,
         "status": "safe"
       }
     ]
@@ -1657,20 +1657,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
+        "eColiCount": 14,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 12,
-        "singleSampleCount": 10,
+        "eColiCount": 14,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 13,
-        "singleSampleCount": 11,
+        "eColiCount": 14,
+        "singleSampleCount": 12,
         "status": "safe"
       },
       {
@@ -1719,20 +1719,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 21,
-        "singleSampleCount": 24,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 24,
-        "singleSampleCount": 28,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 27,
-        "singleSampleCount": 31,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       },
       {
@@ -1743,8 +1743,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 29,
-        "singleSampleCount": 33,
+        "eColiCount": 28,
+        "singleSampleCount": 32,
         "status": "safe"
       }
     ]
@@ -1782,20 +1782,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 26,
-        "singleSampleCount": 29,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 30,
-        "singleSampleCount": 33,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       },
       {
@@ -1806,8 +1806,8 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 35,
-        "singleSampleCount": 39,
+        "eColiCount": 34,
+        "singleSampleCount": 38,
         "status": "safe"
       }
     ]
@@ -1845,13 +1845,13 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 6,
+        "eColiCount": 8,
         "singleSampleCount": 6,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 7,
+        "eColiCount": 8,
         "singleSampleCount": 6,
         "status": "safe"
       },
@@ -1907,20 +1907,20 @@
     "historicalSamples": [
       {
         "date": "2026-07-18",
-        "eColiCount": 12,
-        "singleSampleCount": 11,
+        "eColiCount": 16,
+        "singleSampleCount": 15,
         "status": "safe"
       },
       {
         "date": "2026-07-25",
-        "eColiCount": 14,
-        "singleSampleCount": 13,
+        "eColiCount": 16,
+        "singleSampleCount": 15,
         "status": "safe"
       },
       {
         "date": "2026-08-01",
-        "eColiCount": 15,
-        "singleSampleCount": 14,
+        "eColiCount": 16,
+        "singleSampleCount": 15,
         "status": "safe"
       },
       {
@@ -1931,7 +1931,7 @@
       },
       {
         "date": "2026-08-14",
-        "eColiCount": 17,
+        "eColiCount": 16,
         "singleSampleCount": 15,
         "status": "safe"
       }

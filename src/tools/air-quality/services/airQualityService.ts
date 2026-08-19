@@ -17,30 +17,25 @@ export async function getLiveStations(): Promise<AirMonitoringStation[]> {
 
     if (res.data && res.data.current) {
       const curr = res.data.current;
-      const livePm25 = Math.round((curr.pm2_5 || 4.5) * 10) / 10;
-      const livePm10 = Math.round((curr.pm10 || 8.0) * 10) / 10;
-      const liveO3 = Math.round((curr.ozone || 25.0) * 10) / 10;
+      const livePm25 = Math.round((curr.pm2_5 || 8.4) * 10) / 10;
+      const liveO3 = Math.round((curr.ozone || 24.0) * 10) / 10;
       const liveNo2 = Math.round((curr.nitrogen_dioxide || 12.0) * 10) / 10;
 
-      // Calculate approximate AQHI index based on PM2.5
-      let computedAqhi = 2;
-      if (livePm25 > 60) computedAqhi = 8;
-      else if (livePm25 > 40) computedAqhi = 6;
-      else if (livePm25 > 25) computedAqhi = 4;
-      else if (livePm25 > 15) computedAqhi = 3;
+      // ECCC Canadian AQHI calculation
+      const termO3 = Math.exp(0.000537 * liveO3) - 1;
+      const termNO2 = Math.exp(0.000871 * liveNo2) - 1;
+      const termPM25 = Math.exp(0.000487 * livePm25) - 1;
+      const calculatedAqhi = Math.min(10, Math.max(1, Math.round((10 / 10.4) * 100 * (termO3 + termNO2 + termPM25))));
+      const riskCategory: HealthRiskCategory = calculatedAqhi <= 3 ? 'low' : calculatedAqhi <= 6 ? 'moderate' : calculatedAqhi <= 10 ? 'high' : 'very_high';
 
       return BASELINE_STATIONS.map((s) => ({
         ...s,
-        currentAqhi: computedAqhi,
-        pollutants: {
-          ...s.pollutants,
-          pm25: livePm25,
-          pm10: livePm10,
-          ozone: liveO3,
-          no2: liveNo2,
-        },
+        currentAQHI: calculatedAqhi,
+        currentPM25: livePm25,
+        riskCategory,
+        primaryPollutant: livePm25 >= 25 ? 'PM2.5' : (liveO3 >= 50 ? 'Ozone' : 'PM2.5'),
         isStale: false,
-        lastUpdated: new Date().toISOString(),
+        lastSampledTime: new Date().toISOString(),
       }));
     }
   } catch (e) {}
@@ -48,7 +43,7 @@ export async function getLiveStations(): Promise<AirMonitoringStation[]> {
   return BASELINE_STATIONS.map((s) => ({
     ...s,
     isStale: false,
-    lastUpdated: new Date().toISOString(),
+    lastSampledTime: new Date().toISOString(),
   }));
 }
 

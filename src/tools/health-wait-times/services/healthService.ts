@@ -14,30 +14,51 @@ export async function getLiveFacilities(): Promise<HealthcareFacility[]> {
   const hour = vancouverDate.getHours();
 
   try {
-    const res = await edgeFetch<any[]>('https://edwaittimes.ca/api/facilities', { timeoutMs: 1200 });
-    if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-      const liveData = res.data;
-      return BASELINE_FACILITIES.map((f) => {
-        const matched = liveData.find((ld: any) => ld.name?.toLowerCase().includes(f.name.toLowerCase()) || ld.id === f.id);
-        const currentWait = matched && typeof matched.waitTimeMinutes === 'number' ? matched.waitTimeMinutes : f.triageData?.waitTimeMinutes;
-        const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
+    const res = await edgeFetch<string>('https://www.edwaittimes.ca/legacy', { timeoutMs: 1200 });
+    if (res.data && typeof res.data === 'string') {
+      const match = res.data.match(/<script id="__NEXT_DATA__" type="application\/json">([^<]+)<\/script>/);
+      if (match) {
+        const nextData = JSON.parse(match[1]);
+        const locations: any[] = nextData.props?.pageProps?.locationsWithWaitTimes || [];
 
-        return {
-          ...f,
-          triageData: f.triageData && currentWait !== undefined
-            ? {
-                ...f.triageData,
-                waitTimeMinutes: currentWait,
-                lastUpdated: now.toISOString(),
-                isStale: false,
-              }
-            : f.triageData,
-          hours: {
-            ...f.hours,
-            isCurrentlyOpen: isOpen,
-          },
-        };
-      });
+        if (locations.length > 0) {
+          return BASELINE_FACILITIES.map((f) => {
+            const matched = locations.find((l: any) =>
+              l.name?.toLowerCase().includes(f.shortName.toLowerCase()) ||
+              f.name.toLowerCase().includes(l.name?.toLowerCase()) ||
+              l.slug?.toLowerCase() === f.id
+            );
+            const liveWait = matched?.waitTime?.waitTimeMinutes;
+            const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
+
+            let intensity: WaitIntensity = 'low';
+            if (liveWait === undefined || liveWait === null) {
+              intensity = f.triageData?.intensity || 'unavailable';
+            } else if (liveWait > 210) {
+              intensity = 'high';
+            } else if (liveWait >= 90) {
+              intensity = 'moderate';
+            }
+
+            return {
+              ...f,
+              triageData: f.triageData && liveWait !== undefined && liveWait !== null
+                ? {
+                    ...f.triageData,
+                    waitTimeMinutes: liveWait,
+                    intensity,
+                    lastUpdated: matched?.waitTime?.createdAt || now.toISOString(),
+                    isStale: false,
+                  }
+                : f.triageData,
+              hours: {
+                ...f.hours,
+                isCurrentlyOpen: isOpen,
+              },
+            };
+          });
+        }
+      }
     }
   } catch (e) {}
 

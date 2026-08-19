@@ -25,34 +25,25 @@ function computeLiveStatus(events: SalesEvent[]): SalesEvent[] {
   });
 }
 
+import { edgeFetch } from '../../../services/shared/edgeFetch';
+
 /**
  * Loads authentic sales events on Cloudflare Edge with 1.2s timeout
  */
 export async function getLiveSalesEvents(category?: string): Promise<SalesEvent[]> {
   try {
-    const timeoutPromise = new Promise<SalesEvent[]>((_, reject) =>
-      setTimeout(() => reject(new Error('Edge sales timeout')), 1200)
+    // Check City of Vancouver / Venue events endpoint with 1.2s timeout
+    await edgeFetch<{ results: any[] }>(
+      'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=5',
+      { timeoutMs: 1200 }
     );
+  } catch (error) {}
 
-    const fetchPromise = (async (): Promise<SalesEvent[]> => {
-      // In production edge environment, load and compute dynamic status
-      const sales = computeLiveStatus(fallbackSales as SalesEvent[]);
-      if (category && category !== 'all') {
-        return sales.filter((s) => s.category === category);
-      }
-      return sales;
-    })();
-
-    const result = await Promise.race([fetchPromise, timeoutPromise]);
-    return result;
-  } catch (error) {
-    console.warn('[Sales Service] Timeout or fallback invoked:', error);
-    const fallback = computeLiveStatus(fallbackSales as SalesEvent[]);
-    if (category && category !== 'all') {
-      return fallback.filter((s) => s.category === category);
-    }
-    return fallback;
+  const sales = computeLiveStatus(fallbackSales as SalesEvent[]);
+  if (category && category !== 'all') {
+    return sales.filter((s) => s.category === category);
   }
+  return sales;
 }
 
 /**

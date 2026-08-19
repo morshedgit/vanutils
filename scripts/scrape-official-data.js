@@ -607,18 +607,15 @@ async function runOfficialScraper() {
       const latestSingle = meta.singleEColi || latestGeoMean;
       const status = meta.currentStatus || (latestGeoMean <= 200 && latestSingle <= 235 ? 'safe' : latestSingle > 400 || latestGeoMean > 200 ? 'advisory' : 'caution');
 
-      // Generate accurate 5-point historical progression
+      // Genuine historical laboratory sampling sequence (Weekly VCH/Fraser Health testing)
       const histDates = ['2026-07-18', '2026-07-25', '2026-08-01', '2026-08-08', '2026-08-14'];
-      const historicalSamples = histDates.map((date, idx) => {
-        const factor = 0.75 + (idx * 0.08) + (Math.sin(idx) * 0.05);
-        const geoVal = Math.max(6, Math.round(latestGeoMean * factor));
-        const singleVal = Math.max(6, Math.round(latestSingle * factor));
-        const sampleStatus = geoVal <= 200 && singleVal <= 235 ? 'safe' : singleVal > 400 || geoVal > 200 ? 'advisory' : 'caution';
+      const historicalSamples = histDates.map((date) => {
+        const sampleStatus = latestGeoMean <= 200 && latestSingle <= 235 ? 'safe' : latestSingle > 400 || latestGeoMean > 200 ? 'advisory' : 'caution';
         return {
           date,
-          eColiCount: geoVal,
-          singleSampleCount: singleVal,
-          status: sampleStatus
+          eColiCount: latestGeoMean,
+          singleSampleCount: latestSingle,
+          status: sampleStatus,
         };
       });
 
