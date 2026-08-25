@@ -25,9 +25,10 @@ const { webcams, mountainName } = Astro.props;
             <img
               src={cam.imageUrl}
               alt={cam.name}
+              width="640"
+              height="360"
               loading="lazy"
               class="w-full h-full object-cover"
-              onerror="this.onerror=null; this.src='https://images.drivebc.ca/bchighwaycam/pub/cameras/529.jpg';"
             />
             <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 text-white text-[10px] font-mono">
               {cam.elevationMeters}m Elevation

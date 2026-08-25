@@ -32,12 +32,12 @@ import { TOOLS_REGISTRY } from '../../config/tools';
       <!-- Column 2: Utilities Directory -->
       <div>
         <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">Micro-Utilities</h4>
-        <ul class="space-y-1.5 text-xs">
+        <ul class="space-y-1 text-xs">
           {TOOLS_REGISTRY.slice(0, 8).map((tool) => (
             <li>
               <a
                 href={tool.path}
-                class="text-slate-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center justify-between"
+                class="text-slate-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center justify-between py-1 min-h-[24px]"
               >
                 <span>{tool.name}</span>
                 <span class="text-[10px] text-emerald-500 font-semibold">Live</span>
@@ -45,7 +45,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
             </li>
           ))}
           <li>
-            <a href="/" class="text-sky-600 dark:text-sky-400 font-bold hover:underline inline-flex items-center gap-1 pt-1">
+            <a href="/" class="text-sky-600 dark:text-sky-400 font-bold hover:underline inline-flex items-center gap-1 py-1 min-h-[24px]">
               <span>View all {TOOLS_REGISTRY.length} tools</span>
               <span>→</span>
             </a>
@@ -56,13 +56,13 @@ import { TOOLS_REGISTRY } from '../../config/tools';
       <!-- Column 3: Official Public Feeds & Provenance -->
       <div>
         <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">Official Data Feeds</h4>
-        <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+        <ul class="space-y-1 text-xs text-slate-600 dark:text-slate-400">
           <li>
             <a
               href="https://www.vch.ca/en/health-topics/public-health/environmental-health/beach-water-quality"
               target="_blank"
               rel="noopener noreferrer"
-              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
+              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1 py-1 min-h-[24px]"
             >
               <span>Vancouver Coastal Health (VCH)</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
@@ -73,7 +73,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               href="https://www.bcferries.com"
               target="_blank"
               rel="noopener noreferrer"
-              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
+              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1 py-1 min-h-[24px]"
             >
               <span>BC Ferries Real-Time API</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
@@ -84,7 +84,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               href="https://www.drivebc.ca"
               target="_blank"
               rel="noopener noreferrer"
-              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
+              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1 py-1 min-h-[24px]"
             >
               <span>DriveBC Open511 Telemetry</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
@@ -95,7 +95,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               href="https://opendata.vancouver.ca"
               target="_blank"
               rel="noopener noreferrer"
-              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
+              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1 py-1 min-h-[24px]"
             >
               <span>City of Vancouver Open Data</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
@@ -106,7 +106,7 @@ import { TOOLS_REGISTRY } from '../../config/tools';
               href="https://www.bankofcanada.ca/valet/docs"
               target="_blank"
               rel="noopener noreferrer"
-              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1"
+              class="hover:text-sky-500 transition-colors inline-flex items-center gap-1 py-1 min-h-[24px]"
             >
               <span>Bank of Canada Valet</span>
               <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
@@ -118,34 +118,34 @@ import { TOOLS_REGISTRY } from '../../config/tools';
       <!-- Column 4: Platform, Trust & Legal (Clean Text-Only, Zero Emojis) -->
       <div>
         <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">Platform &amp; Legal</h4>
-        <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+        <ul class="space-y-1 text-xs text-slate-600 dark:text-slate-400">
           <li>
-            <a href="/about" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            <a href="/about" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors inline-flex items-center py-1 min-h-[24px]">
               About VanHeartbeat
             </a>
           </li>
           <li>
-            <a href="/contact" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            <a href="/contact" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors inline-flex items-center py-1 min-h-[24px]">
               Contact Us &amp; Data Corrections
             </a>
           </li>
           <li>
-            <a href="/privacy" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            <a href="/privacy" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors inline-flex items-center py-1 min-h-[24px]">
               Privacy Policy
             </a>
           </li>
           <li>
-            <a href="/terms" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            <a href="/terms" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors inline-flex items-center py-1 min-h-[24px]">
               Terms of Service
             </a>
           </li>
           <li>
-            <a href="/cookies" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            <a href="/cookies" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors inline-flex items-center py-1 min-h-[24px]">
               Cookie Policy
             </a>
           </li>
           <li>
-            <a href="/sitemap.xml" target="_blank" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
+            <a href="/sitemap.xml" target="_blank" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors inline-flex items-center py-1 min-h-[24px]">
               XML Sitemap
             </a>
           </li>
@@ -162,11 +162,11 @@ import { TOOLS_REGISTRY } from '../../config/tools';
     <div class="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
       <p>© {new Date().getFullYear()} VanHeartbeat. Handcrafted in Vancouver, British Columbia.</p>
       <div class="flex flex-wrap items-center gap-4 text-xs">
-        <a href="/about" class="hover:text-slate-900 dark:hover:text-white transition-colors">About</a>
-        <a href="/contact" class="hover:text-slate-900 dark:hover:text-white transition-colors">Contact</a>
-        <a href="/privacy" class="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy</a>
-        <a href="/terms" class="hover:text-slate-900 dark:hover:text-white transition-colors">Terms</a>
-        <a href="/cookies" class="hover:text-slate-900 dark:hover:text-white transition-colors">Cookies</a>
+        <a href="/about" class="hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center py-1 px-1 min-h-[24px]">About</a>
+        <a href="/contact" class="hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center py-1 px-1 min-h-[24px]">Contact</a>
+        <a href="/privacy" class="hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center py-1 px-1 min-h-[24px]">Privacy</a>
+        <a href="/terms" class="hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center py-1 px-1 min-h-[24px]">Terms</a>
+        <a href="/cookies" class="hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center py-1 px-1 min-h-[24px]">Cookies</a>
       </div>
     </div>
   </div>
