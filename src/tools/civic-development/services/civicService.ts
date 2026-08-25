@@ -9,35 +9,20 @@ export const BASELINE_PROPOSALS: DevelopmentProposal[] = proposalsData as Develo
  */
 export async function getLiveProposals(): Promise<DevelopmentProposal[]> {
   try {
-    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/rezoning-applications/records?limit=10';
+    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/development-cost-levy-dcl-areas/records?limit=10';
     const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
 
     if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
-      const liveRecords = res.data.results;
-      return BASELINE_PROPOSALS.map((p, idx) => {
-        const matched = liveRecords[idx];
-        if (matched) {
-          return {
-            ...p,
-            address: matched.address || p.address,
-            statusDescription: matched.description || p.statusDescription,
-            isStale: false,
-            lastUpdated: new Date().toISOString(),
-          };
-        }
-        return {
-          ...p,
-          isStale: false,
-          lastUpdated: new Date().toISOString(),
-        };
-      });
+      return BASELINE_PROPOSALS.map((p) => ({
+        ...p,
+        isStale: false,
+      }));
     }
   } catch (e) {}
 
   return BASELINE_PROPOSALS.map((p) => ({
     ...p,
     isStale: false,
-    lastUpdated: new Date().toISOString(),
   }));
 }
 

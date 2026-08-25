@@ -86,9 +86,8 @@ async function syncLiveHealth() {
 
         if (waitMinutes !== undefined && waitMinutes !== null) {
           facility.triageData = {
+            ...facility.triageData,
             waitTimeMinutes: waitMinutes,
-            patientCountWaiting: Math.max(1, Math.round(waitMinutes / 12)),
-            patientCountTreating: Math.max(2, Math.round(waitMinutes / 8)),
             intensity,
             lastUpdated: createdAt,
             isStale: false,

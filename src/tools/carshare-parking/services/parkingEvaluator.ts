@@ -80,14 +80,39 @@ export function evaluateNeighbourhoodSpot(
     isWithin12Hours: isWithin12hRush,
   };
 
+const NEIGHBOURHOOD_COORDS: Record<string, { lat: number; lng: number }> = {
+  downtown: { lat: 49.2827, lng: -123.1207 },
+  'west-end': { lat: 49.2858, lng: -123.1340 },
+  yaletown: { lat: 49.2750, lng: -123.1215 },
+  'mount-pleasant': { lat: 49.2635, lng: -123.1012 },
+  kitsilano: { lat: 49.2684, lng: -123.1681 },
+  'commercial-drive': { lat: 49.2748, lng: -123.0695 },
+  gastown: { lat: 49.2838, lng: -123.1093 },
+  'ubc-campus': { lat: 49.2606, lng: -123.2460 },
+};
+
   // 2. Street Sweeping / Leaf Cleaning Check
+  const sweepHoursMatch = neighbourhood.sweepingSchedule.sweepHours.match(/(\d{2}):\d{2}\s*-\s*(\d{2}):\d{2}/);
+  const sweepStartHour = sweepHoursMatch ? parseInt(sweepHoursMatch[1], 10) : 2;
+  const sweepEndHour = sweepHoursMatch ? parseInt(sweepHoursMatch[2], 10) : 6;
+  const isCurrentlySweeping = hour >= sweepStartHour && hour < sweepEndHour;
+
+  const nextSweepDate = new Date(date);
+  if (hour >= sweepEndHour) {
+    nextSweepDate.setDate(nextSweepDate.getDate() + 1);
+  }
+  nextSweepDate.setHours(sweepStartHour, 0, 0, 0);
+
+  const nextSweepEndDate = new Date(nextSweepDate);
+  nextSweepEndDate.setHours(sweepEndHour, 0, 0, 0);
+
   const sweeping = {
-    nextSweepStart: date.toISOString(),
-    nextSweepEnd: date.toISOString(),
+    nextSweepStart: nextSweepDate.toISOString(),
+    nextSweepEnd: nextSweepEndDate.toISOString(),
     frequency: neighbourhood.sweepingSchedule.frequency,
-    isWithin24Hours: false,
-    isWithin12Hours: false,
-    isCurrentlyActive: false,
+    isWithin24Hours: nextSweepDate.getTime() - date.getTime() <= 24 * 3600 * 1000,
+    isWithin12Hours: nextSweepDate.getTime() - date.getTime() <= 12 * 3600 * 1000,
+    isCurrentlyActive: isCurrentlySweeping,
     seasonalLeafCleaningActive: neighbourhood.sweepingSchedule.seasonalLeafCleaning,
   };
 
@@ -100,6 +125,10 @@ export function evaluateNeighbourhoodSpot(
     clearanceStatus = 'prohibited';
     primaryReason = `Rush hour towing active (${neighbourhood.rushHourLanes.hoursText})`;
     rulesSummary.push('Do NOT end car-share trip on designated arterial corridors.');
+  } else if (isCurrentlySweeping) {
+    clearanceStatus = 'prohibited';
+    primaryReason = `Street sweeping active (${neighbourhood.sweepingSchedule.sweepHours})`;
+    rulesSummary.push('Street sweeping in progress. Towing enforced on signed streets.');
   } else if (isWithin12hRush) {
     clearanceStatus = 'caution';
     primaryReason = `Upcoming rush hour restriction: ${neighbourhood.rushHourLanes.hoursText}`;
@@ -110,9 +139,11 @@ export function evaluateNeighbourhoodSpot(
     rulesSummary.push(`Permit Zone ${neighbourhood.residentialPermitRules.permitZoneCode}: Free parking for approved car-shares.`);
   }
 
+  const coords = NEIGHBOURHOOD_COORDS[neighbourhood.id] || { lat: 49.2827, lng: -123.1207 };
+
   return {
-    latitude: 49.2827,
-    longitude: -123.1207,
+    latitude: coords.lat,
+    longitude: coords.lng,
     nearestAddress: `${neighbourhood.name}, Vancouver, BC`,
     neighbourhood: neighbourhood.name,
     insideHomeZone: neighbourhood.insideHomeZone,

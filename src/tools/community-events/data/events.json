@@ -10,8 +10,8 @@
     "neighbourhood": "Grandview-Woodland / Commercial Drive",
     "latitude": 49.2748,
     "longitude": -123.0695,
-    "startDateTime": "2026-08-23T19:00:00Z",
-    "endDateTime": "2026-08-24T02:00:00Z",
+    "startDateTime": "2026-09-06T19:00:00Z",
+    "endDateTime": "2026-09-07T02:00:00Z",
     "isFreeAdmission": true,
     "isAllAges": true,
     "isOutdoor": true,
@@ -26,7 +26,7 @@
       "mobiBikeStationNearby": true
     },
     "officialSourceUrl": "https://www.carfreevancouver.org/commercial-drive",
-    "lastUpdated": "2026-08-19T17:48:42.546Z",
+    "lastUpdated": "2026-08-25T12:00:00.000Z",
     "isStale": false
   },
   {
@@ -40,8 +40,8 @@
     "neighbourhood": "Stanley Park / West End",
     "latitude": 49.2935,
     "longitude": -123.1485,
-    "startDateTime": "2026-08-25T03:30:00Z",
-    "endDateTime": "2026-08-25T06:00:00Z",
+    "startDateTime": "2026-08-28T03:30:00Z",
+    "endDateTime": "2026-08-28T06:00:00Z",
     "isFreeAdmission": true,
     "isAllAges": true,
     "isOutdoor": true,
@@ -55,7 +55,7 @@
       "mobiBikeStationNearby": true
     },
     "officialSourceUrl": "https://vancouver.ca/parks-recreation-culture/summer-cinema.aspx",
-    "lastUpdated": "2026-08-19T17:48:42.546Z",
+    "lastUpdated": "2026-08-25T12:00:00.000Z",
     "isStale": false
   },
   {
@@ -69,8 +69,8 @@
     "neighbourhood": "Kitsilano",
     "latitude": 49.2618,
     "longitude": -123.1615,
-    "startDateTime": "2026-08-23T17:00:00Z",
-    "endDateTime": "2026-08-23T21:00:00Z",
+    "startDateTime": "2026-08-30T17:00:00Z",
+    "endDateTime": "2026-08-30T21:00:00Z",
     "isFreeAdmission": true,
     "isAllAges": true,
     "isOutdoor": true,
@@ -85,7 +85,7 @@
       "mobiBikeStationNearby": true
     },
     "officialSourceUrl": "https://eatlocal.org/markets/kitsilano/",
-    "lastUpdated": "2026-08-19T17:48:42.546Z",
+    "lastUpdated": "2026-08-25T12:00:00.000Z",
     "isStale": false
   },
   {
@@ -115,7 +115,7 @@
       "mobiBikeStationNearby": true
     },
     "officialSourceUrl": "https://www.vpl.ca/events",
-    "lastUpdated": "2026-08-19T17:48:42.546Z",
+    "lastUpdated": "2026-08-25T18:08:24.525Z",
     "isStale": false
   },
   {
@@ -145,7 +145,7 @@
       "mobiBikeStationNearby": true
     },
     "officialSourceUrl": "https://www.greekday.com/",
-    "lastUpdated": "2026-08-19T17:48:42.546Z",
+    "lastUpdated": "2026-08-25T18:08:24.525Z",
     "isStale": false
   },
   {
@@ -174,7 +174,7 @@
       "mobiBikeStationNearby": true
     },
     "officialSourceUrl": "https://vancouver.ca/parks-recreation-culture/trout-lake-community-centre.aspx",
-    "lastUpdated": "2026-08-19T17:48:42.546Z",
+    "lastUpdated": "2026-08-25T18:08:24.525Z",
     "isStale": false
   }
 ]

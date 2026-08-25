@@ -19,8 +19,16 @@ export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
   } catch (e) {}
 
   return BASELINE_FACILITIES.map((f) => {
-    // Parks/tennis courts open 6am - 10pm (22:00)
-    const isOpen = hour >= 6 && hour < 22;
+    let isOpen = true;
+    if (f.category === 'tennis_court' || f.category === 'pickleball_court') {
+      const curfew = f.courtDetails?.hasLights ? 22 : 20;
+      isOpen = hour >= 6 && hour < curfew;
+    } else if (f.category === 'swimming_pool') {
+      isOpen = hour >= 6 && hour < 22;
+    } else if (f.category === 'ice_rink') {
+      isOpen = hour >= 6 && hour < 22;
+    }
+
     return {
       ...f,
       session: {
@@ -28,7 +36,6 @@ export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
         isOpenNow: isOpen,
       },
       isStale: false,
-      lastUpdated: now.toISOString(),
     };
   });
 }

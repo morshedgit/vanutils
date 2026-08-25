@@ -10,7 +10,6 @@ export const BASELINE_CHILDCARES: LicensedChildcareCenter[] = childcaresData as 
  * Dynamically loads live school catchment data at the edge with fallback
  */
 export async function getLiveSchools(): Promise<SchoolInfo[]> {
-  const now = new Date();
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/schools/records?limit=10';
     const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
@@ -19,7 +18,6 @@ export async function getLiveSchools(): Promise<SchoolInfo[]> {
       return BASELINE_SCHOOLS.map((s) => ({
         ...s,
         isStale: false,
-        lastUpdated: now.toISOString(),
       }));
     }
   } catch (e) {}
@@ -27,7 +25,6 @@ export async function getLiveSchools(): Promise<SchoolInfo[]> {
   return BASELINE_SCHOOLS.map((s) => ({
     ...s,
     isStale: false,
-    lastUpdated: now.toISOString(),
   }));
 }
 

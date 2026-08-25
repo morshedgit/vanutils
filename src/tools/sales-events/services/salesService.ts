@@ -69,10 +69,24 @@ export async function getSalesOverviewStats(): Promise<SalesOverviewStats> {
 
   const nextSale = upcomingSales[0];
 
+  // Calculate authentic average discount percent from sales discount ranges
+  const discounts = allSales
+    .map((s) => {
+      const nums = (s.discountRange || '').match(/\d+/g);
+      if (!nums || nums.length === 0) return null;
+      const parsed = nums.map(Number);
+      return parsed.reduce((sum, n) => sum + n, 0) / parsed.length;
+    })
+    .filter((d): d is number => d !== null);
+
+  const avgDiscount = discounts.length > 0
+    ? Math.round(discounts.reduce((sum, d) => sum + d, 0) / discounts.length)
+    : 65;
+
   return {
     activeSalesCount: activeCount,
     upcomingThisMonth: upcomingCount,
-    avgDiscountPercent: 65,
+    avgDiscountPercent: avgDiscount,
     nextMajorSaleName: nextSale ? nextSale.name : 'Aritzia Warehouse Sale',
     nextMajorSaleDate: nextSale ? nextSale.startDate : '2026-08-27',
   };

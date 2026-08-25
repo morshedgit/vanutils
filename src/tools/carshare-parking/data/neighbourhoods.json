@@ -273,13 +273,18 @@
       "seasonalLeafCleaning": false
     },
     "rushHourLanes": {
-      "corridors": ["SW Marine Dr & Chancellor Blvd (Approaches)"],
+      "corridors": [
+        "SW Marine Dr & Chancellor Blvd (Approaches)"
+      ],
       "hoursText": "No curbside stopping anytime"
     },
     "activeAlerts": [
       "⚠️ STRICT: Ending trips on UBC campus streets is prohibited. You MUST park in North Parkade, Thunderbird Parkade, or Fraser Parkade."
     ],
-    "satelliteLotsNearby": ["ubc-north-parkade", "ubc-thunderbird-parkade"],
+    "satelliteLotsNearby": [
+      "ubc-north-parkade",
+      "ubc-thunderbird-parkade"
+    ],
     "popularDestinations": [
       "UBC Student Nest",
       "Museum of Anthropology",
@@ -320,7 +325,9 @@
     "activeAlerts": [
       "Home Zone covers City of North Vancouver (South of Highway 1 and Upper Lonsdale). Check app boundary."
     ],
-    "satelliteLotsNearby": ["grouse-mountain-base"],
+    "satelliteLotsNearby": [
+      "grouse-mountain-base"
+    ],
     "popularDestinations": [
       "The Shipyards & Lonsdale Quay",
       "Lower Lonsdale (LoLo) Dining",

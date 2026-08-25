@@ -123,7 +123,7 @@ const parkingSchema = [
         </span>
         <span class="text-[11px] text-slate-400">Click star to customize</span>
       </div>
-      <div id="pinned-parking-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+      <div id="pinned-parking-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" data-neighbourhoods={JSON.stringify(neighbourhoods)}>
         <!-- Dynamically populated via client JS -->
       </div>
     </div>
@@ -198,7 +198,7 @@ const parkingSchema = [
   </div>
 </ToolLayout>
 
-<script is:inline define:vars={{ neighbourhoodsJson: JSON.stringify(neighbourhoods) }}>
+<script is:inline>
   // Pinned Neighbourhoods Management
   const STORAGE_KEY = 'vanutils_pinned_parking';
   const DEFAULT_PINNED = ['downtown', 'west-end', 'kitsilano', 'mount-pleasant', 'ubc'];
@@ -221,7 +221,7 @@ const parkingSchema = [
     if (!grid) return;
 
     const pinnedIds = getPinnedIds();
-    const allNeighbourhoods = JSON.parse(neighbourhoodsJson || '[]');
+    const allNeighbourhoods = JSON.parse(grid.dataset.neighbourhoods || '[]');
     const pinnedNeighbourhoods = allNeighbourhoods.filter((n) => pinnedIds.includes(n.id));
 
     if (pinnedNeighbourhoods.length === 0) {

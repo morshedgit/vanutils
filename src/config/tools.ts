@@ -33,8 +33,8 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     status: 'active',
     badgeText: 'Live Game Radar',
     previewStat: {
-      value: 'Canucks vs CGY',
-      label: 'Next Game • 7:00 PM',
+      value: 'Whitecaps / Lions',
+      label: 'Active Pro Gameday Radar',
       statusType: 'safe',
     },
     features: [
@@ -226,7 +226,7 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     status: 'active',
     badgeText: 'Park Board Rec',
     previewStat: {
-      value: '84 Courts',
+      value: '51 Courts',
       label: 'Lighted & Open',
       statusType: 'safe',
     },
@@ -312,8 +312,8 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     status: 'active',
     badgeText: 'VSB SD39',
     previewStat: {
-      value: '18 Catchments',
-      label: 'Vancouver SD39',
+      value: '9 Catchments',
+      label: 'VSB SD39 & Daycares',
       statusType: 'info',
     },
     features: [
@@ -333,7 +333,7 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     status: 'active',
     badgeText: 'Active Proposals',
     previewStat: {
-      value: '38 Towers',
+      value: '7 Proposals',
       label: 'Broadway Plan Corridor',
       statusType: 'info',
     },

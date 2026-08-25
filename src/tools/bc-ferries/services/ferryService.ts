@@ -88,7 +88,10 @@ export function getRoutesByCategory(category: RouteCategory, list: FerryRoute[] 
 
 export function getSeaBusLiveStatus(): SeaBusLiveStatus {
   const now = new Date();
-  const vancouverHour = (now.getUTCHours() - 7 + 24) % 24; // PDT (UTC-7)
+  const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
+  const vancouverDate = new Date(vancouverTimeString);
+  const vancouverHour = vancouverDate.getHours();
+  const vancouverMinute = vancouverDate.getMinutes();
 
   let headwayMinutes = 15;
   let peakStatus: 'peak_10min' | 'offpeak_15min' | 'night_30min' = 'offpeak_15min';
@@ -101,13 +104,24 @@ export function getSeaBusLiveStatus(): SeaBusLiveStatus {
     peakStatus = 'night_30min';
   }
 
+  const minsUntilNextWaterfront = headwayMinutes - (vancouverMinute % headwayMinutes);
+  const nextWaterfrontDeparture = minsUntilNextWaterfront === headwayMinutes
+    ? 'Departing now'
+    : `In ${minsUntilNextWaterfront} min${minsUntilNextWaterfront > 1 ? 's' : ''}`;
+
+  const lonsdaleMins = ((vancouverMinute + Math.floor(headwayMinutes / 2)) % headwayMinutes);
+  const minsUntilNextLonsdale = headwayMinutes - lonsdaleMins;
+  const nextLonsdaleDeparture = minsUntilNextLonsdale === headwayMinutes
+    ? 'Departing now'
+    : `In ${minsUntilNextLonsdale} min${minsUntilNextLonsdale > 1 ? 's' : ''}`;
+
   return {
     headwayMinutes,
     peakStatus,
     activeVessels: ['Burrard Otter II', 'Burrard Chinook'],
     disruptions: [],
-    nextWaterfrontDeparture: 'In 6 mins',
-    nextLonsdaleDeparture: 'In 4 mins',
+    nextWaterfrontDeparture,
+    nextLonsdaleDeparture,
     crossingDurationMinutes: 12,
   };
 }
@@ -118,10 +132,10 @@ export function getMarineWeatherStatus(): MarineWeatherStatus {
     windSpeedKnots: 12,
     windDirection: 'NW',
     waveHeightMeters: 0.6,
-    waterTempC: 13.5,
+    waterTempC: 14.5,
     advisoryLevel: 'normal' as WeatherRisk,
     warningText: 'Strait of Georgia: Calm waters. Good sailing conditions.',
-    lastUpdated: new Date().toISOString(),
+    lastUpdated: '2026-08-25T12:00:00.000Z',
   };
 }
 

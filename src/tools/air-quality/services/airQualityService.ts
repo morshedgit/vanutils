@@ -11,39 +11,44 @@ export const BASELINE_SHELTERS: CleanAirFacility[] = sheltersData as CleanAirFac
  */
 export async function getLiveStations(): Promise<AirMonitoringStation[]> {
   try {
-    const endpoint =
-      'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=49.2827&longitude=-123.1207&current=pm2_5,pm10,carbon_monoxide,nitrogen_dioxide,ozone,european_aqi,us_aqi&timezone=America/Vancouver';
+    const lats = BASELINE_STATIONS.map((s) => s.latitude).join(',');
+    const lngs = BASELINE_STATIONS.map((s) => s.longitude).join(',');
+    const endpoint = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lats}&longitude=${lngs}&current=pm2_5,pm10,carbon_monoxide,nitrogen_dioxide,ozone&timezone=America/Vancouver`;
     const res = await edgeFetch<any>(endpoint, { timeoutMs: 1200 });
 
-    if (res.data && res.data.current) {
-      const curr = res.data.current;
-      const livePm25 = Math.round((curr.pm2_5 || 8.4) * 10) / 10;
-      const liveO3 = Math.round((curr.ozone || 24.0) * 10) / 10;
-      const liveNo2 = Math.round((curr.nitrogen_dioxide || 12.0) * 10) / 10;
+    if (res.data) {
+      const dataArray = Array.isArray(res.data) ? res.data : [res.data];
+      return BASELINE_STATIONS.map((s, idx) => {
+        const item = dataArray[idx]?.current;
+        if (!item) return { ...s, isStale: false };
 
-      // ECCC Canadian AQHI calculation
-      const termO3 = Math.exp(0.000537 * liveO3) - 1;
-      const termNO2 = Math.exp(0.000871 * liveNo2) - 1;
-      const termPM25 = Math.exp(0.000487 * livePm25) - 1;
-      const calculatedAqhi = Math.min(10, Math.max(1, Math.round((10 / 10.4) * 100 * (termO3 + termNO2 + termPM25))));
-      const riskCategory: HealthRiskCategory = calculatedAqhi <= 3 ? 'low' : calculatedAqhi <= 6 ? 'moderate' : calculatedAqhi <= 10 ? 'high' : 'very_high';
+        const livePm25 = Math.round((item.pm2_5 ?? s.currentPM25) * 10) / 10;
+        const liveO3 = Math.round((item.ozone ?? 24.0) * 10) / 10;
+        const liveNo2 = Math.round((item.nitrogen_dioxide ?? 12.0) * 10) / 10;
 
-      return BASELINE_STATIONS.map((s) => ({
-        ...s,
-        currentAQHI: calculatedAqhi,
-        currentPM25: livePm25,
-        riskCategory,
-        primaryPollutant: livePm25 >= 25 ? 'PM2.5' : (liveO3 >= 50 ? 'Ozone' : 'PM2.5'),
-        isStale: false,
-        lastSampledTime: new Date().toISOString(),
-      }));
+        // ECCC Canadian AQHI calculation
+        const termO3 = Math.exp(0.000537 * liveO3) - 1;
+        const termNO2 = Math.exp(0.000871 * liveNo2) - 1;
+        const termPM25 = Math.exp(0.000487 * livePm25) - 1;
+        const calculatedAqhi = Math.min(10, Math.max(1, Math.round((10 / 10.4) * 100 * (termO3 + termNO2 + termPM25))));
+        const riskCategory: HealthRiskCategory =
+          calculatedAqhi <= 3 ? 'low' : calculatedAqhi <= 6 ? 'moderate' : calculatedAqhi <= 10 ? 'high' : 'very_high';
+
+        return {
+          ...s,
+          currentAQHI: calculatedAqhi,
+          currentPM25: livePm25,
+          riskCategory,
+          primaryPollutant: livePm25 >= 25 ? 'PM2.5' : (liveO3 >= 50 ? 'Ozone' : 'PM2.5'),
+          isStale: false,
+        };
+      });
     }
   } catch (e) {}
 
   return BASELINE_STATIONS.map((s) => ({
     ...s,
     isStale: false,
-    lastSampledTime: new Date().toISOString(),
   }));
 }
 

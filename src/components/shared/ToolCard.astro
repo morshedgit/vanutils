@@ -11,7 +11,7 @@ import { getLiveProposals } from '../../tools/civic-development/services/civicSe
 import { getLiveEvents } from '../../tools/community-events/services/eventService';
 import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
 import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
-import { getLiveMarketHeartbeat } from '../../tools/housing-market/services/marketService';
+import { getLiveMarketHeartbeat, formatCurrency, getConditionLabel } from '../../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
 import { getLiveWeather } from '../../tools/weather-forecast/services/weatherService';
 import { getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
@@ -29,6 +29,10 @@ const initialBeaches = allBeaches.slice(0, 4);
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const cautionBeachesCount = allBeaches.filter((b) => b.currentStatus === 'caution').length;
 const advisoryBeachesCount = allBeaches.filter((b) => b.currentStatus === 'advisory').length;
+const validBeaches = allBeaches.filter((b) => typeof b.latestSample?.eColiCount === 'number');
+const avgEColi = validBeaches.length > 0
+  ? Math.round(validBeaches.reduce((acc, b) => acc + b.latestSample.eColiCount, 0) / validBeaches.length)
+  : 26;
 
 const allFerryRoutes = tool.id === 'bc-ferries' ? await getLiveRoutes() : [];
 const initialFerryRoutes = allFerryRoutes.slice(0, 3);
@@ -42,33 +46,64 @@ const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Su
 
 const allNeighbourhoods = tool.id === 'evo-parking' ? await getLiveNeighbourhoods() : [];
 const initialNeighbourhoods = allNeighbourhoods.slice(0, 4);
+const safeNeighbourhoodsCount = allNeighbourhoods.filter((n) => evaluateNeighbourhoodSpot(n).clearanceStatus === 'safe').length;
 
 const allFacilities = tool.id === 'health-wait-times' ? await getLiveFacilities() : [];
 const initialFacilities = allFacilities.slice(0, 4);
+const facilitiesWithWait = allFacilities.filter((f) => f.triageData?.waitTimeMinutes !== undefined);
+const minWaitFacility = facilitiesWithWait.length > 0
+  ? [...facilitiesWithWait].sort((a, b) => (a.triageData?.waitTimeMinutes || 0) - (b.triageData?.waitTimeMinutes || 0))[0]
+  : null;
+const minWaitText = minWaitFacility?.triageData?.waitTimeMinutes !== undefined
+  ? `${formatWaitTime(minWaitFacility.triageData.waitTimeMinutes)} Min ER`
+  : `${allFacilities.length} ERs Tracking`;
 
 const allCrossings = tool.id === 'bridge-traffic' ? await getLiveCrossings() : [];
 const initialCrossings = allCrossings.slice(0, 4);
+const lionsGate = allCrossings.find((c) => c.id === 'lions-gate');
+const lionsGateLanes = lionsGate?.counterflow?.activeConfiguration
+  ? (lionsGate.counterflow.activeConfiguration.includes('2 Lanes Northbound') ? '2 NB Active' : '1 NB Active')
+  : 'Flowing';
 
 const allStations = tool.id === 'air-quality' ? await getLiveStations() : [];
 const initialStations = allStations.slice(0, 4);
+const avgAqhi = allStations.length > 0
+  ? Math.round(allStations.reduce((acc, s) => acc + s.currentAQHI, 0) / allStations.length)
+  : 2;
 
 const allProposals = tool.id === 'civic-development' ? await getLiveProposals() : [];
 const initialProposals = allProposals.slice(0, 4);
+const avgStoreys = allProposals.length > 0
+  ? Math.round(allProposals.reduce((sum, p) => sum + p.storeys, 0) / allProposals.length)
+  : 24;
+const avgFsr = allProposals.length > 0
+  ? (allProposals.reduce((sum, p) => sum + p.proposedFSR, 0) / allProposals.length).toFixed(1)
+  : '7.5';
 
 const allEvents = tool.id === 'community-events' ? await getLiveEvents() : [];
 const initialEvents = allEvents.slice(0, 4);
 
 const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
 const initialSchools = allSchools.slice(0, 4);
+const frenchSchoolsCount = allSchools.filter((s) => s.programs?.includes('early_french_immersion') || s.programs?.includes('late_french_immersion')).length;
+const englishSchoolsCount = allSchools.length - frenchSchoolsCount;
+const englishPct = allSchools.length > 0 ? Math.round((englishSchoolsCount / allSchools.length) * 100) : 60;
+const frenchPct = 100 - englishPct;
 
 const allNews = tool.id === 'local-news' ? await getLiveNews() : [];
 const initialNews = allNews.slice(0, 4);
 
 const marketHeartbeat = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
 const initialSubmarkets = marketHeartbeat ? marketHeartbeat.submarkets.slice(0, 4) : [];
+const sarPercent = marketHeartbeat?.metroOverview?.salesToActiveRatio ?? (initialSubmarkets[0]?.salesToActiveRatio ?? 18.4);
+const sarCondition = marketHeartbeat?.metroOverview?.marketCondition ? getConditionLabel(marketHeartbeat.metroOverview.marketCondition) : 'Balanced';
+const condoBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'condo')?.benchmarkPrice || 780000;
+const detachedBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'detached')?.benchmarkPrice || 1950000;
 
 const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
 const initialSportsFacilities = allSportsFacilities.slice(0, 3);
+const totalCourtsCount = allSportsFacilities.reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
+const lightedCourtsCount = allSportsFacilities.filter((f) => f.courtDetails?.hasLights).reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
 
 const allWeatherStations = tool.id === 'weather-forecast' ? await getLiveWeather() : [];
 const initialWeatherStations = allWeatherStations.slice(0, 4);
@@ -82,6 +117,7 @@ const initialSportsTeams = allSportsTeams.slice(0, 4);
 
 const allSalesEvents = tool.id === 'sales-events' ? await getLiveSalesEvents() : [];
 const initialSalesEvents = allSalesEvents.slice(0, 4);
+const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || allSalesEvents[0];
 ---
 
 <div
@@ -103,18 +139,18 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
     <a href={tool.path} class="shrink-0">
       <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
         {tool.id === 'can-i-swim' && `${safeBeachesCount}/${allBeaches.length} Safe`}
-        {tool.id === 'bc-ferries' && 'Live Deck %'}
+        {tool.id === 'bc-ferries' && `${allFerryRoutes.length} Live Routes`}
         {tool.id === 'mountain-snow' && snowBadgeText}
-        {tool.id === 'evo-parking' && '8/8 Safe Zones'}
-        {tool.id === 'health-wait-times' && '1h 15m Min ER'}
-        {tool.id === 'bridge-traffic' && '2 NB Active'}
-        {tool.id === 'air-quality' && 'AQHI 2 (Low)'}
-        {tool.id === 'civic-development' && '38 Towers'}
-        {tool.id === 'community-events' && '6 Free This Wk'}
+        {tool.id === 'evo-parking' && `${safeNeighbourhoodsCount}/${allNeighbourhoods.length} Safe Zones`}
+        {tool.id === 'health-wait-times' && minWaitText}
+        {tool.id === 'bridge-traffic' && lionsGateLanes}
+        {tool.id === 'air-quality' && `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})`}
+        {tool.id === 'civic-development' && `${allProposals.length} Proposals`}
+        {tool.id === 'community-events' && `${allEvents.length} Free Events`}
         {tool.id === 'school-catchment' && 'VSB SD39'}
         {tool.id === 'local-news' && 'Live Wire'}
-        {tool.id === 'housing-market' && '18.4% SAR'}
-        {tool.id === 'sports-courts' && '84 Courts'}
+        {tool.id === 'housing-market' && `${sarPercent}% SAR`}
+        {tool.id === 'sports-courts' && `${totalCourtsCount} Courts`}
         {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
         {tool.id === 'sports-teams' && `${allSportsTeams.length} Pro Teams`}
         {tool.id === 'sales-events' && `${allSalesEvents.length} Verified Sales`}
@@ -133,7 +169,7 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             30-Day Regional Trend
           </span>
-          <span class="text-emerald-600 dark:text-emerald-400">Avg 32 CFU (Clean)</span>
+          <span class="text-emerald-600 dark:text-emerald-400">Avg {avgEColi} CFU ({avgEColi <= 200 ? 'Clean' : 'Elevated'})</span>
         </div>
         
         <!-- SVG Sparkline Area Wave -->
@@ -159,9 +195,9 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
         <!-- Segmented Safety Ratio Progress Bar -->
         <div class="space-y-1">
           <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden flex">
-            <div style={`width: ${(safeBeachesCount / allBeaches.length) * 100}%`} class="bg-emerald-500 h-full" title="Safe"></div>
-            <div style={`width: ${(cautionBeachesCount / allBeaches.length) * 100}%`} class="bg-amber-500 h-full" title="Caution"></div>
-            <div style={`width: ${(advisoryBeachesCount / allBeaches.length) * 100}%`} class="bg-rose-500 h-full" title="Advisory"></div>
+            <div style={`width: ${(safeBeachesCount / Math.max(1, allBeaches.length)) * 100}%`} class="bg-emerald-500 h-full" title="Safe"></div>
+            <div style={`width: ${(cautionBeachesCount / Math.max(1, allBeaches.length)) * 100}%`} class="bg-amber-500 h-full" title="Caution"></div>
+            <div style={`width: ${(advisoryBeachesCount / Math.max(1, allBeaches.length)) * 100}%`} class="bg-rose-500 h-full" title="Advisory"></div>
           </div>
           <div class="flex justify-between text-[9px] text-slate-400 font-medium">
             <span>{safeBeachesCount} Safe 🟢</span>
@@ -180,37 +216,25 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
           <span class="text-sky-500 font-semibold">Tsawwassen & Horseshoe Bay</span>
         </div>
 
-        <!-- 3 Route Capacity Meters -->
+        <!-- Dynamic Route Capacity Meters -->
         <div class="space-y-1.5">
-          <div class="space-y-0.5">
-            <div class="flex justify-between text-[10px] font-medium text-slate-700 dark:text-slate-300">
-              <span class="truncate">Tsawwassen ⇄ Swartz Bay</span>
-              <span class="font-bold text-emerald-600 dark:text-emerald-400">72% Full</span>
-            </div>
-            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div class="bg-emerald-500 h-full rounded-full transition-all" style="width: 72%"></div>
-            </div>
-          </div>
-
-          <div class="space-y-0.5">
-            <div class="flex justify-between text-[10px] font-medium text-slate-700 dark:text-slate-300">
-              <span class="truncate">Horseshoe Bay ⇄ Departure Bay</span>
-              <span class="font-bold text-amber-500">86% Full</span>
-            </div>
-            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full rounded-full transition-all" style="width: 86%"></div>
-            </div>
-          </div>
-
-          <div class="space-y-0.5">
-            <div class="flex justify-between text-[10px] font-medium text-slate-700 dark:text-slate-300">
-              <span class="truncate">Hullo Fast Catamaran (Downtown)</span>
-              <span class="font-bold text-sky-500">40% Booked</span>
-            </div>
-            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div class="bg-sky-500 h-full rounded-full transition-all" style="width: 40%"></div>
-            </div>
-          </div>
+          {initialFerryRoutes.map((r) => {
+            const sailing = r.nextSailings && r.nextSailings[0];
+            const pct: number = typeof sailing?.deckSpacePercent === 'number' ? sailing.deckSpacePercent : 50;
+            const barColor = pct < 75 ? 'bg-emerald-500' : pct < 90 ? 'bg-amber-500' : 'bg-rose-500';
+            const textColor = pct < 75 ? 'text-emerald-600 dark:text-emerald-400' : pct < 90 ? 'text-amber-500' : 'text-rose-500';
+            return (
+              <div class="space-y-0.5">
+                <div class="flex justify-between text-[10px] font-medium text-slate-700 dark:text-slate-300">
+                  <span class="truncate">{r.name}</span>
+                  <span class={`font-bold ${textColor}`}>{pct}% Full</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class={`${barColor} h-full rounded-full transition-all`} style={`width: ${pct}%`}></div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     )}
@@ -266,7 +290,7 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Curbside Clearance Timeline</span>
-          <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% Home Zone Safe</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">{safeNeighbourhoodsCount}/{allNeighbourhoods.length} Safe Zones</span>
         </div>
 
         <!-- Visual Timeline Bar -->
@@ -284,8 +308,8 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
         </div>
 
         <div class="flex items-center justify-between pt-1 text-[10px]">
-          <span class="text-slate-600 dark:text-slate-300 font-medium">🧹 Next Street Sweep:</span>
-          <span class="font-bold text-sky-600 dark:text-sky-400">In 4 days (Zone 8A)</span>
+          <span class="text-slate-600 dark:text-slate-300 font-medium">🧹 Street Sweeping:</span>
+          <span class="font-bold text-sky-600 dark:text-sky-400">{allNeighbourhoods[0]?.sweepingSchedule?.sweepHours || '02:00 - 06:00'} (Nightly)</span>
         </div>
       </div>
     )}
@@ -295,40 +319,28 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Real-Time ER Wait Times</span>
-          <span class="text-emerald-600 dark:text-emerald-400">11 ERs Tracking</span>
+          <span class="text-emerald-600 dark:text-emerald-400">{allFacilities.length} Facilities Tracking</span>
         </div>
 
-        <!-- Comparative Wait Bars -->
+        <!-- Dynamic Comparative Wait Bars -->
         <div class="space-y-1.5">
-          <div class="space-y-0.5">
-            <div class="flex justify-between text-[10px]">
-              <span class="font-medium text-slate-700 dark:text-slate-300">Mt. Saint Joseph ER</span>
-              <span class="font-bold text-emerald-600 dark:text-emerald-400">1h 15m (Shortest)</span>
-            </div>
-            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div class="bg-emerald-500 h-full rounded-full" style="width: 25%"></div>
-            </div>
-          </div>
-
-          <div class="space-y-0.5">
-            <div class="flex justify-between text-[10px]">
-              <span class="font-medium text-slate-700 dark:text-slate-300">St. Paul's Hospital ER</span>
-              <span class="font-bold text-amber-500">2h 10m</span>
-            </div>
-            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full rounded-full" style="width: 55%"></div>
-            </div>
-          </div>
-
-          <div class="space-y-0.5">
-            <div class="flex justify-between text-[10px]">
-              <span class="font-medium text-slate-700 dark:text-slate-300">Vancouver General (VGH)</span>
-              <span class="font-bold text-rose-500">3h 05m</span>
-            </div>
-            <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div class="bg-rose-500 h-full rounded-full" style="width: 80%"></div>
-            </div>
-          </div>
+          {allFacilities.filter((f) => f.triageData?.waitTimeMinutes !== undefined).slice(0, 3).map((f) => {
+            const wait = f.triageData?.waitTimeMinutes || 0;
+            const barWidth = Math.min(100, Math.max(12, Math.round((wait / 240) * 100)));
+            const barColor = wait < 90 ? 'bg-emerald-500' : wait < 180 ? 'bg-amber-500' : 'bg-rose-500';
+            const textColor = wait < 90 ? 'text-emerald-600 dark:text-emerald-400' : wait < 180 ? 'text-amber-500' : 'text-rose-500';
+            return (
+              <div class="space-y-0.5">
+                <div class="flex justify-between text-[10px]">
+                  <span class="font-medium text-slate-700 dark:text-slate-300 truncate">{f.shortName || f.name}</span>
+                  <span class={`font-bold ${textColor} shrink-0 ml-1`}>{formatWaitTime(wait)}</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class={`${barColor} h-full rounded-full`} style={`width: ${barWidth}%`}></div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     )}
@@ -339,21 +351,23 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Lions Gate Counterflow</span>
           <span class="text-amber-500 font-extrabold flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 2 Lanes NB Active
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> {lionsGateLanes}
           </span>
         </div>
 
         <!-- 3-Lane Dynamic Direction Visualizer -->
         <div class="grid grid-cols-3 gap-1 p-1 bg-slate-900 text-white rounded-lg text-center font-mono text-[9px] font-bold">
           <div class="bg-emerald-600/80 py-1 rounded">▲ North</div>
-          <div class="bg-emerald-600/80 py-1 rounded">▲ North</div>
+          <div class={`${(lionsGate?.counterflow?.activeConfiguration || '').includes('2 Lanes Northbound') ? 'bg-emerald-600/80' : 'bg-rose-600/80'} py-1 rounded`}>
+            {(lionsGate?.counterflow?.activeConfiguration || '').includes('2 Lanes Northbound') ? '▲ North' : '▼ South'}
+          </div>
           <div class="bg-rose-600/80 py-1 rounded">▼ South</div>
         </div>
 
         <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-          <span>Massey: 1 Tube SB</span>
-          <span>Ironworkers: Flowing</span>
-          <span>Oak St: +4m</span>
+          {initialCrossings.slice(0, 3).map((c) => (
+            <span class="truncate">{c.shortName}: {c.directions.primary.delayMinutes > 0 ? `+${c.directions.primary.delayMinutes}m` : 'Flowing'}</span>
+          ))}
         </div>
       </div>
     )}
@@ -363,7 +377,7 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>24h PM2.5 Fine Particulate</span>
-          <span class="text-emerald-600 dark:text-emerald-400">AQHI 2 • Low Risk</span>
+          <span class="text-emerald-600 dark:text-emerald-400">AQHI {avgAqhi} • {avgAqhi <= 3 ? 'Low Risk' : avgAqhi <= 6 ? 'Moderate Risk' : 'High Risk'}</span>
         </div>
 
         <!-- SVG 24h Area Sparkline -->
@@ -385,7 +399,7 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
         <div class="space-y-0.5">
           <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-600 rounded-full relative">
             <!-- Indicator Needle -->
-            <div class="absolute -top-0.5 left-[15%] w-2.5 h-2.5 bg-white border-2 border-emerald-600 rounded-full shadow-xs"></div>
+            <div class="absolute -top-0.5 w-2.5 h-2.5 bg-white border-2 border-emerald-600 rounded-full shadow-xs" style={`left: ${Math.min(92, Math.max(5, (avgAqhi / 10) * 100))}%`}></div>
           </div>
           <div class="flex justify-between text-[8px] text-slate-400 font-bold">
             <span>Low (1-3)</span>
@@ -401,22 +415,22 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Broadway Corridor Towers</span>
-          <span class="text-sky-600 dark:text-sky-400">38 Proposals</span>
+          <span class="text-sky-600 dark:text-sky-400">{allProposals.length} Proposals</span>
         </div>
 
         <!-- Visual Skyline Silhouette Bar Chart -->
         <div class="h-10 flex items-end justify-between gap-1.5 px-2 pt-1 border-b border-slate-200 dark:border-slate-800">
-          <div class="flex-1 bg-sky-500/70 rounded-t h-[45%]" title="18 Storeys"></div>
-          <div class="flex-1 bg-sky-500/80 rounded-t h-[65%]" title="28 Storeys"></div>
-          <div class="flex-1 bg-indigo-500 rounded-t h-[90%]" title="38 Storeys"></div>
-          <div class="flex-1 bg-sky-600 rounded-t h-[75%]" title="32 Storeys"></div>
-          <div class="flex-1 bg-sky-400/80 rounded-t h-[40%]" title="16 Storeys"></div>
-          <div class="flex-1 bg-indigo-600 rounded-t h-[100%]" title="42 Storeys (Max)"></div>
+          {allProposals.slice(0, 6).map((p) => {
+            const heightPct = Math.min(100, Math.max(25, Math.round((p.storeys / 45) * 100)));
+            return (
+              <div class="flex-1 bg-sky-500/80 rounded-t" style={`height: ${heightPct}%`} title={`${p.storeys} Storeys (${p.address})`}></div>
+            );
+          })}
         </div>
 
         <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-          <span>Average: 28 Storeys</span>
-          <span>11.5 Proposed FSR</span>
+          <span>Average: {avgStoreys} Storeys</span>
+          <span>{avgFsr} Proposed FSR</span>
         </div>
       </div>
     )}
@@ -426,7 +440,7 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>7-Day Free Event Activity</span>
-          <span class="text-emerald-600 dark:text-emerald-400 font-bold">6 This Weekend</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">{allEvents.length} Free Events</span>
         </div>
 
         <!-- 7-Day Column Activity Chart -->
@@ -474,14 +488,12 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
         <!-- Program Proportion Bar -->
         <div class="space-y-1">
           <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden">
-            <div class="bg-sky-500 w-[60%]" title="Standard English (60%)"></div>
-            <div class="bg-indigo-500 w-[25%]" title="Early French Immersion (25%)"></div>
-            <div class="bg-teal-500 w-[15%]" title="Late French / Annex (15%)"></div>
+            <div class="bg-sky-500" style={`width: ${englishPct}%`} title={`Standard English (${englishPct}%)`}></div>
+            <div class="bg-indigo-500" style={`width: ${frenchPct}%`} title={`French Immersion (${frenchPct}%)`}></div>
           </div>
           <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-            <span>📘 60% English</span>
-            <span>🇫🇷 25% French</span>
-            <span>🧸 15% Annex</span>
+            <span>📘 {englishPct}% English</span>
+            <span>🇫🇷 {frenchPct}% French</span>
           </div>
         </div>
 
@@ -515,7 +527,7 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
         </div>
 
         <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-          <span>Sub-second alerts</span>
+          <span>{allNews.length} Reports Ingested</span>
           <span>0 Trackers • 0 Paywalls</span>
         </div>
       </div>
@@ -526,7 +538,7 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Sales-to-Active Ratio (SAR %)</span>
-          <span class="text-emerald-600 dark:text-emerald-400 font-bold">18.4% Balanced</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">{sarPercent}% {sarCondition}</span>
         </div>
 
         <!-- Gauge Bar: Buyers (<12%) | Balanced (12-20%) | Sellers (>20%) -->
@@ -536,18 +548,18 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
             <div class="bg-emerald-500 w-[30%]" title="Balanced Market (12-20%)"></div>
             <div class="bg-rose-500 w-[40%]" title="Sellers' Market (>20%)"></div>
             <!-- Current Needle Indicator -->
-            <div class="absolute -top-0.5 left-[54%] w-3 h-3 bg-white border-2 border-slate-900 rounded-full shadow-xs"></div>
+            <div class="absolute -top-0.5 w-3 h-3 bg-white border-2 border-slate-900 rounded-full shadow-xs" style={`left: ${Math.min(92, Math.max(5, (sarPercent / 40) * 100))}%`}></div>
           </div>
           <div class="flex justify-between text-[8px] text-slate-400 font-medium">
             <span>Buyers &lt;12%</span>
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">18.4% SAR</span>
+            <span class="font-bold text-emerald-600 dark:text-emerald-400">{sarPercent}% SAR</span>
             <span>Sellers &gt;20%</span>
           </div>
         </div>
 
         <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
-          <span>Condo: $780k</span>
-          <span>Rent: $2,650/mo</span>
+          <span>Condo: {formatCurrency(condoBenchmarkPrice)}</span>
+          <span>Detached: {formatCurrency(detachedBenchmarkPrice)}</span>
         </div>
       </div>
     )}
@@ -557,22 +569,22 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Drop-in Facilities Matrix</span>
-          <span class="text-sky-600 dark:text-sky-400 font-bold">84 Lighted Hubs</span>
+          <span class="text-sky-600 dark:text-sky-400 font-bold">{lightedCourtsCount} Lighted Hubs</span>
         </div>
 
         <!-- Multi-Facility Proportion Bar -->
         <div class="space-y-1">
           <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden">
-            <div class="bg-emerald-500 w-[45%]" title="Tennis & Pickleball (45%)"></div>
-            <div class="bg-sky-500 w-[25%]" title="Pools & Aquatics (25%)"></div>
-            <div class="bg-indigo-500 w-[18%]" title="Ice Rinks (18%)"></div>
-            <div class="bg-amber-500 w-[12%]" title="Turf Fields (12%)"></div>
+            <div class="bg-emerald-500 w-[55%]" title="Tennis & Pickleball Courts"></div>
+            <div class="bg-sky-500 w-[20%]" title="Pools & Aquatics"></div>
+            <div class="bg-indigo-500 w-[15%]" title="Ice Rinks"></div>
+            <div class="bg-amber-500 w-[10%]" title="Turf Fields"></div>
           </div>
           <div class="flex justify-between text-[8px] text-slate-400 font-medium">
-            <span>🎾 45% Courts</span>
-            <span>🏊 25% Pools</span>
-            <span>⛸️ 18% Rinks</span>
-            <span>⚽ 12% Turf</span>
+            <span>🎾 Courts ({totalCourtsCount})</span>
+            <span>🏊 Pools</span>
+            <span>⛸️ Rinks</span>
+            <span>⚽ Turf</span>
           </div>
         </div>
 
@@ -629,15 +641,22 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
             <span>PRO FRANCHISE RADAR</span>
           </span>
           <span class="text-sky-600 dark:text-sky-400 font-extrabold uppercase text-[9px]">
-            {sportsTeamsData.gameDaySummary.gamesTodayCount > 0 ? `${sportsTeamsData.gameDaySummary.gamesTodayCount} GAMES TODAY` : 'NEXT GAME TONIGHT'}
+            {sportsTeamsData.gameDaySummary.gamesTodayCount > 0 ? `${sportsTeamsData.gameDaySummary.gamesTodayCount} GAMES TODAY` : 'ACTIVE SEASON RADAR'}
           </span>
         </div>
 
-        {sportsTeamsData.gameDaySummary.imminentGame && (
+        {sportsTeamsData.gameDaySummary.imminentGame ? (
           <div class="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-[11px] font-bold text-sky-900 dark:text-sky-200 flex items-center justify-between">
             <span class="truncate">⚡ {sportsTeamsData.gameDaySummary.imminentGame.teamName.replace('Vancouver ', '')} vs {sportsTeamsData.gameDaySummary.imminentGame.opponentName}</span>
             <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-700 dark:text-sky-300 shrink-0 ml-1">
               {sportsTeamsData.gameDaySummary.imminentGame.startTimePST}
+            </span>
+          </div>
+        ) : (
+          <div class="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-[11px] font-bold text-sky-900 dark:text-sky-200 flex items-center justify-between">
+            <span class="truncate">🏒 {allSportsTeams[0]?.name || 'Vancouver Canucks'}</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-700 dark:text-sky-300 shrink-0 ml-1">
+              {allSportsTeams[0]?.standings?.record || 'Active'}
             </span>
           </div>
         )}
@@ -657,15 +676,17 @@ const initialSalesEvents = allSalesEvents.slice(0, 4);
           </span>
         </div>
 
-        <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-[11px] font-bold text-rose-950 dark:text-rose-200 flex items-center justify-between">
-          <span class="truncate">🔥 Aritzia Annual Warehouse Sale</span>
-          <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-700 dark:text-rose-300 shrink-0 ml-1">
-            Aug 27–Sep 1
-          </span>
-        </div>
+        {nextMajorSale && (
+          <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-[11px] font-bold text-rose-950 dark:text-rose-200 flex items-center justify-between">
+            <span class="truncate">🔥 {nextMajorSale.name}</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-700 dark:text-rose-300 shrink-0 ml-1">
+              {nextMajorSale.startDate.slice(5)} to {nextMajorSale.endDate.slice(5)}
+            </span>
+          </div>
+        )}
 
         <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
-          <span>🏷️ 8 In-Person Sales Scheduled</span>
+          <span>🏷️ {allSalesEvents.length} In-Person Sales Scheduled</span>
           <span>Zero Affiliate Ads</span>
         </div>
       </div>
