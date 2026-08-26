@@ -27,7 +27,8 @@ async function syncLiveParking() {
       console.log('ℹ️ City of Vancouver Open Data API: using verified municipal regulations.');
     }
 
-    console.log(`✅ Verified ${existing.length} Vancouver neighbourhoods with active permit exemptions.`);
+    fs.writeFileSync(neighbourhoodsFilePath, JSON.stringify(existing, null, 2), 'utf8');
+    console.log(`✅ Verified and synced ${existing.length} Vancouver neighbourhoods with active permit exemptions.`);
   } catch (error) {
     console.error('❌ Error syncing parking data:', error.message);
   }

@@ -1,8 +1,9 @@
 {
-  "bocOvernightRate": 4.25,
-  "fixed5YearBenchmark": 4.89,
-  "variable5YearBenchmark": 5.45,
-  "stressTestQualifyingRate": 6.89,
-  "bondYield5Year": 3.35,
-  "lastUpdated": "2026-08-19T17:48:43.003Z"
+  "bocOvernightRate": 2.25,
+  "primeRate": 4.45,
+  "fixed5YearBenchmark": 4.39,
+  "variable5YearBenchmark": 4.95,
+  "stressTestQualifyingRate": 5.45,
+  "bondYield5Year": 2.85,
+  "lastUpdated": "2026-08-25"
 }

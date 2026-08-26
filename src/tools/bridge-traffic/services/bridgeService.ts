@@ -1,7 +1,10 @@
 import type { BridgeCrossing, CrossingRegion, TrafficStatus, CrossingIncident, CounterflowState } from '../types';
 import crossingsData from '../data/crossings.json';
+import { calculateDistanceKm } from '../../../services/shared/geo';
 
 export const BASELINE_CROSSINGS: BridgeCrossing[] = crossingsData as BridgeCrossing[];
+
+const INCIDENT_MATCH_RADIUS_KM = 2;
 
 /**
  * Calculates current Vancouver local time counterflow state
@@ -80,7 +83,12 @@ function getDynamicCounterflowState(crossingId: string): { activeConfiguration: 
  */
 export async function getLiveCrossings(): Promise<BridgeCrossing[]> {
   const nowIso = new Date().toISOString();
-  let liveIncidentsByCrossing: Record<string, CrossingIncident[]> = {};
+  // null = upstream unreachable this request, fall back to baseline incidents.
+  // A populated map (even with empty arrays) means the fetch succeeded, so an
+  // absent entry for a crossing means "confirmed no active incidents" rather
+  // than "we don't know" — it must not fall back to a possibly-resolved
+  // baseline incident in that case.
+  let liveIncidentsByCrossing: Record<string, CrossingIncident[]> | null = null;
 
   try {
     const controller = new AbortController();
@@ -99,30 +107,37 @@ export async function getLiveCrossings(): Promise<BridgeCrossing[]> {
     if (open511Res.ok) {
       const data = await open511Res.json();
       const events: any[] = data.events || [];
+      const byId: Record<string, CrossingIncident[]> = {};
+      for (const c of BASELINE_CROSSINGS) byId[c.id] = [];
 
+      // Match by real geographic proximity to each crossing's coordinates, not
+      // free-text search: several crossings share a name with an ordinary
+      // Vancouver street (Oak Street, Knight Street, Cambie/Granville bridges),
+      // so a keyword match on a headline/description would attach unrelated
+      // roadwork anywhere in the region to the bridge.
       for (const ev of events) {
-        const text = `${ev.headline || ''} ${ev.description || ''}`.toLowerCase();
-        let targetId = '';
-        if (text.includes('lions gate')) targetId = 'lions-gate';
-        else if (text.includes('second narrows') || text.includes('ironworkers')) targetId = 'ironworkers';
-        else if (text.includes('massey')) targetId = 'massey-tunnel';
-        else if (text.includes('alex fraser')) targetId = 'alex-fraser';
-        else if (text.includes('oak st') || text.includes('oak street')) targetId = 'oak-street';
-        else if (text.includes('knight st') || text.includes('knight street')) targetId = 'knight-street';
-        else if (text.includes('port mann')) targetId = 'port-mann';
-        else if (text.includes('pattullo')) targetId = 'pattullo';
+        const coords = ev.geography?.coordinates;
+        if (!Array.isArray(coords) || coords.length < 2) continue;
+        const [lng, lat] = coords;
 
-        if (targetId) {
-          if (!liveIncidentsByCrossing[targetId]) liveIncidentsByCrossing[targetId] = [];
-          liveIncidentsByCrossing[targetId].push({
-            id: ev.id || `inc-${Date.now()}`,
-            severity: ev.severity === 'MAJOR' ? 'major' : 'minor',
-            description: ev.headline || ev.description || 'Active traffic incident',
-            lanesAffected: ev.roads?.[0]?.name || 'Traffic affected',
-            reportedTime: ev.updated || nowIso,
-          });
+        for (const c of BASELINE_CROSSINGS) {
+          const distance = calculateDistanceKm(
+            { latitude: c.coordinates.lat, longitude: c.coordinates.lng },
+            { latitude: lat, longitude: lng }
+          );
+          if (distance <= INCIDENT_MATCH_RADIUS_KM) {
+            byId[c.id].push({
+              id: ev.id || `inc-${Date.now()}`,
+              severity: ev.severity === 'MAJOR' ? 'major' : 'minor',
+              description: ev.headline || ev.description || 'Active traffic incident',
+              lanesAffected: ev.roads?.[0]?.name || 'Traffic affected',
+              reportedTime: ev.updated || nowIso,
+            });
+          }
         }
       }
+
+      liveIncidentsByCrossing = byId;
     }
   } catch (e) {
     // Network timeout or offline, proceed with baseline
@@ -137,7 +152,7 @@ export async function getLiveCrossings(): Promise<BridgeCrossing[]> {
         }
       : c.counterflow;
 
-    const incidents = liveIncidentsByCrossing[c.id] || c.activeIncidents || [];
+    const incidents = liveIncidentsByCrossing ? (liveIncidentsByCrossing[c.id] || []) : (c.activeIncidents || []);
     const hasMajor = incidents.some((i) => i.severity === 'major');
     const hasMinor = incidents.some((i) => i.severity === 'minor');
 

@@ -90,7 +90,7 @@ ${health.map((h) => `- **${h.name}** (${h.facilityType === 'emergency_department
 ---
 
 ## 6. Vancouver Major Sports Teams Radar (/sports-teams)
-${sportsTeamsData.teams.map((t) => `- **${t.name}** (${t.league} - ${t.venue.name}): Record: ${t.standings.record} (${t.standings.points} pts, ${t.standings.streak} streak) | Next Game: ${t.nextGame.date} vs ${t.nextGame.opponent.name} @ ${t.nextGame.startTimePST} (${t.nextGame.broadcast.tv})`).join('\n')}
+${sportsTeamsData.teams.map((t) => `- **${t.name}** (${t.league} - ${t.venue.name}): Record: ${t.standings.record} (${t.standings.points} pts, ${t.standings.streak} streak) | Next Game: ${t.nextGame ? `${t.nextGame.date} vs ${t.nextGame.opponent.name} @ ${t.nextGame.startTimePST} (${t.nextGame.broadcast.tv})` : 'Not yet confirmed'}`).join('\n')}
 
 ---
 

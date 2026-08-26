@@ -23,193 +23,61 @@
     },
     "standings": {
       "divisionOrConf": "Pacific Division (Western Conference)",
-      "rank": 2,
-      "record": "39-23-7",
-      "points": 85,
-      "goalDiffOrMargin": 28,
-      "streak": "2W",
+      "rank": 8,
+      "record": "25-49-8",
+      "points": 58,
+      "goalDiffOrMargin": -100,
+      "streak": "1L",
       "formLast5": [
-        "W",
-        "W",
         "L",
         "W",
-        "OTL"
+        "W",
+        "W",
+        "L"
       ]
     },
     "lastGame": {
-      "gameId": "nhl-202502-1082",
-      "date": "2026-03-24T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
+      "gameId": "nhl-2025021311",
+      "date": "2026-04-17T01:00:00Z",
+      "startTimePST": "6:00 PM PST",
       "opponent": {
         "name": "Edmonton Oilers",
         "shortName": "Oilers",
-        "abbreviation": "EDM",
-        "logoEmoji": "🛢️",
-        "record": "41-22-5"
+        "abbreviation": "EDM"
       },
-      "isHome": true,
-      "venueName": "Rogers Arena",
+      "isHome": false,
+      "venueName": "Rogers Place",
+      "broadcast": {
+        "tv": "SN",
+        "radio": "Check nhl.com/canucks"
+      },
       "status": "final",
       "score": {
-        "team": 4,
-        "opponent": 3,
-        "decisionPeriod": "OT"
+        "team": 1,
+        "opponent": 6,
+        "decisionPeriod": "REG"
       },
-      "result": "W",
-      "broadcast": {
-        "tv": "Sportsnet Pacific",
-        "radio": "Sportsnet 650 AM"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Hughes nets OT winner as Canucks edge Oilers 4-3 at Rogers Arena"
+      "result": "L"
     },
     "nextGame": {
-      "gameId": "nhl-202502-1095",
-      "date": "2026-03-27T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
+      "gameId": "nhl-2026010005",
+      "date": "2026-09-20T01:00:00Z",
+      "startTimePST": "6:00 PM PST",
       "opponent": {
-        "name": "Calgary Flames",
-        "shortName": "Flames",
-        "abbreviation": "CGY",
-        "logoEmoji": "🔥",
-        "record": "34-29-7"
+        "name": "Seattle Kraken",
+        "shortName": "Kraken",
+        "abbreviation": "SEA"
       },
-      "isHome": true,
-      "venueName": "Rogers Arena",
-      "status": "upcoming",
+      "isHome": false,
+      "venueName": "Climate Pledge Arena",
       "broadcast": {
-        "tv": "Sportsnet Pacific",
-        "radio": "Sportsnet 650 AM"
+        "tv": "Check nhl.com/canucks",
+        "radio": "Check nhl.com/canucks"
       },
-      "ticketLink": "https://www.ticketmaster.ca/vancouver-canucks-tickets/artist/806037",
-      "rivalryMatchup": true
+      "status": "upcoming"
     },
-    "recentGames": [
-      {
-        "gameId": "nhl-202502-1082",
-        "date": "2026-03-24T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Edmonton Oilers",
-          "shortName": "Oilers",
-          "abbreviation": "EDM"
-        },
-        "isHome": true,
-        "venueName": "Rogers Arena",
-        "status": "final",
-        "score": {
-          "team": 4,
-          "opponent": 3,
-          "decisionPeriod": "OT"
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "Sportsnet Pacific",
-          "radio": "Sportsnet 650 AM"
-        }
-      },
-      {
-        "gameId": "nhl-202502-1070",
-        "date": "2026-03-22T17:00:00-07:00",
-        "startTimePST": "5:00 PM PST",
-        "opponent": {
-          "name": "Anaheim Ducks",
-          "shortName": "Ducks",
-          "abbreviation": "ANA"
-        },
-        "isHome": false,
-        "venueName": "Honda Center",
-        "status": "final",
-        "score": {
-          "team": 3,
-          "opponent": 1,
-          "decisionPeriod": "REG"
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "Sportsnet",
-          "radio": "Sportsnet 650 AM"
-        }
-      },
-      {
-        "gameId": "nhl-202502-1055",
-        "date": "2026-03-19T19:30:00-07:00",
-        "startTimePST": "7:30 PM PST",
-        "opponent": {
-          "name": "Los Angeles Kings",
-          "shortName": "Kings",
-          "abbreviation": "LAK"
-        },
-        "isHome": false,
-        "venueName": "Crypto.com Arena",
-        "status": "final",
-        "score": {
-          "team": 1,
-          "opponent": 3,
-          "decisionPeriod": "REG"
-        },
-        "result": "L",
-        "broadcast": {
-          "tv": "Sportsnet Pacific",
-          "radio": "Sportsnet 650 AM"
-        }
-      }
-    ],
-    "upcomingSchedule": [
-      {
-        "gameId": "nhl-202502-1095",
-        "date": "2026-03-27T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Calgary Flames",
-          "shortName": "Flames",
-          "abbreviation": "CGY"
-        },
-        "isHome": true,
-        "venueName": "Rogers Arena",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "Sportsnet Pacific",
-          "radio": "Sportsnet 650 AM"
-        },
-        "rivalryMatchup": true
-      },
-      {
-        "gameId": "nhl-202502-1110",
-        "date": "2026-03-29T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Seattle Kraken",
-          "shortName": "Kraken",
-          "abbreviation": "SEA"
-        },
-        "isHome": true,
-        "venueName": "Rogers Arena",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "Sportsnet Pacific",
-          "radio": "Sportsnet 650 AM"
-        },
-        "rivalryMatchup": true
-      },
-      {
-        "gameId": "nhl-202502-1124",
-        "date": "2026-04-01T19:30:00-07:00",
-        "startTimePST": "7:30 PM PST",
-        "opponent": {
-          "name": "Vegas Golden Knights",
-          "shortName": "Golden Knights",
-          "abbreviation": "VGK"
-        },
-        "isHome": false,
-        "venueName": "T-Mobile Arena",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "Sportsnet Pacific",
-          "radio": "Sportsnet 650 AM"
-        }
-      }
-    ],
+    "recentGames": [],
+    "upcomingSchedule": [],
     "leaders": [
       {
         "category": "Points",
@@ -266,136 +134,47 @@
       ]
     },
     "lastGame": {
-      "gameId": "mls-2026-9041",
-      "date": "2026-03-21T19:30:00-07:00",
-      "startTimePST": "7:30 PM PST",
+      "gameId": "mls-761749",
+      "date": "2026-08-23T01:30Z",
+      "startTimePST": "6:30 PM PST",
       "opponent": {
-        "name": "Seattle Sounders FC",
-        "shortName": "Sounders",
-        "abbreviation": "SEA",
-        "logoEmoji": "🌲",
-        "record": "12-10-8"
+        "name": "FC Dallas",
+        "shortName": "Dallas",
+        "abbreviation": "DAL"
       },
       "isHome": true,
       "venueName": "BC Place",
+      "broadcast": {
+        "tv": "Apple TV",
+        "radio": "Check whitecapsfc.com"
+      },
       "status": "final",
       "score": {
-        "team": 2,
-        "opponent": 1,
+        "team": 5,
+        "opponent": 0,
         "decisionPeriod": "REG"
       },
-      "result": "W",
-      "broadcast": {
-        "tv": "Apple TV (MLS Season Pass)",
-        "radio": "AM 730"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Whitecaps hoist Cascadia Cup points with 2-1 derby triumph over Sounders"
+      "result": "W"
     },
     "nextGame": {
-      "gameId": "mls-2026-9055",
-      "date": "2026-03-28T16:30:00-07:00",
-      "startTimePST": "4:30 PM PST",
+      "gameId": "mls-761762",
+      "date": "2026-08-30T00:30Z",
+      "startTimePST": "5:30 PM PST",
       "opponent": {
-        "name": "Portland Timbers",
-        "shortName": "Timbers",
-        "abbreviation": "POR",
-        "logoEmoji": "🪓",
-        "record": "11-11-8"
+        "name": "Sporting Kansas City",
+        "shortName": "Kansas City",
+        "abbreviation": "SKC"
       },
       "isHome": false,
-      "venueName": "Providence Park",
-      "status": "upcoming",
+      "venueName": "Sporting Park",
       "broadcast": {
-        "tv": "Apple TV (MLS Season Pass) / TSN",
-        "radio": "AM 730"
+        "tv": "Apple TV",
+        "radio": "Check whitecapsfc.com"
       },
-      "ticketLink": "https://www.whitecapsfc.com/tickets/",
-      "rivalryMatchup": true
+      "status": "upcoming"
     },
-    "recentGames": [
-      {
-        "gameId": "mls-2026-9041",
-        "date": "2026-03-21T19:30:00-07:00",
-        "startTimePST": "7:30 PM PST",
-        "opponent": {
-          "name": "Seattle Sounders FC",
-          "shortName": "Sounders",
-          "abbreviation": "SEA"
-        },
-        "isHome": true,
-        "venueName": "BC Place",
-        "status": "final",
-        "score": {
-          "team": 2,
-          "opponent": 1
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "Apple TV (MLS Season Pass)",
-          "radio": "AM 730"
-        }
-      },
-      {
-        "gameId": "mls-2026-9032",
-        "date": "2026-03-14T18:00:00-07:00",
-        "startTimePST": "6:00 PM PST",
-        "opponent": {
-          "name": "LA Galaxy",
-          "shortName": "Galaxy",
-          "abbreviation": "LAG"
-        },
-        "isHome": false,
-        "venueName": "Dignity Health Sports Park",
-        "status": "final",
-        "score": {
-          "team": 2,
-          "opponent": 2
-        },
-        "result": "D",
-        "broadcast": {
-          "tv": "Apple TV (MLS Season Pass)",
-          "radio": "AM 730"
-        }
-      }
-    ],
-    "upcomingSchedule": [
-      {
-        "gameId": "mls-2026-9055",
-        "date": "2026-03-28T16:30:00-07:00",
-        "startTimePST": "4:30 PM PST",
-        "opponent": {
-          "name": "Portland Timbers",
-          "shortName": "Timbers",
-          "abbreviation": "POR"
-        },
-        "isHome": false,
-        "venueName": "Providence Park",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "Apple TV (MLS Season Pass) / TSN",
-          "radio": "AM 730"
-        },
-        "rivalryMatchup": true
-      },
-      {
-        "gameId": "mls-2026-9068",
-        "date": "2026-04-04T19:30:00-07:00",
-        "startTimePST": "7:30 PM PST",
-        "opponent": {
-          "name": "Austin FC",
-          "shortName": "Austin",
-          "abbreviation": "ATX"
-        },
-        "isHome": true,
-        "venueName": "BC Place",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "Apple TV (MLS Season Pass)",
-          "radio": "AM 730"
-        }
-      }
-    ],
+    "recentGames": [],
+    "upcomingSchedule": [],
     "leaders": [
       {
         "category": "Top Scorer",
@@ -451,97 +230,10 @@
         "L"
       ]
     },
-    "lastGame": {
-      "gameId": "cfl-2026-wk18",
-      "date": "2026-03-20T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
-      "opponent": {
-        "name": "Calgary Stampeders",
-        "shortName": "Stampeders",
-        "abbreviation": "CGY",
-        "logoEmoji": "🐎",
-        "record": "8-9-0"
-      },
-      "isHome": true,
-      "venueName": "BC Place",
-      "status": "final",
-      "score": {
-        "team": 31,
-        "opponent": 22,
-        "decisionPeriod": "REG"
-      },
-      "result": "W",
-      "broadcast": {
-        "tv": "TSN1 / RDS",
-        "radio": "AM 730"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Lions lock in playoff home seed with commanding 31-22 win over Stamps"
-    },
-    "nextGame": {
-      "gameId": "cfl-2026-wk19",
-      "date": "2026-03-27T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
-      "opponent": {
-        "name": "Saskatchewan Roughriders",
-        "shortName": "Roughriders",
-        "abbreviation": "SSK",
-        "logoEmoji": "🌾",
-        "record": "9-8-0"
-      },
-      "isHome": false,
-      "venueName": "Mosaic Stadium",
-      "status": "upcoming",
-      "broadcast": {
-        "tv": "TSN1",
-        "radio": "AM 730"
-      },
-      "ticketLink": "https://www.bclions.com/tickets/",
-      "rivalryMatchup": true
-    },
-    "recentGames": [
-      {
-        "gameId": "cfl-2026-wk18",
-        "date": "2026-03-20T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Calgary Stampeders",
-          "shortName": "Stampeders",
-          "abbreviation": "CGY"
-        },
-        "isHome": true,
-        "venueName": "BC Place",
-        "status": "final",
-        "score": {
-          "team": 31,
-          "opponent": 22
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "TSN1",
-          "radio": "AM 730"
-        }
-      }
-    ],
-    "upcomingSchedule": [
-      {
-        "gameId": "cfl-2026-wk19",
-        "date": "2026-03-27T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Saskatchewan Roughriders",
-          "shortName": "Roughriders",
-          "abbreviation": "SSK"
-        },
-        "isHome": false,
-        "venueName": "Mosaic Stadium",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "TSN1",
-          "radio": "AM 730"
-        }
-      }
-    ],
+    "lastGame": null,
+    "nextGame": null,
+    "recentGames": [],
+    "upcomingSchedule": [],
     "leaders": [
       {
         "category": "Passing",
@@ -598,96 +290,47 @@
       ]
     },
     "lastGame": {
-      "gameId": "milb-2026-4412",
-      "date": "2026-03-22T13:05:00-07:00",
-      "startTimePST": "1:05 PM PST",
-      "opponent": {
-        "name": "Eugene Emeralds",
-        "shortName": "Emeralds",
-        "abbreviation": "EUG",
-        "logoEmoji": "🌲",
-        "record": "62-58"
-      },
-      "isHome": true,
-      "venueName": "Nat Bailey Stadium",
-      "status": "final",
-      "score": {
-        "team": 6,
-        "opponent": 2,
-        "decisionPeriod": "REG"
-      },
-      "result": "W",
-      "broadcast": {
-        "tv": "MiLB.TV / Bally Sports",
-        "radio": "Sportsnet 650 AM"
-      },
-      "rivalryMatchup": false,
-      "recapHeadline": "C's sweep homestand series with 6-2 victory on Sunday A&W Family Day"
-    },
-    "nextGame": {
-      "gameId": "milb-2026-4420",
-      "date": "2026-03-28T19:05:00-07:00",
+      "gameId": "milb-819050",
+      "date": "2026-08-26T02:05:00Z",
       "startTimePST": "7:05 PM PST",
       "opponent": {
         "name": "Spokane Indians",
         "shortName": "Indians",
-        "abbreviation": "SPO",
-        "logoEmoji": "⚾",
-        "record": "65-55"
+        "abbreviation": "SPO"
       },
       "isHome": true,
-      "venueName": "Nat Bailey Stadium",
-      "status": "upcoming",
+      "venueName": "Rogers Field at Nat Bailey Stadium",
       "broadcast": {
-        "tv": "MiLB.TV",
-        "radio": "Sportsnet 650 AM"
+        "tv": "MiLB.tv",
+        "radio": "Check milb.com/vancouver"
       },
-      "ticketLink": "https://www.milb.com/vancouver/tickets",
-      "rivalryMatchup": true
+      "status": "final",
+      "score": {
+        "team": 6,
+        "opponent": 1,
+        "decisionPeriod": "REG"
+      },
+      "result": "W"
     },
-    "recentGames": [
-      {
-        "gameId": "milb-2026-4412",
-        "date": "2026-03-22T13:05:00-07:00",
-        "startTimePST": "1:05 PM PST",
-        "opponent": {
-          "name": "Eugene Emeralds",
-          "shortName": "Emeralds",
-          "abbreviation": "EUG"
-        },
-        "isHome": true,
-        "venueName": "Nat Bailey Stadium",
-        "status": "final",
-        "score": {
-          "team": 6,
-          "opponent": 2
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "MiLB.TV",
-          "radio": "Sportsnet 650 AM"
-        }
-      }
-    ],
-    "upcomingSchedule": [
-      {
-        "gameId": "milb-2026-4420",
-        "date": "2026-03-28T19:05:00-07:00",
-        "startTimePST": "7:05 PM PST",
-        "opponent": {
-          "name": "Spokane Indians",
-          "shortName": "Indians",
-          "abbreviation": "SPO"
-        },
-        "isHome": true,
-        "venueName": "Nat Bailey Stadium",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "MiLB.TV",
-          "radio": "Sportsnet 650 AM"
-        }
-      }
-    ],
+    "nextGame": {
+      "gameId": "milb-819052",
+      "date": "2026-08-27T02:05:00Z",
+      "startTimePST": "7:05 PM PST",
+      "opponent": {
+        "name": "Spokane Indians",
+        "shortName": "Indians",
+        "abbreviation": "SPO"
+      },
+      "isHome": true,
+      "venueName": "Rogers Field at Nat Bailey Stadium",
+      "broadcast": {
+        "tv": "MiLB.tv",
+        "radio": "Check milb.com/vancouver"
+      },
+      "status": "upcoming"
+    },
+    "recentGames": [],
+    "upcomingSchedule": [],
     "leaders": [
       {
         "category": "Batting AVG",
@@ -744,96 +387,31 @@
       ]
     },
     "lastGame": {
-      "gameId": "nll-2026-088",
-      "date": "2026-03-21T19:00:00-07:00",
+      "gameId": "nll-720162576",
+      "date": "2026-04-25T02:00:00.000Z",
       "startTimePST": "7:00 PM PST",
       "opponent": {
-        "name": "Calgary Roughnecks",
-        "shortName": "Roughnecks",
-        "abbreviation": "CGY",
-        "logoEmoji": "🥍",
-        "record": "7-8"
+        "name": "Halifax Thunderbirds",
+        "shortName": "Thunderbirds",
+        "abbreviation": "HFX"
       },
       "isHome": true,
       "venueName": "Rogers Arena",
       "status": "final",
       "score": {
-        "team": 13,
+        "team": 7,
         "opponent": 10,
         "decisionPeriod": "REG"
       },
-      "result": "W",
+      "result": "L",
       "broadcast": {
-        "tv": "TSN+ / ESPN+",
-        "radio": "Sportsnet 650 AM"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Warriors surge past Roughnecks 13-10 in electric West Coast showdown"
-    },
-    "nextGame": {
-      "gameId": "nll-2026-095",
-      "date": "2026-03-28T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
-      "opponent": {
-        "name": "San Diego Seals",
-        "shortName": "Seals",
-        "abbreviation": "SD",
-        "logoEmoji": "🦭",
-        "record": "10-5"
-      },
-      "isHome": false,
-      "venueName": "Pechanga Arena",
-      "status": "upcoming",
-      "broadcast": {
-        "tv": "TSN+",
-        "radio": "Sportsnet 650 AM"
-      },
-      "ticketLink": "https://vancouverwarriors.com/tickets/",
-      "rivalryMatchup": false
-    },
-    "recentGames": [
-      {
-        "gameId": "nll-2026-088",
-        "date": "2026-03-21T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Calgary Roughnecks",
-          "shortName": "Roughnecks",
-          "abbreviation": "CGY"
-        },
-        "isHome": true,
-        "venueName": "Rogers Arena",
-        "status": "final",
-        "score": {
-          "team": 13,
-          "opponent": 10
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "TSN+",
-          "radio": "Sportsnet 650 AM"
-        }
+        "tv": "Check nll.com",
+        "radio": "Check nll.com"
       }
-    ],
-    "upcomingSchedule": [
-      {
-        "gameId": "nll-2026-095",
-        "date": "2026-03-28T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "San Diego Seals",
-          "shortName": "Seals",
-          "abbreviation": "SD"
-        },
-        "isHome": false,
-        "venueName": "Pechanga Arena",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "TSN+",
-          "radio": "Sportsnet 650 AM"
-        }
-      }
-    ],
+    },
+    "nextGame": null,
+    "recentGames": [],
+    "upcomingSchedule": [],
     "leaders": [
       {
         "category": "Points",
@@ -889,97 +467,10 @@
         "L"
       ]
     },
-    "lastGame": {
-      "gameId": "nsl-2026-012",
-      "date": "2026-03-22T15:00:00-07:00",
-      "startTimePST": "3:00 PM PST",
-      "opponent": {
-        "name": "Calgary Wild FC",
-        "shortName": "Wild FC",
-        "abbreviation": "CAL",
-        "logoEmoji": "🦉",
-        "record": "4-3-1"
-      },
-      "isHome": true,
-      "venueName": "Swangard Stadium",
-      "status": "final",
-      "score": {
-        "team": 3,
-        "opponent": 1,
-        "decisionPeriod": "REG"
-      },
-      "result": "W",
-      "broadcast": {
-        "tv": "CBC Sports / TSN",
-        "radio": "CBC Radio One 88.1 FM"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Rise FC illuminate Swangard Stadium with clinical 3-1 triumph over Calgary"
-    },
-    "nextGame": {
-      "gameId": "nsl-2026-018",
-      "date": "2026-03-29T14:00:00-07:00",
-      "startTimePST": "2:00 PM PST",
-      "opponent": {
-        "name": "AFC Toronto",
-        "shortName": "Toronto",
-        "abbreviation": "TOR",
-        "logoEmoji": "🍁",
-        "record": "5-1-2"
-      },
-      "isHome": false,
-      "venueName": "York Lions Stadium",
-      "status": "upcoming",
-      "broadcast": {
-        "tv": "CBC Sports / TSN",
-        "radio": "CBC Radio One 88.1 FM"
-      },
-      "ticketLink": "https://vancouverrisefc.com/tickets",
-      "rivalryMatchup": false
-    },
-    "recentGames": [
-      {
-        "gameId": "nsl-2026-012",
-        "date": "2026-03-22T15:00:00-07:00",
-        "startTimePST": "3:00 PM PST",
-        "opponent": {
-          "name": "Calgary Wild FC",
-          "shortName": "Wild FC",
-          "abbreviation": "CAL"
-        },
-        "isHome": true,
-        "venueName": "Swangard Stadium",
-        "status": "final",
-        "score": {
-          "team": 3,
-          "opponent": 1
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "CBC Sports",
-          "radio": "CBC Radio"
-        }
-      }
-    ],
-    "upcomingSchedule": [
-      {
-        "gameId": "nsl-2026-018",
-        "date": "2026-03-29T14:00:00-07:00",
-        "startTimePST": "2:00 PM PST",
-        "opponent": {
-          "name": "AFC Toronto",
-          "shortName": "Toronto",
-          "abbreviation": "TOR"
-        },
-        "isHome": false,
-        "venueName": "York Lions Stadium",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "CBC Sports / TSN",
-          "radio": "CBC Radio"
-        }
-      }
-    ],
+    "lastGame": null,
+    "nextGame": null,
+    "recentGames": [],
+    "upcomingSchedule": [],
     "leaders": [
       {
         "category": "Top Scorer",
@@ -1036,96 +527,31 @@
       ]
     },
     "lastGame": {
-      "gameId": "cebl-2026-044",
-      "date": "2026-03-21T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
+      "gameId": "cebl-2878847",
+      "date": "2026-08-08T19:30:00Z",
+      "startTimePST": "12:30 PM PST",
       "opponent": {
-        "name": "Calgary Surge",
-        "shortName": "Surge",
-        "abbreviation": "CGY",
-        "logoEmoji": "⚡",
-        "record": "11-9"
+        "name": "Winnipeg Sea Bears",
+        "shortName": "Bears",
+        "abbreviation": "WIN"
       },
       "isHome": true,
-      "venueName": "Langley Events Centre",
+      "venueName": "Envision Financial Court at Langley Events Centre",
       "status": "final",
       "score": {
-        "team": 94,
-        "opponent": 88,
+        "team": 96,
+        "opponent": 107,
         "decisionPeriod": "REG"
       },
-      "result": "W",
+      "result": "L",
       "broadcast": {
-        "tv": "CEBL+ / TSN+",
-        "radio": "AM 730"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Bandits hit Target Score with clutch triple to down Surge 94-88 at LEC"
-    },
-    "nextGame": {
-      "gameId": "cebl-2026-052",
-      "date": "2026-03-28T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
-      "opponent": {
-        "name": "Edmonton Stingers",
-        "shortName": "Stingers",
-        "abbreviation": "EDM",
-        "logoEmoji": "🐝",
-        "record": "13-7"
-      },
-      "isHome": true,
-      "venueName": "Langley Events Centre",
-      "status": "upcoming",
-      "broadcast": {
-        "tv": "CEBL+ / TSN+",
-        "radio": "AM 730"
-      },
-      "ticketLink": "https://www.thebandits.ca/tickets",
-      "rivalryMatchup": true
-    },
-    "recentGames": [
-      {
-        "gameId": "cebl-2026-044",
-        "date": "2026-03-21T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Calgary Surge",
-          "shortName": "Surge",
-          "abbreviation": "CGY"
-        },
-        "isHome": true,
-        "venueName": "Langley Events Centre",
-        "status": "final",
-        "score": {
-          "team": 94,
-          "opponent": 88
-        },
-        "result": "W",
-        "broadcast": {
-          "tv": "CEBL+",
-          "radio": "AM 730"
-        }
+        "tv": "Check cebl.ca",
+        "radio": "Check cebl.ca"
       }
-    ],
-    "upcomingSchedule": [
-      {
-        "gameId": "cebl-2026-052",
-        "date": "2026-03-28T19:00:00-07:00",
-        "startTimePST": "7:00 PM PST",
-        "opponent": {
-          "name": "Edmonton Stingers",
-          "shortName": "Stingers",
-          "abbreviation": "EDM"
-        },
-        "isHome": true,
-        "venueName": "Langley Events Centre",
-        "status": "upcoming",
-        "broadcast": {
-          "tv": "CEBL+ / TSN+",
-          "radio": "AM 730"
-        }
-      }
-    ],
+    },
+    "nextGame": null,
+    "recentGames": [],
+    "upcomingSchedule": [],
     "leaders": [
       {
         "category": "Scoring",

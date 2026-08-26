@@ -7,7 +7,7 @@ export type WaitIntensity = 'low' | 'moderate' | 'high' | 'unavailable';
 export type HealthFilterCategory = 'all' | 'emergency_department' | 'urgent_primary_care_centre' | 'pediatric';
 
 export interface TriageWaitData {
-  waitTimeMinutes: number;         // e.g. 105 (1h 45m)
+  waitTimeMinutes?: number;        // e.g. 105 (1h 45m); absent when the facility currently reports no wait time
   patientCountWaiting?: number;    // e.g. 18
   patientCountTreating?: number;   // e.g. 34
   intensity: WaitIntensity;

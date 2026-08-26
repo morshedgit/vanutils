@@ -40,19 +40,14 @@ export interface RawScrapeResult {
  */
 export async function scrapeVCHWaterQuality(): Promise<RawScrapeResult[]> {
   try {
-    // In production Node/Cloudflare environment, this performs a fetch to VCH page:
-    // const response = await fetch(DATA_SOURCES.vch.url);
-    // const html = await response.text();
-    // In Edge environments, parse tables with regex or HTMLRewriter
-    return [
-      { beachName: 'English Bay Beach', sampleDate: new Date().toISOString().split('T')[0], eColiSingle: 35 },
-      { beachName: 'Kitsilano Beach', sampleDate: new Date().toISOString().split('T')[0], eColiSingle: 28 },
-      { beachName: 'Jericho Beach', sampleDate: new Date().toISOString().split('T')[0], eColiSingle: 20 },
-      { beachName: 'Spanish Banks West', sampleDate: new Date().toISOString().split('T')[0], eColiSingle: 14 },
-      { beachName: 'Sunset Beach', sampleDate: new Date().toISOString().split('T')[0], eColiSingle: 180 },
-    ];
+    return BEACHES.map((b) => ({
+      beachName: b.name,
+      sampleDate: b.latestSample.date,
+      eColiSingle: b.latestSample.singleSampleCount ?? b.latestSample.eColiCount ?? 0,
+      notes: b.latestSample.notes,
+    }));
   } catch (error) {
-    console.error('Error scraping VCH water quality:', error);
+    console.error('Error extracting water quality:', error);
     return [];
   }
 }

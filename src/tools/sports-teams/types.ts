@@ -80,8 +80,8 @@ export interface SportsTeam {
     accent: string;
   };
   standings: TeamStandings;
-  lastGame: TeamGame;
-  nextGame: TeamGame;
+  lastGame: TeamGame | null;
+  nextGame: TeamGame | null;
   recentGames: TeamGame[];
   upcomingSchedule: TeamGame[];
   leaders: TeamLeader[];

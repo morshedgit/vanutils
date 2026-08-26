@@ -9,6 +9,42 @@ import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 export const NEIGHBOURHOODS: NeighbourhoodParkingProfile[] = neighbourhoodsData as NeighbourhoodParkingProfile[];
 
+const WEEKDAY_MAP: Record<string, number> = {
+  sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6,
+};
+
+/**
+ * Determines whether `date` is an actual scheduled sweep day for a sweepDays
+ * string like "Monday - Sunday", "Every Tuesday", or "1st & 3rd Tuesday".
+ * Returns false for anything it can't confidently parse (e.g. "Monthly" with
+ * no specified day) rather than guessing — sweepHours alone isn't enough to
+ * know a sweep is active without also knowing it's the right day.
+ */
+function isSweepDayToday(sweepDaysText: string, date: Date): boolean {
+  const text = sweepDaysText.trim().toLowerCase();
+
+  if (text.includes('monday - sunday') || text.includes('every day') || text === 'daily') {
+    return true;
+  }
+
+  const everyMatch = text.match(/^every\s+([a-z]+)$/);
+  if (everyMatch) {
+    const weekday = WEEKDAY_MAP[everyMatch[1]];
+    return weekday !== undefined && date.getDay() === weekday;
+  }
+
+  const nthMatch = text.match(/^((?:\d+(?:st|nd|rd|th)\s*&?\s*)+)([a-z]+)$/);
+  if (nthMatch) {
+    const weekday = WEEKDAY_MAP[nthMatch[2]];
+    if (weekday === undefined || date.getDay() !== weekday) return false;
+    const ordinals = (nthMatch[1].match(/\d+/g) || []).map((n) => parseInt(n, 10));
+    const occurrence = Math.ceil(date.getDate() / 7);
+    return ordinals.includes(occurrence);
+  }
+
+  return false;
+}
+
 /**
  * Dynamically loads live parking regulations and sweeping schedules at the edge
  */
@@ -80,14 +116,48 @@ export function evaluateNeighbourhoodSpot(
     isWithin12Hours: isWithin12hRush,
   };
 
+const NEIGHBOURHOOD_COORDS: Record<string, { lat: number; lng: number }> = {
+  downtown: { lat: 49.2827, lng: -123.1207 },
+  'west-end': { lat: 49.2858, lng: -123.1340 },
+  'mount-pleasant': { lat: 49.2635, lng: -123.1012 },
+  kitsilano: { lat: 49.2684, lng: -123.1681 },
+  'commercial-drive': { lat: 49.2748, lng: -123.0695 },
+  'olympic-village': { lat: 49.2687, lng: -123.1101 },
+  ubc: { lat: 49.2606, lng: -123.2460 },
+  'north-van': { lat: 49.3163, lng: -123.0693 },
+};
+
   // 2. Street Sweeping / Leaf Cleaning Check
+  const sweepHoursMatch = neighbourhood.sweepingSchedule.sweepHours.match(/(\d{2}):\d{2}\s*-\s*(\d{2}):\d{2}/);
+  const sweepStartHour = sweepHoursMatch ? parseInt(sweepHoursMatch[1], 10) : 2;
+  const sweepEndHour = sweepHoursMatch ? parseInt(sweepHoursMatch[2], 10) : 6;
+  const isTodayASweepDay = isSweepDayToday(neighbourhood.sweepingSchedule.sweepDays, date);
+  const isCurrentlySweeping = isTodayASweepDay && hour >= sweepStartHour && hour < sweepEndHour;
+
+  // Walk forward day-by-day to the next date that is both a real scheduled
+  // sweep day (per sweepDays) and hasn't already passed its start time today.
+  // Caps at 40 days so an unparseable sweepDays value (e.g. "Monthly" with no
+  // specific day given) can't spin forever — it just yields a distant,
+  // clearly-non-imminent placeholder rather than a false "sweeping now".
+  const nextSweepDate = new Date(date);
+  nextSweepDate.setHours(sweepStartHour, 0, 0, 0);
+  if (nextSweepDate.getTime() <= date.getTime()) {
+    nextSweepDate.setDate(nextSweepDate.getDate() + 1);
+  }
+  for (let i = 0; i < 40 && !isSweepDayToday(neighbourhood.sweepingSchedule.sweepDays, nextSweepDate); i++) {
+    nextSweepDate.setDate(nextSweepDate.getDate() + 1);
+  }
+
+  const nextSweepEndDate = new Date(nextSweepDate);
+  nextSweepEndDate.setHours(sweepEndHour, 0, 0, 0);
+
   const sweeping = {
-    nextSweepStart: date.toISOString(),
-    nextSweepEnd: date.toISOString(),
+    nextSweepStart: nextSweepDate.toISOString(),
+    nextSweepEnd: nextSweepEndDate.toISOString(),
     frequency: neighbourhood.sweepingSchedule.frequency,
-    isWithin24Hours: false,
-    isWithin12Hours: false,
-    isCurrentlyActive: false,
+    isWithin24Hours: nextSweepDate.getTime() - date.getTime() <= 24 * 3600 * 1000,
+    isWithin12Hours: nextSweepDate.getTime() - date.getTime() <= 12 * 3600 * 1000,
+    isCurrentlyActive: isCurrentlySweeping,
     seasonalLeafCleaningActive: neighbourhood.sweepingSchedule.seasonalLeafCleaning,
   };
 
@@ -100,6 +170,10 @@ export function evaluateNeighbourhoodSpot(
     clearanceStatus = 'prohibited';
     primaryReason = `Rush hour towing active (${neighbourhood.rushHourLanes.hoursText})`;
     rulesSummary.push('Do NOT end car-share trip on designated arterial corridors.');
+  } else if (isCurrentlySweeping) {
+    clearanceStatus = 'prohibited';
+    primaryReason = `Street sweeping active (${neighbourhood.sweepingSchedule.sweepHours})`;
+    rulesSummary.push('Street sweeping in progress. Towing enforced on signed streets.');
   } else if (isWithin12hRush) {
     clearanceStatus = 'caution';
     primaryReason = `Upcoming rush hour restriction: ${neighbourhood.rushHourLanes.hoursText}`;
@@ -110,9 +184,11 @@ export function evaluateNeighbourhoodSpot(
     rulesSummary.push(`Permit Zone ${neighbourhood.residentialPermitRules.permitZoneCode}: Free parking for approved car-shares.`);
   }
 
+  const coords = NEIGHBOURHOOD_COORDS[neighbourhood.id] || { lat: 49.2827, lng: -123.1207 };
+
   return {
-    latitude: 49.2827,
-    longitude: -123.1207,
+    latitude: coords.lat,
+    longitude: coords.lng,
     nearestAddress: `${neighbourhood.name}, Vancouver, BC`,
     neighbourhood: neighbourhood.name,
     insideHomeZone: neighbourhood.insideHomeZone,

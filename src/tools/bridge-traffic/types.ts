@@ -39,6 +39,7 @@ export interface BridgeCrossing {
   name: string;                   // "Lions Gate Bridge"
   shortName: string;              // "Lions Gate"
   highwayNumber?: string;         // "Hwy 99"
+  coordinates: { lat: number; lng: number };
   region: CrossingRegion;
   directions: {
     primary: DirectionalTraffic;

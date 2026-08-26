@@ -32,6 +32,7 @@ export interface RentalMetrics {
 
 export interface MortgageBenchmark {
   bocOvernightRate: number;
+  primeRate: number;
   fixed5YearBenchmark: number;
   variable5YearBenchmark: number;
   stressTestQualifyingRate: number;

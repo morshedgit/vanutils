@@ -144,7 +144,7 @@ export function getHealthOverviewStats(facilities: HealthcareFacility[] = BASELI
 
   const erWaits = ers
     .filter((f) => f.triageData?.waitTimeMinutes !== undefined)
-    .map((f) => ({ name: f.shortName, wait: f.triageData!.waitTimeMinutes }));
+    .map((f) => ({ name: f.shortName, wait: f.triageData!.waitTimeMinutes! }));
 
   erWaits.sort((a, b) => a.wait - b.wait);
 

@@ -86,9 +86,19 @@ export function getRoutesByCategory(category: RouteCategory, list: FerryRoute[] 
   return list.filter((r) => r.category === category);
 }
 
+/**
+ * Projects the next SeaBus departures from TransLink's published fixed headway
+ * schedule (10/15/30 min depending on time of day). This is NOT a real-time
+ * vessel feed — TransLink's GTFS-realtime API requires an API key we don't
+ * have — so it assumes on-time service and can't reflect an actual delay or
+ * cancellation. isStale is always true to make that explicit.
+ */
 export function getSeaBusLiveStatus(): SeaBusLiveStatus {
   const now = new Date();
-  const vancouverHour = (now.getUTCHours() - 7 + 24) % 24; // PDT (UTC-7)
+  const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
+  const vancouverDate = new Date(vancouverTimeString);
+  const vancouverHour = vancouverDate.getHours();
+  const vancouverMinute = vancouverDate.getMinutes();
 
   let headwayMinutes = 15;
   let peakStatus: 'peak_10min' | 'offpeak_15min' | 'night_30min' = 'offpeak_15min';
@@ -101,28 +111,104 @@ export function getSeaBusLiveStatus(): SeaBusLiveStatus {
     peakStatus = 'night_30min';
   }
 
+  const minsUntilNextWaterfront = headwayMinutes - (vancouverMinute % headwayMinutes);
+  const nextWaterfrontDeparture = minsUntilNextWaterfront === headwayMinutes
+    ? 'Departing now'
+    : `In ${minsUntilNextWaterfront} min${minsUntilNextWaterfront > 1 ? 's' : ''}`;
+
+  const lonsdaleMins = ((vancouverMinute + Math.floor(headwayMinutes / 2)) % headwayMinutes);
+  const minsUntilNextLonsdale = headwayMinutes - lonsdaleMins;
+  const nextLonsdaleDeparture = minsUntilNextLonsdale === headwayMinutes
+    ? 'Departing now'
+    : `In ${minsUntilNextLonsdale} min${minsUntilNextLonsdale > 1 ? 's' : ''}`;
+
   return {
     headwayMinutes,
     peakStatus,
     activeVessels: ['Burrard Otter II', 'Burrard Chinook'],
     disruptions: [],
-    nextWaterfrontDeparture: 'In 6 mins',
-    nextLonsdaleDeparture: 'In 4 mins',
+    nextWaterfrontDeparture,
+    nextLonsdaleDeparture,
     crossingDurationMinutes: 12,
+    isStale: true,
   };
 }
 
-export function getMarineWeatherStatus(): MarineWeatherStatus {
-  return {
-    region: 'Strait of Georgia - South of Nanaimo',
-    windSpeedKnots: 12,
-    windDirection: 'NW',
-    waveHeightMeters: 0.6,
-    waterTempC: 13.5,
-    advisoryLevel: 'normal' as WeatherRisk,
-    warningText: 'Strait of Georgia: Calm waters. Good sailing conditions.',
-    lastUpdated: new Date().toISOString(),
-  };
+const BASELINE_MARINE_WEATHER: Omit<MarineWeatherStatus, 'isStale'> = {
+  region: 'Strait of Georgia - South of Nanaimo',
+  windSpeedKnots: 12,
+  windDirection: 'NW',
+  waveHeightMeters: 0.6,
+  waterTempC: 14.5,
+  advisoryLevel: 'normal' as WeatherRisk,
+  warningText: 'Strait of Georgia: Calm waters. Good sailing conditions.',
+  lastUpdated: '2026-08-25T12:00:00.000Z',
+};
+
+function degreesToCompass(deg: number): string {
+  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  return directions[Math.round(deg / 22.5) % 16];
+}
+
+/**
+ * Dynamically fetches live Strait of Georgia marine conditions at the edge with fallback to baseline
+ */
+export async function getMarineWeatherStatus(): Promise<MarineWeatherStatus> {
+  const lat = 49.05;
+  const lng = -123.55;
+
+  try {
+    const [marineRes, windRes] = await Promise.all([
+      edgeFetch<{ current: Record<string, any> }>(
+        `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lng}&current=wave_height,sea_surface_temperature&timezone=America%2FVancouver`,
+        { timeoutMs: 1200 }
+      ),
+      edgeFetch<{ current: Record<string, any> }>(
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn&timezone=America%2FVancouver`,
+        { timeoutMs: 1200 }
+      ),
+    ]);
+
+    const marineCurrent = marineRes.data?.current;
+    const windCurrent = windRes.data?.current;
+
+    if (marineCurrent && windCurrent && typeof windCurrent.wind_speed_10m === 'number') {
+      const windSpeedKnots = Math.round(windCurrent.wind_speed_10m);
+      const windDirection = typeof windCurrent.wind_direction_10m === 'number'
+        ? degreesToCompass(windCurrent.wind_direction_10m)
+        : BASELINE_MARINE_WEATHER.windDirection;
+      const waveHeightMeters = typeof marineCurrent.wave_height === 'number'
+        ? marineCurrent.wave_height
+        : BASELINE_MARINE_WEATHER.waveHeightMeters;
+      const waterTempC = typeof marineCurrent.sea_surface_temperature === 'number'
+        ? marineCurrent.sea_surface_temperature
+        : BASELINE_MARINE_WEATHER.waterTempC;
+
+      let advisoryLevel: WeatherRisk = 'normal';
+      let warningText = 'Strait of Georgia: Calm waters. Good sailing conditions.';
+      if (windSpeedKnots > 25) {
+        advisoryLevel = 'high_wind_warning';
+        warningText = `Strait of Georgia: High Wind Warning. Winds at ${windSpeedKnots} kts. Expect fast ferry cancellations.`;
+      } else if (windSpeedKnots >= 15) {
+        advisoryLevel = 'caution';
+        warningText = `Strait of Georgia: Choppy seas. Winds at ${windSpeedKnots} kts. Minor crossing delays possible.`;
+      }
+
+      return {
+        region: BASELINE_MARINE_WEATHER.region,
+        windSpeedKnots,
+        windDirection,
+        waveHeightMeters,
+        waterTempC,
+        advisoryLevel,
+        warningText,
+        lastUpdated: new Date().toISOString(),
+        isStale: false,
+      };
+    }
+  } catch (e) {}
+
+  return { ...BASELINE_MARINE_WEATHER, isStale: true };
 }
 
 export const getMarineWeather = getMarineWeatherStatus;

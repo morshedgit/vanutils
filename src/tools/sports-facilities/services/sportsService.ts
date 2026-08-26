@@ -18,17 +18,30 @@ export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
     await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
   } catch (e) {}
 
+  // isOpenNow is computed purely from the current Vancouver clock time and each
+  // facility's static baseline hours — it never depends on the parks-facilities
+  // fetch above (that dataset has no per-facility fields that map onto
+  // SportsFacility). isStale reflects that the underlying facility record
+  // itself is unverified baseline data, not the correctness of isOpenNow, so it
+  // must stay true regardless of whether the connectivity probe succeeded.
   return BASELINE_FACILITIES.map((f) => {
-    // Parks/tennis courts open 6am - 10pm (22:00)
-    const isOpen = hour >= 6 && hour < 22;
+    let isOpen = true;
+    if (f.category === 'tennis_court' || f.category === 'pickleball_court') {
+      const curfew = f.courtDetails?.hasLights ? 22 : 20;
+      isOpen = hour >= 6 && hour < curfew;
+    } else if (f.category === 'swimming_pool') {
+      isOpen = hour >= 6 && hour < 22;
+    } else if (f.category === 'ice_rink') {
+      isOpen = hour >= 6 && hour < 22;
+    }
+
     return {
       ...f,
       session: {
         ...f.session,
         isOpenNow: isOpen,
       },
-      isStale: false,
-      lastUpdated: now.toISOString(),
+      isStale: true,
     };
   });
 }

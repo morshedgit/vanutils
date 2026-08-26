@@ -1,4 +1,4 @@
-import type { SportsTeam, SportsTeamsHeartbeat, MatchResult } from '../types';
+import type { SportsTeam, SportsTeamsHeartbeat, MatchResult, TeamGame } from '../types';
 import teamsData from '../data/teams.json';
 
 export const BASELINE_TEAMS: SportsTeam[] = teamsData as SportsTeam[];
@@ -55,23 +55,25 @@ export function getGameDaySummary(teams: SportsTeam[]) {
     }
   }
 
-  // If no game today, fallback to the closest upcoming game across all teams
+  // If no game today, fallback to the closest upcoming game in the future across all teams
   if (!imminentGame && teams.length > 0) {
-    const sorted = [...teams].sort((a, b) => {
-      const dateA = new Date(a.nextGame.date).getTime();
-      const dateB = new Date(b.nextGame.date).getTime();
-      return dateA - dateB;
-    });
+    const futureUpcoming = teams
+      .filter((t): t is SportsTeam & { nextGame: TeamGame } =>
+        t.nextGame !== null && new Date(t.nextGame.date).getTime() >= now.getTime() - 4 * 3600 * 1000
+      )
+      .sort((a, b) => new Date(a.nextGame.date).getTime() - new Date(b.nextGame.date).getTime());
 
-    const next = sorted[0];
-    imminentGame = {
-      teamName: next.name,
-      opponentName: next.nextGame.opponent.name,
-      startTimePST: next.nextGame.startTimePST,
-      venueName: next.nextGame.venueName,
-      broadcastTV: next.nextGame.broadcast.tv,
-      isHome: next.nextGame.isHome,
-    };
+    if (futureUpcoming.length > 0) {
+      const next = futureUpcoming[0];
+      imminentGame = {
+        teamName: next.name,
+        opponentName: next.nextGame.opponent.name,
+        startTimePST: next.nextGame.startTimePST,
+        venueName: next.nextGame.venueName,
+        broadcastTV: next.nextGame.broadcast.tv,
+        isHome: next.nextGame.isHome,
+      };
+    }
   }
 
   return {

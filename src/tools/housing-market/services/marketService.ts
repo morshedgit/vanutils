@@ -15,17 +15,21 @@ export async function getLiveMarketHeartbeat(): Promise<MarketHeartbeatData> {
 
   try {
     const endpoint = 'https://www.bankofcanada.ca/valet/observations/V39079/json?recent=1';
-    const res = await edgeFetch<{ observations: Array<{ v: string; d: string }> }>(endpoint, { timeoutMs: 1200 });
+    const res = await edgeFetch<{ observations: Array<Record<string, any>> }>(endpoint, { timeoutMs: 1200 });
 
     if (res.data && Array.isArray(res.data.observations) && res.data.observations.length > 0) {
       const latestObs = res.data.observations[res.data.observations.length - 1];
-      const targetRate = parseFloat(latestObs.v);
+      const rateStr = latestObs?.V39079?.v ?? latestObs?.v ?? latestObs?.V39079;
+      const targetRate = typeof rateStr === 'number' ? rateStr : parseFloat(rateStr);
       if (!isNaN(targetRate) && targetRate > 0) {
         const prime = targetRate + 2.2;
+        const variableRate = prime - 0.75;
         const stressRate = Math.max(5.25, prime + 1.0);
         liveMortgage = {
           ...liveMortgage,
           bocOvernightRate: targetRate,
+          primeRate: parseFloat(prime.toFixed(2)),
+          variable5YearBenchmark: parseFloat(variableRate.toFixed(2)),
           stressTestQualifyingRate: parseFloat(stressRate.toFixed(2)),
           lastUpdated: latestObs.d || now.toISOString(),
         };
