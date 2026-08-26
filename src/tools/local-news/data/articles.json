@@ -1,6 +1,30 @@
 [
   {
     "id": "cbc-bc-1",
+    "title": "Pre-sale purchasers in troubled Lower Mainland condo tower win battle to declare contracts invalid",
+    "source": "cbc_vancouver",
+    "outletName": "CBC News Vancouver",
+    "category": "civic_politics",
+    "publishedAt": "2026-08-26T20:59:46.000Z",
+    "summary": "A B.C. judge has sided with dozens of pre-sale purchasers who claim the developer of a troubled Lower Mainland condo tower breached provincial consumer protection laws by failing to update them on the headwinds facing the development in the months before the project wound up in creditor protection p",
+    "url": "https://www.cbc.ca/news/canada/british-columbia/eclipse-thind-presale-contract-court-9.7321471?cmp=rss",
+    "isBreaking": true,
+    "isStale": false
+  },
+  {
+    "id": "cbc-bc-2",
+    "title": "Dozens more winter shelter beds needed in Comox Valley, staff report finds",
+    "source": "cbc_vancouver",
+    "outletName": "CBC News Vancouver",
+    "category": "civic_politics",
+    "publishedAt": "2026-08-26T20:59:52.000Z",
+    "summary": "A new staff report from the City of Courtenay estimates at least 70 people will still be unhoused in the Comox Valley every winter, even after a new shelter site opens in fall 2027.",
+    "url": "https://www.cbc.ca/news/canada/british-columbia/comox-valley-winter-shelter-report-9.7320311?cmp=rss",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "cbc-bc-3",
     "title": "MLA Teresa Wat leaves B.C. Conservatives, the 4th departure this month",
     "source": "cbc_vancouver",
     "outletName": "CBC News Vancouver",
@@ -8,23 +32,11 @@
     "publishedAt": "2026-08-26T14:09:41.000Z",
     "summary": "MLA Teresa Wat, who represents the Richmond-Bridgeport riding, says she \"can no longer serve\" in the B.C. Conservative Party under its new leader Kerry-Lynne Findlay.",
     "url": "https://www.cbc.ca/news/canada/british-columbia/teresa-wat-leaving-bc-conservatives-9.7320971?cmp=rss",
-    "isBreaking": true,
-    "isStale": false
-  },
-  {
-    "id": "cbc-bc-2",
-    "title": "Why CBSA changes at 1 B.C. border have increased hurdles for some businesses",
-    "source": "cbc_vancouver",
-    "outletName": "CBC News Vancouver",
-    "category": "transit_infrastructure",
-    "publishedAt": "2026-08-26T13:00:00.000Z",
-    "summary": "Some Abbotsford businesses say they are continuing to face more expensive and inconvenient operations due to changes at the the Abbotsford-Huntingdon border crossing. The CBSA says for years, it’s processed some commercial vehicles to go back into Canada after hours as a “courtesy\" — but that's no l",
-    "url": "https://www.cbc.ca/news/canada/british-columbia/cbsa-changes-abbotsford-huntingdon-border-crossing-creating-hurdles-for-some-businesses-9.7318808?cmp=rss",
     "isBreaking": false,
     "isStale": false
   },
   {
-    "id": "cbc-bc-3",
+    "id": "cbc-bc-4",
     "title": "Search for B.C.'s best roadside attraction: Semifinal 2, Enchanted Forest vs. Barkerville",
     "source": "cbc_vancouver",
     "outletName": "CBC News Vancouver",
@@ -36,7 +48,43 @@
     "isStale": false
   },
   {
-    "id": "cbc-bc-4",
+    "id": "cbc-bc-5",
+    "title": "Unhoused Richmond residents urge compassion from political candidates",
+    "source": "cbc_vancouver",
+    "outletName": "CBC News Vancouver",
+    "category": "housing_development",
+    "publishedAt": "2026-08-26T16:50:11.000Z",
+    "summary": "Politicians have been doing most of the talking about homelessness, addiction and mental health — increasingly prominent issues as October's municipal elections approach. But at a listening circle earlier this month, the tables were turned. It was time for unhoused residents to have their voices hea",
+    "url": "https://www.cbc.ca/news/canada/british-columbia/unhoused-richmond-residents-speak-with-political-candidates-9.7320273?cmp=rss",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "cbc-bc-6",
+    "title": "B.C. climber stung by wasps 100 times, rescued by helicopter",
+    "source": "cbc_vancouver",
+    "outletName": "CBC News Vancouver",
+    "category": "civic_politics",
+    "publishedAt": "2026-08-26T17:06:44.000Z",
+    "summary": "A climber in British Columbia was rescued by helicopter after being stung more than 100 times by wasps in backcountry north of Vancouver.",
+    "url": "https://www.cbc.ca/news/canada/british-columbia/wasps-sting-climber-bc-helicopter-rescue-9.7321301?cmp=rss",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "cbc-bc-7",
+    "title": "Why CBSA changes at 1 B.C. border have increased hurdles for some businesses",
+    "source": "cbc_vancouver",
+    "outletName": "CBC News Vancouver",
+    "category": "transit_infrastructure",
+    "publishedAt": "2026-08-26T13:00:00.000Z",
+    "summary": "Some Abbotsford businesses say they are continuing to face more expensive and inconvenient operations due to changes at the the Abbotsford-Huntingdon border crossing. The CBSA says for years, it’s processed some commercial vehicles to go back into Canada after hours as a “courtesy\" — but that's no l",
+    "url": "https://www.cbc.ca/news/canada/british-columbia/cbsa-changes-abbotsford-huntingdon-border-crossing-creating-hurdles-for-some-businesses-9.7318808?cmp=rss",
+    "isBreaking": false,
+    "isStale": false
+  },
+  {
+    "id": "cbc-bc-8",
     "title": "What's at stake in the North Vancouver federal byelection?",
     "source": "cbc_vancouver",
     "outletName": "CBC News Vancouver",
@@ -48,7 +96,7 @@
     "isStale": false
   },
   {
-    "id": "cbc-bc-5",
+    "id": "cbc-bc-9",
     "title": "New hatcheries will see up to 1 million more salmon raised and released into Fraser and Skeena Rivers annually",
     "source": "cbc_vancouver",
     "outletName": "CBC News Vancouver",
@@ -60,7 +108,7 @@
     "isStale": false
   },
   {
-    "id": "cbc-bc-6",
+    "id": "cbc-bc-10",
     "title": "FOI reveals operator of Sandman Hotel chain fined over $620K for asbestos violations",
     "source": "cbc_vancouver",
     "outletName": "CBC News Vancouver",
@@ -72,7 +120,7 @@
     "isStale": false
   },
   {
-    "id": "cbc-bc-7",
+    "id": "cbc-bc-11",
     "title": "B.C. premier urges feds to reconsider fighter jet purchase, coal shipments as U.S. trade war ramps up",
     "source": "cbc_vancouver",
     "outletName": "CBC News Vancouver",
@@ -84,7 +132,7 @@
     "isStale": false
   },
   {
-    "id": "cbc-bc-8",
+    "id": "cbc-bc-12",
     "title": "Advocate worries crisis is being forgotten as B.C. toxic drug deaths tick up in June",
     "source": "cbc_vancouver",
     "outletName": "CBC News Vancouver",
@@ -92,54 +140,6 @@
     "publishedAt": "2026-08-26T00:50:05.000Z",
     "summary": "The B.C. Coroners Service said it recorded 138 suspected toxic drug deaths across the province in June — representing an increase from the previous month, but a decrease from the same month last year.",
     "url": "https://www.cbc.ca/news/canada/british-columbia/bc-coroners-service-toxic-drugs-june-9.7320440?cmp=rss",
-    "isBreaking": false,
-    "isStale": false
-  },
-  {
-    "id": "cbc-bc-9",
-    "title": "Rosalyn Bird is latest MLA to leave Kerry-Lynne Findlay's B.C. Conservatives",
-    "source": "cbc_vancouver",
-    "outletName": "CBC News Vancouver",
-    "category": "civic_politics",
-    "publishedAt": "2026-08-25T20:06:37.000Z",
-    "summary": "Rosalyn Bird, the MLA for Prince George-Valemount, is the latest MLA to leave the B.C. Conservative caucus. It comes on the heels of the departures of Ian Paton and Peter Milobar, who say they plan to set up a new political party.",
-    "url": "https://www.cbc.ca/news/canada/british-columbia/another-b-c-conservative-mla-leaves-amid-frustrations-with-kerry-lynne-findlays-leadership-9.7320107?cmp=rss",
-    "isBreaking": false,
-    "isStale": false
-  },
-  {
-    "id": "cbc-bc-10",
-    "title": "Unionized Metro Vancouver workers to continue some job action as parties agree to binding arbitration",
-    "source": "cbc_vancouver",
-    "outletName": "CBC News Vancouver",
-    "category": "parks_community",
-    "publishedAt": "2026-08-25T22:51:50.000Z",
-    "summary": "Unionized outside workers have been staging job action over the last few months with pickets going up at regional parks, water treatment facilities and Metro Vancouver headquarters, among other places.",
-    "url": "https://www.cbc.ca/news/canada/british-columbia/metro-vancouver-outside-workers-binding-arbitration-9.7320423?cmp=rss",
-    "isBreaking": false,
-    "isStale": false
-  },
-  {
-    "id": "cbc-bc-11",
-    "title": "Search for B.C.'s best roadside attraction: Semifinal 1, Othello Tunnels vs. Cathedral Grove",
-    "source": "cbc_vancouver",
-    "outletName": "CBC News Vancouver",
-    "category": "civic_politics",
-    "publishedAt": "2026-08-25T11:00:00.000Z",
-    "summary": "The story of British Columbia's complex relationship with our natural environment, our early attempts to control it, and our later attempts to celebrate it can be seen in the places voters have chosen to reach the final four of Search for B.C.'s Roadside Attraction.",
-    "url": "https://www.cbc.ca/news/canada/british-columbia/bc-roadside-attraction-semifinals-9.7319018?cmp=rss",
-    "isBreaking": false,
-    "isStale": false
-  },
-  {
-    "id": "cbc-bc-12",
-    "title": "Dolly Parton's 'Jolene' may be named after British Columbia nurse",
-    "source": "cbc_vancouver",
-    "outletName": "CBC News Vancouver",
-    "category": "civic_politics",
-    "publishedAt": "2026-08-25T20:10:31.000Z",
-    "summary": "A Prince George woman believes she may be the inspiration for the name in Dolly Parton's song Jolene. Juline Whelan met the singer in 1972 and matches the description of the little girl Parton says inspired the name behind the famous tune.",
-    "url": "https://www.cbc.ca/news/canada/british-columbia/dolly-parton-s-jolene-may-be-named-after-british-columbia-nurse-1.3734082?cmp=rss",
     "isBreaking": false,
     "isStale": false
   }

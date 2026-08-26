@@ -1,4 +1,4 @@
-import type { SportsTeam, SportsTeamsHeartbeat, MatchResult } from '../types';
+import type { SportsTeam, SportsTeamsHeartbeat, MatchResult, TeamGame } from '../types';
 import teamsData from '../data/teams.json';
 
 export const BASELINE_TEAMS: SportsTeam[] = teamsData as SportsTeam[];
@@ -58,7 +58,9 @@ export function getGameDaySummary(teams: SportsTeam[]) {
   // If no game today, fallback to the closest upcoming game in the future across all teams
   if (!imminentGame && teams.length > 0) {
     const futureUpcoming = teams
-      .filter((t) => t.nextGame && new Date(t.nextGame.date).getTime() >= now.getTime() - 4 * 3600 * 1000)
+      .filter((t): t is SportsTeam & { nextGame: TeamGame } =>
+        t.nextGame !== null && new Date(t.nextGame.date).getTime() >= now.getTime() - 4 * 3600 * 1000
+      )
       .sort((a, b) => new Date(a.nextGame.date).getTime() - new Date(b.nextGame.date).getTime());
 
     if (futureUpcoming.length > 0) {
