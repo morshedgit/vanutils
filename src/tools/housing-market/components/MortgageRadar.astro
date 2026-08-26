@@ -68,7 +68,7 @@ const { mortgage } = Astro.props;
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
       <div>
-        <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Purchase Price</label>
+        <label for="calc-price" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Purchase Price</label>
         <div class="relative">
           <span class="absolute left-2.5 top-2 text-slate-400 font-bold">$</span>
           <input
@@ -82,7 +82,7 @@ const { mortgage } = Astro.props;
       </div>
 
       <div>
-        <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Down Payment (20%)</label>
+        <label for="calc-down" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Down Payment (20%)</label>
         <div class="relative">
           <span class="absolute left-2.5 top-2 text-slate-400 font-bold">$</span>
           <input
@@ -96,7 +96,7 @@ const { mortgage } = Astro.props;
       </div>
 
       <div>
-        <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Interest Rate (%)</label>
+        <label for="calc-rate" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Interest Rate (%)</label>
         <input
           type="number"
           id="calc-rate"

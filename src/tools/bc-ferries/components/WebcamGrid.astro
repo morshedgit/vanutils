@@ -24,9 +24,10 @@ const { cameras } = Astro.props;
             <img
               src={cam.imageUrl}
               alt={cam.name}
+              width="640"
+              height="360"
               loading="lazy"
               class="w-full h-full object-cover"
-              onerror="this.onerror=null; this.src='https://images.drivebc.ca/bchighwaycam/pub/html/dbc/529.html';"
             />
             <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono">
               {cam.highwayName}

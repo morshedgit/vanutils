@@ -3,7 +3,7 @@ Allow: /
 
 # Dedicated AI & Search Engine Manifests
 Sitemap: https://vanheartbeat.ca/sitemap.xml
-LLMs-Txt: https://vanheartbeat.ca/llms.txt
+# LLMs-Txt: https://vanheartbeat.ca/llms.txt
 
 # Friendly Search & AI Indexers
 User-agent: GPTBot

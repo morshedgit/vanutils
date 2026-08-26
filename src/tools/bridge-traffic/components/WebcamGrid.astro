@@ -25,6 +25,8 @@ const { webcams, crossingName } = Astro.props;
           <img
             src={cam.imageUrl}
             alt={cam.name}
+            width="640"
+            height="360"
             class="w-full h-full object-cover"
             loading="lazy"
           />
