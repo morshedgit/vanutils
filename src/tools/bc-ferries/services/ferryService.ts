@@ -86,6 +86,13 @@ export function getRoutesByCategory(category: RouteCategory, list: FerryRoute[] 
   return list.filter((r) => r.category === category);
 }
 
+/**
+ * Projects the next SeaBus departures from TransLink's published fixed headway
+ * schedule (10/15/30 min depending on time of day). This is NOT a real-time
+ * vessel feed — TransLink's GTFS-realtime API requires an API key we don't
+ * have — so it assumes on-time service and can't reflect an actual delay or
+ * cancellation. isStale is always true to make that explicit.
+ */
 export function getSeaBusLiveStatus(): SeaBusLiveStatus {
   const now = new Date();
   const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
@@ -123,6 +130,7 @@ export function getSeaBusLiveStatus(): SeaBusLiveStatus {
     nextWaterfrontDeparture,
     nextLonsdaleDeparture,
     crossingDurationMinutes: 12,
+    isStale: true,
   };
 }
 

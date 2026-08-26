@@ -59,6 +59,10 @@ export interface SeaBusLiveStatus {
   nextWaterfrontDeparture: string;
   nextLonsdaleDeparture: string;
   crossingDurationMinutes: number;
+  isStale: boolean;               // true when derived from the published headway
+                                   // schedule rather than a real-time vessel feed
+                                   // (TransLink's GTFS-realtime API requires a key
+                                   // we don't have) — always true today
 }
 
 export interface MarineWeatherStatus {

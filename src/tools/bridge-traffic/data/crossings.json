@@ -4,6 +4,10 @@
     "name": "Lions Gate Bridge (First Narrows)",
     "shortName": "Lions Gate",
     "highwayNumber": "Hwy 99",
+    "coordinates": {
+      "lat": 49.3168,
+      "lng": -123.1393
+    },
     "region": "burrard_inlet",
     "directions": {
       "primary": {
@@ -56,6 +60,10 @@
     "name": "Ironworkers Memorial Bridge (Second Narrows)",
     "shortName": "Ironworkers Memorial",
     "highwayNumber": "Hwy 1",
+    "coordinates": {
+      "lat": 49.2934,
+      "lng": -123.0227
+    },
     "region": "burrard_inlet",
     "directions": {
       "primary": {
@@ -102,6 +110,10 @@
     "name": "George Massey Tunnel",
     "shortName": "Massey Tunnel",
     "highwayNumber": "Hwy 99",
+    "coordinates": {
+      "lat": 49.1289,
+      "lng": -123.0801
+    },
     "region": "fraser_river",
     "directions": {
       "primary": {
@@ -149,6 +161,10 @@
     "name": "Alex Fraser Bridge",
     "shortName": "Alex Fraser",
     "highwayNumber": "Hwy 91",
+    "coordinates": {
+      "lat": 49.1793,
+      "lng": -122.931
+    },
     "region": "fraser_river",
     "directions": {
       "primary": {
@@ -174,7 +190,15 @@
       "state": "outbound_priority",
       "lastChangedTimestamp": "2026-08-17T15:00:00Z"
     },
-    "activeIncidents": [],
+    "activeIncidents": [
+      {
+        "id": "drivebc.ca/RIDE-100077",
+        "severity": "minor",
+        "description": "CONSTRUCTION",
+        "lanesAffected": "Other Roads",
+        "reportedTime": "2026-06-26T10:44:40-07:00"
+      }
+    ],
     "webcams": [
       {
         "name": "Alex Fraser Mid-Span",
@@ -196,6 +220,10 @@
     "name": "Oak Street Bridge",
     "shortName": "Oak Street",
     "highwayNumber": "Hwy 99",
+    "coordinates": {
+      "lat": 49.1934,
+      "lng": -123.131
+    },
     "region": "fraser_river",
     "directions": {
       "primary": {
@@ -236,6 +264,10 @@
     "id": "knight-street",
     "name": "Knight Street Bridge",
     "shortName": "Knight Street",
+    "coordinates": {
+      "lat": 49.2073,
+      "lng": -123.0857
+    },
     "region": "fraser_river",
     "directions": {
       "primary": {
@@ -277,6 +309,10 @@
     "name": "Port Mann Bridge",
     "shortName": "Port Mann",
     "highwayNumber": "Hwy 1",
+    "coordinates": {
+      "lat": 49.2085,
+      "lng": -122.789
+    },
     "region": "fraser_river",
     "directions": {
       "primary": {
@@ -317,6 +353,10 @@
     "id": "burrard-street",
     "name": "Burrard Street Bridge",
     "shortName": "Burrard Bridge",
+    "coordinates": {
+      "lat": 49.2755,
+      "lng": -123.1372
+    },
     "region": "false_creek",
     "directions": {
       "primary": {
@@ -357,6 +397,10 @@
     "id": "granville-street",
     "name": "Granville Street Bridge",
     "shortName": "Granville Bridge",
+    "coordinates": {
+      "lat": 49.2711,
+      "lng": -123.1305
+    },
     "region": "false_creek",
     "directions": {
       "primary": {
@@ -397,6 +441,10 @@
     "id": "cambie-street",
     "name": "Cambie Street Bridge",
     "shortName": "Cambie Bridge",
+    "coordinates": {
+      "lat": 49.2654,
+      "lng": -123.1173
+    },
     "region": "false_creek",
     "directions": {
       "primary": {

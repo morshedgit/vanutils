@@ -92,13 +92,20 @@ async function syncLiveHealth() {
             lastUpdated: createdAt,
             isStale: false,
           };
-          updatedCount++;
         } else {
-          if (facility.triageData) {
-            facility.triageData.lastUpdated = createdAt;
-            facility.triageData.isStale = false;
-          }
+          // Matched the live feed, but it currently reports no wait time for this
+          // facility (e.g. a UPCC closed overnight) — that's a genuine, fresh
+          // "unavailable" result, not a reason to keep showing a stale number
+          // from the last time it did have one.
+          facility.triageData = {
+            ...facility.triageData,
+            waitTimeMinutes: undefined,
+            intensity: 'unavailable',
+            lastUpdated: createdAt,
+            isStale: false,
+          };
         }
+        updatedCount++;
       }
 
       return facility;

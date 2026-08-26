@@ -40,6 +40,7 @@ export async function getLiveStations(): Promise<AirMonitoringStation[]> {
           currentPM25: livePm25,
           riskCategory,
           primaryPollutant: livePm25 >= 25 ? 'PM2.5' : (liveO3 >= 50 ? 'Ozone' : 'PM2.5'),
+          lastSampledTime: new Date().toISOString(),
           isStale: false,
         };
       });

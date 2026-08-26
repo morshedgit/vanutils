@@ -32,6 +32,7 @@ async function syncLiveSportsTeams() {
     try {
       const nhlRes = await fetch('https://api-web.nhle.com/v1/standings/now', {
         headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+        signal: AbortSignal.timeout(8000),
       }).catch(() => null);
 
       if (nhlRes && nhlRes.ok) {
@@ -57,6 +58,7 @@ async function syncLiveSportsTeams() {
     try {
       const mlsRes = await fetch('https://site.api.espn.com/apis/v2/sports/soccer/usa.1/standings', {
         headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+        signal: AbortSignal.timeout(8000),
       }).catch(() => null);
 
       if (mlsRes && mlsRes.ok) {
@@ -137,6 +139,7 @@ async function syncLiveSportsTeams() {
       const fetchNhlSeasonGames = async (season) => {
         const res = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/VAN/${season}`, {
           headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+          signal: AbortSignal.timeout(8000),
         }).catch(() => null);
         if (!res || !res.ok) return [];
         const data = await res.json();
@@ -149,21 +152,30 @@ async function syncLiveSportsTeams() {
         const finalGames = currentSeasonGames.filter((g) => g.gameState === 'OFF').sort((a, b) => a.gameDate.localeCompare(b.gameDate));
         const upcomingGames = currentSeasonGames.filter((g) => g.gameState === 'FUT' || g.gameState === 'PRE').sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
-        if (finalGames.length > 0) {
-          canucks.lastGame = mapNhlGame(finalGames[finalGames.length - 1]);
-          console.log(`✅ Updated Canucks last game from live NHL schedule: ${canucks.lastGame.opponent.abbreviation} (${canucks.lastGame.result})`);
-        } else {
+        // Combine with the previous season so lastGame/formLast5 have real data
+        // to draw on during the off-season, when the current season has zero
+        // completed games. Only fetched when needed.
+        let recentFinals = finalGames;
+        if (finalGames.length < 5) {
           const previousSeasonYear = new Date().getMonth() >= 6 ? new Date().getFullYear() : new Date().getFullYear() - 1;
           const previousSeasonId = `${previousSeasonYear - 1}${previousSeasonYear}`;
           const previousSeasonGames = await fetchNhlSeasonGames(previousSeasonId);
           const previousFinals = previousSeasonGames.filter((g) => g.gameState === 'OFF').sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+          recentFinals = [...previousFinals, ...finalGames];
+        }
 
-          if (previousFinals.length > 0) {
-            canucks.lastGame = mapNhlGame(previousFinals[previousFinals.length - 1]);
-            console.log(`✅ Updated Canucks last game from live NHL schedule (${previousSeasonId} season): ${canucks.lastGame.opponent.abbreviation} (${canucks.lastGame.result})`);
-          } else {
-            console.log('ℹ️ NHL schedule: no completed Canucks game found in current or previous season — lastGame stays unavailable.');
-          }
+        if (recentFinals.length > 0) {
+          const mappedRecent = recentFinals.map(mapNhlGame);
+          canucks.lastGame = mappedRecent[mappedRecent.length - 1];
+          console.log(`✅ Updated Canucks last game from live NHL schedule: ${canucks.lastGame.opponent.abbreviation} (${canucks.lastGame.result})`);
+
+          // formLast5 is most-recent-first, derived from the exact same games
+          // as lastGame/streak so they can never disagree with each other.
+          const last5 = mappedRecent.slice(-5).reverse();
+          canucks.standings.formLast5 = last5.map((g) => g.result);
+          console.log(`✅ Updated Canucks formLast5 from the same live NHL results: ${canucks.standings.formLast5.join('')}`);
+        } else {
+          console.log('ℹ️ NHL schedule: no completed Canucks game found in current or previous season — lastGame/formLast5 stay unavailable.');
         }
 
         if (upcomingGames.length > 0) {
@@ -227,6 +239,7 @@ async function syncLiveSportsTeams() {
 
         const schedRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/9727/schedule', {
           headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+          signal: AbortSignal.timeout(8000),
         }).catch(() => null);
 
         if (schedRes && schedRes.ok) {
@@ -246,6 +259,7 @@ async function syncLiveSportsTeams() {
 
         const teamRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/9727', {
           headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+          signal: AbortSignal.timeout(8000),
         }).catch(() => null);
 
         if (teamRes && teamRes.ok) {
@@ -274,7 +288,7 @@ async function syncLiveSportsTeams() {
 
         const milbRes = await fetch(
           `https://statsapi.mlb.com/api/v1/schedule?sportId=13&teamId=435&startDate=${startDate}&endDate=${endDate}`,
-          { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
+          { headers: { 'User-Agent': 'VanHeartbeat/2.0' }, signal: AbortSignal.timeout(8000) }
         ).catch(() => null);
 
         if (milbRes && milbRes.ok) {
@@ -349,7 +363,7 @@ async function syncLiveSportsTeams() {
       if (warriors) {
         const nllRes = await fetch(
           'https://nllstatsapp.aordev.com/?data_type=schedule&mode=rest_of_season&phase=PO&season_id=225',
-          { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
+          { headers: { 'User-Agent': 'VanHeartbeat/2.0' }, signal: AbortSignal.timeout(8000) }
         ).catch(() => null);
 
         if (nllRes && nllRes.ok) {
@@ -406,7 +420,7 @@ async function syncLiveSportsTeams() {
       if (bandits) {
         const ceblRes = await fetch(
           'https://github.com/ryanndu/cebl-data/releases/download/schedule/cebl_schedule.csv',
-          { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
+          { headers: { 'User-Agent': 'VanHeartbeat/2.0' }, signal: AbortSignal.timeout(8000) }
         ).catch(() => null);
 
         if (ceblRes && ceblRes.ok) {
