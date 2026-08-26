@@ -9,8 +9,8 @@
     "elevationMeters": 10,
     "officialStationCode": "CWVF",
     "current": {
-      "temperatureCelsius": 21.9,
-      "feelsLikeCelsius": 23,
+      "temperatureCelsius": 22.1,
+      "feelsLikeCelsius": 23.4,
       "condition": "sunny",
       "humidityPercent": 70,
       "windSpeedKmh": 13,
@@ -44,21 +44,21 @@
       },
       {
         "time": "18:00",
-        "temperatureCelsius": 21.2,
+        "temperatureCelsius": 20.9,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "19:00",
-        "temperatureCelsius": 20.1,
+        "temperatureCelsius": 20,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "20:00",
-        "temperatureCelsius": 18.8,
+        "temperatureCelsius": 18.7,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -72,7 +72,7 @@
       },
       {
         "time": "22:00",
-        "temperatureCelsius": 17.5,
+        "temperatureCelsius": 17.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -140,7 +140,7 @@
         "sunset": "19:59"
       }
     ],
-    "lastUpdated": "2026-08-26T21:30:32.067Z",
+    "lastUpdated": "2026-08-26T21:40:22.994Z",
     "isStale": false
   },
   {
@@ -153,12 +153,12 @@
     "elevationMeters": 6,
     "officialStationCode": "CWKB",
     "current": {
-      "temperatureCelsius": 21.3,
-      "feelsLikeCelsius": 22.5,
+      "temperatureCelsius": 21.4,
+      "feelsLikeCelsius": 22.8,
       "condition": "sunny",
       "humidityPercent": 73,
-      "windSpeedKmh": 13,
-      "windDirection": "SSE",
+      "windSpeedKmh": 12,
+      "windDirection": "S",
       "windGustKmh": 16,
       "pressureKpa": 101.6,
       "uvIndex": 6,
@@ -181,35 +181,35 @@
       },
       {
         "time": "17:00",
-        "temperatureCelsius": 21.2,
+        "temperatureCelsius": 21.1,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "18:00",
-        "temperatureCelsius": 20.7,
+        "temperatureCelsius": 20.5,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "19:00",
-        "temperatureCelsius": 19.8,
+        "temperatureCelsius": 19.6,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "20:00",
-        "temperatureCelsius": 18.3,
+        "temperatureCelsius": 18.2,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "21:00",
-        "temperatureCelsius": 17.7,
+        "temperatureCelsius": 17.6,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -226,7 +226,7 @@
       {
         "date": "2026-08-26",
         "dayOfWeek": "Wednesday",
-        "tempHighCelsius": 21,
+        "tempHighCelsius": 22,
         "tempLowCelsius": 15,
         "totalPrecipitationMm": 0,
         "precipitationProbabilityPercent": 1,
@@ -284,7 +284,7 @@
         "sunset": "19:59"
       }
     ],
-    "lastUpdated": "2026-08-26T21:30:32.062Z",
+    "lastUpdated": "2026-08-26T21:40:23.001Z",
     "isStale": false
   },
   {
@@ -297,12 +297,12 @@
     "elevationMeters": 160,
     "officialStationCode": "CWNV",
     "current": {
-      "temperatureCelsius": 21.6,
-      "feelsLikeCelsius": 22.4,
+      "temperatureCelsius": 21.9,
+      "feelsLikeCelsius": 23.7,
       "condition": "mostly_sunny",
       "humidityPercent": 72,
       "windSpeedKmh": 11,
-      "windDirection": "SSW",
+      "windDirection": "SW",
       "windGustKmh": 12,
       "pressureKpa": 99.8,
       "uvIndex": 6,
@@ -318,28 +318,28 @@
       },
       {
         "time": "16:00",
-        "temperatureCelsius": 21.3,
+        "temperatureCelsius": 21.1,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "mostly_sunny"
       },
       {
         "time": "17:00",
-        "temperatureCelsius": 21.3,
+        "temperatureCelsius": 21.1,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "18:00",
-        "temperatureCelsius": 21.1,
+        "temperatureCelsius": 21,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "19:00",
-        "temperatureCelsius": 19.8,
+        "temperatureCelsius": 19.7,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -353,14 +353,14 @@
       },
       {
         "time": "21:00",
-        "temperatureCelsius": 17.6,
+        "temperatureCelsius": 17.5,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "22:00",
-        "temperatureCelsius": 17.4,
+        "temperatureCelsius": 17.2,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -428,7 +428,7 @@
         "sunset": "19:59"
       }
     ],
-    "lastUpdated": "2026-08-26T21:30:32.068Z",
+    "lastUpdated": "2026-08-26T21:40:22.999Z",
     "isStale": false
   },
   {
@@ -441,8 +441,8 @@
     "elevationMeters": 4,
     "officialStationCode": "CWVR",
     "current": {
-      "temperatureCelsius": 20.4,
-      "feelsLikeCelsius": 21.8,
+      "temperatureCelsius": 20.5,
+      "feelsLikeCelsius": 21.7,
       "condition": "sunny",
       "humidityPercent": 78,
       "windSpeedKmh": 13,
@@ -455,56 +455,56 @@
     "hourly": [
       {
         "time": "15:00",
-        "temperatureCelsius": 20.4,
+        "temperatureCelsius": 20.3,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "16:00",
-        "temperatureCelsius": 20,
-        "precipitationMm": 0,
-        "precipitationProbabilityPercent": 1,
-        "condition": "sunny"
-      },
-      {
-        "time": "17:00",
         "temperatureCelsius": 20.1,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
+        "time": "17:00",
+        "temperatureCelsius": 19.9,
+        "precipitationMm": 0,
+        "precipitationProbabilityPercent": 1,
+        "condition": "sunny"
+      },
+      {
         "time": "18:00",
-        "temperatureCelsius": 20,
+        "temperatureCelsius": 19.6,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "19:00",
-        "temperatureCelsius": 18.9,
+        "temperatureCelsius": 18.7,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "20:00",
-        "temperatureCelsius": 17.6,
+        "temperatureCelsius": 17.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "21:00",
-        "temperatureCelsius": 16.9,
+        "temperatureCelsius": 16.8,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "22:00",
-        "temperatureCelsius": 16.5,
+        "temperatureCelsius": 16.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -514,7 +514,7 @@
       {
         "date": "2026-08-26",
         "dayOfWeek": "Wednesday",
-        "tempHighCelsius": 20,
+        "tempHighCelsius": 21,
         "tempLowCelsius": 15,
         "totalPrecipitationMm": 0,
         "precipitationProbabilityPercent": 1,
@@ -572,7 +572,7 @@
         "sunset": "19:59"
       }
     ],
-    "lastUpdated": "2026-08-26T21:30:32.064Z",
+    "lastUpdated": "2026-08-26T21:40:22.997Z",
     "isStale": false
   },
   {
@@ -585,11 +585,11 @@
     "elevationMeters": 365,
     "officialStationCode": "CWBM",
     "current": {
-      "temperatureCelsius": 20.5,
+      "temperatureCelsius": 20.6,
       "feelsLikeCelsius": 21.4,
       "condition": "mostly_sunny",
       "humidityPercent": 69,
-      "windSpeedKmh": 11,
+      "windSpeedKmh": 12,
       "windDirection": "S",
       "windGustKmh": 14,
       "pressureKpa": 97.5,
@@ -599,28 +599,28 @@
     "hourly": [
       {
         "time": "15:00",
-        "temperatureCelsius": 20.5,
+        "temperatureCelsius": 20.2,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "16:00",
-        "temperatureCelsius": 19.6,
+        "temperatureCelsius": 19.7,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "17:00",
-        "temperatureCelsius": 19.6,
+        "temperatureCelsius": 19.5,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "18:00",
-        "temperatureCelsius": 19.1,
+        "temperatureCelsius": 19,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -648,7 +648,7 @@
       },
       {
         "time": "22:00",
-        "temperatureCelsius": 15.3,
+        "temperatureCelsius": 15.2,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -716,7 +716,7 @@
         "sunset": "19:58"
       }
     ],
-    "lastUpdated": "2026-08-26T21:30:32.066Z",
+    "lastUpdated": "2026-08-26T21:40:22.996Z",
     "isStale": false
   },
   {
@@ -729,13 +729,13 @@
     "elevationMeters": 2,
     "officialStationCode": "CWRS",
     "current": {
-      "temperatureCelsius": 20.4,
-      "feelsLikeCelsius": 21.6,
+      "temperatureCelsius": 20.1,
+      "feelsLikeCelsius": 20.8,
       "condition": "mostly_sunny",
       "humidityPercent": 78,
-      "windSpeedKmh": 14,
-      "windDirection": "SSE",
-      "windGustKmh": 18,
+      "windSpeedKmh": 16,
+      "windDirection": "S",
+      "windGustKmh": 19,
       "pressureKpa": 101.5,
       "uvIndex": 6,
       "precipitation24hMm": 0
@@ -743,42 +743,42 @@
     "hourly": [
       {
         "time": "15:00",
-        "temperatureCelsius": 20.2,
+        "temperatureCelsius": 20,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "mostly_sunny"
       },
       {
         "time": "16:00",
-        "temperatureCelsius": 20.2,
+        "temperatureCelsius": 20.3,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "17:00",
-        "temperatureCelsius": 20.5,
+        "temperatureCelsius": 20.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "18:00",
-        "temperatureCelsius": 20.3,
+        "temperatureCelsius": 20.1,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "19:00",
-        "temperatureCelsius": 19.5,
+        "temperatureCelsius": 19.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "20:00",
-        "temperatureCelsius": 17.9,
+        "temperatureCelsius": 17.7,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -860,7 +860,7 @@
         "sunset": "19:59"
       }
     ],
-    "lastUpdated": "2026-08-26T21:30:32.069Z",
+    "lastUpdated": "2026-08-26T21:40:22.999Z",
     "isStale": false
   },
   {
@@ -873,13 +873,13 @@
     "elevationMeters": 20,
     "officialStationCode": "CWTA",
     "current": {
-      "temperatureCelsius": 21.6,
-      "feelsLikeCelsius": 23.2,
+      "temperatureCelsius": 21.7,
+      "feelsLikeCelsius": 23.3,
       "condition": "sunny",
       "humidityPercent": 79,
       "windSpeedKmh": 16,
       "windDirection": "SSE",
-      "windGustKmh": 22,
+      "windGustKmh": 21,
       "pressureKpa": 101.4,
       "uvIndex": 6,
       "precipitation24hMm": 0
@@ -887,56 +887,56 @@
     "hourly": [
       {
         "time": "15:00",
-        "temperatureCelsius": 21.6,
+        "temperatureCelsius": 21.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "16:00",
-        "temperatureCelsius": 21.6,
+        "temperatureCelsius": 21.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "sunny"
       },
       {
         "time": "17:00",
-        "temperatureCelsius": 22.2,
+        "temperatureCelsius": 22.1,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "mostly_sunny"
       },
       {
         "time": "18:00",
-        "temperatureCelsius": 21.7,
+        "temperatureCelsius": 21.5,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "19:00",
-        "temperatureCelsius": 20.5,
+        "temperatureCelsius": 20.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "20:00",
-        "temperatureCelsius": 19.8,
+        "temperatureCelsius": 19.6,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "21:00",
-        "temperatureCelsius": 19.8,
+        "temperatureCelsius": 19.4,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
       },
       {
         "time": "22:00",
-        "temperatureCelsius": 19.5,
+        "temperatureCelsius": 19.3,
         "precipitationMm": 0,
         "precipitationProbabilityPercent": 1,
         "condition": "overcast"
@@ -1004,7 +1004,7 @@
         "sunset": "20:00"
       }
     ],
-    "lastUpdated": "2026-08-26T21:30:32.070Z",
+    "lastUpdated": "2026-08-26T21:40:22.998Z",
     "isStale": false
   }
 ]

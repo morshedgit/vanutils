@@ -12,16 +12,13 @@ export const BASELINE_CHILDCARES: LicensedChildcareCenter[] = childcaresData as 
 export async function getLiveSchools(): Promise<SchoolInfo[]> {
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/schools/records?limit=10';
-    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
-
-    if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
-      return BASELINE_SCHOOLS.map((s) => ({
-        ...s,
-        isStale: false,
-      }));
-    }
+    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
   } catch (e) {}
 
+  // This dataset has no per-catchment fields that map onto SchoolInfo (see
+  // scripts/sync-live-schools.js), so no live data is ever actually merged
+  // here. isStale must stay true regardless of whether the connectivity probe
+  // above succeeded — a reachable endpoint doesn't make these records fresh.
   return BASELINE_SCHOOLS.map((s) => ({
     ...s,
     isStale: true,

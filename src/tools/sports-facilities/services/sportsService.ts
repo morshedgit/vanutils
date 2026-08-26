@@ -13,13 +13,17 @@ export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
   const vancouverDate = new Date(vancouverTimeString);
   const hour = vancouverDate.getHours();
 
-  let liveDatasetReachable = false;
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-facilities/records?limit=10';
-    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
-    liveDatasetReachable = Boolean(res.data && Array.isArray(res.data.results) && res.data.results.length > 0);
+    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
   } catch (e) {}
 
+  // isOpenNow is computed purely from the current Vancouver clock time and each
+  // facility's static baseline hours — it never depends on the parks-facilities
+  // fetch above (that dataset has no per-facility fields that map onto
+  // SportsFacility). isStale reflects that the underlying facility record
+  // itself is unverified baseline data, not the correctness of isOpenNow, so it
+  // must stay true regardless of whether the connectivity probe succeeded.
   return BASELINE_FACILITIES.map((f) => {
     let isOpen = true;
     if (f.category === 'tennis_court' || f.category === 'pickleball_court') {
@@ -37,7 +41,7 @@ export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
         ...f.session,
         isOpenNow: isOpen,
       },
-      isStale: !liveDatasetReachable,
+      isStale: true,
     };
   });
 }

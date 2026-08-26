@@ -10,16 +10,13 @@ export const BASELINE_EVENTS: CommunityEvent[] = eventsData as CommunityEvent[];
 export async function getLiveEvents(): Promise<CommunityEvent[]> {
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=15';
-    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
-
-    if (res.data && Array.isArray(res.data.results) && res.data.results.length > 0) {
-      return BASELINE_EVENTS.map((e) => ({
-        ...e,
-        isStale: false,
-      }));
-    }
+    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
   } catch (e) {}
 
+  // This dataset has no per-event fields that map onto CommunityEvent (see
+  // scripts/sync-live-events.js), so no live data is ever actually merged
+  // here. isStale must stay true regardless of whether the connectivity probe
+  // above succeeded — a reachable endpoint doesn't make these records fresh.
   return BASELINE_EVENTS.map((e) => ({
     ...e,
     isStale: true,
