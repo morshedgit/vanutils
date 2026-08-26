@@ -75,9 +75,7 @@ async function syncLiveSportsTeams() {
 
     // 3. Ingest live NHL schedule for Vancouver Canucks lastGame/nextGame.
     // Only fields returned by the NHL API are used — no invented scores, recap
-    // prose, broadcast details, or ticket links. Other teams' schedule fixtures
-    // are intentionally left untouched here: no free live schedule feed is wired
-    // up for MLS/CFL/MiLB/NLL/NSL/CEBL, so this script must not fabricate them.
+    // prose, broadcast details, or ticket links.
     try {
       const scheduleRes = await fetch('https://api-web.nhle.com/v1/club-schedule-season/VAN/now', {
         headers: { 'User-Agent': 'VanHeartbeat/2.0' },
@@ -151,6 +149,298 @@ async function syncLiveSportsTeams() {
     } catch (e) {
       console.log('ℹ️ NHL Schedule API: using existing baseline Canucks schedule fixtures.');
     }
+
+    // 4. Ingest live MLS schedule for Vancouver Whitecaps FC lastGame/nextGame
+    // via ESPN's public site API (team id 9727).
+    try {
+      const whitecaps = existingTeams.find((t) => t.id === 'whitecaps');
+      if (whitecaps) {
+        const mapMlsEvent = (event) => {
+          const comp = event.competitions?.[0];
+          const homeC = comp?.competitors?.find((c) => c.homeAway === 'home');
+          const awayC = comp?.competitors?.find((c) => c.homeAway === 'away');
+          const isHome = homeC?.team?.id === '9727';
+          const self = isHome ? homeC : awayC;
+          const opp = isHome ? awayC : homeC;
+          const broadcasts = [...new Set((comp?.broadcasts || []).map((b) => b.media?.shortName).filter(Boolean))];
+          const startTimePST = event.date
+            ? `${new Date(event.date).toLocaleTimeString('en-US', { timeZone: 'America/Vancouver', hour: 'numeric', minute: '2-digit', hour12: true })} PST`
+            : 'TBD';
+
+          const mapped = {
+            gameId: `mls-${event.id}`,
+            date: event.date,
+            startTimePST,
+            opponent: {
+              name: opp?.team?.displayName || opp?.team?.name || 'TBD',
+              shortName: opp?.team?.shortDisplayName || opp?.team?.nickname || opp?.team?.abbreviation || 'TBD',
+              abbreviation: opp?.team?.abbreviation || 'TBD',
+            },
+            isHome,
+            venueName: comp?.venue?.fullName || 'TBD',
+            broadcast: {
+              tv: broadcasts.length > 0 ? broadcasts.join(' / ') : 'Check whitecapsfc.com',
+              radio: 'Check whitecapsfc.com',
+            },
+          };
+
+          const selfScore = Number(self?.score?.displayValue ?? self?.score?.value);
+          const oppScore = Number(opp?.score?.displayValue ?? opp?.score?.value);
+          if (comp?.status?.type?.completed && !Number.isNaN(selfScore) && !Number.isNaN(oppScore)) {
+            return {
+              ...mapped,
+              status: 'final',
+              score: { team: selfScore, opponent: oppScore, decisionPeriod: 'REG' },
+              result: selfScore > oppScore ? 'W' : selfScore < oppScore ? 'L' : 'D',
+            };
+          }
+
+          return { ...mapped, status: 'upcoming' };
+        };
+
+        const schedRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/9727/schedule', {
+          headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+        }).catch(() => null);
+
+        if (schedRes && schedRes.ok) {
+          const schedData = await schedRes.json();
+          const events = Array.isArray(schedData.events) ? schedData.events : [];
+          const completed = events
+            .filter((e) => e.competitions?.[0]?.status?.type?.completed)
+            .sort((a, b) => a.date.localeCompare(b.date));
+
+          if (completed.length > 0) {
+            whitecaps.lastGame = mapMlsEvent(completed[completed.length - 1]);
+            console.log(`✅ Updated Whitecaps last game from live MLS schedule: ${whitecaps.lastGame.opponent.abbreviation} (${whitecaps.lastGame.result})`);
+          } else {
+            console.log('ℹ️ MLS schedule: no completed Whitecaps game found — lastGame left unchanged.');
+          }
+        }
+
+        const teamRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/9727', {
+          headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+        }).catch(() => null);
+
+        if (teamRes && teamRes.ok) {
+          const teamData = await teamRes.json();
+          const nextEvent = teamData.team?.nextEvent?.[0];
+          if (nextEvent) {
+            whitecaps.nextGame = mapMlsEvent(nextEvent);
+            console.log(`✅ Updated Whitecaps next game from live MLS schedule: vs ${whitecaps.nextGame.opponent.abbreviation} on ${whitecaps.nextGame.date}`);
+          } else {
+            console.log('ℹ️ MLS schedule: no upcoming Whitecaps game found — nextGame left unchanged.');
+          }
+        }
+      }
+    } catch (e) {
+      console.log('ℹ️ MLS Schedule API: using existing baseline Whitecaps schedule fixtures.');
+    }
+
+    // 5. Ingest live MiLB schedule for Vancouver Canadians lastGame/nextGame via
+    // the official MLB Stats API (team id 435, Northwest League / sportId 13).
+    try {
+      const canadians = existingTeams.find((t) => t.id === 'canadians');
+      if (canadians) {
+        const now = new Date();
+        const startDate = new Date(now.getTime() - 14 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+        const endDate = new Date(now.getTime() + 14 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+
+        const milbRes = await fetch(
+          `https://statsapi.mlb.com/api/v1/schedule?sportId=13&teamId=435&startDate=${startDate}&endDate=${endDate}`,
+          { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
+        ).catch(() => null);
+
+        if (milbRes && milbRes.ok) {
+          const milbData = await milbRes.json();
+          const games = (milbData.dates || []).flatMap((d) => d.games || []);
+
+          const mapMilbGame = (game) => {
+            const isHome = game.teams.home.team.id === 435;
+            const self = isHome ? game.teams.home : game.teams.away;
+            const opp = isHome ? game.teams.away : game.teams.home;
+            const startTimePST = `${new Date(game.gameDate).toLocaleTimeString('en-US', { timeZone: 'America/Vancouver', hour: 'numeric', minute: '2-digit', hour12: true })} PST`;
+
+            const mapped = {
+              gameId: `milb-${game.gamePk}`,
+              date: game.gameDate,
+              startTimePST,
+              opponent: {
+                name: opp.team.name,
+                shortName: opp.team.name.replace(/^.*\s/, ''),
+                abbreviation: opp.team.name.slice(0, 3).toUpperCase(),
+              },
+              isHome,
+              venueName: game.venue?.name || 'TBD',
+              broadcast: { tv: 'MiLB.tv', radio: 'Check milb.com/vancouver' },
+            };
+
+            if (game.status?.abstractGameState === 'Final' && typeof self.score === 'number' && typeof opp.score === 'number') {
+              return {
+                ...mapped,
+                status: 'final',
+                score: { team: self.score, opponent: opp.score, decisionPeriod: 'REG' },
+                result: self.score > opp.score ? 'W' : 'L',
+              };
+            }
+
+            return { ...mapped, status: 'upcoming' };
+          };
+
+          const finalGames = games
+            .filter((g) => g.status?.abstractGameState === 'Final')
+            .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+          const upcomingGames = games
+            .filter((g) => g.status?.abstractGameState === 'Preview' || g.status?.abstractGameState === 'Live')
+            .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+
+          if (finalGames.length > 0) {
+            canadians.lastGame = mapMilbGame(finalGames[finalGames.length - 1]);
+            console.log(`✅ Updated Canadians last game from live MiLB schedule: ${canadians.lastGame.opponent.abbreviation} (${canadians.lastGame.result})`);
+          } else {
+            console.log('ℹ️ MiLB schedule: no completed Canadians game in range — lastGame left unchanged.');
+          }
+
+          if (upcomingGames.length > 0) {
+            canadians.nextGame = mapMilbGame(upcomingGames[0]);
+            console.log(`✅ Updated Canadians next game from live MiLB schedule: vs ${canadians.nextGame.opponent.abbreviation} on ${canadians.nextGame.date}`);
+          } else {
+            console.log('ℹ️ MiLB schedule: no upcoming Canadians game in range — nextGame left unchanged.');
+          }
+        }
+      }
+    } catch (e) {
+      console.log('ℹ️ MLB Stats API: using existing baseline Canadians schedule fixtures.');
+    }
+
+    // 6. Ingest the most recent completed Vancouver Warriors game from the NLL's
+    // stats backend (undocumented; discovered via nll.com's embedded widget
+    // config). Only the most recently published season/phase the league site
+    // itself exposes (2025-26 playoffs) has live data at time of writing — no
+    // next-game data is available until the league publishes a new season.
+    try {
+      const warriors = existingTeams.find((t) => t.id === 'warriors');
+      if (warriors) {
+        const nllRes = await fetch(
+          'https://nllstatsapp.aordev.com/?data_type=schedule&mode=rest_of_season&phase=PO&season_id=225',
+          { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
+        ).catch(() => null);
+
+        if (nllRes && nllRes.ok) {
+          const nllData = await nllRes.json();
+          const allMatches = (Array.isArray(nllData) ? nllData : []).flatMap((week) => week.matches || []);
+          const vanMatches = allMatches.filter((m) => m.squads?.home?.code === 'VAN' || m.squads?.away?.code === 'VAN');
+          const completed = vanMatches
+            .filter((m) => m.status?.code === 'COMP')
+            .sort((a, b) => (a.date?.utcMatchStart || '').localeCompare(b.date?.utcMatchStart || ''));
+
+          if (completed.length > 0) {
+            const match = completed[completed.length - 1];
+            const isHome = match.squads.home.code === 'VAN';
+            const self = isHome ? match.squads.home : match.squads.away;
+            const opp = isHome ? match.squads.away : match.squads.home;
+            const utcMatchStart = match.date?.utcMatchStart;
+            const startTimePST = utcMatchStart
+              ? `${new Date(utcMatchStart).toLocaleTimeString('en-US', { timeZone: 'America/Vancouver', hour: 'numeric', minute: '2-digit', hour12: true })} PST`
+              : 'TBD';
+            const decisionPeriod = (match.status?.period || 0) > 4 ? 'OT' : 'REG';
+
+            warriors.lastGame = {
+              gameId: `nll-${match.id}`,
+              date: utcMatchStart || match.date?.startDate,
+              startTimePST,
+              opponent: {
+                name: opp.displayName || opp.name,
+                shortName: opp.nickname || opp.name,
+                abbreviation: opp.code,
+              },
+              isHome,
+              venueName: match.venue?.name || 'TBD',
+              status: 'final',
+              score: { team: self.score.score, opponent: opp.score.score, decisionPeriod },
+              result: self.score.score > opp.score.score ? 'W' : 'L',
+              broadcast: { tv: 'Check nll.com', radio: 'Check nll.com' },
+            };
+            console.log(`✅ Updated Warriors last game from live NLL schedule: ${warriors.lastGame.opponent.abbreviation} (${warriors.lastGame.result})`);
+          } else {
+            console.log('ℹ️ NLL schedule: no completed Warriors playoff game found — lastGame left unchanged.');
+          }
+        }
+      }
+    } catch (e) {
+      console.log('ℹ️ NLL stats backend: using existing baseline Warriors schedule fixtures.');
+    }
+
+    // 7. Ingest the most recent completed Vancouver Bandits game from a
+    // community-maintained CEBL schedule mirror (github.com/ryanndu/cebl-data),
+    // refreshed daily from the league's FIBA LiveStats feed. Not an official
+    // CEBL source — used with graceful fallback like everything else here.
+    try {
+      const bandits = existingTeams.find((t) => t.id === 'bandits');
+      if (bandits) {
+        const ceblRes = await fetch(
+          'https://github.com/ryanndu/cebl-data/releases/download/schedule/cebl_schedule.csv',
+          { headers: { 'User-Agent': 'VanHeartbeat/2.0' } }
+        ).catch(() => null);
+
+        if (ceblRes && ceblRes.ok) {
+          const csvText = await ceblRes.text();
+          const lines = csvText.trim().split('\n');
+          const header = lines[0].split(',');
+          const col = (name) => header.indexOf(name);
+          const rows = lines.slice(1).map((line) => line.split(','));
+
+          const vanRows = rows.filter(
+            (r) => r[col('home_team_name')] === 'Vancouver Bandits' || r[col('away_team_name')] === 'Vancouver Bandits'
+          );
+          const completed = vanRows
+            .filter((r) => r[col('status')] === 'COMPLETE')
+            .sort((a, b) => a[col('start_time_utc')].localeCompare(b[col('start_time_utc')]));
+
+          if (completed.length > 0) {
+            const row = completed[completed.length - 1];
+            const isHome = row[col('home_team_name')] === 'Vancouver Bandits';
+            const selfScore = Number(isHome ? row[col('home_team_score')] : row[col('away_team_score')]);
+            const oppScore = Number(isHome ? row[col('away_team_score')] : row[col('home_team_score')]);
+            const oppName = isHome ? row[col('away_team_name')] : row[col('home_team_name')];
+            const startTimeUTC = row[col('start_time_utc')];
+            const startTimePST = startTimeUTC
+              ? `${new Date(startTimeUTC).toLocaleTimeString('en-US', { timeZone: 'America/Vancouver', hour: 'numeric', minute: '2-digit', hour12: true })} PST`
+              : 'TBD';
+
+            if (!Number.isNaN(selfScore) && !Number.isNaN(oppScore)) {
+              bandits.lastGame = {
+                gameId: `cebl-${row[col('fiba_id')]}`,
+                date: startTimeUTC,
+                startTimePST,
+                opponent: {
+                  name: oppName,
+                  shortName: oppName.replace(/^.*\s/, ''),
+                  abbreviation: oppName.slice(0, 3).toUpperCase(),
+                },
+                isHome,
+                venueName: row[col('venue_name')] || 'TBD',
+                status: 'final',
+                score: { team: selfScore, opponent: oppScore, decisionPeriod: 'REG' },
+                result: selfScore > oppScore ? 'W' : 'L',
+                broadcast: { tv: 'Check cebl.ca', radio: 'Check cebl.ca' },
+              };
+              console.log(`✅ Updated Bandits last game from CEBL schedule mirror: ${bandits.lastGame.opponent.abbreviation} (${bandits.lastGame.result})`);
+            }
+          } else {
+            console.log('ℹ️ CEBL schedule mirror: no completed Bandits game found — lastGame left unchanged.');
+          }
+        }
+      }
+    } catch (e) {
+      console.log('ℹ️ CEBL schedule mirror: using existing baseline Bandits schedule fixtures.');
+    }
+
+    // NOTE: BC Lions (CFL) and Vancouver Rise FC (NSL) have no viable live
+    // source wired up yet. CFL's official schedule is rendered client-side by
+    // a Genius Sports widget with no exposed public endpoint found; NSL's
+    // schedule is loaded via a Craft CMS/Sprig AJAX component, not present in
+    // any static HTML response. Both are intentionally left untouched here
+    // rather than fabricated.
 
     fs.writeFileSync(teamsFilePath, JSON.stringify(existingTeams, null, 2), 'utf8');
     console.log(`✅ Verified and synchronized ${existingTeams.length} major Vancouver professional sports franchises.`);

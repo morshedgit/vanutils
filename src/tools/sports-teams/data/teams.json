@@ -262,52 +262,44 @@
       ]
     },
     "lastGame": {
-      "gameId": "mls-2026-0822",
-      "date": "2026-08-22T19:30:00-07:00",
-      "startTimePST": "7:30 PM PST",
+      "gameId": "mls-761749",
+      "date": "2026-08-23T01:30Z",
+      "startTimePST": "6:30 PM PST",
       "opponent": {
-        "name": "Houston Dynamo",
-        "shortName": "Dynamo",
-        "abbreviation": "HOU",
-        "logoEmoji": "⚡",
-        "record": "10-9-7"
+        "name": "FC Dallas",
+        "shortName": "Dallas",
+        "abbreviation": "DAL"
       },
       "isHome": true,
       "venueName": "BC Place",
+      "broadcast": {
+        "tv": "Apple TV",
+        "radio": "Check whitecapsfc.com"
+      },
       "status": "final",
       "score": {
-        "team": 2,
-        "opponent": 1,
-        "decisionPeriod": "FT"
+        "team": 5,
+        "opponent": 0,
+        "decisionPeriod": "REG"
       },
-      "result": "W",
-      "broadcast": {
-        "tv": "Apple TV MLS Season Pass",
-        "radio": "AM730"
-      },
-      "rivalryMatchup": false,
-      "recapHeadline": "Gauld and White strike as Whitecaps defeat Dynamo 2-1 at BC Place"
+      "result": "W"
     },
     "nextGame": {
-      "gameId": "mls-2026-0829",
-      "date": "2026-08-29T19:30:00-07:00",
-      "startTimePST": "7:30 PM PST",
+      "gameId": "mls-761762",
+      "date": "2026-08-30T00:30Z",
+      "startTimePST": "5:30 PM PST",
       "opponent": {
-        "name": "St. Louis CITY SC",
-        "shortName": "St. Louis",
-        "abbreviation": "STL",
-        "logoEmoji": "🔴",
-        "record": "8-11-7"
+        "name": "Sporting Kansas City",
+        "shortName": "Kansas City",
+        "abbreviation": "SKC"
       },
-      "isHome": true,
-      "venueName": "BC Place",
-      "status": "upcoming",
+      "isHome": false,
+      "venueName": "Sporting Park",
       "broadcast": {
-        "tv": "Apple TV MLS Season Pass",
-        "radio": "AM730"
+        "tv": "Apple TV",
+        "radio": "Check whitecapsfc.com"
       },
-      "ticketLink": "https://www.whitecapsfc.com/tickets",
-      "rivalryMatchup": false
+      "status": "upcoming"
     },
     "recentGames": [
       {
@@ -594,52 +586,44 @@
       ]
     },
     "lastGame": {
-      "gameId": "milb-2026-0824",
-      "date": "2026-08-24T19:05:00-07:00",
+      "gameId": "milb-819050",
+      "date": "2026-08-26T02:05:00Z",
       "startTimePST": "7:05 PM PST",
       "opponent": {
         "name": "Spokane Indians",
         "shortName": "Indians",
-        "abbreviation": "SPO",
-        "logoEmoji": "⚾",
-        "record": "62-48"
+        "abbreviation": "SPO"
       },
       "isHome": true,
-      "venueName": "Nat Bailey Stadium",
+      "venueName": "Rogers Field at Nat Bailey Stadium",
+      "broadcast": {
+        "tv": "MiLB.tv",
+        "radio": "Check milb.com/vancouver"
+      },
       "status": "final",
       "score": {
-        "team": 5,
-        "opponent": 3,
-        "decisionPeriod": "9th"
+        "team": 6,
+        "opponent": 1,
+        "decisionPeriod": "REG"
       },
-      "result": "W",
-      "broadcast": {
-        "tv": "MiLB.tv / Bally Live",
-        "radio": "Sportsnet 650 AM"
-      },
-      "rivalryMatchup": false,
-      "recapHeadline": "C’s pitching dominates in 5-3 victory over Spokane at The Nat"
+      "result": "W"
     },
     "nextGame": {
-      "gameId": "milb-2026-0826",
-      "date": "2026-08-26T19:05:00-07:00",
+      "gameId": "milb-819052",
+      "date": "2026-08-27T02:05:00Z",
       "startTimePST": "7:05 PM PST",
       "opponent": {
-        "name": "Eugene Emeralds",
-        "shortName": "Emeralds",
-        "abbreviation": "EUG",
-        "logoEmoji": "🌲",
-        "record": "58-54"
+        "name": "Spokane Indians",
+        "shortName": "Indians",
+        "abbreviation": "SPO"
       },
       "isHome": true,
-      "venueName": "Nat Bailey Stadium",
-      "status": "upcoming",
+      "venueName": "Rogers Field at Nat Bailey Stadium",
       "broadcast": {
-        "tv": "MiLB.tv / Bally Live",
-        "radio": "Sportsnet 650 AM"
+        "tv": "MiLB.tv",
+        "radio": "Check milb.com/vancouver"
       },
-      "ticketLink": "https://www.milb.com/vancouver/tickets",
-      "rivalryMatchup": false
+      "status": "upcoming"
     },
     "recentGames": [
       {
@@ -740,31 +724,27 @@
       ]
     },
     "lastGame": {
-      "gameId": "nll-2026-088",
-      "date": "2026-03-21T19:00:00-07:00",
+      "gameId": "nll-720162576",
+      "date": "2026-04-25T02:00:00.000Z",
       "startTimePST": "7:00 PM PST",
       "opponent": {
-        "name": "Calgary Roughnecks",
-        "shortName": "Roughnecks",
-        "abbreviation": "CGY",
-        "logoEmoji": "🥍",
-        "record": "7-8"
+        "name": "Halifax Thunderbirds",
+        "shortName": "Thunderbirds",
+        "abbreviation": "HFX"
       },
       "isHome": true,
       "venueName": "Rogers Arena",
       "status": "final",
       "score": {
-        "team": 13,
+        "team": 7,
         "opponent": 10,
         "decisionPeriod": "REG"
       },
-      "result": "W",
+      "result": "L",
       "broadcast": {
-        "tv": "TSN+ / ESPN+",
-        "radio": "Sportsnet 650 AM"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Warriors surge past Roughnecks 13-10 in electric West Coast showdown"
+        "tv": "Check nll.com",
+        "radio": "Check nll.com"
+      }
     },
     "nextGame": {
       "gameId": "nll-2026-1205",
@@ -1032,31 +1012,27 @@
       ]
     },
     "lastGame": {
-      "gameId": "cebl-2026-044",
-      "date": "2026-03-21T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
+      "gameId": "cebl-2878847",
+      "date": "2026-08-08T19:30:00Z",
+      "startTimePST": "12:30 PM PST",
       "opponent": {
-        "name": "Calgary Surge",
-        "shortName": "Surge",
-        "abbreviation": "CGY",
-        "logoEmoji": "⚡",
-        "record": "11-9"
+        "name": "Winnipeg Sea Bears",
+        "shortName": "Bears",
+        "abbreviation": "WIN"
       },
       "isHome": true,
-      "venueName": "Langley Events Centre",
+      "venueName": "Envision Financial Court at Langley Events Centre",
       "status": "final",
       "score": {
-        "team": 94,
-        "opponent": 88,
+        "team": 96,
+        "opponent": 107,
         "decisionPeriod": "REG"
       },
-      "result": "W",
+      "result": "L",
       "broadcast": {
-        "tv": "CEBL+ / TSN+",
-        "radio": "AM 730"
-      },
-      "rivalryMatchup": true,
-      "recapHeadline": "Bandits hit Target Score with clutch triple to down Surge 94-88 at LEC"
+        "tv": "Check cebl.ca",
+        "radio": "Check cebl.ca"
+      }
     },
     "nextGame": {
       "gameId": "cebl-2026-0828",
