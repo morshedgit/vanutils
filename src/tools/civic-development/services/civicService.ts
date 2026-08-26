@@ -22,7 +22,7 @@ export async function getLiveProposals(): Promise<DevelopmentProposal[]> {
 
   return BASELINE_PROPOSALS.map((p) => ({
     ...p,
-    isStale: false,
+    isStale: true,
   }));
 }
 

@@ -2,7 +2,7 @@
 import { getMarineWeather } from '../services/ferryService';
 import { getWeatherRiskMeta } from '../services/standbyCalc';
 
-const weather = getMarineWeather();
+const weather = await getMarineWeather();
 const weatherMeta = getWeatherRiskMeta(weather.advisoryLevel);
 ---
 

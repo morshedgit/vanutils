@@ -64,25 +64,21 @@
       "recapHeadline": "Hughes nets OT winner as Canucks conclude 2025-26 season at Rogers Arena"
     },
     "nextGame": {
-      "gameId": "nhl-202601-0012",
-      "date": "2026-09-22T19:00:00-07:00",
-      "startTimePST": "7:00 PM PST",
+      "gameId": "nhl-2026010005",
+      "date": "2026-09-20T01:00:00Z",
+      "startTimePST": "6:00 PM PST",
       "opponent": {
         "name": "Seattle Kraken",
         "shortName": "Kraken",
-        "abbreviation": "SEA",
-        "logoEmoji": "🦑",
-        "record": "Preseason"
+        "abbreviation": "SEA"
       },
-      "isHome": true,
-      "venueName": "Rogers Arena",
-      "status": "upcoming",
+      "isHome": false,
+      "venueName": "Climate Pledge Arena",
       "broadcast": {
-        "tv": "Sportsnet Pacific",
-        "radio": "Sportsnet 650 AM"
+        "tv": "Check nhl.com/canucks",
+        "radio": "Check nhl.com/canucks"
       },
-      "ticketLink": "https://www.ticketmaster.ca/vancouver-canucks-tickets/artist/806037",
-      "rivalryMatchup": true
+      "status": "upcoming"
     },
     "recentGames": [
       {

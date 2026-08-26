@@ -20,7 +20,7 @@ export async function getLiveStations(): Promise<AirMonitoringStation[]> {
       const dataArray = Array.isArray(res.data) ? res.data : [res.data];
       return BASELINE_STATIONS.map((s, idx) => {
         const item = dataArray[idx]?.current;
-        if (!item) return { ...s, isStale: false };
+        if (!item) return { ...s, isStale: true };
 
         const livePm25 = Math.round((item.pm2_5 ?? s.currentPM25) * 10) / 10;
         const liveO3 = Math.round((item.ozone ?? 24.0) * 10) / 10;
@@ -48,7 +48,7 @@ export async function getLiveStations(): Promise<AirMonitoringStation[]> {
 
   return BASELINE_STATIONS.map((s) => ({
     ...s,
-    isStale: false,
+    isStale: true,
   }));
 }
 

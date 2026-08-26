@@ -18,7 +18,10 @@ async function syncSalesEvents() {
   const rawData = fs.readFileSync(dataPath, 'utf-8');
   const sales = JSON.parse(rawData);
 
-  // Verify City of Vancouver Open Data API connectivity
+  // Smoke-test City of Vancouver Open Data API reachability. NOTE: this dataset
+  // (special-events) does not carry warehouse/sample-sale records, so no live data
+  // is ingested here. This baseline is a manually curated snapshot and is NOT
+  // refreshed by this script.
   try {
     const openDataRes = await fetch(
       'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=5',
@@ -26,14 +29,16 @@ async function syncSalesEvents() {
     ).catch(() => null);
 
     if (openDataRes && openDataRes.ok) {
-      console.log('✅ Connected to City of Vancouver Open Data Portal.');
+      console.log('ℹ️ City of Vancouver Open Data Portal reachable (informational only; no matching sales dataset to sync).');
+    } else {
+      console.log('ℹ️ City of Vancouver Open Data Portal unreachable (informational only; baseline dataset unaffected).');
     }
   } catch (e) {
-    console.log('ℹ️ CoV Open Data: using verified baseline warehouse & sample sales.');
+    console.log('ℹ️ CoV Open Data connectivity check failed (informational only; baseline dataset unaffected).');
   }
 
   fs.writeFileSync(dataPath, JSON.stringify(sales, null, 2), 'utf-8');
-  console.log(`✅ Verified ${sales.length} authentic Metro Vancouver warehouse, sample sales & swaps.`);
+  console.log(`ℹ️ ${sales.length} curated warehouse/sample sales unchanged (no live source available; edit sales.json manually to update).`);
 }
 
 syncSalesEvents().catch((err) => {

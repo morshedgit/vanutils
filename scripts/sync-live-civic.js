@@ -15,7 +15,10 @@ async function syncLiveCivic() {
     );
     const existing = JSON.parse(fs.readFileSync(proposalsFilePath, 'utf8'));
 
-    // Verify City of Vancouver Open Data API connectivity
+    // Smoke-test City of Vancouver Open Data API reachability. NOTE: this dataset
+    // (development-cost-levy-dcl-areas) does not carry per-proposal fields that map
+    // onto proposals.json, so no live data is ingested here. This baseline is a
+    // manually curated snapshot and is NOT refreshed by this script.
     try {
       const openDataRes = await fetch(
         'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/development-cost-levy-dcl-areas/records?limit=5',
@@ -23,14 +26,16 @@ async function syncLiveCivic() {
       ).catch(() => null);
 
       if (openDataRes && openDataRes.ok) {
-        console.log('✅ Connected to City of Vancouver Open Data Portal.');
+        console.log('ℹ️ City of Vancouver Open Data Portal reachable (informational only; no per-proposal fields available to sync).');
+      } else {
+        console.log('ℹ️ City of Vancouver Open Data Portal unreachable (informational only; baseline dataset unaffected).');
       }
     } catch (e) {
-      console.log('ℹ️ CoV Open Data: using verified baseline proposal dataset.');
+      console.log('ℹ️ CoV Open Data connectivity check failed (informational only; baseline dataset unaffected).');
     }
 
     fs.writeFileSync(proposalsFilePath, JSON.stringify(existing, null, 2), 'utf8');
-    console.log(`✅ Verified ${existing.length} authentic development and rezoning applications in Fairview, Broadway Plan & Downtown.`);
+    console.log(`ℹ️ ${existing.length} curated development/rezoning proposals unchanged (no live per-record source available; edit proposals.json manually to update).`);
   } catch (error) {
     console.error('❌ Error syncing civic development data:', error.message);
   }

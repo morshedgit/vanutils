@@ -83,12 +83,12 @@ export function evaluateNeighbourhoodSpot(
 const NEIGHBOURHOOD_COORDS: Record<string, { lat: number; lng: number }> = {
   downtown: { lat: 49.2827, lng: -123.1207 },
   'west-end': { lat: 49.2858, lng: -123.1340 },
-  yaletown: { lat: 49.2750, lng: -123.1215 },
   'mount-pleasant': { lat: 49.2635, lng: -123.1012 },
   kitsilano: { lat: 49.2684, lng: -123.1681 },
   'commercial-drive': { lat: 49.2748, lng: -123.0695 },
-  gastown: { lat: 49.2838, lng: -123.1093 },
-  'ubc-campus': { lat: 49.2606, lng: -123.2460 },
+  'olympic-village': { lat: 49.2687, lng: -123.1101 },
+  ubc: { lat: 49.2606, lng: -123.2460 },
+  'north-van': { lat: 49.3163, lng: -123.0693 },
 };
 
   // 2. Street Sweeping / Leaf Cleaning Check
@@ -98,7 +98,7 @@ const NEIGHBOURHOOD_COORDS: Record<string, { lat: number; lng: number }> = {
   const isCurrentlySweeping = hour >= sweepStartHour && hour < sweepEndHour;
 
   const nextSweepDate = new Date(date);
-  if (hour >= sweepEndHour) {
+  if (hour >= sweepStartHour) {
     nextSweepDate.setDate(nextSweepDate.getDate() + 1);
   }
   nextSweepDate.setHours(sweepStartHour, 0, 0, 0);

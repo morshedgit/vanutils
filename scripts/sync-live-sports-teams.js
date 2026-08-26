@@ -73,236 +73,83 @@ async function syncLiveSportsTeams() {
       console.log('ℹ️ MLS API: using verified baseline team telemetry.');
     }
 
-    // 3. Update all team schedule fixtures to active current season / preseason dates
-    const scheduleUpdates = {
-      canucks: {
-        lastGame: {
-          gameId: 'nhl-202502-1312',
-          date: '2026-04-18T19:00:00-07:00',
-          startTimePST: '7:00 PM PST',
-          opponent: {
-            name: 'Calgary Flames',
-            shortName: 'Flames',
-            abbreviation: 'CGY',
-            logoEmoji: '🔥',
-            record: '38-39-5',
-          },
-          isHome: true,
-          venueName: 'Rogers Arena',
-          status: 'final',
-          score: { team: 4, opponent: 3, decisionPeriod: 'OT' },
-          result: 'W',
-          broadcast: { tv: 'Sportsnet Pacific', radio: 'Sportsnet 650 AM' },
-          rivalryMatchup: true,
-          recapHeadline: 'Hughes nets OT winner as Canucks conclude 2025-26 season at Rogers Arena',
-        },
-        nextGame: {
-          gameId: 'nhl-202601-0012',
-          date: '2026-09-22T19:00:00-07:00',
-          startTimePST: '7:00 PM PST',
-          opponent: {
-            name: 'Seattle Kraken',
-            shortName: 'Kraken',
-            abbreviation: 'SEA',
-            logoEmoji: '🦑',
-            record: 'Preseason',
-          },
-          isHome: true,
-          venueName: 'Rogers Arena',
-          status: 'upcoming',
-          broadcast: { tv: 'Sportsnet Pacific', radio: 'Sportsnet 650 AM' },
-          ticketLink: 'https://www.ticketmaster.ca/vancouver-canucks-tickets/artist/806037',
-          rivalryMatchup: true,
-        },
-      },
-      whitecaps: {
-        lastGame: {
-          gameId: 'mls-2026-0822',
-          date: '2026-08-22T19:30:00-07:00',
-          startTimePST: '7:30 PM PST',
-          opponent: {
-            name: 'Houston Dynamo',
-            shortName: 'Dynamo',
-            abbreviation: 'HOU',
-            logoEmoji: '⚡',
-            record: '10-9-7',
-          },
-          isHome: true,
-          venueName: 'BC Place',
-          status: 'final',
-          score: { team: 2, opponent: 1, decisionPeriod: 'FT' },
-          result: 'W',
-          broadcast: { tv: 'Apple TV MLS Season Pass', radio: 'AM730' },
-          rivalryMatchup: false,
-          recapHeadline: 'Gauld and White strike as Whitecaps defeat Dynamo 2-1 at BC Place',
-        },
-        nextGame: {
-          gameId: 'mls-2026-0829',
-          date: '2026-08-29T19:30:00-07:00',
-          startTimePST: '7:30 PM PST',
-          opponent: {
-            name: 'St. Louis CITY SC',
-            shortName: 'St. Louis',
-            abbreviation: 'STL',
-            logoEmoji: '🔴',
-            record: '8-11-7',
-          },
-          isHome: true,
-          venueName: 'BC Place',
-          status: 'upcoming',
-          broadcast: { tv: 'Apple TV MLS Season Pass', radio: 'AM730' },
-          ticketLink: 'https://www.whitecapsfc.com/tickets',
-          rivalryMatchup: false,
-        },
-      },
-      'bc-lions': {
-        lastGame: {
-          gameId: 'cfl-2026-0821',
-          date: '2026-08-21T19:00:00-07:00',
-          startTimePST: '7:00 PM PST',
-          opponent: {
-            name: 'Ottawa Redblacks',
-            shortName: 'Redblacks',
-            abbreviation: 'OTT',
-            logoEmoji: '🪓',
-            record: '6-4-0',
-          },
-          isHome: false,
-          venueName: 'TD Place Stadium',
-          status: 'final',
-          score: { team: 28, opponent: 24, decisionPeriod: 'FT' },
-          result: 'W',
-          broadcast: { tv: 'TSN / RDS', radio: 'AM730' },
-          rivalryMatchup: false,
-          recapHeadline: 'Lions defense seals thrilling 28-24 road win in Ottawa',
-        },
-        nextGame: {
-          gameId: 'cfl-2026-0828',
-          date: '2026-08-28T19:00:00-07:00',
-          startTimePST: '7:00 PM PST',
-          opponent: {
-            name: 'Montreal Alouettes',
-            shortName: 'Alouettes',
-            abbreviation: 'MTL',
-            logoEmoji: '🦅',
-            record: '8-2-0',
-          },
-          isHome: true,
-          venueName: 'BC Place',
-          status: 'upcoming',
-          broadcast: { tv: 'TSN / RDS', radio: 'AM730' },
-          ticketLink: 'https://www.bclions.com/tickets',
-          rivalryMatchup: false,
-        },
-      },
-      canadians: {
-        lastGame: {
-          gameId: 'milb-2026-0824',
-          date: '2026-08-24T19:05:00-07:00',
-          startTimePST: '7:05 PM PST',
-          opponent: {
-            name: 'Spokane Indians',
-            shortName: 'Indians',
-            abbreviation: 'SPO',
-            logoEmoji: '⚾',
-            record: '62-48',
-          },
-          isHome: true,
-          venueName: 'Nat Bailey Stadium',
-          status: 'final',
-          score: { team: 5, opponent: 3, decisionPeriod: '9th' },
-          result: 'W',
-          broadcast: { tv: 'MiLB.tv / Bally Live', radio: 'Sportsnet 650 AM' },
-          rivalryMatchup: false,
-          recapHeadline: 'C’s pitching dominates in 5-3 victory over Spokane at The Nat',
-        },
-        nextGame: {
-          gameId: 'milb-2026-0826',
-          date: '2026-08-26T19:05:00-07:00',
-          startTimePST: '7:05 PM PST',
-          opponent: {
-            name: 'Eugene Emeralds',
-            shortName: 'Emeralds',
-            abbreviation: 'EUG',
-            logoEmoji: '🌲',
-            record: '58-54',
-          },
-          isHome: true,
-          venueName: 'Nat Bailey Stadium',
-          status: 'upcoming',
-          broadcast: { tv: 'MiLB.tv / Bally Live', radio: 'Sportsnet 650 AM' },
-          ticketLink: 'https://www.milb.com/vancouver/tickets',
-          rivalryMatchup: false,
-        },
-      },
-      warriors: {
-        nextGame: {
-          gameId: 'nll-2026-1205',
-          date: '2026-12-05T19:00:00-08:00',
-          startTimePST: '7:00 PM PST',
-          opponent: {
-            name: 'Calgary Roughnecks',
-            shortName: 'Roughnecks',
-            abbreviation: 'CGY',
-            logoEmoji: '🥍',
-            record: '0-0',
-          },
-          isHome: true,
-          venueName: 'Rogers Arena',
-          status: 'upcoming',
-          broadcast: { tv: 'TSN / ESPN+', radio: 'Sportsnet 650 AM' },
-          ticketLink: 'https://vancouverwarriors.com/tickets',
-          rivalryMatchup: true,
-        },
-      },
-      'rise-fc': {
-        nextGame: {
-          gameId: 'nsl-2026-0830',
-          date: '2026-08-30T14:00:00-07:00',
-          startTimePST: '2:00 PM PST',
-          opponent: {
-            name: 'Calgary Wild FC',
-            shortName: 'Wild FC',
-            abbreviation: 'CGY',
-            logoEmoji: '⚽',
-            record: '4-3-2',
-          },
-          isHome: true,
-          venueName: 'Swangard Stadium',
-          status: 'upcoming',
-          broadcast: { tv: 'CBC Sports / TSN', radio: 'CBC Radio One' },
-          ticketLink: 'https://vancouverrisefc.com/tickets',
-          rivalryMatchup: false,
-        },
-      },
-      bandits: {
-        nextGame: {
-          gameId: 'cebl-2026-0828',
-          date: '2026-08-28T19:00:00-07:00',
-          startTimePST: '7:00 PM PST',
-          opponent: {
-            name: 'Calgary Surge',
-            shortName: 'Surge',
-            abbreviation: 'CGY',
-            logoEmoji: '🏀',
-            record: '13-7',
-          },
-          isHome: true,
-          venueName: 'Langley Events Centre',
-          status: 'upcoming',
-          broadcast: { tv: 'TSN+ / CEBL+', radio: 'Bandits Live' },
-          ticketLink: 'https://www.thebandits.ca/tickets',
-          rivalryMatchup: false,
-        },
-      },
-    };
+    // 3. Ingest live NHL schedule for Vancouver Canucks lastGame/nextGame.
+    // Only fields returned by the NHL API are used — no invented scores, recap
+    // prose, broadcast details, or ticket links. Other teams' schedule fixtures
+    // are intentionally left untouched here: no free live schedule feed is wired
+    // up for MLS/CFL/MiLB/NLL/NSL/CEBL, so this script must not fabricate them.
+    try {
+      const scheduleRes = await fetch('https://api-web.nhle.com/v1/club-schedule-season/VAN/now', {
+        headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+      }).catch(() => null);
 
-    for (const team of existingTeams) {
-      const updates = scheduleUpdates[team.id];
-      if (updates) {
-        if (updates.lastGame) team.lastGame = updates.lastGame;
-        if (updates.nextGame) team.nextGame = updates.nextGame;
+      if (scheduleRes && scheduleRes.ok) {
+        const scheduleData = await scheduleRes.json();
+        const games = Array.isArray(scheduleData.games) ? scheduleData.games : [];
+
+        const mapGame = (game) => {
+          const isHome = game.homeTeam?.abbrev === 'VAN';
+          const self = isHome ? game.homeTeam : game.awayTeam;
+          const opp = isHome ? game.awayTeam : game.homeTeam;
+          const tvNetworks = [...new Set((game.tvBroadcasts || []).map((b) => b.network).filter(Boolean))];
+          const startTimeUTC = game.startTimeUTC;
+          const startTimePST = startTimeUTC
+            ? `${new Date(startTimeUTC).toLocaleTimeString('en-US', { timeZone: 'America/Vancouver', hour: 'numeric', minute: '2-digit', hour12: true })} PST`
+            : 'TBD';
+
+          const mapped = {
+            gameId: `nhl-${game.id}`,
+            date: startTimeUTC || game.gameDate,
+            startTimePST,
+            opponent: {
+              name: [opp.placeName?.default, opp.commonName?.default].filter(Boolean).join(' ') || opp.abbrev,
+              shortName: opp.commonName?.default || opp.abbrev,
+              abbreviation: opp.abbrev,
+            },
+            isHome,
+            venueName: game.venue?.default || 'TBD',
+            broadcast: {
+              tv: tvNetworks.length > 0 ? tvNetworks.join(' / ') : 'Check nhl.com/canucks',
+              radio: 'Check nhl.com/canucks',
+            },
+          };
+
+          if (game.gameState === 'OFF' && typeof self.score === 'number' && typeof opp.score === 'number') {
+            const periodType = game.periodDescriptor?.periodType;
+            const decisionPeriod = periodType === 'OT' ? 'OT' : periodType === 'SO' ? 'SO' : 'REG';
+            return {
+              ...mapped,
+              status: 'final',
+              score: { team: self.score, opponent: opp.score, decisionPeriod },
+              result: self.score > opp.score ? 'W' : (decisionPeriod !== 'REG' ? 'OTL' : 'L'),
+            };
+          }
+
+          return { ...mapped, status: 'upcoming' };
+        };
+
+        const finalGames = games.filter((g) => g.gameState === 'OFF').sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+        const upcomingGames = games.filter((g) => g.gameState === 'FUT' || g.gameState === 'PRE').sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+
+        const canucks = existingTeams.find((t) => t.id === 'canucks');
+        if (canucks) {
+          if (finalGames.length > 0) {
+            canucks.lastGame = mapGame(finalGames[finalGames.length - 1]);
+            console.log(`✅ Updated Canucks last game from live NHL schedule: ${canucks.lastGame.opponent.abbreviation} (${canucks.lastGame.result})`);
+          } else {
+            console.log('ℹ️ NHL schedule: no completed Canucks game in the current season yet — lastGame left unchanged.');
+          }
+
+          if (upcomingGames.length > 0) {
+            canucks.nextGame = mapGame(upcomingGames[0]);
+            console.log(`✅ Updated Canucks next game from live NHL schedule: vs ${canucks.nextGame.opponent.abbreviation} on ${canucks.nextGame.date}`);
+          } else {
+            console.log('ℹ️ NHL schedule: no upcoming Canucks game found — nextGame left unchanged.');
+          }
+        }
       }
+    } catch (e) {
+      console.log('ℹ️ NHL Schedule API: using existing baseline Canucks schedule fixtures.');
     }
 
     fs.writeFileSync(teamsFilePath, JSON.stringify(existingTeams, null, 2), 'utf8');

@@ -86,9 +86,9 @@ const initialEvents = allEvents.slice(0, 4);
 const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
 const initialSchools = allSchools.slice(0, 4);
 const frenchSchoolsCount = allSchools.filter((s) => s.programs?.includes('early_french_immersion') || s.programs?.includes('late_french_immersion')).length;
-const englishSchoolsCount = allSchools.length - frenchSchoolsCount;
+const englishSchoolsCount = allSchools.filter((s) => s.programs?.includes('english_regular')).length;
 const englishPct = allSchools.length > 0 ? Math.round((englishSchoolsCount / allSchools.length) * 100) : 60;
-const frenchPct = 100 - englishPct;
+const frenchPct = allSchools.length > 0 ? Math.round((frenchSchoolsCount / allSchools.length) * 100) : 40;
 
 const allNews = tool.id === 'local-news' ? await getLiveNews() : [];
 const initialNews = allNews.slice(0, 4);

@@ -24,7 +24,7 @@ export async function getLiveSchools(): Promise<SchoolInfo[]> {
 
   return BASELINE_SCHOOLS.map((s) => ({
     ...s,
-    isStale: false,
+    isStale: true,
   }));
 }
 

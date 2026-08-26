@@ -6,69 +6,64 @@
     "region": "vancouver_core",
     "latitude": 49.2825,
     "longitude": -123.1215,
-    "currentAQHI": 8,
-    "currentPM25": 13.7,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 5,
+    "currentPM25": 19.4,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 13.7,
+        "value": 19.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 22.4,
+        "value": 21.7,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 103,
+        "value": 35,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13.9,
+        "value": 20.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.2,
+        "value": 6.5,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 24.7,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 28.1,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 21.3,
-        "aqhiValue": 8
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 20.4,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
+        "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 19.4,
-        "aqhiValue": 8
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 13.7,
-        "aqhiValue": 8
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.425Z",
+    "lastSampledTime": "2026-08-26T15:50:00.753Z",
     "isStale": false
   },
   {
@@ -78,69 +73,64 @@
     "region": "vancouver_core",
     "latitude": 49.2605,
     "longitude": -123.0778,
-    "currentAQHI": 8,
-    "currentPM25": 13.7,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 5,
+    "currentPM25": 19.4,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 13.7,
+        "value": 19.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 22.4,
+        "value": 21.7,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 103,
+        "value": 35,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13.9,
+        "value": 20.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.2,
+        "value": 6.5,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 24.7,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 28.1,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 21.3,
-        "aqhiValue": 8
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 20.4,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
+        "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 19.4,
-        "aqhiValue": 8
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 13.7,
-        "aqhiValue": 8
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.399Z",
+    "lastSampledTime": "2026-08-26T15:50:00.755Z",
     "isStale": false
   },
   {
@@ -150,69 +140,64 @@
     "region": "vancouver_core",
     "latitude": 49.2625,
     "longitude": -123.1528,
-    "currentAQHI": 8,
-    "currentPM25": 13.7,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 5,
+    "currentPM25": 19.4,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 13.7,
+        "value": 19.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 22.4,
+        "value": 21.7,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 103,
+        "value": 35,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13.9,
+        "value": 20.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.2,
+        "value": 6.5,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 24.7,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 28.1,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 21.3,
-        "aqhiValue": 8
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 20.4,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
+        "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 19.4,
-        "aqhiValue": 8
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 13.7,
-        "aqhiValue": 8
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.419Z",
+    "lastSampledTime": "2026-08-26T15:50:00.752Z",
     "isStale": false
   },
   {
@@ -222,69 +207,64 @@
     "region": "vancouver_core",
     "latitude": 49.1912,
     "longitude": -123.1612,
-    "currentAQHI": 8,
-    "currentPM25": 13.7,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 5,
+    "currentPM25": 19.4,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 13.7,
+        "value": 19.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 22.4,
+        "value": 21.7,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 103,
+        "value": 35,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13.9,
+        "value": 20.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.2,
+        "value": 6.5,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 24.7,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 28.1,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 21.3,
-        "aqhiValue": 8
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 20.4,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
+        "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 19.4,
-        "aqhiValue": 8
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 13.7,
-        "aqhiValue": 8
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.420Z",
+    "lastSampledTime": "2026-08-26T15:50:00.769Z",
     "isStale": false
   },
   {
@@ -294,69 +274,64 @@
     "region": "north_shore",
     "latitude": 49.3092,
     "longitude": -123.0245,
-    "currentAQHI": 8,
-    "currentPM25": 13.7,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 5,
+    "currentPM25": 19.4,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 13.7,
+        "value": 19.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 22.4,
+        "value": 21.7,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 103,
+        "value": 35,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13.9,
+        "value": 20.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.2,
+        "value": 6.5,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 24.7,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 28.1,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 21.3,
-        "aqhiValue": 8
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 20.4,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
+        "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 19.4,
-        "aqhiValue": 8
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 13.7,
-        "aqhiValue": 8
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.445Z",
+    "lastSampledTime": "2026-08-26T15:50:00.812Z",
     "isStale": false
   },
   {
@@ -366,69 +341,64 @@
     "region": "north_shore",
     "latitude": 49.3245,
     "longitude": -123.0815,
-    "currentAQHI": 8,
-    "currentPM25": 13.7,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 5,
+    "currentPM25": 19.4,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 13.7,
+        "value": 19.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 22.4,
+        "value": 21.7,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 103,
+        "value": 35,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13.9,
+        "value": 20.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.2,
+        "value": 6.5,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 24.7,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 28.1,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 21.3,
-        "aqhiValue": 8
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 20.4,
+        "aqhiValue": 5
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
+        "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 19.4,
-        "aqhiValue": 8
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 13.7,
-        "aqhiValue": 8
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.422Z",
+    "lastSampledTime": "2026-08-26T15:50:00.776Z",
     "isStale": false
   },
   {
@@ -438,69 +408,64 @@
     "region": "burrard_inland",
     "latitude": 49.2285,
     "longitude": -122.9785,
-    "currentAQHI": 9,
-    "currentPM25": 22.9,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 4,
+    "currentPM25": 23.8,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 22.9,
+        "value": 23.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 21.6,
+        "value": 24.4,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 118,
+        "value": 15,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 23.1,
+        "value": 25.6,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.8,
+        "value": 5.9,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 37.8,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 31.1,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 33.3,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 23.4,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
-        "pm25Value": 28.2,
-        "aqhiValue": 9
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 22.9,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T08:00:00Z",
+        "pm25Value": 23.8,
+        "aqhiValue": 4
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.421Z",
+    "lastSampledTime": "2026-08-26T15:50:00.753Z",
     "isStale": false
   },
   {
@@ -510,69 +475,64 @@
     "region": "burrard_inland",
     "latitude": 49.2785,
     "longitude": -122.9185,
-    "currentAQHI": 9,
-    "currentPM25": 22.9,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 4,
+    "currentPM25": 23.8,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 22.9,
+        "value": 23.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 21.6,
+        "value": 24.4,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 118,
+        "value": 15,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 23.1,
+        "value": 25.6,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.8,
+        "value": 5.9,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 37.8,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 31.1,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 33.3,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 23.4,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
-        "pm25Value": 28.2,
-        "aqhiValue": 9
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 22.9,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T08:00:00Z",
+        "pm25Value": 23.8,
+        "aqhiValue": 4
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.445Z",
+    "lastSampledTime": "2026-08-26T15:50:00.836Z",
     "isStale": false
   },
   {
@@ -582,69 +542,64 @@
     "region": "burrard_inland",
     "latitude": 49.2825,
     "longitude": -122.8285,
-    "currentAQHI": 9,
-    "currentPM25": 22.9,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 4,
+    "currentPM25": 23.8,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 22.9,
+        "value": 23.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 21.6,
+        "value": 24.4,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 118,
+        "value": 15,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 23.1,
+        "value": 25.6,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.8,
+        "value": 5.9,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 37.8,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 31.1,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 33.3,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 23.4,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
-        "pm25Value": 28.2,
-        "aqhiValue": 9
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 22.9,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T08:00:00Z",
+        "pm25Value": 23.8,
+        "aqhiValue": 4
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.438Z",
+    "lastSampledTime": "2026-08-26T15:50:00.807Z",
     "isStale": false
   },
   {
@@ -654,69 +609,64 @@
     "region": "fraser_valley",
     "latitude": 49.2885,
     "longitude": -122.7915,
-    "currentAQHI": 9,
-    "currentPM25": 22.9,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 4,
+    "currentPM25": 23.8,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 22.9,
+        "value": 23.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 21.6,
+        "value": 24.4,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 118,
+        "value": 15,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 23.1,
+        "value": 25.6,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.8,
+        "value": 5.9,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 37.8,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 31.1,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 33.3,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 23.4,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
-        "pm25Value": 28.2,
-        "aqhiValue": 9
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 22.9,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T08:00:00Z",
+        "pm25Value": 23.8,
+        "aqhiValue": 4
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.445Z",
+    "lastSampledTime": "2026-08-26T15:50:00.754Z",
     "isStale": false
   },
   {
@@ -726,69 +676,64 @@
     "region": "fraser_valley",
     "latitude": 49.1385,
     "longitude": -122.7585,
-    "currentAQHI": 9,
-    "currentPM25": 22.9,
-    "riskCategory": "high",
-    "primaryPollutant": "Ozone",
+    "currentAQHI": 4,
+    "currentPM25": 23.8,
+    "riskCategory": "moderate",
+    "primaryPollutant": "PM2.5",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 22.9,
+        "value": 23.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 21.6,
+        "value": 24.4,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 118,
+        "value": 15,
         "unit": "ppb",
-        "status": "high"
+        "status": "low"
       },
       {
         "pollutantCode": "PM10",
-        "value": 23.1,
+        "value": 25.6,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 10.8,
+        "value": 5.9,
         "unit": "ppb",
         "status": "low"
       }
     ],
     "historical24h": [
       {
-        "timestamp": "2026-08-25T00:00:00Z",
-        "pm25Value": 37.8,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T00:00:00Z",
+        "pm25Value": 31.1,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T04:00:00Z",
-        "pm25Value": 33.3,
-        "aqhiValue": 10
+        "timestamp": "2026-08-26T04:00:00Z",
+        "pm25Value": 23.4,
+        "aqhiValue": 4
       },
       {
-        "timestamp": "2026-08-25T08:00:00Z",
-        "pm25Value": 28.2,
-        "aqhiValue": 9
-      },
-      {
-        "timestamp": "2026-08-25T12:00:00Z",
-        "pm25Value": 22.9,
-        "aqhiValue": 9
+        "timestamp": "2026-08-26T08:00:00Z",
+        "pm25Value": 23.8,
+        "aqhiValue": 4
       }
     ],
     "healthAdvice": {
-      "generalPopulation": "Consider reducing or rescheduling strenuous activities outdoors.",
-      "atRiskPopulation": "Reduce or reschedule strenuous activities outdoors. Children and elderly should take it easy."
+      "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
+      "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-25T19:18:45.425Z",
+    "lastSampledTime": "2026-08-26T15:50:00.756Z",
     "isStale": false
   }
 ]

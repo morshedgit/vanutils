@@ -126,17 +126,81 @@ export function getSeaBusLiveStatus(): SeaBusLiveStatus {
   };
 }
 
-export function getMarineWeatherStatus(): MarineWeatherStatus {
-  return {
-    region: 'Strait of Georgia - South of Nanaimo',
-    windSpeedKnots: 12,
-    windDirection: 'NW',
-    waveHeightMeters: 0.6,
-    waterTempC: 14.5,
-    advisoryLevel: 'normal' as WeatherRisk,
-    warningText: 'Strait of Georgia: Calm waters. Good sailing conditions.',
-    lastUpdated: '2026-08-25T12:00:00.000Z',
-  };
+const BASELINE_MARINE_WEATHER: Omit<MarineWeatherStatus, 'isStale'> = {
+  region: 'Strait of Georgia - South of Nanaimo',
+  windSpeedKnots: 12,
+  windDirection: 'NW',
+  waveHeightMeters: 0.6,
+  waterTempC: 14.5,
+  advisoryLevel: 'normal' as WeatherRisk,
+  warningText: 'Strait of Georgia: Calm waters. Good sailing conditions.',
+  lastUpdated: '2026-08-25T12:00:00.000Z',
+};
+
+function degreesToCompass(deg: number): string {
+  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  return directions[Math.round(deg / 22.5) % 16];
+}
+
+/**
+ * Dynamically fetches live Strait of Georgia marine conditions at the edge with fallback to baseline
+ */
+export async function getMarineWeatherStatus(): Promise<MarineWeatherStatus> {
+  const lat = 49.05;
+  const lng = -123.55;
+
+  try {
+    const [marineRes, windRes] = await Promise.all([
+      edgeFetch<{ current: Record<string, any> }>(
+        `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lng}&current=wave_height,sea_surface_temperature&timezone=America%2FVancouver`,
+        { timeoutMs: 1200 }
+      ),
+      edgeFetch<{ current: Record<string, any> }>(
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=wind_speed_10m,wind_direction_10m&wind_speed_unit=kn&timezone=America%2FVancouver`,
+        { timeoutMs: 1200 }
+      ),
+    ]);
+
+    const marineCurrent = marineRes.data?.current;
+    const windCurrent = windRes.data?.current;
+
+    if (marineCurrent && windCurrent && typeof windCurrent.wind_speed_10m === 'number') {
+      const windSpeedKnots = Math.round(windCurrent.wind_speed_10m);
+      const windDirection = typeof windCurrent.wind_direction_10m === 'number'
+        ? degreesToCompass(windCurrent.wind_direction_10m)
+        : BASELINE_MARINE_WEATHER.windDirection;
+      const waveHeightMeters = typeof marineCurrent.wave_height === 'number'
+        ? marineCurrent.wave_height
+        : BASELINE_MARINE_WEATHER.waveHeightMeters;
+      const waterTempC = typeof marineCurrent.sea_surface_temperature === 'number'
+        ? marineCurrent.sea_surface_temperature
+        : BASELINE_MARINE_WEATHER.waterTempC;
+
+      let advisoryLevel: WeatherRisk = 'normal';
+      let warningText = 'Strait of Georgia: Calm waters. Good sailing conditions.';
+      if (windSpeedKnots > 25) {
+        advisoryLevel = 'high_wind_warning';
+        warningText = `Strait of Georgia: High Wind Warning. Winds at ${windSpeedKnots} kts. Expect fast ferry cancellations.`;
+      } else if (windSpeedKnots >= 15) {
+        advisoryLevel = 'caution';
+        warningText = `Strait of Georgia: Choppy seas. Winds at ${windSpeedKnots} kts. Minor crossing delays possible.`;
+      }
+
+      return {
+        region: BASELINE_MARINE_WEATHER.region,
+        windSpeedKnots,
+        windDirection,
+        waveHeightMeters,
+        waterTempC,
+        advisoryLevel,
+        warningText,
+        lastUpdated: new Date().toISOString(),
+        isStale: false,
+      };
+    }
+  } catch (e) {}
+
+  return { ...BASELINE_MARINE_WEATHER, isStale: true };
 }
 
 export const getMarineWeather = getMarineWeatherStatus;

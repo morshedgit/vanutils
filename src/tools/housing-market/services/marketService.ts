@@ -23,11 +23,13 @@ export async function getLiveMarketHeartbeat(): Promise<MarketHeartbeatData> {
       const targetRate = typeof rateStr === 'number' ? rateStr : parseFloat(rateStr);
       if (!isNaN(targetRate) && targetRate > 0) {
         const prime = targetRate + 2.2;
+        const variableRate = prime - 0.75;
         const stressRate = Math.max(5.25, prime + 1.0);
         liveMortgage = {
           ...liveMortgage,
           bocOvernightRate: targetRate,
-          variable5YearBenchmark: parseFloat(prime.toFixed(2)),
+          primeRate: parseFloat(prime.toFixed(2)),
+          variable5YearBenchmark: parseFloat(variableRate.toFixed(2)),
           stressTestQualifyingRate: parseFloat(stressRate.toFixed(2)),
           lastUpdated: latestObs.d || now.toISOString(),
         };

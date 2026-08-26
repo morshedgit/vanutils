@@ -13,9 +13,11 @@ export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
   const vancouverDate = new Date(vancouverTimeString);
   const hour = vancouverDate.getHours();
 
+  let liveDatasetReachable = false;
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-facilities/records?limit=10';
-    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
+    const res = await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
+    liveDatasetReachable = Boolean(res.data && Array.isArray(res.data.results) && res.data.results.length > 0);
   } catch (e) {}
 
   return BASELINE_FACILITIES.map((f) => {
@@ -35,7 +37,7 @@ export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
         ...f.session,
         isOpenNow: isOpen,
       },
-      isStale: false,
+      isStale: !liveDatasetReachable,
     };
   });
 }

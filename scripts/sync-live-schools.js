@@ -15,7 +15,11 @@ async function syncLiveSchools() {
     );
     const existing = JSON.parse(fs.readFileSync(schoolsFilePath, 'utf8'));
 
-    // Verify City of Vancouver Open Data API connectivity for schools
+    // Smoke-test City of Vancouver Schools Open Data API reachability. NOTE: this
+    // dataset does not carry the curated catchment/program fields used in
+    // schools.json (feeder patterns, program offerings), so no live data is
+    // ingested here. This baseline is a manually curated snapshot and is NOT
+    // refreshed by this script.
     try {
       const openDataRes = await fetch(
         'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/schools/records?limit=5',
@@ -23,14 +27,16 @@ async function syncLiveSchools() {
       ).catch(() => null);
 
       if (openDataRes && openDataRes.ok) {
-        console.log('✅ Connected to City of Vancouver Schools Open Data API.');
+        console.log('ℹ️ City of Vancouver Schools Open Data API reachable (informational only; no per-catchment fields available to sync).');
+      } else {
+        console.log('ℹ️ City of Vancouver Schools Open Data API unreachable (informational only; baseline dataset unaffected).');
       }
     } catch (e) {
-      console.log('ℹ️ CoV Open Data: using verified baseline VSB SD39 schools dataset.');
+      console.log('ℹ️ CoV Open Data connectivity check failed (informational only; baseline dataset unaffected).');
     }
 
     fs.writeFileSync(schoolsFilePath, JSON.stringify(existing, null, 2), 'utf8');
-    console.log(`✅ Verified ${existing.length} VSB SD39 schools and catchment feeder patterns.`);
+    console.log(`ℹ️ ${existing.length} curated VSB SD39 schools unchanged (no live per-record source available; edit schools.json manually to update).`);
   } catch (error) {
     console.error('❌ Error syncing school catchment data:', error.message);
   }

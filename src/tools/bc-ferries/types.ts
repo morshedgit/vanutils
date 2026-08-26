@@ -70,4 +70,5 @@ export interface MarineWeatherStatus {
   advisoryLevel: WeatherRisk;
   warningText?: string;
   lastUpdated: string;
+  isStale: boolean;
 }

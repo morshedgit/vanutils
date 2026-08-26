@@ -22,7 +22,7 @@ export async function getLiveEvents(): Promise<CommunityEvent[]> {
 
   return BASELINE_EVENTS.map((e) => ({
     ...e,
-    isStale: false,
+    isStale: true,
   }));
 }
 
