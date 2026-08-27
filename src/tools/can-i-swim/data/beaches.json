@@ -28,39 +28,7 @@
       "singleSampleCount": 16,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 18,
-        "singleSampleCount": 16,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 18,
-        "singleSampleCount": 16,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 18,
-        "singleSampleCount": 16,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 18,
-        "singleSampleCount": 16,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 18,
-        "singleSampleCount": 16,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "barnet-marine-park",
@@ -91,39 +59,7 @@
       "singleSampleCount": 48,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "belcarra-regional-park",
@@ -153,39 +89,7 @@
       "singleSampleCount": 25,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 22,
-        "singleSampleCount": 25,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 22,
-        "singleSampleCount": 25,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 22,
-        "singleSampleCount": 25,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 22,
-        "singleSampleCount": 25,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 22,
-        "singleSampleCount": 25,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "cates-park-beach",
@@ -216,39 +120,7 @@
       "singleSampleCount": 20,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 24,
-        "singleSampleCount": 20,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 24,
-        "singleSampleCount": 20,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 24,
-        "singleSampleCount": 20,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 24,
-        "singleSampleCount": 20,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 24,
-        "singleSampleCount": 20,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "centennial-beach-boundary-bay",
@@ -279,39 +151,7 @@
       "singleSampleCount": 36,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 32,
-        "singleSampleCount": 36,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "crab-park-beach",
@@ -341,39 +181,7 @@
       "singleSampleCount": 48,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 44,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 44,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 44,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 44,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 44,
-        "singleSampleCount": 48,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "crescent-beach",
@@ -404,39 +212,7 @@
       "singleSampleCount": 28,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 25,
-        "singleSampleCount": 28,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 25,
-        "singleSampleCount": 28,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 25,
-        "singleSampleCount": 28,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 25,
-        "singleSampleCount": 28,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 25,
-        "singleSampleCount": 28,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "deep-cove-beach",
@@ -467,39 +243,7 @@
       "singleSampleCount": 38,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 35,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 35,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 35,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 35,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 35,
-        "singleSampleCount": 38,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "dundarave-beach",
@@ -529,39 +273,7 @@
       "singleSampleCount": 12,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "eagle-harbour-beach",
@@ -591,39 +303,7 @@
       "singleSampleCount": 12,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 15,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 15,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 15,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 15,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 15,
-        "singleSampleCount": 12,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "english-bay-beach",
@@ -654,39 +334,7 @@
       "singleSampleCount": 42,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "garry-point-park",
@@ -716,39 +364,7 @@
       "singleSampleCount": 42,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 38,
-        "singleSampleCount": 42,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "hadden-park-dog-beach",
@@ -778,39 +394,7 @@
       "singleSampleCount": 48,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 42,
-        "singleSampleCount": 48,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "iona-beach",
@@ -841,39 +425,7 @@
       "singleSampleCount": 50,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 45,
-        "singleSampleCount": 50,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 45,
-        "singleSampleCount": 50,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 45,
-        "singleSampleCount": 50,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 45,
-        "singleSampleCount": 50,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 45,
-        "singleSampleCount": 50,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "jericho-beach",
@@ -904,39 +456,7 @@
       "singleSampleCount": 19,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 22,
-        "singleSampleCount": 19,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 22,
-        "singleSampleCount": 19,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 22,
-        "singleSampleCount": 19,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 22,
-        "singleSampleCount": 19,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 22,
-        "singleSampleCount": 19,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "kitsilano-beach",
@@ -967,39 +487,7 @@
       "singleSampleCount": 30,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 26,
-        "singleSampleCount": 30,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 26,
-        "singleSampleCount": 30,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 26,
-        "singleSampleCount": 30,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 26,
-        "singleSampleCount": 30,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 26,
-        "singleSampleCount": 30,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "locarno-beach",
@@ -1029,39 +517,7 @@
       "singleSampleCount": 22,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 20,
-        "singleSampleCount": 22,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 20,
-        "singleSampleCount": 22,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 20,
-        "singleSampleCount": 22,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 20,
-        "singleSampleCount": 22,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 20,
-        "singleSampleCount": 22,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "old-orchard-park-beach",
@@ -1091,39 +547,7 @@
       "singleSampleCount": 32,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "rocky-point-park-beach",
@@ -1154,39 +578,7 @@
       "singleSampleCount": 38,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "sandy-cove-beach",
@@ -1216,39 +608,7 @@
       "singleSampleCount": 9,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 11,
-        "singleSampleCount": 9,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "sasamat-lake-white-pine",
@@ -1278,39 +638,7 @@
       "singleSampleCount": 45,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 36,
-        "singleSampleCount": 45,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 36,
-        "singleSampleCount": 45,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 36,
-        "singleSampleCount": 45,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 36,
-        "singleSampleCount": 45,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 36,
-        "singleSampleCount": 45,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "second-beach-stanley-park",
@@ -1340,39 +668,7 @@
       "singleSampleCount": 35,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 32,
-        "singleSampleCount": 35,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 32,
-        "singleSampleCount": 35,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 32,
-        "singleSampleCount": 35,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 32,
-        "singleSampleCount": 35,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 32,
-        "singleSampleCount": 35,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "spanish-banks-west",
@@ -1403,39 +699,7 @@
       "singleSampleCount": 14,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 15,
-        "singleSampleCount": 14,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 15,
-        "singleSampleCount": 14,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 15,
-        "singleSampleCount": 14,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 15,
-        "singleSampleCount": 14,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 15,
-        "singleSampleCount": 14,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "spanish-banks-extension",
@@ -1466,39 +730,7 @@
       "singleSampleCount": 12,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 13,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 13,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 13,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 13,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 13,
-        "singleSampleCount": 12,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "sunset-beach",
@@ -1529,39 +761,7 @@
       "singleSampleCount": 280,
       "status": "caution",
       "notes": "Elevated bacteria count"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 142,
-        "singleSampleCount": 280,
-        "status": "caution"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 142,
-        "singleSampleCount": 280,
-        "status": "caution"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 142,
-        "singleSampleCount": 280,
-        "status": "caution"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 142,
-        "singleSampleCount": 280,
-        "status": "caution"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 142,
-        "singleSampleCount": 280,
-        "status": "caution"
-      }
-    ]
+    }
   },
   {
     "id": "third-beach-stanley-park",
@@ -1591,39 +791,7 @@
       "singleSampleCount": 18,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 21,
-        "singleSampleCount": 18,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 21,
-        "singleSampleCount": 18,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 21,
-        "singleSampleCount": 18,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 21,
-        "singleSampleCount": 18,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 21,
-        "singleSampleCount": 18,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "tower-beach-ubc",
@@ -1653,39 +821,7 @@
       "singleSampleCount": 12,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 14,
-        "singleSampleCount": 12,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "white-rock-east-beach",
@@ -1715,39 +851,7 @@
       "singleSampleCount": 32,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 28,
-        "singleSampleCount": 32,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "white-rock-west-beach",
@@ -1778,39 +882,7 @@
       "singleSampleCount": 38,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 34,
-        "singleSampleCount": 38,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "whytecliff-park",
@@ -1841,39 +913,7 @@
       "singleSampleCount": 6,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 8,
-        "singleSampleCount": 6,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 8,
-        "singleSampleCount": 6,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 8,
-        "singleSampleCount": 6,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 8,
-        "singleSampleCount": 6,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 8,
-        "singleSampleCount": 6,
-        "status": "safe"
-      }
-    ]
+    }
   },
   {
     "id": "wreck-beach-ubc",
@@ -1903,38 +943,6 @@
       "singleSampleCount": 15,
       "status": "safe",
       "notes": "Pristine recreational water quality"
-    },
-    "historicalSamples": [
-      {
-        "date": "2026-07-18",
-        "eColiCount": 16,
-        "singleSampleCount": 15,
-        "status": "safe"
-      },
-      {
-        "date": "2026-07-25",
-        "eColiCount": 16,
-        "singleSampleCount": 15,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-01",
-        "eColiCount": 16,
-        "singleSampleCount": 15,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-08",
-        "eColiCount": 16,
-        "singleSampleCount": 15,
-        "status": "safe"
-      },
-      {
-        "date": "2026-08-14",
-        "eColiCount": 16,
-        "singleSampleCount": 15,
-        "status": "safe"
-      }
-    ]
+    }
   }
 ]

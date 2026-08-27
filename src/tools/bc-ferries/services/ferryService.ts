@@ -37,7 +37,10 @@ export async function getLiveRoutes(): Promise<FerryRoute[]> {
 
         if (matchingLive && matchingLive.sailings && matchingLive.sailings.length > 0) {
           const activeSailings = matchingLive.sailings
-            .filter((s: any) => s.sailingStatus !== 'past')
+            // A sailing without a real departure time or an assigned vessel
+            // isn't actionable info — show it once BC Ferries actually
+            // publishes it rather than inventing a placeholder for it.
+            .filter((s: any) => s.sailingStatus !== 'past' && s.time && s.vesselName)
             .map((s: any) => {
               const fillPercent = typeof s.carFill === 'number' ? s.carFill : (typeof s.fill === 'number' ? s.fill : 0);
               const deckSpaceAvailable = Math.max(0, 100 - fillPercent);
@@ -49,7 +52,7 @@ export async function getLiveRoutes(): Promise<FerryRoute[]> {
               return {
                 departureTime: s.time,
                 arrivalTime: s.arrivalTime || '',
-                vesselName: s.vesselName || 'Scheduled Vessel',
+                vesselName: s.vesselName,
                 deckSpacePercent: deckSpaceAvailable,
                 passengerSpaceAvailable: true,
                 isCancelled: s.sailingStatus === 'cancelled',

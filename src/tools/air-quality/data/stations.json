@@ -7,37 +7,37 @@
     "latitude": 49.2825,
     "longitude": -123.1215,
     "currentAQHI": 5,
-    "currentPM25": 10.3,
+    "currentPM25": 9.8,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 10.3,
+        "value": 9.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.8,
+        "value": 15.8,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 72,
+        "value": 67,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13,
+        "value": 12.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 6.3,
+        "value": 5.7,
         "unit": "ppb",
         "status": "low"
       }
@@ -51,7 +51,7 @@
       {
         "timestamp": "2026-08-26T04:00:00Z",
         "pm25Value": 20.4,
-        "aqhiValue": 5
+        "aqhiValue": 6
       },
       {
         "timestamp": "2026-08-26T08:00:00Z",
@@ -62,13 +62,18 @@
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 9.9,
         "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 10.5,
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.261Z",
+    "lastSampledTime": "2026-08-27T01:44:09.504Z",
     "isStale": false
   },
   {
@@ -79,37 +84,37 @@
     "latitude": 49.2605,
     "longitude": -123.0778,
     "currentAQHI": 5,
-    "currentPM25": 10.3,
+    "currentPM25": 9.8,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 10.3,
+        "value": 9.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.8,
+        "value": 15.8,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 72,
+        "value": 67,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13,
+        "value": 12.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 6.3,
+        "value": 5.7,
         "unit": "ppb",
         "status": "low"
       }
@@ -123,7 +128,7 @@
       {
         "timestamp": "2026-08-26T04:00:00Z",
         "pm25Value": 20.4,
-        "aqhiValue": 5
+        "aqhiValue": 6
       },
       {
         "timestamp": "2026-08-26T08:00:00Z",
@@ -134,13 +139,18 @@
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 9.9,
         "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 10.5,
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.262Z",
+    "lastSampledTime": "2026-08-27T01:44:09.505Z",
     "isStale": false
   },
   {
@@ -151,37 +161,37 @@
     "latitude": 49.2625,
     "longitude": -123.1528,
     "currentAQHI": 5,
-    "currentPM25": 10.3,
+    "currentPM25": 9.8,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 10.3,
+        "value": 9.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.8,
+        "value": 15.8,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 72,
+        "value": 67,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13,
+        "value": 12.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 6.3,
+        "value": 5.7,
         "unit": "ppb",
         "status": "low"
       }
@@ -195,7 +205,7 @@
       {
         "timestamp": "2026-08-26T04:00:00Z",
         "pm25Value": 20.4,
-        "aqhiValue": 5
+        "aqhiValue": 6
       },
       {
         "timestamp": "2026-08-26T08:00:00Z",
@@ -206,13 +216,18 @@
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 9.9,
         "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 10.5,
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.260Z",
+    "lastSampledTime": "2026-08-27T01:44:09.524Z",
     "isStale": false
   },
   {
@@ -223,37 +238,37 @@
     "latitude": 49.1912,
     "longitude": -123.1612,
     "currentAQHI": 5,
-    "currentPM25": 10.3,
+    "currentPM25": 9.8,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 10.3,
+        "value": 9.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.8,
+        "value": 15.8,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 72,
+        "value": 67,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13,
+        "value": 12.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 6.3,
+        "value": 5.7,
         "unit": "ppb",
         "status": "low"
       }
@@ -267,7 +282,7 @@
       {
         "timestamp": "2026-08-26T04:00:00Z",
         "pm25Value": 20.4,
-        "aqhiValue": 5
+        "aqhiValue": 6
       },
       {
         "timestamp": "2026-08-26T08:00:00Z",
@@ -278,13 +293,18 @@
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 9.9,
         "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 10.5,
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.267Z",
+    "lastSampledTime": "2026-08-27T01:44:09.522Z",
     "isStale": false
   },
   {
@@ -295,37 +315,37 @@
     "latitude": 49.3092,
     "longitude": -123.0245,
     "currentAQHI": 5,
-    "currentPM25": 10.3,
+    "currentPM25": 9.8,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 10.3,
+        "value": 9.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.8,
+        "value": 15.8,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 72,
+        "value": 67,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13,
+        "value": 12.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 6.3,
+        "value": 5.7,
         "unit": "ppb",
         "status": "low"
       }
@@ -339,7 +359,7 @@
       {
         "timestamp": "2026-08-26T04:00:00Z",
         "pm25Value": 20.4,
-        "aqhiValue": 5
+        "aqhiValue": 6
       },
       {
         "timestamp": "2026-08-26T08:00:00Z",
@@ -350,13 +370,18 @@
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 9.9,
         "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 10.5,
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.259Z",
+    "lastSampledTime": "2026-08-27T01:44:09.506Z",
     "isStale": false
   },
   {
@@ -367,37 +392,37 @@
     "latitude": 49.3245,
     "longitude": -123.0815,
     "currentAQHI": 5,
-    "currentPM25": 10.3,
+    "currentPM25": 9.8,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 10.3,
+        "value": 9.8,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.8,
+        "value": 15.8,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 72,
+        "value": 67,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 13,
+        "value": 12.4,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 6.3,
+        "value": 5.7,
         "unit": "ppb",
         "status": "low"
       }
@@ -411,7 +436,7 @@
       {
         "timestamp": "2026-08-26T04:00:00Z",
         "pm25Value": 20.4,
-        "aqhiValue": 5
+        "aqhiValue": 6
       },
       {
         "timestamp": "2026-08-26T08:00:00Z",
@@ -422,13 +447,18 @@
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 9.9,
         "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 10.5,
+        "aqhiValue": 5
       }
     ],
     "healthAdvice": {
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.332Z",
+    "lastSampledTime": "2026-08-27T01:44:09.514Z",
     "isStale": false
   },
   {
@@ -439,37 +469,37 @@
     "latitude": 49.2285,
     "longitude": -122.9785,
     "currentAQHI": 5,
-    "currentPM25": 12,
+    "currentPM25": 9.9,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 12,
+        "value": 9.9,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.2,
+        "value": 12.9,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 71,
+        "value": 72,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 15.1,
+        "value": 12.3,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 5.9,
+        "value": 5.4,
         "unit": "ppb",
         "status": "low"
       }
@@ -488,11 +518,16 @@
       {
         "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 36.9,
-        "aqhiValue": 6
+        "aqhiValue": 7
       },
       {
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 12.3,
+        "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 11.4,
         "aqhiValue": 5
       }
     ],
@@ -500,7 +535,7 @@
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.282Z",
+    "lastSampledTime": "2026-08-27T01:44:09.524Z",
     "isStale": false
   },
   {
@@ -511,37 +546,37 @@
     "latitude": 49.2785,
     "longitude": -122.9185,
     "currentAQHI": 5,
-    "currentPM25": 12,
+    "currentPM25": 9.9,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 12,
+        "value": 9.9,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.2,
+        "value": 12.9,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 71,
+        "value": 72,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 15.1,
+        "value": 12.3,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 5.9,
+        "value": 5.4,
         "unit": "ppb",
         "status": "low"
       }
@@ -560,11 +595,16 @@
       {
         "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 36.9,
-        "aqhiValue": 6
+        "aqhiValue": 7
       },
       {
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 12.3,
+        "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 11.4,
         "aqhiValue": 5
       }
     ],
@@ -572,7 +612,7 @@
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.289Z",
+    "lastSampledTime": "2026-08-27T01:44:09.504Z",
     "isStale": false
   },
   {
@@ -583,37 +623,37 @@
     "latitude": 49.2825,
     "longitude": -122.8285,
     "currentAQHI": 5,
-    "currentPM25": 12,
+    "currentPM25": 9.9,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 12,
+        "value": 9.9,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.2,
+        "value": 12.9,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 71,
+        "value": 72,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 15.1,
+        "value": 12.3,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 5.9,
+        "value": 5.4,
         "unit": "ppb",
         "status": "low"
       }
@@ -632,11 +672,16 @@
       {
         "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 36.9,
-        "aqhiValue": 6
+        "aqhiValue": 7
       },
       {
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 12.3,
+        "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 11.4,
         "aqhiValue": 5
       }
     ],
@@ -644,7 +689,7 @@
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.256Z",
+    "lastSampledTime": "2026-08-27T01:44:09.504Z",
     "isStale": false
   },
   {
@@ -655,37 +700,37 @@
     "latitude": 49.2885,
     "longitude": -122.7915,
     "currentAQHI": 5,
-    "currentPM25": 12,
+    "currentPM25": 9.9,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 12,
+        "value": 9.9,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.2,
+        "value": 12.9,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 71,
+        "value": 72,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 15.1,
+        "value": 12.3,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 5.9,
+        "value": 5.4,
         "unit": "ppb",
         "status": "low"
       }
@@ -704,11 +749,16 @@
       {
         "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 36.9,
-        "aqhiValue": 6
+        "aqhiValue": 7
       },
       {
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 12.3,
+        "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 11.4,
         "aqhiValue": 5
       }
     ],
@@ -716,7 +766,7 @@
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.269Z",
+    "lastSampledTime": "2026-08-27T01:44:09.505Z",
     "isStale": false
   },
   {
@@ -727,37 +777,37 @@
     "latitude": 49.1385,
     "longitude": -122.7585,
     "currentAQHI": 5,
-    "currentPM25": 12,
+    "currentPM25": 9.9,
     "riskCategory": "moderate",
     "primaryPollutant": "Ozone",
     "pollutants": [
       {
         "pollutantCode": "PM25",
-        "value": 12,
+        "value": 9.9,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "NO2",
-        "value": 8.2,
+        "value": 12.9,
         "unit": "ppb",
         "status": "low"
       },
       {
         "pollutantCode": "O3",
-        "value": 71,
+        "value": 72,
         "unit": "ppb",
         "status": "moderate"
       },
       {
         "pollutantCode": "PM10",
-        "value": 15.1,
+        "value": 12.3,
         "unit": "µg/m³",
         "status": "low"
       },
       {
         "pollutantCode": "SO2",
-        "value": 5.9,
+        "value": 5.4,
         "unit": "ppb",
         "status": "low"
       }
@@ -776,11 +826,16 @@
       {
         "timestamp": "2026-08-26T08:00:00Z",
         "pm25Value": 36.9,
-        "aqhiValue": 6
+        "aqhiValue": 7
       },
       {
         "timestamp": "2026-08-26T12:00:00Z",
         "pm25Value": 12.3,
+        "aqhiValue": 5
+      },
+      {
+        "timestamp": "2026-08-26T16:00:00Z",
+        "pm25Value": 11.4,
         "aqhiValue": 5
       }
     ],
@@ -788,7 +843,7 @@
       "generalPopulation": "No need to modify usual outdoor activities unless experiencing symptoms like coughing.",
       "atRiskPopulation": "Consider reducing or rescheduling strenuous activities outdoors if experiencing symptoms."
     },
-    "lastSampledTime": "2026-08-26T21:59:36.262Z",
+    "lastSampledTime": "2026-08-27T01:44:09.506Z",
     "isStale": false
   }
 ]

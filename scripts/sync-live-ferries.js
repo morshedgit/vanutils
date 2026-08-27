@@ -44,9 +44,11 @@ async function syncLiveFerries() {
       });
 
       if (matchingLive && matchingLive.sailings && matchingLive.sailings.length > 0) {
-        // Filter for upcoming / current sailings
+        // Filter for upcoming / current sailings with a real published time
+        // and vessel assignment — a sailing missing either isn't actionable
+        // info and must not be papered over with a fabricated placeholder.
         const activeSailings = matchingLive.sailings
-          .filter((s) => s.sailingStatus !== 'past')
+          .filter((s) => s.sailingStatus !== 'past' && s.time && s.vesselName)
           .map((s) => {
             // carFill is % filled. Deck space % available = 100 - carFill
             const fillPercent = typeof s.carFill === 'number' ? s.carFill : (typeof s.fill === 'number' ? s.fill : 0);
@@ -59,7 +61,7 @@ async function syncLiveFerries() {
             return {
               departureTime: s.time,
               arrivalTime: s.arrivalTime || '',
-              vesselName: s.vesselName || 'Scheduled Vessel',
+              vesselName: s.vesselName,
               deckSpacePercent: deckSpaceAvailable,
               passengerSpaceAvailable: true,
               isCancelled: s.sailingStatus === 'cancelled',

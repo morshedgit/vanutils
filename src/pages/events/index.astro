@@ -209,7 +209,7 @@ const eventsSchema = [
             <span class="text-[10px] text-slate-400 block">${e.neighbourhood}</span>
           </div>
           <span class="shrink-0 font-bold text-[11px] text-emerald-600 dark:text-emerald-400">
-            ${d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' })}
+            ${d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric', timeZone: 'America/Vancouver' })}
           </span>
         </div>
       `;

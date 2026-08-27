@@ -121,10 +121,10 @@ const eventSchema = [
       <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
         <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">Date & Time</span>
         <div class="text-base font-bold text-slate-900 dark:text-white">
-          {startDate.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}
+          {startDate.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'America/Vancouver' })}
         </div>
         <span class="text-xs text-slate-500 dark:text-slate-400">
-          {startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} – {endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          {startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/Vancouver' })} – {endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/Vancouver' })}
         </span>
       </div>
 
