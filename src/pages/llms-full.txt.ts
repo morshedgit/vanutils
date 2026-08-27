@@ -23,9 +23,9 @@ export const GET: APIRoute = async ({ request }) => {
   // Concurrent telemetry fetches
   const [
     weather,
-    mountains,
-    ferries,
-    crossings,
+    mountainsResult,
+    ferriesResult,
+    crossingsResult,
     health,
     airResult,
     sportsTeamsData,
@@ -35,9 +35,9 @@ export const GET: APIRoute = async ({ request }) => {
     communityEventsResult,
   ] = await Promise.all([
     getLiveWeather().catch(() => []),
-    getLiveMountains().catch(() => []),
-    getLiveRoutes().catch(() => []),
-    getLiveCrossings().catch(() => []),
+    getLiveMountains(),
+    getLiveRoutes(),
+    getLiveCrossings(),
     getLiveFacilities().catch(() => []),
     getLiveAirStations(),
     getLiveSportsTeams().catch(() => ({ teams: [], gameDaySummary: { totalTeams: 0, gamesTodayCount: 0, teamsPlayingToday: [] } })),
@@ -48,6 +48,9 @@ export const GET: APIRoute = async ({ request }) => {
   ]);
 
   const air = airResult.ok ? airResult.data : [];
+  const mountains = mountainsResult.ok ? mountainsResult.data : [];
+  const ferries = ferriesResult.ok ? ferriesResult.data : [];
+  const crossings = crossingsResult.ok ? crossingsResult.data : [];
   const proposals = proposalsResult.ok ? proposalsResult.data : [];
   const communityEvents = communityEventsResult.ok ? communityEventsResult.data : [];
 

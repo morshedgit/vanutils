@@ -36,14 +36,16 @@ const avgEColi = validBeaches.length > 0
   ? Math.round(validBeaches.reduce((acc, b) => acc + b.latestSample.eColiCount, 0) / validBeaches.length)
   : 0;
 
-const allFerryRoutes = tool.id === 'bc-ferries' ? await getLiveRoutes() : [];
+const ferriesResult = tool.id === 'bc-ferries' ? await getLiveRoutes() : null;
+const allFerryRoutes = ferriesResult?.ok ? ferriesResult.data : [];
 const initialFerryRoutes = allFerryRoutes.slice(0, 3);
 
-const allMountains = tool.id === 'mountain-snow' ? await getLiveMountains() : [];
+const snowResult = tool.id === 'mountain-snow' ? await getLiveMountains() : null;
+const allMountains = snowResult?.ok ? snowResult.data : [];
 const initialMountains = allMountains.slice(0, 4);
 const avgFreezingLevel = allMountains.length > 0
   ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
-  : 3500;
+  : 0;
 const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Summer)` : `${avgFreezingLevel}m FZ`;
 
 const allNeighbourhoods = tool.id === 'evo-parking' ? await getLiveNeighbourhoods() : [];
@@ -63,7 +65,8 @@ const minWaitText = minWaitFacility?.triageData?.waitTimeMinutes !== undefined
   ? `${formatWaitTime(minWaitFacility.triageData.waitTimeMinutes)} Min ER`
   : `${allFacilities.length} ERs Tracking`;
 
-const allCrossings = tool.id === 'bridge-traffic' ? await getLiveCrossings() : [];
+const crossingsResult = tool.id === 'bridge-traffic' ? await getLiveCrossings() : null;
+const allCrossings = crossingsResult?.ok ? crossingsResult.data : [];
 const initialCrossings = allCrossings.slice(0, 4);
 const lionsGate = allCrossings.find((c) => c.id === 'lions-gate');
 const lionsGateLanes = lionsGate?.counterflow?.activeConfiguration
@@ -149,11 +152,11 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     <a href={tool.path} class="shrink-0">
       <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
         {tool.id === 'can-i-swim' && (swimResult?.ok ? `${safeBeachesCount}/${allBeaches.length} Safe` : 'Unavailable')}
-        {tool.id === 'bc-ferries' && `${allFerryRoutes.length} Live Routes`}
-        {tool.id === 'mountain-snow' && snowBadgeText}
+        {tool.id === 'bc-ferries' && (ferriesResult?.ok ? `${allFerryRoutes.length} Live Routes` : 'Unavailable')}
+        {tool.id === 'mountain-snow' && (snowResult?.ok ? snowBadgeText : 'Unavailable')}
         {tool.id === 'evo-parking' && `${safeNeighbourhoodsCount}/${allNeighbourhoods.length} Safe Zones`}
         {tool.id === 'health-wait-times' && minWaitText}
-        {tool.id === 'bridge-traffic' && lionsGateLanes}
+        {tool.id === 'bridge-traffic' && (crossingsResult?.ok ? lionsGateLanes : 'Unavailable')}
         {tool.id === 'air-quality' && (airResult?.ok ? `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})` : 'Unavailable')}
         {tool.id === 'civic-development' && (civicResult?.ok ? `${allProposals.length} Proposals` : 'Unavailable')}
         {tool.id === 'community-events' && (eventsResult?.ok ? `${allEvents.length} Free Events` : 'Unavailable')}
@@ -222,7 +225,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 2. BC FERRIES: Live Vehicle Deck Capacity Progress Meters -->
-    {tool.id === 'bc-ferries' && (
+    {tool.id === 'bc-ferries' && !ferriesResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'bc-ferries' && ferriesResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Live Deck Space</span>
@@ -253,7 +259,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 3. MOUNTAIN SNOW: Elevation Matrix & Freezing Line Cross-Section -->
-    {tool.id === 'mountain-snow' && (
+    {tool.id === 'mountain-snow' && !snowResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'mountain-snow' && snowResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Freezing Level vs Peaks</span>
@@ -359,7 +368,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 6. BRIDGES & TUNNELS: Dynamic Counterflow Visualizer & Delay Chart -->
-    {tool.id === 'bridge-traffic' && (
+    {tool.id === 'bridge-traffic' && !crossingsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'bridge-traffic' && crossingsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Lions Gate Counterflow</span>

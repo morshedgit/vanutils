@@ -52,18 +52,22 @@ export const GET: APIRoute = async ({ request }) => {
 
   // BC Ferries
   try {
-    const ferryRoutes = await getLiveRoutes();
-    ferryRoutes.forEach((r) => {
-      dynamicRoutes.push({ url: `${baseUrl}/ferries/${r.id}`, priority: '0.8', changefreq: 'always' });
-    });
+    const ferryRoutesResult = await getLiveRoutes();
+    if (ferryRoutesResult.ok) {
+      ferryRoutesResult.data.forEach((r) => {
+        dynamicRoutes.push({ url: `${baseUrl}/ferries/${r.id}`, priority: '0.8', changefreq: 'always' });
+      });
+    }
   } catch (e) {}
 
   // Mountain Snow
   try {
-    const mountains = await getLiveMountains();
-    mountains.forEach((m) => {
-      dynamicRoutes.push({ url: `${baseUrl}/snow/${m.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
+    const mountainsResult = await getLiveMountains();
+    if (mountainsResult.ok) {
+      mountainsResult.data.forEach((m) => {
+        dynamicRoutes.push({ url: `${baseUrl}/snow/${m.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Carshare Parking
@@ -84,10 +88,12 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Bridges & Tunnels
   try {
-    const crossings = await getLiveCrossings();
-    crossings.forEach((c) => {
-      dynamicRoutes.push({ url: `${baseUrl}/bridges/${c.id}`, priority: '0.8', changefreq: 'always' });
-    });
+    const crossingsResult = await getLiveCrossings();
+    if (crossingsResult.ok) {
+      crossingsResult.data.forEach((c) => {
+        dynamicRoutes.push({ url: `${baseUrl}/bridges/${c.id}`, priority: '0.8', changefreq: 'always' });
+      });
+    }
   } catch (e) {}
 
   // Air Quality

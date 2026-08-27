@@ -45,7 +45,6 @@ export interface FerryRoute {
   activeNotices: string[];
   highwayCameras: HighwayCamera[];
   lastUpdated: string;            // ISO 8601
-  isStale: boolean;
   reverseRouteId?: string;
   fareNote?: string;
   frequencyText?: string;
@@ -74,5 +73,4 @@ export interface MarineWeatherStatus {
   advisoryLevel: WeatherRisk;
   warningText?: string;
   lastUpdated: string;
-  isStale: boolean;
 }

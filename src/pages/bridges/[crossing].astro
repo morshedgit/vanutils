@@ -5,23 +5,27 @@ import RelatedTelemetry, { type RelatedItem } from '../../components/shared/Rela
 import CounterflowDiagram from '../../tools/bridge-traffic/components/CounterflowDiagram.astro';
 import WebcamGrid from '../../tools/bridge-traffic/components/WebcamGrid.astro';
 import IncidentsBanner from '../../tools/bridge-traffic/components/IncidentsBanner.astro';
-import { getLiveCrossings, getCrossingById, getStatusMeta } from '../../tools/bridge-traffic/services/bridgeService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveCrossings, getCrossingById, getStatusMeta, BASELINE_CROSSINGS } from '../../tools/bridge-traffic/services/bridgeService';
 
 // Set Edge Cache header: 60s max age, 120s background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
 
 const { crossing: crossingId } = Astro.params;
-const allCrossings = await getLiveCrossings();
-const crossing = getCrossingById(crossingId || '', allCrossings);
 
-if (!crossing) {
+// Baseline lookup is metadata-only (name/region) so an unknown id still 404s
+// even when the live upstream is down; it is never used for telemetry values.
+const crossingMeta = getCrossingById(crossingId || '', BASELINE_CROSSINGS);
+if (!crossingMeta) {
   return Astro.redirect('/bridges');
 }
 
-const p = crossing.directions.primary;
-const r = crossing.directions.reverse;
-const pMeta = getStatusMeta(p.status);
-const rMeta = getStatusMeta(r.status);
+const crossingsResult = await getLiveCrossings();
+const crossing = crossingsResult.ok ? getCrossingById(crossingId || '', crossingsResult.data) : undefined;
+const p = crossing?.directions.primary;
+const r = crossing?.directions.reverse;
+const pMeta = p ? getStatusMeta(p.status) : null;
+const rMeta = r ? getStatusMeta(r.status) : null;
 
 const wikidataMap: Record<string, string[]> = {
   'lions-gate': ['https://en.wikipedia.org/wiki/Lions_Gate_Bridge', 'https://www.wikidata.org/wiki/Q1048892'],
@@ -41,10 +45,10 @@ const crossingSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'CivicStructure',
-    name: crossing.name,
-    description: `Real-time travel times, delay deltas, active counterflow lane directions, and DriveBC webcams for ${crossing.name}.`,
-    url: `https://vanheartbeat.ca/bridges/${crossing.id}`,
-    sameAs: wikidataMap[crossing.id] || [],
+    name: crossingMeta.name,
+    description: `Real-time travel times, delay deltas, active counterflow lane directions, and DriveBC webcams for ${crossingMeta.name}.`,
+    url: `https://vanheartbeat.ca/bridges/${crossingMeta.id}`,
+    sameAs: wikidataMap[crossingMeta.id] || [],
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Metro Vancouver',
@@ -58,7 +62,7 @@ const crossingSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Bridges & Tunnels Radar', item: 'https://vanheartbeat.ca/bridges' },
-      { '@type': 'ListItem', position: 3, name: crossing.name, item: `https://vanheartbeat.ca/bridges/${crossing.id}` },
+      { '@type': 'ListItem', position: 3, name: crossingMeta.name, item: `https://vanheartbeat.ca/bridges/${crossingMeta.id}` },
     ],
   },
 ];
@@ -90,10 +94,10 @@ const relatedItems: RelatedItem[] = [
 
 <ToolLayout
   toolId="bridge-traffic"
-  title={`${crossing.name} — Live Delays & Cameras`}
-  description={`Real-time travel times, delay deltas, active counterflow lane directions, and DriveBC webcams for ${crossing.name}.`}
-  currentPath={`/bridges/${crossing.id}`}
-  badgeText={crossing.highwayNumber || 'Metro Crossing'}
+  title={crossing ? `${crossing.name} — Live Delays & Cameras` : `${crossingMeta.name} — Live Data Unavailable`}
+  description={crossing ? `Real-time travel times, delay deltas, active counterflow lane directions, and DriveBC webcams for ${crossing.name}.` : 'Live bridge traffic data is temporarily unavailable.'}
+  currentPath={`/bridges/${crossingMeta.id}`}
+  badgeText={crossing ? (crossing.highwayNumber || 'Metro Crossing') : 'Live Data Unavailable'}
   status="active"
 >
   <JsonLd schema={crossingSchema} />
@@ -106,15 +110,21 @@ const relatedItems: RelatedItem[] = [
         <span>/</span>
         <a href="/bridges" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Bridges Radar</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate">{crossing.name}</span>
+        <span class="text-slate-900 dark:text-white truncate">{crossingMeta.name}</span>
       </div>
       <span class="text-xs text-slate-400">
-        {crossing.region === 'burrard_inlet' && 'Burrard Inlet (North Shore)'}
-        {crossing.region === 'false_creek' && 'False Creek (Downtown)'}
-        {crossing.region === 'fraser_river' && 'Fraser River'}
+        {crossingMeta.region === 'burrard_inlet' && 'Burrard Inlet (North Shore)'}
+        {crossingMeta.region === 'false_creek' && 'False Creek (Downtown)'}
+        {crossingMeta.region === 'fraser_river' && 'Fraser River'}
       </span>
     </nav>
 
+    {!crossing && (
+      <LiveDataUnavailable toolName={`${crossingMeta.name} Crossing`} variant="page" error={!crossingsResult.ok ? crossingsResult.error : undefined} />
+    )}
+
+    {crossing && p && r && pMeta && rMeta && (
+    <>
     <!-- Active Incidents if present -->
     <IncidentsBanner incidents={crossing.activeIncidents} />
 
@@ -194,6 +204,8 @@ const relatedItems: RelatedItem[] = [
     {crossing.webcams.length > 0 && (
       <WebcamGrid webcams={crossing.webcams} crossingName={crossing.name} />
     )}
+    </>
+    )}
 
     <!-- Connected Cross-Utility Telemetry -->
     <RelatedTelemetry items={relatedItems} />
@@ -201,7 +213,7 @@ const relatedItems: RelatedItem[] = [
     <!-- Official Portal Citation -->
     <div class="pt-2">
       <a
-        href={crossing.officialSourceUrl}
+        href={crossingMeta.officialSourceUrl}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline"

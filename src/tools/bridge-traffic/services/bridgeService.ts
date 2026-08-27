@@ -1,9 +1,13 @@
 import type { BridgeCrossing, CrossingRegion, TrafficStatus, CrossingIncident, CounterflowState } from '../types';
 import crossingsData from '../data/crossings.json';
 import { calculateDistanceKm } from '../../../services/shared/geo';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only — never presented as live telemetry. See issue #35.
 export const BASELINE_CROSSINGS: BridgeCrossing[] = crossingsData as BridgeCrossing[];
 
+const CACHE_TTL_SECONDS = 60; // live delay/counterflow data
 const INCIDENT_MATCH_RADIUS_KM = 2;
 
 /**
@@ -79,32 +83,30 @@ function getDynamicCounterflowState(crossingId: string): { activeConfiguration: 
 }
 
 /**
- * Dynamically fetches live bridge delays and DriveBC Open511 events at the edge
+ * Dynamically fetches live bridge delays and DriveBC Open511 events at the edge.
+ * Returns ok:false (no baseline incidents masquerading as live) when the
+ * upstream Open511 fetch fails.
  */
-export async function getLiveCrossings(): Promise<BridgeCrossing[]> {
-  const nowIso = new Date().toISOString();
-  // null = upstream unreachable this request, fall back to baseline incidents.
-  // A populated map (even with empty arrays) means the fetch succeeded, so an
-  // absent entry for a crossing means "confirmed no active incidents" rather
-  // than "we don't know" — it must not fall back to a possibly-resolved
-  // baseline incident in that case.
-  let liveIncidentsByCrossing: Record<string, CrossingIncident[]> | null = null;
+export async function getLiveCrossings(): Promise<LiveResult<BridgeCrossing[]>> {
+  return withEdgeCache<BridgeCrossing[]>('bridge-traffic-crossings', CACHE_TTL_SECONDS, async () => {
+    const nowIso = new Date().toISOString();
 
-  try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s fast edge timeout
 
-    const open511Res = await fetch(
-      'https://api.open511.gov.bc.ca/events?bbox=-123.35,49.0,-122.6,49.4&status=ACTIVE&format=json',
-      {
-        signal: controller.signal,
-        headers: { 'User-Agent': 'VanHeartbeat/2.0' },
-      }
-    );
+    let liveIncidentsByCrossing: Record<string, CrossingIncident[]>;
 
-    clearTimeout(timeoutId);
+    try {
+      const open511Res = await fetch(
+        'https://api.open511.gov.bc.ca/events?bbox=-123.35,49.0,-122.6,49.4&status=ACTIVE&format=json',
+        {
+          signal: controller.signal,
+          headers: { 'User-Agent': 'VanHeartbeat/2.0' },
+        }
+      );
 
-    if (open511Res.ok) {
+      if (!open511Res.ok) return null;
+
       const data = await open511Res.json();
       const events: any[] = data.events || [];
       const byId: Record<string, CrossingIncident[]> = {};
@@ -138,51 +140,53 @@ export async function getLiveCrossings(): Promise<BridgeCrossing[]> {
       }
 
       liveIncidentsByCrossing = byId;
+    } catch (e) {
+      return null;
+    } finally {
+      clearTimeout(timeoutId);
     }
-  } catch (e) {
-    // Network timeout or offline, proceed with baseline
-  }
 
-  return BASELINE_CROSSINGS.map((c) => {
-    const counterflow = c.counterflow.hasCounterflow
-      ? {
-          ...c.counterflow,
-          ...getDynamicCounterflowState(c.id),
-          lastChangedTimestamp: nowIso,
-        }
-      : c.counterflow;
+    return BASELINE_CROSSINGS.map((c) => {
+      const counterflow = c.counterflow.hasCounterflow
+        ? {
+            ...c.counterflow,
+            ...getDynamicCounterflowState(c.id),
+            lastChangedTimestamp: nowIso,
+          }
+        : c.counterflow;
 
-    const incidents = liveIncidentsByCrossing ? (liveIncidentsByCrossing[c.id] || []) : (c.activeIncidents || []);
-    const hasMajor = incidents.some((i) => i.severity === 'major');
-    const hasMinor = incidents.some((i) => i.severity === 'minor');
+      const incidents = liveIncidentsByCrossing[c.id] || [];
+      const hasMajor = incidents.some((i) => i.severity === 'major');
+      const hasMinor = incidents.some((i) => i.severity === 'minor');
 
-    const incidentDelay = hasMajor ? 14 : (hasMinor ? 6 : 0);
-    const dynamicStatus: TrafficStatus = hasMajor ? 'heavy' : (hasMinor ? 'moderate' : c.directions.primary.status);
+      const incidentDelay = hasMajor ? 14 : (hasMinor ? 6 : 0);
+      const dynamicStatus: TrafficStatus = hasMajor ? 'heavy' : (hasMinor ? 'moderate' : c.directions.primary.status);
 
-    const primaryTraffic = {
-      ...c.directions.primary,
-      delayMinutes: c.directions.primary.delayMinutes + incidentDelay,
-      travelTimeMinutes: c.directions.primary.normalTimeMinutes + c.directions.primary.delayMinutes + incidentDelay,
-      status: dynamicStatus,
-    };
+      const primaryTraffic = {
+        ...c.directions.primary,
+        delayMinutes: c.directions.primary.delayMinutes + incidentDelay,
+        travelTimeMinutes: c.directions.primary.normalTimeMinutes + c.directions.primary.delayMinutes + incidentDelay,
+        status: dynamicStatus,
+      };
 
-    const reverseTraffic = {
-      ...c.directions.reverse,
-      delayMinutes: c.directions.reverse.delayMinutes + (hasMajor ? 8 : 0),
-      travelTimeMinutes: c.directions.reverse.normalTimeMinutes + c.directions.reverse.delayMinutes + (hasMajor ? 8 : 0),
-      status: hasMajor ? 'moderate' : c.directions.reverse.status,
-    };
+      const reverseTraffic = {
+        ...c.directions.reverse,
+        delayMinutes: c.directions.reverse.delayMinutes + (hasMajor ? 8 : 0),
+        travelTimeMinutes: c.directions.reverse.normalTimeMinutes + c.directions.reverse.delayMinutes + (hasMajor ? 8 : 0),
+        status: hasMajor ? 'moderate' : c.directions.reverse.status,
+      };
 
-    return {
-      ...c,
-      counterflow,
-      directions: {
-        primary: primaryTraffic,
-        reverse: reverseTraffic,
-      },
-      activeIncidents: incidents,
-      lastUpdated: nowIso,
-    };
+      return {
+        ...c,
+        counterflow,
+        directions: {
+          primary: primaryTraffic,
+          reverse: reverseTraffic,
+        },
+        activeIncidents: incidents,
+        lastUpdated: nowIso,
+      };
+    });
   });
 }
 
