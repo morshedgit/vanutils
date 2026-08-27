@@ -1,32 +1,36 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
-import { getLiveSportsFacilities, getFacilityById, getCategoryMeta } from '../../tools/sports-facilities/services/sportsService';
+import { getLiveSportsFacilities, getFacilityById, getCategoryMeta, BASELINE_FACILITIES } from '../../tools/sports-facilities/services/sportsService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 
 // Tiered Edge Cache: 30-minute edge TTL, 2-hour background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200');
 
 const { facility: facilityId } = Astro.params;
-const allFacilities = await getLiveSportsFacilities();
-const facility = getFacilityById(facilityId || '', allFacilities);
 
-if (!facility) {
+// Baseline lookup is metadata-only (name/address) so an unknown id still 404s
+// even when the live upstream is down; it is never used for telemetry values.
+const facilityMeta = getFacilityById(facilityId || '', BASELINE_FACILITIES);
+if (!facilityMeta) {
   return Astro.redirect('/sports');
 }
 
-const catMeta = getCategoryMeta(facility.category);
+const facilitiesResult = await getLiveSportsFacilities();
+const facility = facilitiesResult.ok ? getFacilityById(facilityId || '', facilitiesResult.data) : undefined;
+const catMeta = getCategoryMeta(facilityMeta.category);
 
 const facilitySchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'SportsActivityLocation',
-    name: facility.name,
-    description: `Public drop-in schedules, active session mode (${facility.session.currentMode}), court lighting, and amenities at ${facility.name}.`,
-    url: `https://vanheartbeat.ca/sports/${facility.id}`,
+    name: facilityMeta.name,
+    description: `Public drop-in schedules, court lighting, and amenities at ${facilityMeta.name}.`,
+    url: `https://vanheartbeat.ca/sports/${facilityMeta.id}`,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: facility.address,
-      addressLocality: facility.neighbourhood,
+      streetAddress: facilityMeta.address,
+      addressLocality: facilityMeta.neighbourhood,
       addressRegion: 'BC',
       addressCountry: 'CA',
     },
@@ -37,7 +41,7 @@ const facilitySchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Sports Courts Radar', item: 'https://vanheartbeat.ca/sports' },
-      { '@type': 'ListItem', position: 3, name: facility.name, item: `https://vanheartbeat.ca/sports/${facility.id}` },
+      { '@type': 'ListItem', position: 3, name: facilityMeta.name, item: `https://vanheartbeat.ca/sports/${facilityMeta.id}` },
     ],
   },
 ];
@@ -45,9 +49,9 @@ const facilitySchema = [
 
 <ToolLayout
   toolId="sports-courts"
-  title={`${facility.name} — Sports & Rec Radar`}
-  description={`Public drop-in schedules, active session mode (${facility.session.currentMode}), court lighting, and amenities at ${facility.name}.`}
-  currentPath={`/sports/${facility.id}`}
+  title={facility ? `${facility.name} — Sports & Rec Radar` : `${facilityMeta.name} — Live Data Unavailable`}
+  description={facility ? `Public drop-in schedules, active session mode (${facility.session.currentMode}), court lighting, and amenities at ${facility.name}.` : 'Live session status is temporarily unavailable.'}
+  currentPath={`/sports/${facilityMeta.id}`}
   badgeText={catMeta.label}
   status="active"
 >
@@ -61,14 +65,20 @@ const facilitySchema = [
         <span>/</span>
         <a href="/sports" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Sports Radar</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate">{facility.name}</span>
+        <span class="text-slate-900 dark:text-white truncate">{facilityMeta.name}</span>
       </div>
       <span class="text-xs text-slate-400">
         Vancouver Park Board Drop-in Hub
       </span>
     </nav>
 
+    {!facility && (
+      <LiveDataUnavailable toolName={`${facilityMeta.name}`} variant="page" error={!facilitiesResult.ok ? facilitiesResult.error : undefined} />
+    )}
+
     <!-- Facility Hero Header -->
+    {facility && (
+    <>
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1.5">
         <div class="flex items-center gap-2 flex-wrap">
@@ -196,11 +206,13 @@ const facilitySchema = [
         </div>
       </div>
     </section>
+    </>
+    )}
 
     <!-- Outbound Park Board Schedule Link -->
     <div class="flex items-center gap-3">
       <a
-        href={facility.officialScheduleUrl}
+        href={facilityMeta.officialScheduleUrl}
         target="_blank"
         rel="noopener noreferrer"
         class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"

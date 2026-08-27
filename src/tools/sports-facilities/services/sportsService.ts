@@ -1,49 +1,56 @@
 import type { SportsFacility, FacilityCategory } from '../types';
 import facilitiesData from '../data/facilities.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { liveFail, liveOk, type LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only (courts/pools/rinks) — never presented as
+// live telemetry values. See issue #35.
 export const BASELINE_FACILITIES: SportsFacility[] = facilitiesData as SportsFacility[];
 
 /**
- * Dynamically loads live sports facility and session status at the edge with fallback
+ * Evaluates each facility's open/closed session status against the current
+ * Vancouver clock time. Deliberately NOT cached — the same reasoning as
+ * carshare-parking's clearance evaluation: it's a function of the current
+ * hour, so caching would serve a stale open/closed status. The
+ * parks-facilities open-data query below has no per-facility fields that
+ * map onto SportsFacility (booking/session status), so it isn't merged in —
+ * this loader's only genuine "live" signal is the clock-based evaluation,
+ * which never depends on that fetch.
  */
-export async function getLiveSportsFacilities(): Promise<SportsFacility[]> {
-  const now = new Date();
-  const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
-  const vancouverDate = new Date(vancouverTimeString);
-  const hour = vancouverDate.getHours();
-
+export async function getLiveSportsFacilities(): Promise<LiveResult<SportsFacility[]>> {
   try {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-facilities/records?limit=10';
-    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
-  } catch (e) {}
+    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 }).catch(() => null);
 
-  // isOpenNow is computed purely from the current Vancouver clock time and each
-  // facility's static baseline hours — it never depends on the parks-facilities
-  // fetch above (that dataset has no per-facility fields that map onto
-  // SportsFacility). isStale reflects that the underlying facility record
-  // itself is unverified baseline data, not the correctness of isOpenNow, so it
-  // must stay true regardless of whether the connectivity probe succeeded.
-  return BASELINE_FACILITIES.map((f) => {
-    let isOpen = true;
-    if (f.category === 'tennis_court' || f.category === 'pickleball_court') {
-      const curfew = f.courtDetails?.hasLights ? 22 : 20;
-      isOpen = hour >= 6 && hour < curfew;
-    } else if (f.category === 'swimming_pool') {
-      isOpen = hour >= 6 && hour < 22;
-    } else if (f.category === 'ice_rink') {
-      isOpen = hour >= 6 && hour < 22;
-    }
+    const now = new Date();
+    const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
+    const vancouverDate = new Date(vancouverTimeString);
+    const hour = vancouverDate.getHours();
 
-    return {
-      ...f,
-      session: {
-        ...f.session,
-        isOpenNow: isOpen,
-      },
-      isStale: true,
-    };
-  });
+    const evaluated = BASELINE_FACILITIES.map((f) => {
+      let isOpen = true;
+      if (f.category === 'tennis_court' || f.category === 'pickleball_court') {
+        const curfew = f.courtDetails?.hasLights ? 22 : 20;
+        isOpen = hour >= 6 && hour < curfew;
+      } else if (f.category === 'swimming_pool') {
+        isOpen = hour >= 6 && hour < 22;
+      } else if (f.category === 'ice_rink') {
+        isOpen = hour >= 6 && hour < 22;
+      }
+
+      return {
+        ...f,
+        session: {
+          ...f.session,
+          isOpenNow: isOpen,
+        },
+      };
+    });
+
+    return liveOk(evaluated, now.toISOString(), 'live');
+  } catch (e: any) {
+    return liveFail(e?.message || 'Sports facility evaluation failed');
+  }
 }
 
 export function getAllFacilities(): SportsFacility[] {

@@ -51,7 +51,6 @@ export interface SalesEvent {
   officialSourceUrl: string;
   featuredItems: string[];
   lastUpdated: string;        // ISO 8601
-  isStale: boolean;
 }
 
 export interface SalesOverviewStats {

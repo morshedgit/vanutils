@@ -50,5 +50,4 @@ export interface BridgeCrossing {
   webcams: CrossingWebcam[];
   officialSourceUrl: string;
   lastUpdated: string;            // ISO 8601
-  isStale: boolean;
 }

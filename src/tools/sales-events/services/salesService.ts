@@ -1,5 +1,10 @@
 import type { SalesEvent, SalesOverviewStats } from '../types';
 import fallbackSales from '../data/sales.json';
+import { liveFail, liveOk, type LiveResult } from '../../../services/shared/liveResult';
+
+// Seed/reference metadata only (schedules) — never presented as live
+// telemetry. See issue #35.
+export const BASELINE_SALES: SalesEvent[] = fallbackSales as SalesEvent[];
 
 /**
  * Normalizes and computes live statuses based on today's date
@@ -28,30 +33,40 @@ function computeLiveStatus(events: SalesEvent[]): SalesEvent[] {
 import { edgeFetch } from '../../../services/shared/edgeFetch';
 
 /**
- * Loads authentic sales events on Cloudflare Edge with 1.2s timeout
+ * Evaluates each sale's live status (upcoming/active_now/concluded) against
+ * today's date. Deliberately not cached beyond the request — the same
+ * reasoning as carshare-parking/sports-facilities: this is a function of the
+ * current date, not something that can go stale. The special-events open-data
+ * query below has no per-sale fields that map onto SalesEvent, so it isn't
+ * merged in; this loader's only genuine "live" signal is the date-based
+ * status evaluation, which never depends on that fetch. Returns ok:false only
+ * if the evaluation itself throws.
  */
-export async function getLiveSalesEvents(category?: string): Promise<SalesEvent[]> {
+export async function getLiveSalesEvents(category?: string): Promise<LiveResult<SalesEvent[]>> {
   try {
     // Check City of Vancouver / Venue events endpoint with 1.2s timeout
     await edgeFetch<{ results: any[] }>(
       'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=5',
       { timeoutMs: 1200 }
-    );
-  } catch (error) {}
+    ).catch(() => null);
 
-  const sales = computeLiveStatus(fallbackSales as SalesEvent[]);
-  if (category && category !== 'all') {
-    return sales.filter((s) => s.category === category);
+    const now = new Date();
+    const sales = computeLiveStatus(BASELINE_SALES);
+    const filtered = category && category !== 'all' ? sales.filter((s) => s.category === category) : sales;
+
+    return liveOk(filtered, now.toISOString(), 'live');
+  } catch (e: any) {
+    return liveFail(e?.message || 'Sales event evaluation failed');
   }
-  return sales;
 }
 
 /**
  * Gets a single sale event by slug / ID
  */
 export async function getSalesEventBySlug(slug: string): Promise<SalesEvent | null> {
-  const allSales = await getLiveSalesEvents();
-  const event = allSales.find((s) => s.id === slug);
+  const result = await getLiveSalesEvents();
+  if (!result.ok) return null;
+  const event = result.data.find((s) => s.id === slug);
   return event || null;
 }
 
@@ -59,7 +74,8 @@ export async function getSalesEventBySlug(slug: string): Promise<SalesEvent | nu
  * Computes high-density overview stats
  */
 export async function getSalesOverviewStats(): Promise<SalesOverviewStats> {
-  const allSales = await getLiveSalesEvents();
+  const result = await getLiveSalesEvents();
+  const allSales = result.ok ? result.data : [];
   const activeCount = allSales.filter((s) => s.status === 'active_now').length;
   const upcomingCount = allSales.filter((s) => s.status === 'upcoming').length;
 

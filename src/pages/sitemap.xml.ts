@@ -160,18 +160,22 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Sports Facilities
   try {
-    const sports = await getLiveSportsFacilities();
-    sports.forEach((sp) => {
-      dynamicRoutes.push({ url: `${baseUrl}/sports/${sp.id}`, priority: '0.7', changefreq: 'daily' });
-    });
+    const sportsResult = await getLiveSportsFacilities();
+    if (sportsResult.ok) {
+      sportsResult.data.forEach((sp) => {
+        dynamicRoutes.push({ url: `${baseUrl}/sports/${sp.id}`, priority: '0.7', changefreq: 'daily' });
+      });
+    }
   } catch (e) {}
 
   // Weather Microclimates
   try {
-    const weatherStations = await getLiveWeather();
-    weatherStations.forEach((ws) => {
-      dynamicRoutes.push({ url: `${baseUrl}/weather/${ws.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
+    const weatherResult = await getLiveWeather();
+    if (weatherResult.ok) {
+      weatherResult.data.forEach((ws) => {
+        dynamicRoutes.push({ url: `${baseUrl}/weather/${ws.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Major Sports Teams
@@ -183,10 +187,12 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Warehouse & Sample Sales
   try {
-    const sales = await getLiveSalesEvents();
-    sales.forEach((sl) => {
-      dynamicRoutes.push({ url: `${baseUrl}/sales/${sl.id}`, priority: '0.8', changefreq: 'daily' });
-    });
+    const salesResult = await getLiveSalesEvents();
+    if (salesResult.ok) {
+      salesResult.data.forEach((sl) => {
+        dynamicRoutes.push({ url: `${baseUrl}/sales/${sl.id}`, priority: '0.8', changefreq: 'daily' });
+      });
+    }
   } catch (e) {}
 
   const allUrls = [...staticRoutes, ...dynamicRoutes];

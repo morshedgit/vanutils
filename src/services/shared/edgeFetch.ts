@@ -10,7 +10,7 @@ export interface EdgeFetchOptions extends RequestInit {
 export async function edgeFetch<T = any>(
   url: string,
   options: EdgeFetchOptions = {}
-): Promise<{ data: T | null; isStale: boolean; status: number; durationMs: number }> {
+): Promise<{ data: T | null; status: number; durationMs: number }> {
   const timeoutMs = options.timeoutMs || 1200; // 1.2s default timeout SLA
   const startTime = Date.now();
 
@@ -36,7 +36,6 @@ export async function edgeFetch<T = any>(
     if (!response.ok) {
       return {
         data: null,
-        isStale: true,
         status: response.status,
         durationMs,
       };
@@ -53,7 +52,6 @@ export async function edgeFetch<T = any>(
 
     return {
       data: parsedData as T,
-      isStale: false,
       status: response.status,
       durationMs,
     };
@@ -62,7 +60,6 @@ export async function edgeFetch<T = any>(
     const durationMs = Date.now() - startTime;
     return {
       data: null,
-      isStale: true,
       status: error.name === 'AbortError' ? 408 : 500,
       durationMs,
     };

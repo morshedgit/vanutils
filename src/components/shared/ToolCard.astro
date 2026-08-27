@@ -116,23 +116,26 @@ const sarCondition = marketHeartbeat?.metroOverview?.marketCondition ? getCondit
 const condoBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'condo')?.benchmarkPrice ?? 0;
 const detachedBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'detached')?.benchmarkPrice ?? 0;
 
-const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
+const sportsResult = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : null;
+const allSportsFacilities = sportsResult?.ok ? sportsResult.data : [];
 const initialSportsFacilities = allSportsFacilities.slice(0, 3);
 const totalCourtsCount = allSportsFacilities.reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
 const lightedCourtsCount = allSportsFacilities.filter((f) => f.courtDetails?.hasLights).reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
 
-const allWeatherStations = tool.id === 'weather-forecast' ? await getLiveWeather() : [];
+const weatherResult = tool.id === 'weather-forecast' ? await getLiveWeather() : null;
+const allWeatherStations = weatherResult?.ok ? weatherResult.data : [];
 const initialWeatherStations = allWeatherStations.slice(0, 4);
 const avgWeatherTemp = allWeatherStations.length > 0
   ? Math.round((allWeatherStations.reduce((acc, s) => acc + s.current.temperatureCelsius, 0) / allWeatherStations.length) * 10) / 10
-  : 19.4;
+  : 0;
 
 const sportsTeamsResult = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
 const sportsTeamsData = sportsTeamsResult?.ok ? sportsTeamsResult.data : null;
 const allSportsTeams = sportsTeamsData ? sportsTeamsData.teams : [];
 const initialSportsTeams = allSportsTeams.slice(0, 4);
 
-const allSalesEvents = tool.id === 'sales-events' ? await getLiveSalesEvents() : [];
+const salesResult = tool.id === 'sales-events' ? await getLiveSalesEvents() : null;
+const allSalesEvents = salesResult?.ok ? salesResult.data : [];
 const initialSalesEvents = allSalesEvents.slice(0, 4);
 const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || allSalesEvents[0];
 ---
@@ -167,10 +170,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
         {tool.id === 'school-catchment' && (schoolsResult?.ok ? 'VSB SD39' : 'Unavailable')}
         {tool.id === 'local-news' && (newsResult?.ok ? 'Live Wire' : 'Unavailable')}
         {tool.id === 'housing-market' && (marketResult?.ok ? `${sarPercent}% SAR` : 'Unavailable')}
-        {tool.id === 'sports-courts' && `${totalCourtsCount} Courts`}
-        {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
+        {tool.id === 'sports-courts' && (sportsResult?.ok ? `${totalCourtsCount} Courts` : 'Unavailable')}
+        {tool.id === 'weather-forecast' && (weatherResult?.ok ? `${avgWeatherTemp}°C Regional Avg` : 'Unavailable')}
         {tool.id === 'sports-teams' && (sportsTeamsResult?.ok ? `${allSportsTeams.length} Pro Teams` : 'Unavailable')}
-        {tool.id === 'sales-events' && `${allSalesEvents.length} Verified Sales`}
+        {tool.id === 'sales-events' && (salesResult?.ok ? `${allSalesEvents.length} Verified Sales` : 'Unavailable')}
       </span>
     </a>
   </div>
@@ -618,7 +621,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 13. SPORTS & REC: Recreation Facilities Donut / Multi-Facility Breakdown -->
-    {tool.id === 'sports-courts' && (
+    {tool.id === 'sports-courts' && !sportsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'sports-courts' && sportsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Drop-in Facilities Matrix</span>
@@ -649,7 +655,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 14. WEATHER: Embedded Third-Party Live Weather Map Widget (Windy.com) -->
-    {tool.id === 'weather-forecast' && (
+    {tool.id === 'weather-forecast' && !weatherResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'weather-forecast' && weatherResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1.5">
@@ -720,7 +729,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 16. WAREHOUSE & SAMPLE SALES: Live Sales Radar & Next Major Drop -->
-    {tool.id === 'sales-events' && (
+    {tool.id === 'sales-events' && !salesResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'sales-events' && salesResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1">

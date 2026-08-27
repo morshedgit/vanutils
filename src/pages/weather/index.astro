@@ -5,15 +5,17 @@ import StationCard from '../../tools/weather-forecast/components/StationCard.ast
 import FilterTabs from '../../tools/weather-forecast/components/FilterTabs.astro';
 import WeatherAdvisoryBanner from '../../tools/weather-forecast/components/WeatherAdvisoryBanner.astro';
 import InteractiveRadarMap from '../../tools/weather-forecast/components/InteractiveRadarMap.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveWeather, getWeatherOverviewStats } from '../../tools/weather-forecast/services/weatherService';
 
 // Set Edge Cache header: 5 min max age, 10 min background SWR revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
-const stations = await getLiveWeather();
-const stats = getWeatherOverviewStats(stations);
+const weatherResult = await getLiveWeather();
+const stations = weatherResult.ok ? weatherResult.data : [];
+const stats = weatherResult.ok ? getWeatherOverviewStats(stations) : null;
 
-const hasActiveAdvisory = stats.activeAdvisoryCount > 0;
+const hasActiveAdvisory = (stats?.activeAdvisoryCount ?? 0) > 0;
 
 const weatherSchema = [
   {
@@ -78,44 +80,50 @@ const weatherSchema = [
     <!-- Active ECCC Weather Advisory Banner -->
     <WeatherAdvisoryBanner hasAdvisory={hasActiveAdvisory} />
 
-    <!-- Compact Hero Summary & 1-Tap Geolocation Sorter -->
-    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Spread: {stats.minTemperatureCelsius}°C to {stats.maxTemperatureCelsius}°C • Regional Mean: {stats.avgTemperatureCelsius}°C</span>
+    {weatherResult.ok && stats ? (
+      <>
+        <!-- Compact Hero Summary & 1-Tap Geolocation Sorter -->
+        <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Spread: {stats.minTemperatureCelsius}°C to {stats.maxTemperatureCelsius}°C • Regional Mean: {stats.avgTemperatureCelsius}°C</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+              Real-Time Doppler Radar &amp; Microclimate Soundings
+            </h2>
+            <p class="text-xs text-slate-300">
+              Tracking {stations.length} official meteorological stations across the Salish Sea, urban core &amp; North Shore slopes.
+            </p>
+          </div>
+
+          <!-- 1-Tap Geolocation Sorter -->
+          <button
+            type="button"
+            id="geo-sort-weather-btn"
+            class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-md shadow-sky-600/30 transition-all shrink-0 cursor-pointer"
+          >
+            <span>📍</span>
+            <span>Find Closest Station</span>
+          </button>
+        </section>
+
+        <!-- WebGL Doppler Weather Radar & Wind Map Viewport -->
+        <InteractiveRadarMap />
+
+        <!-- Filter & Search Tabs -->
+        <FilterTabs activeRegion="all" />
+
+        <!-- Station Cards Grid -->
+        <div id="weather-stations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {stations.map((station) => (
+            <StationCard station={station} />
+          ))}
         </div>
-        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Real-Time Doppler Radar &amp; Microclimate Soundings
-        </h2>
-        <p class="text-xs text-slate-300">
-          Tracking {stations.length} official meteorological stations across the Salish Sea, urban core &amp; North Shore slopes.
-        </p>
-      </div>
-
-      <!-- 1-Tap Geolocation Sorter -->
-      <button
-        type="button"
-        id="geo-sort-weather-btn"
-        class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-md shadow-sky-600/30 transition-all shrink-0 cursor-pointer"
-      >
-        <span>📍</span>
-        <span>Find Closest Station</span>
-      </button>
-    </section>
-
-    <!-- WebGL Doppler Weather Radar & Wind Map Viewport -->
-    <InteractiveRadarMap />
-
-    <!-- Filter & Search Tabs -->
-    <FilterTabs activeRegion="all" />
-
-    <!-- Station Cards Grid -->
-    <div id="weather-stations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {stations.map((station) => (
-        <StationCard station={station} />
-      ))}
-    </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Microclimate Weather Radar" variant="page" error={!weatherResult.ok ? weatherResult.error : undefined} />
+    )}
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
