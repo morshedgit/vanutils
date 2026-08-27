@@ -12,7 +12,6 @@ export interface TriageWaitData {
   patientCountTreating?: number;   // e.g. 34
   intensity: WaitIntensity;
   lastUpdated: string;             // ISO 8601
-  isStale: boolean;
 }
 
 export interface OperatingHours {

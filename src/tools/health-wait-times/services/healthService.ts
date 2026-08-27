@@ -1,76 +1,70 @@
 import type { HealthcareFacility, FacilityType, WaitIntensity } from '../types';
 import facilitiesData from '../data/facilities.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only — never presented as live telemetry. See issue #35.
 export const BASELINE_FACILITIES: HealthcareFacility[] = facilitiesData as HealthcareFacility[];
 
+const CACHE_TTL_SECONDS = 300; // ER wait times change every few minutes
+
 /**
- * Dynamically fetches live hospital emergency wait times at the edge with fallback
+ * Dynamically fetches live hospital emergency wait times at the edge.
+ * Returns ok:false (no baseline wait times masquerading as live) when the
+ * upstream fetch fails. A facility with no live match still comes back —
+ * its `triageData.waitTimeMinutes` is omitted and `intensity` set to
+ * 'unavailable' rather than showing the baseline number.
  */
-export async function getLiveFacilities(): Promise<HealthcareFacility[]> {
-  const now = new Date();
-  const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
-  const vancouverDate = new Date(vancouverTimeString);
-  const hour = vancouverDate.getHours();
+export async function getLiveFacilities(): Promise<LiveResult<HealthcareFacility[]>> {
+  return withEdgeCache<HealthcareFacility[]>('health-wait-times-facilities', CACHE_TTL_SECONDS, async () => {
+    const now = new Date();
+    const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
+    const vancouverDate = new Date(vancouverTimeString);
+    const hour = vancouverDate.getHours();
 
-  try {
     const res = await edgeFetch<string>('https://www.edwaittimes.ca/legacy', { timeoutMs: 1200 });
-    if (res.data && typeof res.data === 'string') {
-      const match = res.data.match(/<script id="__NEXT_DATA__" type="application\/json">([^<]+)<\/script>/);
-      if (match) {
-        const nextData = JSON.parse(match[1]);
-        const locations: any[] = nextData.props?.pageProps?.locationsWithWaitTimes || [];
+    if (!res.data || typeof res.data !== 'string') return null;
 
-        if (locations.length > 0) {
-          return BASELINE_FACILITIES.map((f) => {
-            const matched = locations.find((l: any) =>
-              l.name?.toLowerCase().includes(f.shortName.toLowerCase()) ||
-              f.name.toLowerCase().includes(l.name?.toLowerCase()) ||
-              l.slug?.toLowerCase() === f.id
-            );
-            const liveWait = matched?.waitTime?.waitTimeMinutes;
-            const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
+    const match = res.data.match(/<script id="__NEXT_DATA__" type="application\/json">([^<]+)<\/script>/);
+    if (!match) return null;
 
-            let intensity: WaitIntensity = 'low';
-            if (liveWait === undefined || liveWait === null) {
-              intensity = f.triageData?.intensity || 'unavailable';
-            } else if (liveWait > 210) {
-              intensity = 'high';
-            } else if (liveWait >= 90) {
-              intensity = 'moderate';
-            }
+    const nextData = JSON.parse(match[1]);
+    const locations: any[] = nextData.props?.pageProps?.locationsWithWaitTimes || [];
+    if (locations.length === 0) return null;
 
-            return {
-              ...f,
-              triageData: f.triageData && liveWait !== undefined && liveWait !== null
-                ? {
-                    ...f.triageData,
-                    waitTimeMinutes: liveWait,
-                    intensity,
-                    lastUpdated: matched?.waitTime?.createdAt || now.toISOString(),
-                    isStale: false,
-                  }
-                : f.triageData,
-              hours: {
-                ...f.hours,
-                isCurrentlyOpen: isOpen,
-              },
-            };
-          });
-        }
+    return BASELINE_FACILITIES.map((f) => {
+      const matched = locations.find((l: any) =>
+        l.name?.toLowerCase().includes(f.shortName.toLowerCase()) ||
+        f.name.toLowerCase().includes(l.name?.toLowerCase()) ||
+        l.slug?.toLowerCase() === f.id
+      );
+      const liveWait = matched?.waitTime?.waitTimeMinutes;
+      const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
+
+      let intensity: WaitIntensity = 'unavailable';
+      if (liveWait !== undefined && liveWait !== null) {
+        if (liveWait > 210) intensity = 'high';
+        else if (liveWait >= 90) intensity = 'moderate';
+        else intensity = 'low';
       }
-    }
-  } catch (e) {}
 
-  return BASELINE_FACILITIES.map((f) => {
-    const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
-    return {
-      ...f,
-      hours: {
-        ...f.hours,
-        isCurrentlyOpen: isOpen,
-      },
-    };
+      return {
+        ...f,
+        triageData: f.triageData
+          ? {
+              ...f.triageData,
+              waitTimeMinutes: liveWait ?? undefined,
+              intensity,
+              lastUpdated: matched?.waitTime?.createdAt || now.toISOString(),
+            }
+          : f.triageData,
+        hours: {
+          ...f.hours,
+          isCurrentlyOpen: isOpen,
+        },
+      };
+    });
   });
 }
 

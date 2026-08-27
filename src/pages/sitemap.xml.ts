@@ -80,10 +80,12 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Health / ER
   try {
-    const facilities = await getLiveFacilities();
-    facilities.forEach((f) => {
-      dynamicRoutes.push({ url: `${baseUrl}/health/${f.id}`, priority: '0.8', changefreq: 'always' });
-    });
+    const facilitiesResult = await getLiveFacilities();
+    if (facilitiesResult.ok) {
+      facilitiesResult.data.forEach((f) => {
+        dynamicRoutes.push({ url: `${baseUrl}/health/${f.id}`, priority: '0.8', changefreq: 'always' });
+      });
+    }
   } catch (e) {}
 
   // Bridges & Tunnels

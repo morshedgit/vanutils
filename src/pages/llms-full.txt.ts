@@ -26,7 +26,7 @@ export const GET: APIRoute = async ({ request }) => {
     mountainsResult,
     ferriesResult,
     crossingsResult,
-    health,
+    healthResult,
     airResult,
     sportsTeamsData,
     sales,
@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ request }) => {
     getLiveMountains(),
     getLiveRoutes(),
     getLiveCrossings(),
-    getLiveFacilities().catch(() => []),
+    getLiveFacilities(),
     getLiveAirStations(),
     getLiveSportsTeams().catch(() => ({ teams: [], gameDaySummary: { totalTeams: 0, gamesTodayCount: 0, teamsPlayingToday: [] } })),
     getLiveSalesEvents().catch(() => []),
@@ -51,6 +51,7 @@ export const GET: APIRoute = async ({ request }) => {
   const mountains = mountainsResult.ok ? mountainsResult.data : [];
   const ferries = ferriesResult.ok ? ferriesResult.data : [];
   const crossings = crossingsResult.ok ? crossingsResult.data : [];
+  const health = healthResult.ok ? healthResult.data : [];
   const proposals = proposalsResult.ok ? proposalsResult.data : [];
   const communityEvents = communityEventsResult.ok ? communityEventsResult.data : [];
 

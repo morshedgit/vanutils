@@ -48,11 +48,13 @@ const avgFreezingLevel = allMountains.length > 0
   : 0;
 const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Summer)` : `${avgFreezingLevel}m FZ`;
 
-const allNeighbourhoods = tool.id === 'evo-parking' ? await getLiveNeighbourhoods() : [];
+const parkingResult = tool.id === 'evo-parking' ? await getLiveNeighbourhoods() : null;
+const allNeighbourhoods = parkingResult?.ok ? parkingResult.data : [];
 const initialNeighbourhoods = allNeighbourhoods.slice(0, 4);
 const safeNeighbourhoodsCount = allNeighbourhoods.filter((n) => evaluateNeighbourhoodSpot(n).clearanceStatus === 'safe').length;
 
-const allFacilities = tool.id === 'health-wait-times' ? await getLiveFacilities() : [];
+const healthResult = tool.id === 'health-wait-times' ? await getLiveFacilities() : null;
+const allFacilities = healthResult?.ok ? healthResult.data : [];
 const facilitiesWithWait = allFacilities.filter((f) => f.triageData?.waitTimeMinutes !== undefined);
 const barChartFacilities = facilitiesWithWait.slice(0, 3);
 // Start the list below after the bar chart's own facilities so the homepage
@@ -154,8 +156,8 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
         {tool.id === 'can-i-swim' && (swimResult?.ok ? `${safeBeachesCount}/${allBeaches.length} Safe` : 'Unavailable')}
         {tool.id === 'bc-ferries' && (ferriesResult?.ok ? `${allFerryRoutes.length} Live Routes` : 'Unavailable')}
         {tool.id === 'mountain-snow' && (snowResult?.ok ? snowBadgeText : 'Unavailable')}
-        {tool.id === 'evo-parking' && `${safeNeighbourhoodsCount}/${allNeighbourhoods.length} Safe Zones`}
-        {tool.id === 'health-wait-times' && minWaitText}
+        {tool.id === 'evo-parking' && (parkingResult?.ok ? `${safeNeighbourhoodsCount}/${allNeighbourhoods.length} Safe Zones` : 'Unavailable')}
+        {tool.id === 'health-wait-times' && (healthResult?.ok ? minWaitText : 'Unavailable')}
         {tool.id === 'bridge-traffic' && (crossingsResult?.ok ? lionsGateLanes : 'Unavailable')}
         {tool.id === 'air-quality' && (airResult?.ok ? `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})` : 'Unavailable')}
         {tool.id === 'civic-development' && (civicResult?.ok ? `${allProposals.length} Proposals` : 'Unavailable')}
@@ -308,7 +310,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 4. CAR-SHARE PARKING: Radar Clearance Dial & Rush-Hour Timeline -->
-    {tool.id === 'evo-parking' && (
+    {tool.id === 'evo-parking' && !parkingResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'evo-parking' && parkingResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Curbside Clearance Timeline</span>
@@ -337,7 +342,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 5. ER & URGENT CARE: Comparative Wait Time Bar Chart -->
-    {tool.id === 'health-wait-times' && (
+    {tool.id === 'health-wait-times' && !healthResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'health-wait-times' && healthResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Real-Time ER Wait Times</span>
