@@ -24,8 +24,6 @@ export interface RushHourRestriction {
   hasRestriction: boolean;
   restrictedCorridors: string[]; // e.g. ["West Georgia St", "Burrard St"]
   restrictedHoursText: string;   // "07:00-09:30 & 15:00-18:00 Mon-Fri"
-  morningWindow: { start: string; end: string }; // "07:00", "09:30"
-  afternoonWindow: { start: string; end: string }; // "15:00", "18:00"
   isCurrentlyActive: boolean;
   isWithin12Hours: boolean;
 }

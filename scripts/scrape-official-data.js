@@ -607,18 +607,6 @@ async function runOfficialScraper() {
       const latestSingle = meta.singleEColi || latestGeoMean;
       const status = meta.currentStatus || (latestGeoMean <= 200 && latestSingle <= 235 ? 'safe' : latestSingle > 400 || latestGeoMean > 200 ? 'advisory' : 'caution');
 
-      // Genuine historical laboratory sampling sequence (Weekly VCH/Fraser Health testing)
-      const histDates = ['2026-07-18', '2026-07-25', '2026-08-01', '2026-08-08', '2026-08-14'];
-      const historicalSamples = histDates.map((date) => {
-        const sampleStatus = latestGeoMean <= 200 && latestSingle <= 235 ? 'safe' : latestSingle > 400 || latestGeoMean > 200 ? 'advisory' : 'caution';
-        return {
-          date,
-          eColiCount: latestGeoMean,
-          singleSampleCount: latestSingle,
-          status: sampleStatus,
-        };
-      });
-
       compiledBeaches.push({
         id: meta.slug,
         name: meta.name,
@@ -644,8 +632,7 @@ async function runOfficialScraper() {
           singleSampleCount: latestSingle,
           status,
           notes: status === 'safe' ? 'Pristine recreational water quality' : 'Elevated bacteria count'
-        },
-        historicalSamples
+        }
       });
     }
 

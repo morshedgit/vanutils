@@ -49,8 +49,11 @@ const initialNeighbourhoods = allNeighbourhoods.slice(0, 4);
 const safeNeighbourhoodsCount = allNeighbourhoods.filter((n) => evaluateNeighbourhoodSpot(n).clearanceStatus === 'safe').length;
 
 const allFacilities = tool.id === 'health-wait-times' ? await getLiveFacilities() : [];
-const initialFacilities = allFacilities.slice(0, 4);
 const facilitiesWithWait = allFacilities.filter((f) => f.triageData?.waitTimeMinutes !== undefined);
+const barChartFacilities = facilitiesWithWait.slice(0, 3);
+// Start the list below after the bar chart's own facilities so the homepage
+// card never renders the same hospital twice.
+const initialFacilities = allFacilities.filter((f) => !barChartFacilities.some((bf) => bf.id === f.id)).slice(0, 4);
 const minWaitFacility = facilitiesWithWait.length > 0
   ? [...facilitiesWithWait].sort((a, b) => (a.triageData?.waitTimeMinutes || 0) - (b.triageData?.waitTimeMinutes || 0))[0]
   : null;
@@ -324,7 +327,7 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
 
         <!-- Dynamic Comparative Wait Bars -->
         <div class="space-y-1.5">
-          {allFacilities.filter((f) => f.triageData?.waitTimeMinutes !== undefined).slice(0, 3).map((f) => {
+          {barChartFacilities.map((f) => {
             const wait = f.triageData?.waitTimeMinutes || 0;
             const barWidth = Math.min(100, Math.max(12, Math.round((wait / 240) * 100)));
             const barColor = wait < 90 ? 'bg-emerald-500' : wait < 180 ? 'bg-amber-500' : 'bg-rose-500';
@@ -900,7 +903,7 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
                 {e.title}
               </a>
               <span class="shrink-0 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400">
-                {d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' })}
+                {d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric', timeZone: 'America/Vancouver' })}
               </span>
             </div>
           );

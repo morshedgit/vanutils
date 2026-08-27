@@ -35,7 +35,6 @@ export interface Beach {
   currentStatus: WaterQualityStatus;
   advisoryReason?: string;
   latestSample: SamplingRecord;
-  historicalSamples: SamplingRecord[];
   officialSourceUrl: string;
   description: string;
   bestFor: string[];

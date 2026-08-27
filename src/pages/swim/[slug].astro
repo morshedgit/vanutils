@@ -1,7 +1,6 @@
 ---
 import PlatformLayout from '../../layouts/PlatformLayout.astro';
 import StatusBadge from '../../components/shared/StatusBadge.astro';
-import Sparkline from '../../tools/can-i-swim/components/Sparkline.astro';
 import SafetyLegend from '../../tools/can-i-swim/components/SafetyLegend.astro';
 import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import { getLiveBeaches, getBeachById, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
@@ -171,62 +170,40 @@ const relatedItems: RelatedItem[] = [
       </div>
     </section>
 
-    <!-- Historical 30-Day Sparkline Trend & Data Table Grid -->
+    <!-- Latest Reading Disclosure & Amenities Grid -->
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- 30-Day Chart Card -->
-      <div class="lg:col-span-2 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-base font-bold text-slate-900 dark:text-white">30-Day E. coli Historical Trend</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Weekly sampling results & regulatory threshold limits</p>
-          </div>
-          <div class="flex items-center gap-3 text-[11px]">
-            <span class="flex items-center gap-1 text-rose-500 font-medium">
-              <span class="w-3 border-t-2 border-dashed border-rose-500"></span> 200 Advisory Limit
-            </span>
-          </div>
+      <!-- Data Source Disclosure Card -->
+      <div class="rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm space-y-4">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 dark:text-white">Latest Verified Reading</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Metro Vancouver's public beach monitoring feed publishes each site's current result only — no per-sample historical series is available upstream, so no trend chart is shown here.</p>
         </div>
-
-        <!-- Trend Graph Container -->
-        <div class="pt-4 pb-2">
-          <Sparkline
-            samples={beach.historicalSamples}
-            status={beach.currentStatus}
-            width={640}
-            height={160}
-            showThresholds={true}
-          />
-        </div>
-
-        <!-- Sampling History Table -->
-        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 overflow-x-auto">
+        <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
           <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="text-slate-400 uppercase text-[10px] font-bold border-b border-slate-100 dark:border-slate-800">
-                <th class="pb-2">Sample Date</th>
-                <th class="pb-2">30-Day Geo Mean</th>
-                <th class="pb-2">Single Sample</th>
-                <th class="pb-2">Water Quality</th>
-              </tr>
-            </thead>
             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-              {beach.historicalSamples.map((rec) => (
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                  <td class="py-2.5 font-medium text-slate-800 dark:text-slate-200">{rec.date}</td>
-                  <td class="py-2.5 font-bold text-slate-900 dark:text-white">{rec.eColiCount} CFU</td>
-                  <td class="py-2.5 text-slate-600 dark:text-slate-300">{rec.singleSampleCount || '-'} CFU</td>
-                  <td class="py-2.5">
-                    <StatusBadge status={rec.status} size="sm" />
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td class="py-2.5 text-slate-500 dark:text-slate-400">Sample Date</td>
+                <td class="py-2.5 font-bold text-slate-900 dark:text-white text-right">{beach.latestSample.date}</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 text-slate-500 dark:text-slate-400">30-Day Geo Mean</td>
+                <td class="py-2.5 font-bold text-slate-900 dark:text-white text-right">{beach.latestSample.eColiCount} CFU</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 text-slate-500 dark:text-slate-400">Single Sample</td>
+                <td class="py-2.5 font-bold text-slate-900 dark:text-white text-right">{beach.latestSample.singleSampleCount || '-'} CFU</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 text-slate-500 dark:text-slate-400">Water Quality</td>
+                <td class="py-2.5 text-right"><StatusBadge status={beach.latestSample.status} size="sm" /></td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <!-- Beach Amenities & Info Card -->
-      <div class="rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm flex flex-col justify-between space-y-6">
+      <div class="lg:col-span-2 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-6 shadow-sm flex flex-col justify-between space-y-6">
         <div>
           <h2 class="text-base font-bold text-slate-900 dark:text-white mb-1">Beach Amenities & Details</h2>
           <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">{beach.description}</p>

@@ -6,7 +6,12 @@ interface Props {
 }
 
 const { proposals } = Astro.props;
-const hearings = proposals.filter((p) => p.status === 'public_hearing_scheduled' && p.publicHearing?.hearingDate);
+const now = Date.now();
+const hearings = proposals.filter((p) =>
+  p.status === 'public_hearing_scheduled' &&
+  p.publicHearing?.hearingDate &&
+  new Date(p.publicHearing.hearingDate).getTime() > now
+);
 ---
 
 {hearings.length > 0 && (
@@ -31,7 +36,7 @@ const hearings = proposals.filter((p) => p.status === 'public_hearing_scheduled'
               {h.address} ({h.storeys} Storeys)
             </a>
             <span class="text-[11px] text-amber-600 dark:text-amber-400 font-mono">
-              {new Date(h.publicHearing!.hearingDate!).toLocaleDateString([], { month: 'short', day: 'numeric' })} @ 6:00 PM
+              {new Date(h.publicHearing!.hearingDate!).toLocaleDateString([], { month: 'short', day: 'numeric', timeZone: 'America/Vancouver' })} @ {new Date(h.publicHearing!.hearingDate!).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', timeZone: 'America/Vancouver' })}
             </span>
           </div>
           <p class="text-slate-600 dark:text-slate-400 text-[11px]">

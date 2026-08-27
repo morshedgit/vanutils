@@ -13,6 +13,74 @@ const WEEKDAY_MAP: Record<string, number> = {
   sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6,
 };
 
+interface TimeWindow {
+  startMin: number;
+  endMin: number;
+}
+
+/**
+ * Parses a neighbourhood's own `rushHourLanes.hoursText` (e.g.
+ * "07:00-09:30 & 15:00-18:00 Mon-Fri" or "Commercial loading 07:00-11:00
+ * Mon-Sat") into the actual time window(s) and day scope it describes,
+ * instead of assuming every zone shares the same generic rush-hour hours.
+ */
+function parseRushHourWindows(hoursText: string): {
+  windows: TimeWindow[];
+  appliesOnDay: (day: number) => boolean;
+  alwaysActive: boolean;
+} {
+  const text = hoursText.toLowerCase();
+  const windows: TimeWindow[] = [];
+  const rangeRegex = /(\d{2}):(\d{2})\s*-\s*(\d{2}):(\d{2})/g;
+  let m: RegExpExecArray | null;
+  while ((m = rangeRegex.exec(hoursText)) !== null) {
+    windows.push({
+      startMin: parseInt(m[1], 10) * 60 + parseInt(m[2], 10),
+      endMin: parseInt(m[3], 10) * 60 + parseInt(m[4], 10),
+    });
+  }
+
+  let appliesOnDay: (day: number) => boolean;
+  if (text.includes('mon-sat')) {
+    appliesOnDay = (day) => day >= 1 && day <= 6;
+  } else if (text.includes('mon-fri')) {
+    appliesOnDay = (day) => day >= 1 && day <= 5;
+  } else if (text.includes('anytime') || text.includes('every day') || text.includes('daily')) {
+    appliesOnDay = () => true;
+  } else {
+    // No explicit day scope in the text — default to weekdays.
+    appliesOnDay = (day) => day >= 1 && day <= 5;
+  }
+
+  const alwaysActive = windows.length === 0 && text.includes('anytime');
+
+  return { windows, appliesOnDay, alwaysActive };
+}
+
+function isInsideAnyWindow(nowMin: number, dayOfWeek: number, windows: TimeWindow[], appliesOnDay: (day: number) => boolean): boolean {
+  if (!appliesOnDay(dayOfWeek)) return false;
+  return windows.some((w) => nowMin >= w.startMin && nowMin < w.endMin);
+}
+
+/**
+ * Minutes from now until the next time one of `windows` starts, searching
+ * forward day-by-day (current day's remaining windows first, then up to a
+ * week out) so multi-day-scoped restrictions (e.g. "Mon-Sat") are respected.
+ */
+function minutesUntilNextWindowStart(nowMin: number, dayOfWeek: number, windows: TimeWindow[], appliesOnDay: (day: number) => boolean): number | null {
+  if (windows.length === 0) return null;
+  const sorted = [...windows].sort((a, b) => a.startMin - b.startMin);
+  for (let dayOffset = 0; dayOffset <= 7; dayOffset++) {
+    const day = (dayOfWeek + dayOffset) % 7;
+    if (!appliesOnDay(day)) continue;
+    for (const w of sorted) {
+      if (dayOffset === 0 && w.startMin <= nowMin) continue;
+      return dayOffset * 24 * 60 + w.startMin - nowMin;
+    }
+  }
+  return null;
+}
+
 /**
  * Determines whether `date` is an actual scheduled sweep day for a sweepDays
  * string like "Monday - Sunday", "Every Tuesday", or "1st & 3rd Tuesday".
@@ -83,35 +151,30 @@ export function evaluateNeighbourhoodSpot(
   neighbourhood: NeighbourhoodParkingProfile,
   date: Date = new Date()
 ): ParkingSpotEvaluation {
-  // Vancouver time
-  const vancouverTimeStr = date.toLocaleTimeString('en-CA', {
-    timeZone: 'America/Vancouver',
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-  const [hourStr, minStr] = vancouverTimeStr.split(':');
-  const hour = parseInt(hourStr, 10);
-  const min = parseInt(minStr, 10);
-  const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+  // Vancouver time (hour, minute, AND day-of-week all derived from the same
+  // Pacific wall-clock instant — deriving dayOfWeek from the server's own
+  // timezone would misclassify the day near midnight Pacific / UTC boundaries)
+  const vancouverNow = new Date(date.toLocaleString('en-US', { timeZone: 'America/Vancouver' }));
+  const hour = vancouverNow.getHours();
+  const min = vancouverNow.getMinutes();
+  const dayOfWeek = vancouverNow.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-  // 1. Rush Hour Check (07:00-09:30 & 15:00-18:00 on Weekdays)
-  const isMorningRush = isWeekday && (hour === 7 || hour === 8 || (hour === 9 && min <= 30));
-  const isAfternoonRush = isWeekday && (hour >= 15 && hour < 18);
-  const isCurrentlyRush = (isMorningRush || isAfternoonRush) && neighbourhood.rushHourLanes.corridors.length > 0;
-
-  const isWithin12hRush = isWeekday && (
-    (hour >= 19 && hour <= 23) || // Overnight before morning rush
-    (hour >= 4 && hour < 7)       // Early morning before rush
-  );
+  // 1. Rush Hour Check — parsed from this zone's own hoursText, not a
+  // hardcoded window shared across every neighbourhood.
+  const hasRushLanes = neighbourhood.rushHourLanes.corridors.length > 0;
+  const nowMin = hour * 60 + min;
+  const { windows: rushWindows, appliesOnDay: rushAppliesOnDay, alwaysActive: rushAlwaysActive } =
+    parseRushHourWindows(neighbourhood.rushHourLanes.hoursText);
+  const isCurrentlyRush = hasRushLanes && (rushAlwaysActive || isInsideAnyWindow(nowMin, dayOfWeek, rushWindows, rushAppliesOnDay));
+  const minutesToNextRush = hasRushLanes && !isCurrentlyRush && !rushAlwaysActive
+    ? minutesUntilNextWindowStart(nowMin, dayOfWeek, rushWindows, rushAppliesOnDay)
+    : null;
+  const isWithin12hRush = minutesToNextRush !== null && minutesToNextRush <= 12 * 60;
 
   const rushHour: RushHourRestriction = {
-    hasRestriction: neighbourhood.rushHourLanes.corridors.length > 0,
+    hasRestriction: hasRushLanes,
     restrictedCorridors: neighbourhood.rushHourLanes.corridors,
     restrictedHoursText: neighbourhood.rushHourLanes.hoursText,
-    morningWindow: { start: '07:00', end: '09:30' },
-    afternoonWindow: { start: '15:00', end: '18:00' },
     isCurrentlyActive: isCurrentlyRush,
     isWithin12Hours: isWithin12hRush,
   };
