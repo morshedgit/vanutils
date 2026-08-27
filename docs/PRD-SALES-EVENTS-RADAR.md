@@ -87,10 +87,10 @@ In compliance with the **Zero-Fluff, High-Density Card Law**:
 /**
  * Asynchronously loads live sales events at the Cloudflare Edge with 1.2s timeout
  */
-export async function getLiveSalesEvents(category?: string): Promise<SalesEvent[]>
+export async function getLiveSalesEvents(category?: string): Promise<LiveResult<SalesEvent[]>>
 ```
 - Strict 1.2-second timeout using `AbortSignal.timeout(1200)`.
-- Graceful failover to verified snapshot in `src/tools/sales-events/data/sales.json` with `isStale: true` and explicit timestamp.
+- Returns `Promise<LiveResult<SalesEvent[]>>` (issue #35). This loader's only genuine live signal is a date-based status evaluation (`upcoming`/`active_now`/`concluded`) against `src/tools/sales-events/data/sales.json` schedule data — that evaluation never depends on the venue-feed fetch, so it is always current and never a masked failure.
 
 ### 5.3 Tiered Edge Caching Matrix
 - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (Medium-Low Volatility: 30-minute edge cache with 2-hour SWR revalidation).
@@ -155,7 +155,6 @@ export interface SalesEvent {
   officialSourceUrl: string;
   featuredItems: string[];
   lastUpdated: string;        // ISO 8601
-  isStale: boolean;
 }
 
 export interface SalesOverviewStats {

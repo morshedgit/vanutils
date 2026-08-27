@@ -18,7 +18,7 @@ Every micro-utility will implement an asynchronous edge loader `getLive<ToolData
 1. **Parallel Upstream Fetch**: Dispatches requests to official government / institutional REST, GeoJSON, and XML/RSS APIs.
 2. **Strict 1.2s Fast Timeout**: Uses `AbortSignal.timeout(1200)` to guarantee sub-second Time-To-First-Byte (TTFB).
 3. **Tiered Edge Caching (SWR)**: Sets explicit `Cache-Control: public, s-maxage=..., stale-while-revalidate=...` headers to protect upstream endpoints and deliver sub-50ms cached responses from Cloudflare's Vancouver edge.
-4. **Graceful Failover**: If and only if upstream endpoints fail or exceed 1,200ms, the loader returns the verified baseline snapshot with `isStale: true` and an authentic timestamp. Zero synthetic or fake timestamp stamping.
+4. **Explicit Failure, No Fallback** *(superseded by issue #35 — see below)*: If upstream endpoints fail or exceed 1,200ms, the loader returns `{ ok: false, error }` (`src/services/shared/liveResult.ts`) — never the baseline snapshot dressed up as current. Zero synthetic or fake timestamp stamping, and zero baseline masquerading as live.
 
 ---
 
@@ -70,19 +70,19 @@ To support live edge fetching without heavy dependencies or Node-specific runtim
 
 | Tool | Module ID | Upstream Public Endpoint | Edge Loader Function | Caching Policy (SWR) | Failover Behavior |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **#1 Swim** | `can-i-swim` | Metro Vancouver ArcGIS FeatureServer (`gis.metrovancouver.org`) | `getLiveBeaches()` | `s-maxage=1800, stale-while-revalidate=7200` | Return verified baseline with `isStale: true` |
-| **#2 Ferries** | `bc-ferries` | BC Ferries API v2 (`bcferriesapi.ca/v2/capacity/`) | `getLiveRoutes()` | `s-maxage=60, stale-while-revalidate=120` | Return verified baseline with `isStale: true` |
-| **#3 Snow** | `mountain-snow` | Open-Meteo High-Elevation API (`api.open-meteo.com`) | `getLiveMountains()` | `s-maxage=300, stale-while-revalidate=600` | Return verified baseline with `isStale: true` |
-| **#4 Parking** | `carshare-parking` | City of Vancouver Open Data (`opendata.vancouver.ca`) | `getLiveNeighbourhoods()` | `s-maxage=3600, stale-while-revalidate=86400` | Return verified baseline with `isStale: true` |
-| **#5 Health** | `health-wait-times`| VCH / Fraser Health ED Triage Feed (`edwaittimes.ca`) | `getLiveFacilities()` | `s-maxage=300, stale-while-revalidate=600` | Return verified baseline with `isStale: true` |
-| **#6 Bridges** | `bridge-traffic` | DriveBC Open511 Events API (`api.open511.gov.bc.ca/events`) | `getLiveCrossings()` | `s-maxage=60, stale-while-revalidate=120` | Return verified baseline with `isStale: true` |
-| **#7 Air Quality** | `air-quality` | BC EnvistaWeb BAM-1020 API (`envistaweb.env.gov.bc.ca/aqo/api/station/latest`) | `getLiveStations()` | `s-maxage=600, stale-while-revalidate=1800` | Return verified baseline with `isStale: true` |
-| **#8 Civic Rezoning** | `civic-development` | City of Vancouver Rezoning API (`opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/rezoning-applications/records`) | `getLiveProposals()` | `s-maxage=3600, stale-while-revalidate=86400` | Return verified baseline with `isStale: true` |
-| **#9 Community Events** | `community-events` | City of Vancouver Special Events Permits API (`opendata.vancouver.ca`) | `getLiveEvents()` | `s-maxage=1800, stale-while-revalidate=7200` | Return verified baseline with `isStale: true` |
-| **#10 Schools** | `school-catchment` | VSB SD39 Official Catchment GeoJSON Dataset | `getLiveSchools()` | `s-maxage=86400, stale-while-revalidate=604800`| Return verified baseline with `isStale: true` |
-| **#11 Local News** | `local-news` | CBC News BC RSS + City of Vancouver Media Releases RSS + ECCC Weather Alerts | `getLiveNews()`, `getLiveBreakingAlerts()` | `s-maxage=60/300, stale-while-revalidate=120/600` | Return verified baseline with `isStale: true` |
-| **#12 Housing Market** | `housing-market` | Bank of Canada Valet REST API (`bankofcanada.ca/valet/observations/V39079,V80691311,V39055/json`) | `getLiveMarketHeartbeat()` | `s-maxage=86400, stale-while-revalidate=604800`| Return verified baseline with `isStale: true` |
-| **#13 Sports Radar** | `sports-facilities`| City of Vancouver Parks Facilities GeoJSON API (`opendata.vancouver.ca`) | `getLiveSportsFacilities()` | `s-maxage=1800, stale-while-revalidate=7200` | Return verified baseline with `isStale: true` |
+| **#1 Swim** | `can-i-swim` | Metro Vancouver ArcGIS FeatureServer (`gis.metrovancouver.org`) | `getLiveBeaches()` | `s-maxage=1800, stale-while-revalidate=7200` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#2 Ferries** | `bc-ferries` | BC Ferries API v2 (`bcferriesapi.ca/v2/capacity/`) | `getLiveRoutes()` | `s-maxage=60, stale-while-revalidate=120` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#3 Snow** | `mountain-snow` | Open-Meteo High-Elevation API (`api.open-meteo.com`) | `getLiveMountains()` | `s-maxage=300, stale-while-revalidate=600` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#4 Parking** | `carshare-parking` | City of Vancouver Open Data (`opendata.vancouver.ca`) | `getLiveNeighbourhoods()` | `s-maxage=3600, stale-while-revalidate=86400` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#5 Health** | `health-wait-times`| VCH / Fraser Health ED Triage Feed (`edwaittimes.ca`) | `getLiveFacilities()` | `s-maxage=300, stale-while-revalidate=600` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#6 Bridges** | `bridge-traffic` | DriveBC Open511 Events API (`api.open511.gov.bc.ca/events`) | `getLiveCrossings()` | `s-maxage=60, stale-while-revalidate=120` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#7 Air Quality** | `air-quality` | BC EnvistaWeb BAM-1020 API (`envistaweb.env.gov.bc.ca/aqo/api/station/latest`) | `getLiveStations()` | `s-maxage=600, stale-while-revalidate=1800` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#8 Civic Rezoning** | `civic-development` | City of Vancouver Rezoning API (`opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/rezoning-applications/records`) | `getLiveProposals()` | `s-maxage=3600, stale-while-revalidate=86400` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#9 Community Events** | `community-events` | City of Vancouver Special Events Permits API (`opendata.vancouver.ca`) | `getLiveEvents()` | `s-maxage=1800, stale-while-revalidate=7200` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#10 Schools** | `school-catchment` | VSB SD39 Official Catchment GeoJSON Dataset | `getLiveSchools()` | `s-maxage=86400, stale-while-revalidate=604800`| Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#11 Local News** | `local-news` | CBC News BC RSS + City of Vancouver Media Releases RSS + ECCC Weather Alerts | `getLiveNews()`, `getLiveBreakingAlerts()` | `s-maxage=60/300, stale-while-revalidate=120/600` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#12 Housing Market** | `housing-market` | Bank of Canada Valet REST API (`bankofcanada.ca/valet/observations/V39079,V80691311,V39055/json`) | `getLiveMarketHeartbeat()` | `s-maxage=86400, stale-while-revalidate=604800`| Return `ok: false` with explicit error — no baseline shown (issue #35) |
+| **#13 Sports Radar** | `sports-facilities`| City of Vancouver Parks Facilities GeoJSON API (`opendata.vancouver.ca`) | `getLiveSportsFacilities()` | `s-maxage=1800, stale-while-revalidate=7200` | Return `ok: false` with explicit error — no baseline shown (issue #35) |
 
 ---
 
@@ -96,12 +96,12 @@ To support live edge fetching without heavy dependencies or Node-specific runtim
 - Upgrade all `src/tools/<tool-id>/services/*.ts` files:
   - Replace static file-reading logic with runtime `edgeFetch` requests to upstream endpoints.
   - Implement full response normalization and schema mapping.
-  - Retain local JSON files strictly as resilient offline fallbacks (`isStale: true`).
+  - Retain local JSON files strictly as seed/reference metadata — never rendered as live values (issue #35).
 
-### Phase 3: Automated Build & Scheduled Sync Scrapers
+### Phase 3: Manual Seed-Refresh Scripts (Not Part of Build)
 - Overhaul `scripts/sync-live-*.js`:
   - Upgrade every script from timestamp stamping to full upstream data downloading and JSON compilation.
-  - Wire into `npm run data:sync:all` and deployment pipelines.
+  - These remain manual, one-time seed-refresh tools — `npm run data:sync:all` is intentionally NOT wired into `npm run build` or any deployment pipeline (issue #35).
 
 ### Phase 4: Quality Assurance & Edge SLA Verification
 - Validate that all 13 tools execute real network requests on Cloudflare Edge.
@@ -115,5 +115,5 @@ To support live edge fetching without heavy dependencies or Node-specific runtim
 1. **Zero Mock/Fake Stamping**: No service or script generates fake timestamps or synthetic metrics.
 2. **True Runtime Edge Execution**: Every tool queries live endpoints on request at Cloudflare YVR PoP.
 3. **1.2s SLA Adherence**: All edge loaders enforce `AbortSignal.timeout(1200)`.
-4. **Resilient Failover**: If upstream is unreachable, the system gracefully falls back with `isStale: true`.
+4. **Explicit Failure, No Fallback**: If upstream is unreachable, the system returns `{ ok: false, error }` and renders a dedicated "Live data unavailable" state — never a baseline number dressed up as current (issue #35).
 5. **Full Type Safety**: `npm run check` passes with 0 errors.
