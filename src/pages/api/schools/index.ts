@@ -13,8 +13,17 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const schools = await getLiveSchools();
+  const schoolsResult = await getLiveSchools();
   const childcares = getAllChildcares();
+
+  if (!schoolsResult.ok) {
+    return new Response(JSON.stringify({ error: schoolsResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const schools = schoolsResult.data;
 
   if (id) {
     const school = getSchoolById(id, schools);

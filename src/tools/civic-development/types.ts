@@ -43,5 +43,4 @@ export interface DevelopmentProposal {
   architecturalDrawingsUrl: string;
   officialCityUrl: string;
   lastUpdated: string;           // ISO 8601
-  isStale: boolean;
 }

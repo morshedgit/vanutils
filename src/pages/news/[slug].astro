@@ -1,24 +1,28 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveNews, getArticleById, getCategoryMeta, formatTimeAgo } from '../../tools/local-news/services/newsService';
 
 // Tiered Edge Cache: 5-minute edge TTL, 10-minute background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
 const { slug } = Astro.params;
-const allArticles = await getLiveNews();
-const article = getArticleById(slug || '', allArticles);
+const articlesResult = await getLiveNews();
 
-if (!article) {
+// News article IDs are derived from the live RSS wire on every fetch (no
+// stable baseline entity), so a "not found" redirect only makes sense once
+// we actually have a live article list to check against.
+const article = articlesResult.ok ? getArticleById(slug || '', articlesResult.data) : undefined;
+if (articlesResult.ok && !article) {
   return Astro.redirect('/news');
 }
 
-const catMeta = getCategoryMeta(article.category);
-const timeAgo = formatTimeAgo(article.publishedAt);
-const publishedDate = new Date(article.publishedAt);
+const catMeta = article ? getCategoryMeta(article.category) : null;
+const timeAgo = article ? formatTimeAgo(article.publishedAt) : null;
+const publishedDate = article ? new Date(article.publishedAt) : null;
 
-const articleSchema = [
+const articleSchema = article ? [
   {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
@@ -45,15 +49,15 @@ const articleSchema = [
       { '@type': 'ListItem', position: 3, name: article.title, item: `https://vanheartbeat.ca/news/${article.id}` },
     ],
   },
-];
+] : [];
 ---
 
 <ToolLayout
   toolId="local-news"
-  title={`${article.title} — Vancouver Local News`}
-  description={`${article.summary}`}
-  currentPath={`/news/${article.id}`}
-  badgeText={article.outletName}
+  title={article ? `${article.title} — Vancouver Local News` : 'Vancouver Local News — Live Data Unavailable'}
+  description={article ? article.summary : 'Live news wire data is temporarily unavailable.'}
+  currentPath={`/news/${slug}`}
+  badgeText={article ? article.outletName : 'Live Data Unavailable'}
   status="active"
 >
   <JsonLd schema={articleSchema} />
@@ -66,14 +70,19 @@ const articleSchema = [
         <span>/</span>
         <a href="/news" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">News Wire</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate max-w-xs">{article.title}</span>
+        <span class="text-slate-900 dark:text-white truncate max-w-xs">{article ? article.title : 'Article'}</span>
       </div>
       <span class="text-xs text-slate-400">
         Verified Source
       </span>
     </nav>
 
+    {!article && (
+      <LiveDataUnavailable toolName="Local News Wire" variant="page" error={!articlesResult.ok ? articlesResult.error : undefined} />
+    )}
+
     <!-- Article Header Hero -->
+    {article && catMeta && timeAgo && publishedDate && (
     <article class="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
       <div class="flex items-center gap-2 flex-wrap">
         <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
@@ -122,5 +131,6 @@ const articleSchema = [
         </a>
       </div>
     </article>
+    )}
   </div>
 </ToolLayout>

@@ -1,26 +1,28 @@
 import type { CommunityEvent, EventCategory } from '../types';
 import eventsData from '../data/events.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only — never presented as live telemetry. See issue #35.
 export const BASELINE_EVENTS: CommunityEvent[] = eventsData as CommunityEvent[];
 
+const CACHE_TTL_SECONDS = 1800; // 30 minutes
+
 /**
- * Dynamically loads live community events at the edge with fallback
+ * Dynamically loads live community events at the edge.
+ * Returns ok:false when there is no genuine live reading (no baseline masquerading as live — issue #35).
  */
-export async function getLiveEvents(): Promise<CommunityEvent[]> {
-  try {
+export async function getLiveEvents(): Promise<LiveResult<CommunityEvent[]>> {
+  return withEdgeCache<CommunityEvent[]>('community-events-events', CACHE_TTL_SECONDS, async () => {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=15';
     await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
-  } catch (e) {}
 
-  // This dataset has no per-event fields that map onto CommunityEvent (see
-  // scripts/sync-live-events.js), so no live data is ever actually merged
-  // here. isStale must stay true regardless of whether the connectivity probe
-  // above succeeded — a reachable endpoint doesn't make these records fresh.
-  return BASELINE_EVENTS.map((e) => ({
-    ...e,
-    isStale: true,
-  }));
+    // This open-data dataset has no per-event fields that map onto
+    // CommunityEvent (see scripts/sync-live-events.js) — there is no real
+    // live merge implemented yet, so this module has no live source.
+    return null;
+  });
 }
 
 export function getAllEvents(): CommunityEvent[] {

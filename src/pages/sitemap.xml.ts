@@ -92,42 +92,52 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Air Quality
   try {
-    const stations = await getLiveStations();
-    stations.forEach((s) => {
-      dynamicRoutes.push({ url: `${baseUrl}/air/${s.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
+    const stationsResult = await getLiveStations();
+    if (stationsResult.ok) {
+      stationsResult.data.forEach((s) => {
+        dynamicRoutes.push({ url: `${baseUrl}/air/${s.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Civic Development
   try {
-    const proposals = await getLiveProposals();
-    proposals.forEach((p) => {
-      dynamicRoutes.push({ url: `${baseUrl}/civic/${p.id}`, priority: '0.7', changefreq: 'weekly' });
-    });
+    const proposalsResult = await getLiveProposals();
+    if (proposalsResult.ok) {
+      proposalsResult.data.forEach((p) => {
+        dynamicRoutes.push({ url: `${baseUrl}/civic/${p.id}`, priority: '0.7', changefreq: 'weekly' });
+      });
+    }
   } catch (e) {}
 
   // Community Events
   try {
-    const events = await getLiveEvents();
-    events.forEach((ev) => {
-      dynamicRoutes.push({ url: `${baseUrl}/events/${ev.id}`, priority: '0.8', changefreq: 'daily' });
-    });
+    const eventsResult = await getLiveEvents();
+    if (eventsResult.ok) {
+      eventsResult.data.forEach((ev) => {
+        dynamicRoutes.push({ url: `${baseUrl}/events/${ev.id}`, priority: '0.8', changefreq: 'daily' });
+      });
+    }
   } catch (e) {}
 
   // School Catchment
   try {
-    const schools = await getLiveSchools();
-    schools.forEach((sc) => {
-      dynamicRoutes.push({ url: `${baseUrl}/schools/${sc.id}`, priority: '0.7', changefreq: 'weekly' });
-    });
+    const schoolsResult = await getLiveSchools();
+    if (schoolsResult.ok) {
+      schoolsResult.data.forEach((sc) => {
+        dynamicRoutes.push({ url: `${baseUrl}/schools/${sc.id}`, priority: '0.7', changefreq: 'weekly' });
+      });
+    }
   } catch (e) {}
 
   // Local News Articles
   try {
-    const articles = await getLiveNews();
-    articles.forEach((a) => {
-      dynamicRoutes.push({ url: `${baseUrl}/news/${a.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
+    const articlesResult = await getLiveNews();
+    if (articlesResult.ok) {
+      articlesResult.data.forEach((a) => {
+        dynamicRoutes.push({ url: `${baseUrl}/news/${a.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Real Estate Submarkets

@@ -13,7 +13,16 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const proposals = await getLiveProposals();
+  const proposalsResult = await getLiveProposals();
+
+  if (!proposalsResult.ok) {
+    return new Response(JSON.stringify({ error: proposalsResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const proposals = proposalsResult.data;
 
   if (id) {
     const proposal = getProposalById(id, proposals);

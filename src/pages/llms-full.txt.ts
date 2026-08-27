@@ -27,25 +27,29 @@ export const GET: APIRoute = async ({ request }) => {
     ferries,
     crossings,
     health,
-    air,
+    airResult,
     sportsTeamsData,
     sales,
     market,
-    proposals,
-    communityEvents,
+    proposalsResult,
+    communityEventsResult,
   ] = await Promise.all([
     getLiveWeather().catch(() => []),
     getLiveMountains().catch(() => []),
     getLiveRoutes().catch(() => []),
     getLiveCrossings().catch(() => []),
     getLiveFacilities().catch(() => []),
-    getLiveAirStations().catch(() => []),
+    getLiveAirStations(),
     getLiveSportsTeams().catch(() => ({ teams: [], gameDaySummary: { totalTeams: 0, gamesTodayCount: 0, teamsPlayingToday: [] } })),
     getLiveSalesEvents().catch(() => []),
     getLiveMarketHeartbeat().catch(() => null),
-    getLiveProposals().catch(() => []),
-    getLiveEvents().catch(() => []),
+    getLiveProposals(),
+    getLiveEvents(),
   ]);
+
+  const air = airResult.ok ? airResult.data : [];
+  const proposals = proposalsResult.ok ? proposalsResult.data : [];
+  const communityEvents = communityEventsResult.ok ? communityEventsResult.data : [];
 
   const beaches = getAllBeaches();
   const neighbourhoods = getAllNeighbourhoods();

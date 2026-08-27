@@ -3,83 +3,85 @@ import articlesData from '../data/articles.json';
 import alertsData from '../data/alerts.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
 import { parseRssXml } from '../../../services/shared/xmlParser';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only — never presented as live telemetry values. See issue #35.
 export const BASELINE_ARTICLES: NewsArticle[] = articlesData as NewsArticle[];
 export const BASELINE_ALERTS: BreakingAlert[] = alertsData as BreakingAlert[];
 
+const ALERTS_CACHE_TTL_SECONDS = 300; // ECCC warning feed polling interval
+const ARTICLES_CACHE_TTL_SECONDS = 300; // CBC wire refresh interval
+
 /**
- * Dynamically loads live breaking alerts at the edge with fallback
+ * Dynamically fetches live ECCC breaking weather alerts at the edge.
+ * Returns ok:false (no baseline masquerading as live) when the upstream fetch fails.
  */
-export async function getLiveBreakingAlerts(): Promise<BreakingAlert[]> {
-  try {
+export async function getLiveBreakingAlerts(): Promise<LiveResult<BreakingAlert[]>> {
+  return withEdgeCache('local-news-breaking-alerts', ALERTS_CACHE_TTL_SECONDS, async () => {
     const endpoint = 'https://weather.gc.ca/rss/warning/bc-74_e.xml';
     const res = await edgeFetch<string>(endpoint, { timeoutMs: 1200 });
 
-    if (res.data && typeof res.data === 'string') {
-      const items = parseRssXml(res.data);
-      const activeAlerts = items.filter((it) => !it.title.toLowerCase().includes('no watches or warnings in effect'));
+    if (!res.data || typeof res.data !== 'string') return null;
 
-      if (activeAlerts.length > 0) {
-        return activeAlerts.map((it, idx) => ({
-          id: `eccc-alert-${idx}`,
-          title: it.title,
-          source: 'eccc_weather',
-          outletName: 'Environment Canada',
-          severity: 'warning',
-          timestamp: it.pubDate || new Date().toISOString(),
-          summary: it.description || it.title,
-          actionUrl: it.link,
-          isStale: false,
-        }));
-      }
-    }
-  } catch (e) {}
+    const items = parseRssXml(res.data);
+    // An empty array here is a legitimate live result (no active watches/warnings),
+    // not a failure — it must not fall back to baseline/stale alerts.
+    const activeAlerts = items.filter((it) => !it.title.toLowerCase().includes('no watches or warnings in effect'));
 
-  return BASELINE_ALERTS;
+    return activeAlerts.map((it, idx) => ({
+      id: `eccc-alert-${idx}`,
+      title: it.title,
+      source: 'eccc_weather' as const,
+      outletName: 'Environment Canada',
+      severity: 'warning' as const,
+      timestamp: it.pubDate || new Date().toISOString(),
+      summary: it.description || it.title,
+      actionUrl: it.link,
+    }));
+  });
 }
 
 /**
- * Dynamically loads live news wire articles at the edge with fallback
+ * Dynamically fetches live CBC news wire articles at the edge.
+ * Returns ok:false (no baseline masquerading as live) when the upstream fetch fails.
  */
-export async function getLiveNews(): Promise<NewsArticle[]> {
-  try {
+export async function getLiveNews(): Promise<LiveResult<NewsArticle[]>> {
+  return withEdgeCache('local-news-articles', ARTICLES_CACHE_TTL_SECONDS, async () => {
     const endpoint = 'https://www.cbc.ca/cmlink/rss-canada-britishcolumbia';
     const res = await edgeFetch<string>(endpoint, { timeoutMs: 1200 });
 
-    if (res.data && typeof res.data === 'string') {
-      const items = parseRssXml(res.data);
-      if (items.length > 0) {
-        return items.slice(0, 8).map((it, idx) => {
-          const lower = `${it.title} ${it.description}`.toLowerCase();
-          let category: NewsCategory = 'civic_politics';
-          if (lower.includes('transit') || lower.includes('skytrain') || lower.includes('bus') || lower.includes('bridge') || lower.includes('ferry')) {
-            category = 'transit_infrastructure';
-          } else if (lower.includes('housing') || lower.includes('rent') || lower.includes('real estate') || lower.includes('rezoning')) {
-            category = 'housing_development';
-          } else if (lower.includes('weather') || lower.includes('smoke') || lower.includes('snow') || lower.includes('heat') || lower.includes('rain')) {
-            category = 'weather_hazards';
-          } else if (lower.includes('park') || lower.includes('swim') || lower.includes('event') || lower.includes('festival')) {
-            category = 'parks_community';
-          }
+    if (!res.data || typeof res.data !== 'string') return null;
 
-          return {
-            id: `cbc-live-${idx}`,
-            title: it.title,
-            summary: it.description || it.title,
-            source: 'cbc_vancouver',
-            outletName: 'CBC News',
-            category,
-            publishedAt: it.pubDate || new Date().toISOString(),
-            url: it.link,
-            isBreaking: idx === 0,
-            isStale: false,
-          };
-        });
+    const items = parseRssXml(res.data);
+    if (items.length === 0) return null;
+
+    return items.slice(0, 8).map((it, idx) => {
+      const lower = `${it.title} ${it.description}`.toLowerCase();
+      let category: NewsCategory = 'civic_politics';
+      if (lower.includes('transit') || lower.includes('skytrain') || lower.includes('bus') || lower.includes('bridge') || lower.includes('ferry')) {
+        category = 'transit_infrastructure';
+      } else if (lower.includes('housing') || lower.includes('rent') || lower.includes('real estate') || lower.includes('rezoning')) {
+        category = 'housing_development';
+      } else if (lower.includes('weather') || lower.includes('smoke') || lower.includes('snow') || lower.includes('heat') || lower.includes('rain')) {
+        category = 'weather_hazards';
+      } else if (lower.includes('park') || lower.includes('swim') || lower.includes('event') || lower.includes('festival')) {
+        category = 'parks_community';
       }
-    }
-  } catch (e) {}
 
-  return BASELINE_ARTICLES;
+      return {
+        id: `cbc-live-${idx}`,
+        title: it.title,
+        summary: it.description || it.title,
+        source: 'cbc_vancouver' as const,
+        outletName: 'CBC News',
+        category,
+        publishedAt: it.pubDate || new Date().toISOString(),
+        url: it.link,
+        isBreaking: idx === 0,
+      };
+    });
+  });
 }
 
 export function getAllArticles(): NewsArticle[] {

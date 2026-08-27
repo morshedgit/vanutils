@@ -24,7 +24,6 @@ export interface BreakingAlert {
   timestamp: string;               // ISO 8601
   summary: string;
   actionUrl?: string;
-  isStale: boolean;
 }
 
 export interface NewsArticle {
@@ -37,5 +36,4 @@ export interface NewsArticle {
   publishedAt: string;             // ISO 8601
   url: string;                     // Direct canonical source URL
   isBreaking: boolean;
-  isStale: boolean;
 }

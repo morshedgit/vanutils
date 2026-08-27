@@ -2,27 +2,29 @@ import type { SchoolInfo, LicensedChildcareCenter } from '../types';
 import schoolsData from '../data/schools.json';
 import childcaresData from '../data/childcares.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only — never presented as live telemetry. See issue #35.
 export const BASELINE_SCHOOLS: SchoolInfo[] = schoolsData as SchoolInfo[];
 export const BASELINE_CHILDCARES: LicensedChildcareCenter[] = childcaresData as LicensedChildcareCenter[];
 
+const CACHE_TTL_SECONDS = 86400; // catchment boundaries rarely change
+
 /**
- * Dynamically loads live school catchment data at the edge with fallback
+ * Dynamically loads live school catchment data at the edge.
+ * Returns ok:false when there is no genuine live reading (no baseline masquerading as live — issue #35).
  */
-export async function getLiveSchools(): Promise<SchoolInfo[]> {
-  try {
+export async function getLiveSchools(): Promise<LiveResult<SchoolInfo[]>> {
+  return withEdgeCache<SchoolInfo[]>('school-catchment-schools', CACHE_TTL_SECONDS, async () => {
     const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/schools/records?limit=10';
     await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 });
-  } catch (e) {}
 
-  // This dataset has no per-catchment fields that map onto SchoolInfo (see
-  // scripts/sync-live-schools.js), so no live data is ever actually merged
-  // here. isStale must stay true regardless of whether the connectivity probe
-  // above succeeded — a reachable endpoint doesn't make these records fresh.
-  return BASELINE_SCHOOLS.map((s) => ({
-    ...s,
-    isStale: true,
-  }));
+    // This open-data dataset has no per-catchment fields that map onto
+    // SchoolInfo (see scripts/sync-live-schools.js) — there is no real
+    // live merge implemented yet, so this module has no live source.
+    return null;
+  });
 }
 
 export function getAllSchools(): SchoolInfo[] {

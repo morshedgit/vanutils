@@ -5,14 +5,16 @@ import AdvisoryBanner from '../../tools/air-quality/components/AdvisoryBanner.as
 import FilterTabs from '../../tools/air-quality/components/FilterTabs.astro';
 import StationCard from '../../tools/air-quality/components/StationCard.astro';
 import CleanAirShelters from '../../tools/air-quality/components/CleanAirShelters.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveStations, getAllShelters, getAirOverviewStats } from '../../tools/air-quality/services/airQualityService';
 
 // Set Edge Cache header: 10 min max age, 30 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
-const stations = await getLiveStations();
+const stationsResult = await getLiveStations();
+const stations = stationsResult.ok ? stationsResult.data : [];
 const shelters = getAllShelters();
-const stats = getAirOverviewStats(stations);
+const stats = stationsResult.ok ? getAirOverviewStats(stations) : null;
 
 const airSchema = [
   {
@@ -77,55 +79,61 @@ const airSchema = [
     <!-- Active Wildfire Smoke Advisory Banner -->
     <AdvisoryBanner hasAdvisory={false} />
 
-    <!-- Hero Regional Air Quality Snapshot -->
-    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Metro Vancouver Baseline: AQHI {stats.avgAQHI} ({stats.avgAQHILabel})</span>
+    {stationsResult.ok && stats ? (
+      <>
+        <!-- Hero Regional Air Quality Snapshot -->
+        <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Metro Vancouver Live: AQHI {stats.avgAQHI} ({stats.avgAQHILabel})</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+              Hyper-Local Air Quality & Fine Particulate (PM2.5) Telemetry
+            </h2>
+            <p class="text-xs text-slate-300">
+              Tracking {stats.totalStations} official BAM-1020 air stations from Kitsilano to Fraser Valley. Cleanest: {stats.cleanCoastalName} ({stats.cleanCoastalPM25} µg/m³).
+            </p>
+          </div>
+
+          <!-- 1-Tap Geolocation Sorter -->
+          <button
+            type="button"
+            id="geo-sort-air-btn"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
+          >
+            <span>📍</span>
+            <span id="geo-air-label">Find Nearest Air Station</span>
+          </button>
+        </section>
+
+        <!-- Pinned Stations Section (Mirrors Home Dashboard Card) -->
+        <div id="pinned-air-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Pinned Air Stations (Shown on Main Dashboard)</span>
+            </span>
+            <span class="text-[11px] text-slate-400">Click star on any station to customize</span>
+          </div>
+          <div id="pinned-air-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <!-- Dynamically populated via client JS -->
+          </div>
         </div>
-        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Hyper-Local Air Quality & Fine Particulate (PM2.5) Telemetry
-        </h2>
-        <p class="text-xs text-slate-300">
-          Tracking {stats.totalStations} official BAM-1020 air stations from Kitsilano to Fraser Valley. Cleanest: {stats.cleanCoastalName} ({stats.cleanCoastalPM25} µg/m³).
-        </p>
-      </div>
 
-      <!-- 1-Tap Geolocation Sorter -->
-      <button
-        type="button"
-        id="geo-sort-air-btn"
-        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
-      >
-        <span>📍</span>
-        <span id="geo-air-label">Find Nearest Air Station</span>
-      </button>
-    </section>
+        <!-- Filter Tabs -->
+        <FilterTabs activeTab="all" />
 
-    <!-- Pinned Stations Section (Mirrors Home Dashboard Card) -->
-    <div id="pinned-air-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-          <span>⭐</span>
-          <span>Pinned Air Stations (Shown on Main Dashboard)</span>
-        </span>
-        <span class="text-[11px] text-slate-400">Click star on any station to customize</span>
-      </div>
-      <div id="pinned-air-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        <!-- Dynamically populated via client JS -->
-      </div>
-    </div>
-
-    <!-- Filter Tabs -->
-    <FilterTabs activeTab="all" />
-
-    <!-- Stations Directory Grid -->
-    <div id="stations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {stations.map((station) => (
-        <StationCard station={station} />
-      ))}
-    </div>
+        <!-- Stations Directory Grid -->
+        <div id="stations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {stations.map((station) => (
+            <StationCard station={station} />
+          ))}
+        </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Air Quality Radar" variant="page" error={!stationsResult.ok ? stationsResult.error : undefined} />
+    )}
 
     <!-- Public Clean-Air Shelters & Cooling Centres -->
     <CleanAirShelters shelters={shelters} />

@@ -4,13 +4,15 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import PublicHearingBanner from '../../tools/civic-development/components/PublicHearingBanner.astro';
 import FilterTabs from '../../tools/civic-development/components/FilterTabs.astro';
 import ProposalCard from '../../tools/civic-development/components/ProposalCard.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveProposals, getCivicOverviewStats } from '../../tools/civic-development/services/civicService';
 
 // Tiered Edge Cache: 1 hour edge TTL, 24 hour background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
 
-const proposals = await getLiveProposals();
-const stats = getCivicOverviewStats(proposals);
+const proposalsResult = await getLiveProposals();
+const proposals = proposalsResult.ok ? proposalsResult.data : [];
+const stats = proposalsResult.ok ? getCivicOverviewStats(proposals) : null;
 
 const civicSchema = [
   {
@@ -72,58 +74,64 @@ const civicSchema = [
   <JsonLd schema={civicSchema} />
 
   <div class="space-y-5 max-w-5xl mx-auto">
-    <!-- Active Public Hearings Notice -->
-    <PublicHearingBanner proposals={proposals} />
+    {proposalsResult.ok && stats ? (
+      <>
+        <!-- Active Public Hearings Notice -->
+        <PublicHearingBanner proposals={proposals} />
 
-    <!-- Hero Stats & 1-Tap Geolocation Sorter -->
-    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>City of Vancouver Open Data • {stats.totalProposals} Active Applications</span>
+        <!-- Hero Stats & 1-Tap Geolocation Sorter -->
+        <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>City of Vancouver Open Data • {stats.totalProposals} Active Applications</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+              Rezoning, Broadway Plan & Transit-Oriented Development Radar
+            </h2>
+            <p class="text-xs text-slate-300">
+              Tracking {stats.totalUnits.toLocaleString()} proposed homes ({stats.belowMarketUnits.toLocaleString()} secured below-market/social units). Max height: {stats.highestStoreys} storeys.
+            </p>
+          </div>
+
+          <!-- 1-Tap Geolocation Sorter -->
+          <button
+            type="button"
+            id="geo-sort-civic-btn"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
+          >
+            <span>📍</span>
+            <span id="geo-civic-label">Find Developments Near Me</span>
+          </button>
+        </section>
+
+        <!-- Pinned Proposals Section (Mirrors Home Dashboard Card) -->
+        <div id="pinned-civic-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Pinned Corridors & Watchlist (Shown on Main Dashboard)</span>
+            </span>
+            <span class="text-[11px] text-slate-400">Click star on any proposal to customize</span>
+          </div>
+          <div id="pinned-civic-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <!-- Dynamically populated via client JS -->
+          </div>
         </div>
-        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Rezoning, Broadway Plan & Transit-Oriented Development Radar
-        </h2>
-        <p class="text-xs text-slate-300">
-          Tracking {stats.totalUnits.toLocaleString()} proposed homes ({stats.belowMarketUnits.toLocaleString()} secured below-market/social units). Max height: {stats.highestStoreys} storeys.
-        </p>
-      </div>
 
-      <!-- 1-Tap Geolocation Sorter -->
-      <button
-        type="button"
-        id="geo-sort-civic-btn"
-        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
-      >
-        <span>📍</span>
-        <span id="geo-civic-label">Find Developments Near Me</span>
-      </button>
-    </section>
+        <!-- Filter Tabs -->
+        <FilterTabs activeTab="all" />
 
-    <!-- Pinned Proposals Section (Mirrors Home Dashboard Card) -->
-    <div id="pinned-civic-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-          <span>⭐</span>
-          <span>Pinned Corridors & Watchlist (Shown on Main Dashboard)</span>
-        </span>
-        <span class="text-[11px] text-slate-400">Click star on any proposal to customize</span>
-      </div>
-      <div id="pinned-civic-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        <!-- Dynamically populated via client JS -->
-      </div>
-    </div>
-
-    <!-- Filter Tabs -->
-    <FilterTabs activeTab="all" />
-
-    <!-- Proposals Grid -->
-    <div id="proposals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {proposals.map((proposal) => (
-        <ProposalCard proposal={proposal} />
-      ))}
-    </div>
+        <!-- Proposals Grid -->
+        <div id="proposals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {proposals.map((proposal) => (
+            <ProposalCard proposal={proposal} />
+          ))}
+        </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Development & Rezoning Radar" variant="page" error={!proposalsResult.ok ? proposalsResult.error : undefined} />
+    )}
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">

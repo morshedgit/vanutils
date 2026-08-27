@@ -13,7 +13,16 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const events = await getLiveEvents();
+  const eventsResult = await getLiveEvents();
+
+  if (!eventsResult.ok) {
+    return new Response(JSON.stringify({ error: eventsResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const events = eventsResult.data;
 
   if (id) {
     const event = getEventById(id, events);

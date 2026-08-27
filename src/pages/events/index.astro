@@ -3,13 +3,15 @@ import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
 import FilterTabs from '../../tools/community-events/components/FilterTabs.astro';
 import EventCard from '../../tools/community-events/components/EventCard.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveEvents, getEventsOverviewStats } from '../../tools/community-events/services/eventService';
 
 // Tiered Edge Cache: 30-minute edge TTL, 2-hour background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200');
 
-const events = await getLiveEvents();
-const stats = getEventsOverviewStats(events);
+const eventsResult = await getLiveEvents();
+const events = eventsResult.ok ? eventsResult.data : [];
+const stats = eventsResult.ok ? getEventsOverviewStats(events) : null;
 
 const eventsSchema = [
   {
@@ -71,55 +73,61 @@ const eventsSchema = [
   <JsonLd schema={eventsSchema} />
 
   <div class="space-y-5 max-w-5xl mx-auto">
-    <!-- Hero Stats & 1-Tap Geolocation Sorter -->
-    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Verified Non-Commercial • {stats.totalEvents} Free Events</span>
+    {eventsResult.ok && stats ? (
+      <>
+        <!-- Hero Stats & 1-Tap Geolocation Sorter -->
+        <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Verified Non-Commercial • {stats.totalEvents} Free Events</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+              Free Local Festivals, Park Movies & Community Happenings
+            </h2>
+            <p class="text-xs text-slate-300">
+              Filtered from Vancouver Park Board, VPL, and Special Events permits. No paywalls, no ads.
+            </p>
+          </div>
+
+          <!-- 1-Tap Geolocation Sorter -->
+          <button
+            type="button"
+            id="geo-sort-events-btn"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
+          >
+            <span>📍</span>
+            <span id="geo-events-label">Find Events Near Me</span>
+          </button>
+        </section>
+
+        <!-- Pinned Events Section (Mirrors Home Dashboard Card) -->
+        <div id="pinned-events-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Pinned Events (Shown on Main Dashboard)</span>
+            </span>
+            <span class="text-[11px] text-slate-400">Click star on any event to customize</span>
+          </div>
+          <div id="pinned-events-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <!-- Dynamically populated via client JS -->
+          </div>
         </div>
-        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Free Local Festivals, Park Movies & Community Happenings
-        </h2>
-        <p class="text-xs text-slate-300">
-          Filtered from Vancouver Park Board, VPL, and Special Events permits. No paywalls, no ads.
-        </p>
-      </div>
 
-      <!-- 1-Tap Geolocation Sorter -->
-      <button
-        type="button"
-        id="geo-sort-events-btn"
-        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
-      >
-        <span>📍</span>
-        <span id="geo-events-label">Find Events Near Me</span>
-      </button>
-    </section>
+        <!-- Filter Tabs -->
+        <FilterTabs activeTab="all" />
 
-    <!-- Pinned Events Section (Mirrors Home Dashboard Card) -->
-    <div id="pinned-events-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-          <span>⭐</span>
-          <span>Pinned Events (Shown on Main Dashboard)</span>
-        </span>
-        <span class="text-[11px] text-slate-400">Click star on any event to customize</span>
-      </div>
-      <div id="pinned-events-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        <!-- Dynamically populated via client JS -->
-      </div>
-    </div>
-
-    <!-- Filter Tabs -->
-    <FilterTabs activeTab="all" />
-
-    <!-- Events Grid -->
-    <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {events.map((event) => (
-        <EventCard event={event} />
-      ))}
-    </div>
+        <!-- Events Grid -->
+        <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {events.map((event) => (
+            <EventCard event={event} />
+          ))}
+        </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Community Events Radar" variant="page" error={!eventsResult.ok ? eventsResult.error : undefined} />
+    )}
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">

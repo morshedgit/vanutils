@@ -47,5 +47,4 @@ export interface AirMonitoringStation {
     atRiskPopulation: string;
   };
   lastSampledTime: string;        // ISO 8601
-  isStale: boolean;
 }

@@ -16,7 +16,6 @@ export interface SchoolInfo {
   programs: ProgramTrack[];
   websiteUrl: string;
   lastUpdated: string;
-  isStale: boolean;
 }
 
 export interface CatchmentLookupResult {

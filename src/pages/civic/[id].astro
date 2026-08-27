@@ -1,31 +1,35 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
-import { getLiveProposals, getProposalById, getStatusMeta } from '../../tools/civic-development/services/civicService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveProposals, getProposalById, getStatusMeta, BASELINE_PROPOSALS } from '../../tools/civic-development/services/civicService';
 
 // Tiered Edge Cache: 1 hour edge TTL, 24 hour background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
 
 const { id } = Astro.params;
-const allProposals = await getLiveProposals();
-const proposal = getProposalById(id || '', allProposals);
 
-if (!proposal) {
+// Baseline lookup is metadata-only (address/id) so an unknown id still 404s
+// even when the live upstream is down; it is never used for telemetry values.
+const proposalMeta = getProposalById(id || '', BASELINE_PROPOSALS);
+if (!proposalMeta) {
   return Astro.redirect('/civic');
 }
 
-const statusMeta = getStatusMeta(proposal.status);
+const proposalsResult = await getLiveProposals();
+const proposal = proposalsResult.ok ? getProposalById(id || '', proposalsResult.data) : undefined;
+const statusMeta = proposal ? getStatusMeta(proposal.status) : null;
 
 const proposalSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'GovernmentPermit',
-    name: `Rezoning Application: ${proposal.address}`,
-    description: `Proposal details, storeys, FSR density, unit mix, and public hearing schedule for ${proposal.address}.`,
-    url: `https://vanheartbeat.ca/civic/${proposal.id}`,
+    name: `Rezoning Application: ${proposalMeta.address}`,
+    description: `Proposal details, storeys, FSR density, unit mix, and public hearing schedule for ${proposalMeta.address}.`,
+    url: `https://vanheartbeat.ca/civic/${proposalMeta.id}`,
     permitAudience: {
       '@type': 'AdministrativeArea',
-      name: proposal.neighbourhood,
+      name: proposalMeta.neighbourhood,
     },
   },
   {
@@ -34,7 +38,7 @@ const proposalSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Development & Rezoning', item: 'https://vanheartbeat.ca/civic' },
-      { '@type': 'ListItem', position: 3, name: proposal.address, item: `https://vanheartbeat.ca/civic/${proposal.id}` },
+      { '@type': 'ListItem', position: 3, name: proposalMeta.address, item: `https://vanheartbeat.ca/civic/${proposalMeta.id}` },
     ],
   },
 ];
@@ -42,10 +46,10 @@ const proposalSchema = [
 
 <ToolLayout
   toolId="civic-development"
-  title={`${proposal.address} — Development & Rezoning`}
-  description={`Proposal details, storeys, FSR density, unit mix, and public hearing schedule for ${proposal.address}.`}
-  currentPath={`/civic/${proposal.id}`}
-  badgeText={`${proposal.storeys} Storeys`}
+  title={`${proposalMeta.address} — Development & Rezoning`}
+  description={`Proposal details, storeys, FSR density, unit mix, and public hearing schedule for ${proposalMeta.address}.`}
+  currentPath={`/civic/${proposalMeta.id}`}
+  badgeText={proposal ? `${proposal.storeys} Storeys` : 'Live Data Unavailable'}
   status="active"
 >
   <JsonLd schema={proposalSchema} />
@@ -58,14 +62,20 @@ const proposalSchema = [
         <span>/</span>
         <a href="/civic" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Development Radar</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate">{proposal.address}</span>
+        <span class="text-slate-900 dark:text-white truncate">{proposalMeta.address}</span>
       </div>
       <span class="text-xs text-slate-400 font-mono">
-        Application ID: {proposal.id}
+        Application ID: {proposalMeta.id}
       </span>
     </nav>
 
+    {!proposal && (
+      <LiveDataUnavailable toolName={`${proposalMeta.address} Development Proposal`} variant="page" error={!proposalsResult.ok ? proposalsResult.error : undefined} />
+    )}
+
     <!-- Application Hero Header -->
+    {proposal && statusMeta && (
+    <>
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1.5">
         <div class="flex items-center gap-2">
@@ -216,5 +226,7 @@ const proposalSchema = [
         </a>
       </div>
     </section>
+    </>
+    )}
   </div>
 </ToolLayout>

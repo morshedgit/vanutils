@@ -2,55 +2,60 @@ import type { AirMonitoringStation, StationRegion, CleanAirFacility, HealthRiskC
 import stationsData from '../data/stations.json';
 import sheltersData from '../data/shelters.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only (station names, coordinates) — never presented
+// as live telemetry values. See issue #35.
 export const BASELINE_STATIONS: AirMonitoringStation[] = stationsData as AirMonitoringStation[];
 export const BASELINE_SHELTERS: CleanAirFacility[] = sheltersData as CleanAirFacility[];
 
+const CACHE_TTL_SECONDS = 300; // Open-Meteo AQ readings update every few minutes
+
 /**
- * Dynamically fetches live BAM-1020 & Open-Meteo Air Quality telemetry at the edge with fallback
+ * Dynamically fetches live BAM-1020 & Open-Meteo Air Quality telemetry at the edge.
+ * Returns ok:false (no baseline masquerading as live) when the upstream fetch fails.
  */
-export async function getLiveStations(): Promise<AirMonitoringStation[]> {
-  try {
+export async function getLiveStations(): Promise<LiveResult<AirMonitoringStation[]>> {
+  return withEdgeCache('air-quality-stations', CACHE_TTL_SECONDS, async () => {
     const lats = BASELINE_STATIONS.map((s) => s.latitude).join(',');
     const lngs = BASELINE_STATIONS.map((s) => s.longitude).join(',');
     const endpoint = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lats}&longitude=${lngs}&current=pm2_5,pm10,carbon_monoxide,nitrogen_dioxide,ozone&timezone=America/Vancouver`;
     const res = await edgeFetch<any>(endpoint, { timeoutMs: 1200 });
 
-    if (res.data) {
-      const dataArray = Array.isArray(res.data) ? res.data : [res.data];
-      return BASELINE_STATIONS.map((s, idx) => {
-        const item = dataArray[idx]?.current;
-        if (!item) return { ...s, isStale: true };
+    if (!res.data) return null;
 
-        const livePm25 = Math.round((item.pm2_5 ?? s.currentPM25) * 10) / 10;
-        const liveO3 = Math.round((item.ozone ?? 24.0) * 10) / 10;
-        const liveNo2 = Math.round((item.nitrogen_dioxide ?? 12.0) * 10) / 10;
+    const dataArray = Array.isArray(res.data) ? res.data : [res.data];
+    const liveStations: AirMonitoringStation[] = [];
 
-        // ECCC Canadian AQHI calculation
-        const termO3 = Math.exp(0.000537 * liveO3) - 1;
-        const termNO2 = Math.exp(0.000871 * liveNo2) - 1;
-        const termPM25 = Math.exp(0.000487 * livePm25) - 1;
-        const calculatedAqhi = Math.min(10, Math.max(1, Math.round((10 / 10.4) * 100 * (termO3 + termNO2 + termPM25))));
-        const riskCategory: HealthRiskCategory =
-          calculatedAqhi <= 3 ? 'low' : calculatedAqhi <= 6 ? 'moderate' : calculatedAqhi <= 10 ? 'high' : 'very_high';
+    BASELINE_STATIONS.forEach((s, idx) => {
+      const item = dataArray[idx]?.current;
+      if (!item) return;
 
-        return {
-          ...s,
-          currentAQHI: calculatedAqhi,
-          currentPM25: livePm25,
-          riskCategory,
-          primaryPollutant: livePm25 >= 25 ? 'PM2.5' : (liveO3 >= 50 ? 'Ozone' : 'PM2.5'),
-          lastSampledTime: new Date().toISOString(),
-          isStale: false,
-        };
+      const livePm25 = Math.round((item.pm2_5 ?? s.currentPM25) * 10) / 10;
+      const liveO3 = Math.round((item.ozone ?? 24.0) * 10) / 10;
+      const liveNo2 = Math.round((item.nitrogen_dioxide ?? 12.0) * 10) / 10;
+
+      // ECCC Canadian AQHI calculation
+      const termO3 = Math.exp(0.000537 * liveO3) - 1;
+      const termNO2 = Math.exp(0.000871 * liveNo2) - 1;
+      const termPM25 = Math.exp(0.000487 * livePm25) - 1;
+      const calculatedAqhi = Math.min(10, Math.max(1, Math.round((10 / 10.4) * 100 * (termO3 + termNO2 + termPM25))));
+      const riskCategory: HealthRiskCategory =
+        calculatedAqhi <= 3 ? 'low' : calculatedAqhi <= 6 ? 'moderate' : calculatedAqhi <= 10 ? 'high' : 'very_high';
+
+      liveStations.push({
+        ...s,
+        currentAQHI: calculatedAqhi,
+        currentPM25: livePm25,
+        riskCategory,
+        primaryPollutant: livePm25 >= 25 ? 'PM2.5' : (liveO3 >= 50 ? 'Ozone' : 'PM2.5'),
+        lastSampledTime: new Date().toISOString(),
       });
-    }
-  } catch (e) {}
+    });
 
-  return BASELINE_STATIONS.map((s) => ({
-    ...s,
-    isStale: true,
-  }));
+    return liveStations.length > 0 ? liveStations : null;
+  });
 }
 
 export function getAllStations(): AirMonitoringStation[] {

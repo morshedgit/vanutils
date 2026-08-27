@@ -7,6 +7,7 @@ import { getLiveNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/ca
 import { getLiveFacilities, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
 import { getLiveCrossings } from '../../tools/bridge-traffic/services/bridgeService';
 import { getLiveStations } from '../../tools/air-quality/services/airQualityService';
+import LiveDataUnavailable from './LiveDataUnavailable.astro';
 import { getLiveProposals } from '../../tools/civic-development/services/civicService';
 import { getLiveEvents } from '../../tools/community-events/services/eventService';
 import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
@@ -24,7 +25,8 @@ interface Props {
 const { tool } = Astro.props;
 
 // Fetch live telemetry for high-density listings at the edge
-const allBeaches = tool.id === 'can-i-swim' ? await getLiveBeaches() : [];
+const swimResult = tool.id === 'can-i-swim' ? await getLiveBeaches() : null;
+const allBeaches = swimResult?.ok ? swimResult.data : [];
 const initialBeaches = allBeaches.slice(0, 4);
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const cautionBeachesCount = allBeaches.filter((b) => b.currentStatus === 'caution').length;
@@ -32,7 +34,7 @@ const advisoryBeachesCount = allBeaches.filter((b) => b.currentStatus === 'advis
 const validBeaches = allBeaches.filter((b) => typeof b.latestSample?.eColiCount === 'number');
 const avgEColi = validBeaches.length > 0
   ? Math.round(validBeaches.reduce((acc, b) => acc + b.latestSample.eColiCount, 0) / validBeaches.length)
-  : 26;
+  : 0;
 
 const allFerryRoutes = tool.id === 'bc-ferries' ? await getLiveRoutes() : [];
 const initialFerryRoutes = allFerryRoutes.slice(0, 3);
@@ -68,32 +70,37 @@ const lionsGateLanes = lionsGate?.counterflow?.activeConfiguration
   ? (lionsGate.counterflow.activeConfiguration.includes('2 Lanes Northbound') ? '2 NB Active' : '1 NB Active')
   : 'Flowing';
 
-const allStations = tool.id === 'air-quality' ? await getLiveStations() : [];
+const airResult = tool.id === 'air-quality' ? await getLiveStations() : null;
+const allStations = airResult?.ok ? airResult.data : [];
 const initialStations = allStations.slice(0, 4);
 const avgAqhi = allStations.length > 0
   ? Math.round(allStations.reduce((acc, s) => acc + s.currentAQHI, 0) / allStations.length)
-  : 2;
+  : 0;
 
-const allProposals = tool.id === 'civic-development' ? await getLiveProposals() : [];
+const civicResult = tool.id === 'civic-development' ? await getLiveProposals() : null;
+const allProposals = civicResult?.ok ? civicResult.data : [];
 const initialProposals = allProposals.slice(0, 4);
 const avgStoreys = allProposals.length > 0
   ? Math.round(allProposals.reduce((sum, p) => sum + p.storeys, 0) / allProposals.length)
-  : 24;
+  : 0;
 const avgFsr = allProposals.length > 0
   ? (allProposals.reduce((sum, p) => sum + p.proposedFSR, 0) / allProposals.length).toFixed(1)
-  : '7.5';
+  : '0';
 
-const allEvents = tool.id === 'community-events' ? await getLiveEvents() : [];
+const eventsResult = tool.id === 'community-events' ? await getLiveEvents() : null;
+const allEvents = eventsResult?.ok ? eventsResult.data : [];
 const initialEvents = allEvents.slice(0, 4);
 
-const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
+const schoolsResult = tool.id === 'school-catchment' ? await getLiveSchools() : null;
+const allSchools = schoolsResult?.ok ? schoolsResult.data : [];
 const initialSchools = allSchools.slice(0, 4);
 const frenchSchoolsCount = allSchools.filter((s) => s.programs?.includes('early_french_immersion') || s.programs?.includes('late_french_immersion')).length;
 const englishSchoolsCount = allSchools.filter((s) => s.programs?.includes('english_regular')).length;
-const englishPct = allSchools.length > 0 ? Math.round((englishSchoolsCount / allSchools.length) * 100) : 60;
-const frenchPct = allSchools.length > 0 ? Math.round((frenchSchoolsCount / allSchools.length) * 100) : 40;
+const englishPct = allSchools.length > 0 ? Math.round((englishSchoolsCount / allSchools.length) * 100) : 0;
+const frenchPct = allSchools.length > 0 ? Math.round((frenchSchoolsCount / allSchools.length) * 100) : 0;
 
-const allNews = tool.id === 'local-news' ? await getLiveNews() : [];
+const newsResult = tool.id === 'local-news' ? await getLiveNews() : null;
+const allNews = newsResult?.ok ? newsResult.data : [];
 const initialNews = allNews.slice(0, 4);
 
 const marketHeartbeat = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
@@ -141,17 +148,17 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     
     <a href={tool.path} class="shrink-0">
       <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
-        {tool.id === 'can-i-swim' && `${safeBeachesCount}/${allBeaches.length} Safe`}
+        {tool.id === 'can-i-swim' && (swimResult?.ok ? `${safeBeachesCount}/${allBeaches.length} Safe` : 'Unavailable')}
         {tool.id === 'bc-ferries' && `${allFerryRoutes.length} Live Routes`}
         {tool.id === 'mountain-snow' && snowBadgeText}
         {tool.id === 'evo-parking' && `${safeNeighbourhoodsCount}/${allNeighbourhoods.length} Safe Zones`}
         {tool.id === 'health-wait-times' && minWaitText}
         {tool.id === 'bridge-traffic' && lionsGateLanes}
-        {tool.id === 'air-quality' && `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})`}
-        {tool.id === 'civic-development' && `${allProposals.length} Proposals`}
-        {tool.id === 'community-events' && `${allEvents.length} Free Events`}
-        {tool.id === 'school-catchment' && 'VSB SD39'}
-        {tool.id === 'local-news' && 'Live Wire'}
+        {tool.id === 'air-quality' && (airResult?.ok ? `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})` : 'Unavailable')}
+        {tool.id === 'civic-development' && (civicResult?.ok ? `${allProposals.length} Proposals` : 'Unavailable')}
+        {tool.id === 'community-events' && (eventsResult?.ok ? `${allEvents.length} Free Events` : 'Unavailable')}
+        {tool.id === 'school-catchment' && (schoolsResult?.ok ? 'VSB SD39' : 'Unavailable')}
+        {tool.id === 'local-news' && (newsResult?.ok ? 'Live Wire' : 'Unavailable')}
         {tool.id === 'housing-market' && `${sarPercent}% SAR`}
         {tool.id === 'sports-courts' && `${totalCourtsCount} Courts`}
         {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
@@ -165,7 +172,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
   <div class="my-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80">
     
     <!-- 1. CAN I SWIM: 30-Day Regional E. coli Area Curve & Safety Distribution Bar -->
-    {tool.id === 'can-i-swim' && (
+    {tool.id === 'can-i-swim' && !swimResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'can-i-swim' && swimResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1">
@@ -376,7 +386,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 7. AIR QUALITY: 24h PM2.5 Particulate Area Sparkline & AQHI Gauge -->
-    {tool.id === 'air-quality' && (
+    {tool.id === 'air-quality' && !airResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'air-quality' && airResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>24h PM2.5 Fine Particulate</span>
@@ -414,7 +427,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 8. CIVIC DEVELOPMENT: Skyline Tower Height Distribution -->
-    {tool.id === 'civic-development' && (
+    {tool.id === 'civic-development' && !civicResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'civic-development' && civicResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Broadway Corridor Towers</span>
@@ -439,7 +455,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 9. COMMUNITY EVENTS: 7-Day Event Activity Spark-Calendar -->
-    {tool.id === 'community-events' && (
+    {tool.id === 'community-events' && !eventsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'community-events' && eventsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>7-Day Free Event Activity</span>
@@ -481,7 +500,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 10. SCHOOL CATCHMENT: Program Distribution & Feeder Bar -->
-    {tool.id === 'school-catchment' && (
+    {tool.id === 'school-catchment' && !schoolsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'school-catchment' && schoolsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>VSB Program Feeder Tracks</span>
@@ -508,7 +530,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 11. LOCAL NEWS: Breaking Frequency Pulse Visualizer -->
-    {tool.id === 'local-news' && (
+    {tool.id === 'local-news' && !newsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'local-news' && newsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1">

@@ -31,5 +31,4 @@ export interface CommunityEvent {
   transitAccess: TransitAccessInfo;
   officialSourceUrl: string;
   lastUpdated: string;             // ISO 8601
-  isStale: boolean;
 }

@@ -13,8 +13,17 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const stations = await getLiveStations();
+  const stationsResult = await getLiveStations();
   const shelters = getAllShelters();
+
+  if (!stationsResult.ok) {
+    return new Response(JSON.stringify({ error: stationsResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const stations = stationsResult.data;
 
   if (stationId) {
     const station = getStationById(stationId, stations);

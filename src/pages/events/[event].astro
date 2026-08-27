@@ -1,48 +1,52 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
-import { getLiveEvents, getEventById, getCategoryMeta } from '../../tools/community-events/services/eventService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveEvents, getEventById, getCategoryMeta, BASELINE_EVENTS } from '../../tools/community-events/services/eventService';
 
 // Tiered Edge Cache: 30-minute edge TTL, 2-hour background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200');
 
 const { event: eventId } = Astro.params;
-const allEvents = await getLiveEvents();
-const event = getEventById(eventId || '', allEvents);
 
-if (!event) {
+// Baseline lookup is metadata-only (title/venue) so an unknown id still 404s
+// even when the live upstream is down; it is never used for telemetry values.
+const eventMeta = getEventById(eventId || '', BASELINE_EVENTS);
+if (!eventMeta) {
   return Astro.redirect('/events');
 }
 
-const catMeta = getCategoryMeta(event.category);
-const startDate = new Date(event.startDateTime);
-const endDate = new Date(event.endDateTime);
+const eventsResult = await getLiveEvents();
+const event = eventsResult.ok ? getEventById(eventId || '', eventsResult.data) : undefined;
+const catMeta = event ? getCategoryMeta(event.category) : null;
+const startDate = event ? new Date(event.startDateTime) : null;
+const endDate = event ? new Date(event.endDateTime) : null;
 
 const eventSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'Event',
-    name: event.title,
-    description: event.shortDescription,
-    startDate: event.startDateTime,
-    endDate: event.endDateTime,
+    name: eventMeta.title,
+    description: eventMeta.shortDescription,
+    startDate: eventMeta.startDateTime,
+    endDate: eventMeta.endDateTime,
     isAccessibleForFree: true,
     location: {
       '@type': 'Place',
-      name: event.venueName,
+      name: eventMeta.venueName,
       address: {
         '@type': 'PostalAddress',
-        streetAddress: event.address,
-        addressLocality: event.neighbourhood,
+        streetAddress: eventMeta.address,
+        addressLocality: eventMeta.neighbourhood,
         addressRegion: 'BC',
         addressCountry: 'CA',
       },
     },
     organizer: {
       '@type': 'Organization',
-      name: event.organization,
+      name: eventMeta.organization,
     },
-    url: `https://vanheartbeat.ca/events/${event.id}`,
+    url: `https://vanheartbeat.ca/events/${eventMeta.id}`,
   },
   {
     '@context': 'https://schema.org',
@@ -50,7 +54,7 @@ const eventSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Community Events', item: 'https://vanheartbeat.ca/events' },
-      { '@type': 'ListItem', position: 3, name: event.title, item: `https://vanheartbeat.ca/events/${event.id}` },
+      { '@type': 'ListItem', position: 3, name: eventMeta.title, item: `https://vanheartbeat.ca/events/${eventMeta.id}` },
     ],
   },
 ];
@@ -58,10 +62,10 @@ const eventSchema = [
 
 <ToolLayout
   toolId="community-events"
-  title={`${event.title} — Free Community Event`}
-  description={`Schedule, venue location, transit directions, and admission details for ${event.title}.`}
-  currentPath={`/events/${event.id}`}
-  badgeText="100% Free Admission"
+  title={`${eventMeta.title} — Free Community Event`}
+  description={`Schedule, venue location, transit directions, and admission details for ${eventMeta.title}.`}
+  currentPath={`/events/${eventMeta.id}`}
+  badgeText={event ? '100% Free Admission' : 'Live Data Unavailable'}
   status="active"
 >
   <JsonLd schema={eventSchema} />
@@ -74,14 +78,20 @@ const eventSchema = [
         <span>/</span>
         <a href="/events" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Events Radar</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate">{event.title}</span>
+        <span class="text-slate-900 dark:text-white truncate">{eventMeta.title}</span>
       </div>
       <span class="text-xs text-slate-400">
-        Hosted by {event.organization}
+        Hosted by {eventMeta.organization}
       </span>
     </nav>
 
+    {!event && (
+      <LiveDataUnavailable toolName={`${eventMeta.title}`} variant="page" error={!eventsResult.ok ? eventsResult.error : undefined} />
+    )}
+
     <!-- Event Hero Header -->
+    {event && catMeta && startDate && endDate && (
+    <>
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1.5">
         <div class="flex items-center gap-2">
@@ -197,5 +207,7 @@ const eventSchema = [
         Official Host Page ({event.organization}) →
       </a>
     </div>
+    </>
+    )}
   </div>
 </ToolLayout>
