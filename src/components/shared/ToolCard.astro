@@ -8,9 +8,6 @@ import { getLiveFacilities, formatWaitTime } from '../../tools/health-wait-times
 import { getLiveCrossings } from '../../tools/bridge-traffic/services/bridgeService';
 import { getLiveStations } from '../../tools/air-quality/services/airQualityService';
 import LiveDataUnavailable from './LiveDataUnavailable.astro';
-import { getLiveProposals } from '../../tools/civic-development/services/civicService';
-import { getLiveEvents } from '../../tools/community-events/services/eventService';
-import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
 import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat, formatCurrency, getConditionLabel } from '../../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
@@ -82,27 +79,6 @@ const avgAqhi = allStations.length > 0
   ? Math.round(allStations.reduce((acc, s) => acc + s.currentAQHI, 0) / allStations.length)
   : 0;
 
-const civicResult = tool.id === 'civic-development' ? await getLiveProposals() : null;
-const allProposals = civicResult?.ok ? civicResult.data : [];
-const initialProposals = allProposals.slice(0, 4);
-const avgStoreys = allProposals.length > 0
-  ? Math.round(allProposals.reduce((sum, p) => sum + p.storeys, 0) / allProposals.length)
-  : 0;
-const avgFsr = allProposals.length > 0
-  ? (allProposals.reduce((sum, p) => sum + p.proposedFSR, 0) / allProposals.length).toFixed(1)
-  : '0';
-
-const eventsResult = tool.id === 'community-events' ? await getLiveEvents() : null;
-const allEvents = eventsResult?.ok ? eventsResult.data : [];
-const initialEvents = allEvents.slice(0, 4);
-
-const schoolsResult = tool.id === 'school-catchment' ? await getLiveSchools() : null;
-const allSchools = schoolsResult?.ok ? schoolsResult.data : [];
-const initialSchools = allSchools.slice(0, 4);
-const frenchSchoolsCount = allSchools.filter((s) => s.programs?.includes('early_french_immersion') || s.programs?.includes('late_french_immersion')).length;
-const englishSchoolsCount = allSchools.filter((s) => s.programs?.includes('english_regular')).length;
-const englishPct = allSchools.length > 0 ? Math.round((englishSchoolsCount / allSchools.length) * 100) : 0;
-const frenchPct = allSchools.length > 0 ? Math.round((frenchSchoolsCount / allSchools.length) * 100) : 0;
 
 const newsResult = tool.id === 'local-news' ? await getLiveNews() : null;
 const allNews = newsResult?.ok ? newsResult.data : [];
@@ -165,9 +141,6 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
         {tool.id === 'health-wait-times' && (healthResult?.ok ? minWaitText : 'Unavailable')}
         {tool.id === 'bridge-traffic' && (crossingsResult?.ok ? lionsGateLanes : 'Unavailable')}
         {tool.id === 'air-quality' && (airResult?.ok ? `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})` : 'Unavailable')}
-        {tool.id === 'civic-development' && (civicResult?.ok ? `${allProposals.length} Proposals` : 'Unavailable')}
-        {tool.id === 'community-events' && (eventsResult?.ok ? `${allEvents.length} Free Events` : 'Unavailable')}
-        {tool.id === 'school-catchment' && (schoolsResult?.ok ? 'VSB SD39' : 'Unavailable')}
         {tool.id === 'local-news' && (newsResult?.ok ? 'Live Wire' : 'Unavailable')}
         {tool.id === 'housing-market' && (marketResult?.ok ? `${sarPercent}% SAR` : 'Unavailable')}
         {tool.id === 'sports-courts' && (sportsResult?.ok ? `${totalCourtsCount} Courts` : 'Unavailable')}
@@ -447,109 +420,6 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
             <span>Mod (4-6)</span>
             <span>High (7-10)</span>
           </div>
-        </div>
-      </div>
-    )}
-
-    <!-- 8. CIVIC DEVELOPMENT: Skyline Tower Height Distribution -->
-    {tool.id === 'civic-development' && !civicResult?.ok && (
-      <LiveDataUnavailable toolName={tool.name} variant="card" />
-    )}
-    {tool.id === 'civic-development' && civicResult?.ok && (
-      <div class="space-y-2">
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-          <span>Broadway Corridor Towers</span>
-          <span class="text-sky-600 dark:text-sky-400">{allProposals.length} Proposals</span>
-        </div>
-
-        <!-- Visual Skyline Silhouette Bar Chart -->
-        <div class="h-10 flex items-end justify-between gap-1.5 px-2 pt-1 border-b border-slate-200 dark:border-slate-800">
-          {allProposals.slice(0, 6).map((p) => {
-            const heightPct = Math.min(100, Math.max(25, Math.round((p.storeys / 45) * 100)));
-            return (
-              <div class="flex-1 bg-sky-500/80 rounded-t" style={`height: ${heightPct}%`} title={`${p.storeys} Storeys (${p.address})`}></div>
-            );
-          })}
-        </div>
-
-        <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-          <span>Average: {avgStoreys} Storeys</span>
-          <span>{avgFsr} Proposed FSR</span>
-        </div>
-      </div>
-    )}
-
-    <!-- 9. COMMUNITY EVENTS: 7-Day Event Activity Spark-Calendar -->
-    {tool.id === 'community-events' && !eventsResult?.ok && (
-      <LiveDataUnavailable toolName={tool.name} variant="card" />
-    )}
-    {tool.id === 'community-events' && eventsResult?.ok && (
-      <div class="space-y-2">
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-          <span>7-Day Free Event Activity</span>
-          <span class="text-emerald-600 dark:text-emerald-400 font-bold">{allEvents.length} Free Events</span>
-        </div>
-
-        <!-- 7-Day Column Activity Chart -->
-        <div class="h-10 flex items-end justify-between gap-1 px-1">
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-t h-2"></div>
-            <span class="text-[8px] text-slate-400">M</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-t h-3"></div>
-            <span class="text-[8px] text-slate-400">T</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500/50 rounded-t h-5"></div>
-            <span class="text-[8px] text-slate-400">W</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500/60 rounded-t h-4"></div>
-            <span class="text-[8px] text-slate-400">T</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500/80 rounded-t h-8"></div>
-            <span class="text-[8px] font-bold text-emerald-600">F</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500 rounded-t h-10"></div>
-            <span class="text-[8px] font-bold text-emerald-600">S</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500 rounded-t h-9"></div>
-            <span class="text-[8px] font-bold text-emerald-600">S</span>
-          </div>
-        </div>
-      </div>
-    )}
-
-    <!-- 10. SCHOOL CATCHMENT: Program Distribution & Feeder Bar -->
-    {tool.id === 'school-catchment' && !schoolsResult?.ok && (
-      <LiveDataUnavailable toolName={tool.name} variant="card" />
-    )}
-    {tool.id === 'school-catchment' && schoolsResult?.ok && (
-      <div class="space-y-2">
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-          <span>VSB Program Feeder Tracks</span>
-          <span class="text-sky-600 dark:text-sky-400">SD39 Vancouver</span>
-        </div>
-
-        <!-- Program Proportion Bar -->
-        <div class="space-y-1">
-          <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden">
-            <div class="bg-sky-500" style={`width: ${englishPct}%`} title={`Standard English (${englishPct}%)`}></div>
-            <div class="bg-indigo-500" style={`width: ${frenchPct}%`} title={`French Immersion (${frenchPct}%)`}></div>
-          </div>
-          <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-            <span>📘 {englishPct}% English</span>
-            <span>🇫🇷 {frenchPct}% French</span>
-          </div>
-        </div>
-
-        <div class="flex justify-between text-[9px] pt-0.5 text-slate-500 dark:text-slate-400">
-          <span>Elementary: K-7</span>
-          <span>Secondary: 8-12</span>
         </div>
       </div>
     )}
@@ -941,56 +811,6 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
       </div>
     )}
 
-    <!-- CIVIC DEVELOPMENT -->
-    {tool.id === 'civic-development' && (
-      <div class="space-y-1" id="main-card-civic-grid">
-        {initialProposals.map((p) => (
-          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-proposal-id={p.id}>
-            <a href={`/civic/${p.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
-              {p.address}
-            </a>
-            <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
-              {p.storeys}st • {p.units.totalUnits}u
-            </span>
-          </div>
-        ))}
-      </div>
-    )}
-
-    <!-- COMMUNITY EVENTS -->
-    {tool.id === 'community-events' && (
-      <div class="space-y-1" id="main-card-events-grid">
-        {initialEvents.map((e) => {
-          const d = new Date(e.startDateTime);
-          return (
-            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-event-id={e.id}>
-              <a href={`/events/${e.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
-                {e.title}
-              </a>
-              <span class="shrink-0 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400">
-                {d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric', timeZone: 'America/Vancouver' })}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    )}
-
-    <!-- SCHOOL CATCHMENT -->
-    {tool.id === 'school-catchment' && (
-      <div class="space-y-1" id="main-card-schools-grid">
-        {initialSchools.map((s) => (
-          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-school-id={s.id}>
-            <a href={`/schools/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
-              {s.name}
-            </a>
-            <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
-              {s.programs.includes('early_french_immersion') ? '🇫🇷 French' : '📘 K-7'}
-            </span>
-          </div>
-        ))}
-      </div>
-    )}
 
     <!-- LOCAL NEWS -->
     {tool.id === 'local-news' && (

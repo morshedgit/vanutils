@@ -7,9 +7,6 @@ import { getAllNeighbourhoods } from '../tools/carshare-parking/services/parking
 import { getLiveFacilities } from '../tools/health-wait-times/services/healthService';
 import { getLiveCrossings } from '../tools/bridge-traffic/services/bridgeService';
 import { getLiveStations } from '../tools/air-quality/services/airQualityService';
-import { getLiveProposals } from '../tools/civic-development/services/civicService';
-import { getLiveEvents } from '../tools/community-events/services/eventService';
-import { getLiveSchools } from '../tools/school-catchment/services/catchmentService';
 import { getLiveNews } from '../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../tools/sports-facilities/services/sportsService';
@@ -104,36 +101,6 @@ export const GET: APIRoute = async ({ request }) => {
     if (stationsResult.ok) {
       stationsResult.data.forEach((s) => {
         dynamicRoutes.push({ url: `${baseUrl}/air/${s.id}`, priority: '0.8', changefreq: 'hourly' });
-      });
-    }
-  } catch (e) {}
-
-  // Civic Development
-  try {
-    const proposalsResult = await getLiveProposals();
-    if (proposalsResult.ok) {
-      proposalsResult.data.forEach((p) => {
-        dynamicRoutes.push({ url: `${baseUrl}/civic/${p.id}`, priority: '0.7', changefreq: 'weekly' });
-      });
-    }
-  } catch (e) {}
-
-  // Community Events
-  try {
-    const eventsResult = await getLiveEvents();
-    if (eventsResult.ok) {
-      eventsResult.data.forEach((ev) => {
-        dynamicRoutes.push({ url: `${baseUrl}/events/${ev.id}`, priority: '0.8', changefreq: 'daily' });
-      });
-    }
-  } catch (e) {}
-
-  // School Catchment
-  try {
-    const schoolsResult = await getLiveSchools();
-    if (schoolsResult.ok) {
-      schoolsResult.data.forEach((sc) => {
-        dynamicRoutes.push({ url: `${baseUrl}/schools/${sc.id}`, priority: '0.7', changefreq: 'weekly' });
       });
     }
   } catch (e) {}

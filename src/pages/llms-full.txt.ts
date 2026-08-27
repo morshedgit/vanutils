@@ -8,8 +8,6 @@ import { getLiveStations as getLiveAirStations } from '../tools/air-quality/serv
 import { getLiveSportsTeams } from '../tools/sports-teams/services/sportsTeamsService';
 import { getLiveSalesEvents } from '../tools/sales-events/services/salesService';
 import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketService';
-import { getLiveProposals } from '../tools/civic-development/services/civicService';
-import { getLiveEvents } from '../tools/community-events/services/eventService';
 import { getAllBeaches } from '../tools/can-i-swim/services/vchScraper';
 import { getAllNeighbourhoods, evaluateNeighbourhoodSpot } from '../tools/carshare-parking/services/parkingEvaluator';
 
@@ -31,8 +29,6 @@ export const GET: APIRoute = async ({ request }) => {
     sportsTeamsResult,
     salesResult,
     marketResult,
-    proposalsResult,
-    communityEventsResult,
   ] = await Promise.all([
     getLiveWeather(),
     getLiveMountains(),
@@ -43,8 +39,6 @@ export const GET: APIRoute = async ({ request }) => {
     getLiveSportsTeams(),
     getLiveSalesEvents(),
     getLiveMarketHeartbeat(),
-    getLiveProposals(),
-    getLiveEvents(),
   ]);
 
   const weather = weatherResult.ok ? weatherResult.data : [];
@@ -56,8 +50,6 @@ export const GET: APIRoute = async ({ request }) => {
   const market = marketResult.ok ? marketResult.data : null;
   const sportsTeamsData = sportsTeamsResult.ok ? sportsTeamsResult.data : { teams: [], gameDaySummary: { gamesTodayCount: 0, imminentGame: null } };
   const sales = salesResult.ok ? salesResult.data : [];
-  const proposals = proposalsResult.ok ? proposalsResult.data : [];
-  const communityEvents = communityEventsResult.ok ? communityEventsResult.data : [];
 
   const beaches = getAllBeaches();
   const neighbourhoods = getAllNeighbourhoods();
@@ -132,16 +124,6 @@ ${market ? `- **Metro Vancouver Composite**: Benchmark Price: $${market.metroOve
 
 ## 11. Warehouse & Sample Sales Radar (/sales)
 ${sales.map((s) => `- **${s.name}** (${s.brand}): ${s.startDate} to ${s.endDate} @ ${s.venueName} | Discount: ${s.discountRange} | Entry: ${s.entryType.replace(/_/g, ' ')}`).join('\n')}
-
----
-
-## 12. Civic Rezoning & Broadway Plan Radar (/civic)
-${proposals.map((p) => `- **${p.address}** (${p.neighbourhood}): ${p.storeys} Storeys | ${p.proposedFSR} FSR | ${p.units.totalUnits} Units (${p.units.belowMarketRental} Below-Market) | Status: ${p.status.toUpperCase()}`).join('\n')}
-
----
-
-## 13. Free Community Events (/events)
-${communityEvents.map((e) => `- **${e.title}**: ${e.startDateTime.split('T')[0]} @ ${e.venueName} (${e.neighbourhood}) | Free Admission: Yes | All Ages: ${e.isAllAges ? 'Yes' : 'No'}`).join('\n')}
 `;
 
   return new Response(markdown, {
