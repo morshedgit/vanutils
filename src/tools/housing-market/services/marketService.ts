@@ -2,54 +2,55 @@ import type { SubmarketPulse, MortgageBenchmark, MarketHeartbeatData, MarketCond
 import marketData from '../data/market.json';
 import mortgageData from '../data/mortgage.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only (REBGV benchmark snapshots, refreshed by the
+// manual sync script) — never presented as live telemetry. See issue #35.
 export const BASELINE_MARKET: { metroOverview: SubmarketPulse; submarkets: SubmarketPulse[] } = marketData as any;
 export const BASELINE_MORTGAGE: MortgageBenchmark = mortgageData as MortgageBenchmark;
 
-/**
- * Dynamically loads live market data and Bank of Canada interest rates at the edge with fallback
- */
-export async function getLiveMarketHeartbeat(): Promise<MarketHeartbeatData> {
-  const now = new Date();
-  let liveMortgage = { ...BASELINE_MORTGAGE };
+const CACHE_TTL_SECONDS = 86400; // Bank of Canada rate/REBGV stats are daily at most
 
-  try {
+/**
+ * Dynamically loads live Bank of Canada interest rates at the edge.
+ * Returns ok:false (no baseline mortgage rates masquerading as live) when
+ * the upstream fetch fails — this is the only genuinely live-fetched piece
+ * of this module today; submarket benchmark prices are seed/reference data
+ * only until a live REBGV feed is integrated.
+ */
+export async function getLiveMarketHeartbeat(): Promise<LiveResult<MarketHeartbeatData>> {
+  return withEdgeCache<MarketHeartbeatData>('housing-market-heartbeat', CACHE_TTL_SECONDS, async () => {
+    const now = new Date();
     const endpoint = 'https://www.bankofcanada.ca/valet/observations/V39079/json?recent=1';
     const res = await edgeFetch<{ observations: Array<Record<string, any>> }>(endpoint, { timeoutMs: 1200 });
 
-    if (res.data && Array.isArray(res.data.observations) && res.data.observations.length > 0) {
-      const latestObs = res.data.observations[res.data.observations.length - 1];
-      const rateStr = latestObs?.V39079?.v ?? latestObs?.v ?? latestObs?.V39079;
-      const targetRate = typeof rateStr === 'number' ? rateStr : parseFloat(rateStr);
-      if (!isNaN(targetRate) && targetRate > 0) {
-        const prime = targetRate + 2.2;
-        const variableRate = prime - 0.75;
-        const stressRate = Math.max(5.25, prime + 1.0);
-        liveMortgage = {
-          ...liveMortgage,
-          bocOvernightRate: targetRate,
-          primeRate: parseFloat(prime.toFixed(2)),
-          variable5YearBenchmark: parseFloat(variableRate.toFixed(2)),
-          stressTestQualifyingRate: parseFloat(stressRate.toFixed(2)),
-          lastUpdated: latestObs.d || now.toISOString(),
-        };
-      }
-    }
-  } catch (e) {}
+    if (!res.data || !Array.isArray(res.data.observations) || res.data.observations.length === 0) return null;
 
-  return {
-    metroOverview: {
-      ...BASELINE_MARKET.metroOverview,
-      isStale: false,
-    },
-    submarkets: BASELINE_MARKET.submarkets.map((s) => ({
-      ...s,
-      isStale: false,
-    })),
-    mortgage: liveMortgage,
-    lastUpdated: now.toISOString(),
-    isStale: false,
-  };
+    const latestObs = res.data.observations[res.data.observations.length - 1];
+    const rateStr = latestObs?.V39079?.v ?? latestObs?.v ?? latestObs?.V39079;
+    const targetRate = typeof rateStr === 'number' ? rateStr : parseFloat(rateStr);
+    if (isNaN(targetRate) || targetRate <= 0) return null;
+
+    const prime = targetRate + 2.2;
+    const variableRate = prime - 0.75;
+    const stressRate = Math.max(5.25, prime + 1.0);
+    const liveMortgage: MortgageBenchmark = {
+      ...BASELINE_MORTGAGE,
+      bocOvernightRate: targetRate,
+      primeRate: parseFloat(prime.toFixed(2)),
+      variable5YearBenchmark: parseFloat(variableRate.toFixed(2)),
+      stressTestQualifyingRate: parseFloat(stressRate.toFixed(2)),
+      lastUpdated: latestObs.d || now.toISOString(),
+    };
+
+    return {
+      metroOverview: BASELINE_MARKET.metroOverview,
+      submarkets: BASELINE_MARKET.submarkets,
+      mortgage: liveMortgage,
+      lastUpdated: now.toISOString(),
+    };
+  });
 }
 
 export function getAllSubmarkets(): SubmarketPulse[] {

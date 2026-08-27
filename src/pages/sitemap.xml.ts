@@ -14,7 +14,7 @@ import { getLiveNews } from '../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../tools/sports-facilities/services/sportsService';
 import { getLiveWeather } from '../tools/weather-forecast/services/weatherService';
-import { getLiveSportsTeams } from '../tools/sports-teams/services/sportsTeamsService';
+import { getAllTeams } from '../tools/sports-teams/services/sportsTeamsService';
 import { getLiveSalesEvents } from '../tools/sales-events/services/salesService';
 
 export const GET: APIRoute = async ({ request }) => {
@@ -150,10 +150,12 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Real Estate Submarkets
   try {
-    const market = await getLiveMarketHeartbeat();
-    market.submarkets.forEach((sm) => {
-      dynamicRoutes.push({ url: `${baseUrl}/market/${sm.id}`, priority: '0.7', changefreq: 'daily' });
-    });
+    const marketResult = await getLiveMarketHeartbeat();
+    if (marketResult.ok) {
+      marketResult.data.submarkets.forEach((sm) => {
+        dynamicRoutes.push({ url: `${baseUrl}/market/${sm.id}`, priority: '0.7', changefreq: 'daily' });
+      });
+    }
   } catch (e) {}
 
   // Sports Facilities
@@ -174,8 +176,7 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Major Sports Teams
   try {
-    const { teams } = await getLiveSportsTeams();
-    teams.forEach((tm) => {
+    getAllTeams().forEach((tm) => {
       dynamicRoutes.push({ url: `${baseUrl}/sports-teams/${tm.id}`, priority: '0.8', changefreq: 'daily' });
     });
   } catch (e) {}

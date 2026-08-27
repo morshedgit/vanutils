@@ -4,11 +4,14 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import { getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
 import TeamCard from '../../tools/sports-teams/components/TeamCard.astro';
 import GameCountdown from '../../tools/sports-teams/components/GameCountdown.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 
 // Edge cache for 1 minute with 2-minute background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
 
-const { teams, gameDaySummary } = await getLiveSportsTeams();
+const sportsTeamsResult = await getLiveSportsTeams();
+const teams = sportsTeamsResult.ok ? sportsTeamsResult.data.teams : [];
+const gameDaySummary = sportsTeamsResult.ok ? sportsTeamsResult.data.gameDaySummary : null;
 
 const sportsSchema = [
   {
@@ -102,14 +105,20 @@ const sportsSchema = [
         </div>
         <div class="h-8 w-px bg-slate-200 dark:bg-slate-800"></div>
         <div class="text-center px-2">
-          <div class="text-lg font-black text-emerald-600 dark:text-emerald-400">{gameDaySummary.gamesTodayCount}</div>
+          <div class="text-lg font-black text-emerald-600 dark:text-emerald-400">{gameDaySummary?.gamesTodayCount ?? 0}</div>
           <div class="text-[10px] text-slate-500 uppercase font-bold">Games Today</div>
         </div>
       </div>
     </div>
 
+    {!sportsTeamsResult.ok && (
+      <LiveDataUnavailable toolName="Sports Teams Radar" variant="page" error={sportsTeamsResult.error} />
+    )}
+
     <!-- Live Game Day Countdown & Imminent Matchup Banner -->
-    <GameCountdown imminentGame={gameDaySummary.imminentGame} gamesTodayCount={gameDaySummary.gamesTodayCount} />
+    {gameDaySummary && (
+      <GameCountdown imminentGame={gameDaySummary.imminentGame} gamesTodayCount={gameDaySummary.gamesTodayCount} />
+    )}
 
     <!-- Filter Bar -->
     <div class="flex items-center justify-between gap-4 overflow-x-auto pb-2 scrollbar-none">

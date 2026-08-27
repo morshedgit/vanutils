@@ -25,9 +25,19 @@ export const GET: APIRoute = async ({ url }) => {
     });
   }
 
-  const heartbeat = await getLiveSportsTeams();
+  const result = await getLiveSportsTeams();
 
-  return new Response(JSON.stringify(heartbeat), {
+  if (!result.ok) {
+    return new Response(JSON.stringify({ error: result.error }), {
+      status: 503,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+      },
+    });
+  }
+
+  return new Response(JSON.stringify(result.data), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',

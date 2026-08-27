@@ -3,29 +3,34 @@ import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
 import MarketConditionBadge from '../../tools/housing-market/components/MarketConditionBadge.astro';
 import MortgageRadar from '../../tools/housing-market/components/MortgageRadar.astro';
-import { getLiveMarketHeartbeat, getSubmarketById, formatCurrency, formatPercent } from '../../tools/housing-market/services/marketService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveMarketHeartbeat, getSubmarketById, formatCurrency, formatPercent, BASELINE_MARKET } from '../../tools/housing-market/services/marketService';
 
 // Tiered Edge Cache: 24-hour edge TTL, 7-day background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
 
 const { submarket: submarketSlug } = Astro.params;
-const data = await getLiveMarketHeartbeat();
-const submarket = getSubmarketById(submarketSlug || '', [data.metroOverview, ...data.submarkets]);
 
-if (!submarket) {
+// Baseline lookup is metadata-only (name/id) so an unknown slug still 404s
+// even when the live upstream is down; it is never used for telemetry values.
+const submarketMeta = getSubmarketById(submarketSlug || '', [BASELINE_MARKET.metroOverview, ...BASELINE_MARKET.submarkets]);
+if (!submarketMeta) {
   return Astro.redirect('/market');
 }
+
+const marketResult = await getLiveMarketHeartbeat();
+const submarket = marketResult.ok ? getSubmarketById(submarketSlug || '', [marketResult.data.metroOverview, ...marketResult.data.submarkets]) : undefined;
 
 const submarketSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'FinancialProduct',
-    name: `${submarket.name} Real Estate & MLS® HPI Benchmark`,
-    description: `MLS® HPI benchmark prices, sales-to-active ratio (${submarket.salesToActiveRatio}%), rental vacancy rates, and mortgage qualification for ${submarket.name}.`,
-    url: `https://vanheartbeat.ca/market/${submarket.id.replace(/_/g, '-')}`,
+    name: `${submarketMeta.name} Real Estate & MLS® HPI Benchmark`,
+    description: `MLS® HPI benchmark prices, sales-to-active ratio, rental vacancy rates, and mortgage qualification for ${submarketMeta.name}.`,
+    url: `https://vanheartbeat.ca/market/${submarketMeta.id.replace(/_/g, '-')}`,
     areaServed: {
       '@type': 'AdministrativeArea',
-      name: submarket.name,
+      name: submarketMeta.name,
     },
   },
   {
@@ -34,7 +39,7 @@ const submarketSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Real Estate Radar', item: 'https://vanheartbeat.ca/market' },
-      { '@type': 'ListItem', position: 3, name: submarket.name, item: `https://vanheartbeat.ca/market/${submarket.id.replace(/_/g, '-')}` },
+      { '@type': 'ListItem', position: 3, name: submarketMeta.name, item: `https://vanheartbeat.ca/market/${submarketMeta.id.replace(/_/g, '-')}` },
     ],
   },
 ];
@@ -42,10 +47,10 @@ const submarketSchema = [
 
 <ToolLayout
   toolId="housing-market"
-  title={`${submarket.name} — Real Estate & Rental Heartbeat`}
-  description={`MLS® HPI benchmark prices, sales-to-active ratio (${submarket.salesToActiveRatio}%), rental vacancy rates, and mortgage qualification for ${submarket.name}.`}
-  currentPath={`/market/${submarket.id.replace(/_/g, '-')}`}
-  badgeText={submarket.name}
+  title={submarket ? `${submarket.name} — Real Estate & Rental Heartbeat` : `${submarketMeta.name} — Live Data Unavailable`}
+  description={submarket ? `MLS® HPI benchmark prices, sales-to-active ratio (${submarket.salesToActiveRatio}%), rental vacancy rates, and mortgage qualification for ${submarket.name}.` : 'Live housing market data is temporarily unavailable.'}
+  currentPath={`/market/${submarketMeta.id.replace(/_/g, '-')}`}
+  badgeText={submarketMeta.name}
   status="active"
 >
   <JsonLd schema={submarketSchema} />
@@ -58,14 +63,20 @@ const submarketSchema = [
         <span>/</span>
         <a href="/market" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Real Estate Radar</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate">{submarket.name}</span>
+        <span class="text-slate-900 dark:text-white truncate">{submarketMeta.name}</span>
       </div>
       <span class="text-xs text-slate-400">
         GVR &amp; CMHC Open Data
       </span>
     </nav>
 
+    {!submarket && (
+      <LiveDataUnavailable toolName={`${submarketMeta.name} Real Estate`} variant="page" error={!marketResult.ok ? marketResult.error : undefined} />
+    )}
+
     <!-- Submarket Hero Header -->
+    {submarket && (
+    <>
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm space-y-3">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
@@ -190,8 +201,12 @@ const submarketSchema = [
         </div>
       </div>
     </section>
+    </>
+    )}
 
     <!-- Mortgage Calculator -->
-    <MortgageRadar mortgage={data.mortgage} />
+    {marketResult.ok && (
+      <MortgageRadar mortgage={marketResult.data.mortgage} />
+    )}
   </div>
 </ToolLayout>

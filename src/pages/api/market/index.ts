@@ -13,7 +13,16 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const data = await getLiveMarketHeartbeat();
+  const marketResult = await getLiveMarketHeartbeat();
+
+  if (!marketResult.ok) {
+    return new Response(JSON.stringify({ error: marketResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const data = marketResult.data;
 
   if (submarketId) {
     const submarket = getSubmarketById(submarketId, [data.metroOverview, ...data.submarkets]);

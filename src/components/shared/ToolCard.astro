@@ -108,12 +108,13 @@ const newsResult = tool.id === 'local-news' ? await getLiveNews() : null;
 const allNews = newsResult?.ok ? newsResult.data : [];
 const initialNews = allNews.slice(0, 4);
 
-const marketHeartbeat = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
+const marketResult = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
+const marketHeartbeat = marketResult?.ok ? marketResult.data : null;
 const initialSubmarkets = marketHeartbeat ? marketHeartbeat.submarkets.slice(0, 4) : [];
-const sarPercent = marketHeartbeat?.metroOverview?.salesToActiveRatio ?? (initialSubmarkets[0]?.salesToActiveRatio ?? 18.4);
-const sarCondition = marketHeartbeat?.metroOverview?.marketCondition ? getConditionLabel(marketHeartbeat.metroOverview.marketCondition) : 'Balanced';
-const condoBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'condo')?.benchmarkPrice || 780000;
-const detachedBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'detached')?.benchmarkPrice || 1950000;
+const sarPercent = marketHeartbeat?.metroOverview?.salesToActiveRatio ?? 0;
+const sarCondition = marketHeartbeat?.metroOverview?.marketCondition ? getConditionLabel(marketHeartbeat.metroOverview.marketCondition) : '';
+const condoBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'condo')?.benchmarkPrice ?? 0;
+const detachedBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'detached')?.benchmarkPrice ?? 0;
 
 const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
 const initialSportsFacilities = allSportsFacilities.slice(0, 3);
@@ -126,7 +127,8 @@ const avgWeatherTemp = allWeatherStations.length > 0
   ? Math.round((allWeatherStations.reduce((acc, s) => acc + s.current.temperatureCelsius, 0) / allWeatherStations.length) * 10) / 10
   : 19.4;
 
-const sportsTeamsData = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
+const sportsTeamsResult = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
+const sportsTeamsData = sportsTeamsResult?.ok ? sportsTeamsResult.data : null;
 const allSportsTeams = sportsTeamsData ? sportsTeamsData.teams : [];
 const initialSportsTeams = allSportsTeams.slice(0, 4);
 
@@ -164,10 +166,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
         {tool.id === 'community-events' && (eventsResult?.ok ? `${allEvents.length} Free Events` : 'Unavailable')}
         {tool.id === 'school-catchment' && (schoolsResult?.ok ? 'VSB SD39' : 'Unavailable')}
         {tool.id === 'local-news' && (newsResult?.ok ? 'Live Wire' : 'Unavailable')}
-        {tool.id === 'housing-market' && `${sarPercent}% SAR`}
+        {tool.id === 'housing-market' && (marketResult?.ok ? `${sarPercent}% SAR` : 'Unavailable')}
         {tool.id === 'sports-courts' && `${totalCourtsCount} Courts`}
         {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
-        {tool.id === 'sports-teams' && `${allSportsTeams.length} Pro Teams`}
+        {tool.id === 'sports-teams' && (sportsTeamsResult?.ok ? `${allSportsTeams.length} Pro Teams` : 'Unavailable')}
         {tool.id === 'sales-events' && `${allSalesEvents.length} Verified Sales`}
       </span>
     </a>
@@ -582,7 +584,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 12. HOUSING MARKET: SAR % Liquidity Gauge & Benchmark Trends -->
-    {tool.id === 'housing-market' && (
+    {tool.id === 'housing-market' && !marketResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'housing-market' && marketResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Sales-to-Active Ratio (SAR %)</span>
@@ -681,6 +686,9 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 15. MAJOR SPORTS TEAMS: Live Game Day Radar & Standings -->
+    {tool.id === 'sports-teams' && !sportsTeamsData && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
     {tool.id === 'sports-teams' && sportsTeamsData && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
