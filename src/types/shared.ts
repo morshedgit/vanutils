@@ -10,6 +10,8 @@ export interface ToolMeta {
   icon: string;
   category: ToolCategory;
   status: ToolStatus;
+  /** Set to false to keep the tool's standalone route live while hiding it from the home page grid. Defaults to true. */
+  homeVisible?: boolean;
   badgeText?: string;
   previewStat?: {
     value: string;

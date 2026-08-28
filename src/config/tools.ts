@@ -10,6 +10,7 @@ export const TOOLS_REGISTRY: ToolMeta[] = [
     icon: 'sun',
     category: 'outdoors',
     status: 'active',
+    homeVisible: false,
     badgeText: 'Microclimate Radar',
     previewStat: {
       value: '19.4°C',
