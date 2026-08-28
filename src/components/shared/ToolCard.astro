@@ -11,7 +11,6 @@ import LiveDataUnavailable from './LiveDataUnavailable.astro';
 import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat, formatCurrency, getConditionLabel } from '../../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
-import { getLiveWeather } from '../../tools/weather-forecast/services/weatherService';
 import { getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
 import { getLiveSalesEvents } from '../../tools/sales-events/services/salesService';
 
@@ -98,13 +97,6 @@ const initialSportsFacilities = allSportsFacilities.slice(0, 3);
 const totalCourtsCount = allSportsFacilities.reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
 const lightedCourtsCount = allSportsFacilities.filter((f) => f.courtDetails?.hasLights).reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
 
-const weatherResult = tool.id === 'weather-forecast' ? await getLiveWeather() : null;
-const allWeatherStations = weatherResult?.ok ? weatherResult.data : [];
-const initialWeatherStations = allWeatherStations.slice(0, 4);
-const avgWeatherTemp = allWeatherStations.length > 0
-  ? Math.round((allWeatherStations.reduce((acc, s) => acc + s.current.temperatureCelsius, 0) / allWeatherStations.length) * 10) / 10
-  : 0;
-
 const sportsTeamsResult = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
 const sportsTeamsData = sportsTeamsResult?.ok ? sportsTeamsResult.data : null;
 const allSportsTeams = sportsTeamsData ? sportsTeamsData.teams : [];
@@ -144,7 +136,6 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
         {tool.id === 'local-news' && (newsResult?.ok ? 'Live Wire' : 'Unavailable')}
         {tool.id === 'housing-market' && (marketResult?.ok ? `${sarPercent}% SAR` : 'Unavailable')}
         {tool.id === 'sports-courts' && (sportsResult?.ok ? `${totalCourtsCount} Courts` : 'Unavailable')}
-        {tool.id === 'weather-forecast' && (weatherResult?.ok ? `${avgWeatherTemp}°C Regional Avg` : 'Unavailable')}
         {tool.id === 'sports-teams' && (sportsTeamsResult?.ok ? `${allSportsTeams.length} Pro Teams` : 'Unavailable')}
         {tool.id === 'sales-events' && (salesResult?.ok ? `${allSalesEvents.length} Verified Sales` : 'Unavailable')}
       </span>
@@ -524,46 +515,6 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
       </div>
     )}
 
-    <!-- 14. WEATHER: Embedded Third-Party Live Weather Map Widget (Windy.com) -->
-    {tool.id === 'weather-forecast' && !weatherResult?.ok && (
-      <LiveDataUnavailable toolName={tool.name} variant="card" />
-    )}
-    {tool.id === 'weather-forecast' && weatherResult?.ok && (
-      <div class="space-y-2">
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-          <span class="flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Live Doppler &amp; Wind Map (Windy)</span>
-          </span>
-          <span class="text-sky-600 dark:text-sky-400 font-bold">
-            {avgWeatherTemp}°C Regional Avg
-          </span>
-        </div>
-
-        <!-- Embedded Third-Party Interactive Weather Map Frame -->
-        <div class="relative w-full h-[140px] rounded-xl bg-slate-950 border border-slate-800 overflow-hidden shadow-inner group-hover:border-sky-500/50 transition-colors">
-          <iframe
-            src="https://embed.windy.com/embed2.html?lat=49.283&lon=-123.121&detailLat=49.283&detailLon=-123.121&width=100%25&height=140&zoom=9&level=surface&overlay=radar&product=radar&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"
-            class="w-full h-full border-0 pointer-events-none"
-            loading="lazy"
-            title="Metro Vancouver Live Weather Radar Map"
-          ></iframe>
-
-          <!-- Click Overlay Badge -->
-          <div class="absolute bottom-1.5 right-1.5 z-10 px-2 py-0.5 rounded-md bg-slate-950/90 border border-sky-500/40 text-[9px] font-semibold text-sky-300 backdrop-blur-xs flex items-center gap-1">
-            <span>📡 Live Radar</span>
-            <span>•</span>
-            <span>Tap to Expand →</span>
-          </div>
-        </div>
-
-        <div class="flex justify-between text-[9px] text-slate-500 dark:text-slate-400">
-          <span>📡 Third-Party WebGL Telemetry</span>
-          <span>ECCC Radar Composite</span>
-        </div>
-      </div>
-    )}
-
     <!-- 15. MAJOR SPORTS TEAMS: Live Game Day Radar & Standings -->
     {tool.id === 'sports-teams' && !sportsTeamsData && (
       <LiveDataUnavailable toolName={tool.name} variant="card" />
@@ -856,27 +807,6 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
             <span class="shrink-0 font-bold text-[11px] text-emerald-600 dark:text-emerald-400">
               {f.courtDetails?.hasLights ? '💡 Lighted' : '🟢 Open'}
             </span>
-          </div>
-        ))}
-      </div>
-    )}
-
-    <!-- MICROCLIMATE WEATHER -->
-    {tool.id === 'weather-forecast' && (
-      <div class="space-y-1" id="main-card-weather-grid">
-        {initialWeatherStations.map((s) => (
-          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-station-id={s.id}>
-            <a href={`/weather/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
-              {s.shortName}
-            </a>
-            <div class="shrink-0 flex items-center gap-2 text-[11px]">
-              <span class="font-bold text-slate-900 dark:text-white">
-                {s.current.temperatureCelsius}°C
-              </span>
-              <span class="text-slate-400">
-                {s.current.precipitation24hMm > 0 ? `🌧️ ${s.current.precipitation24hMm}mm` : '☀️ 0mm'}
-              </span>
-            </div>
           </div>
         ))}
       </div>
