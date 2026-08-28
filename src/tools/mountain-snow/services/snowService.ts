@@ -183,7 +183,7 @@ export function getPrecipitationMeta(type: PrecipitationType) {
         label: 'Fog / Low Cloud',
         icon: '🌫️',
         badgeBg: 'bg-slate-500/15 text-slate-700 dark:text-slate-300 border-slate-500/30',
-        textColor: 'text-slate-500',
+        textColor: 'text-slate-600 dark:text-slate-400',
       };
     case 'clear':
     default:
@@ -191,7 +191,7 @@ export function getPrecipitationMeta(type: PrecipitationType) {
         label: 'Clear',
         icon: '☀️',
         badgeBg: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
-        textColor: 'text-emerald-500',
+        textColor: 'text-emerald-600 dark:text-emerald-400',
       };
   }
 }
