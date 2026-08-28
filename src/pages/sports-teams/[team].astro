@@ -2,30 +2,37 @@
 import PlatformLayout from '../../layouts/PlatformLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
 import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
-import { getTeamById, getLiveSportsTeams } from '../../tools/sports-teams/services/sportsTeamsService';
+import { getTeamById, getLiveSportsTeams, BASELINE_TEAMS } from '../../tools/sports-teams/services/sportsTeamsService';
 import FormBadge from '../../tools/sports-teams/components/FormBadge.astro';
 import TransitGuide from '../../tools/sports-teams/components/TransitGuide.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 
 const { team: teamId } = Astro.params;
-const { teams } = await getLiveSportsTeams();
-const team = getTeamById(teamId || '', teams);
 
-if (!team) {
+// Baseline lookup is metadata-only (name/venue) so an unknown id still 404s
+// even when the live upstream is down; it is never used for standings values.
+const teamMeta = getTeamById(teamId || '', BASELINE_TEAMS);
+if (!teamMeta) {
   return Astro.redirect('/sports-teams');
 }
 
 // Edge cache for 1 minute
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
 
-const otherTeams = teams.filter((t) => t.id !== team.id);
+const sportsTeamsResult = await getLiveSportsTeams();
+const teams = sportsTeamsResult.ok ? sportsTeamsResult.data.teams : [];
+const team = sportsTeamsResult.ok ? getTeamById(teamId || '', teams) : undefined;
+const otherTeams = teams.filter((t) => t.id !== teamMeta.id);
 
 // The "next matchup" marquee and the "Upcoming Fixtures" list must never
 // contradict each other — merge nextGame into the fixtures list (when it
 // isn't already the first entry) instead of treating them as independent
 // data that can silently disagree.
-const fixtureList = team.nextGame && team.upcomingSchedule[0]?.gameId !== team.nextGame.gameId
-  ? [team.nextGame, ...team.upcomingSchedule]
-  : team.upcomingSchedule;
+const fixtureList = team
+  ? (team.nextGame && team.upcomingSchedule[0]?.gameId !== team.nextGame.gameId
+      ? [team.nextGame, ...team.upcomingSchedule]
+      : team.upcomingSchedule)
+  : [];
 
 const wikidataTeamMap: Record<string, string[]> = {
   canucks: ['https://en.wikipedia.org/wiki/Vancouver_Canucks', 'https://www.wikidata.org/wiki/Q192525'],
@@ -41,25 +48,25 @@ const teamSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'SportsTeam',
-    name: team.name,
-    sport: team.sport,
+    name: teamMeta.name,
+    sport: teamMeta.sport,
     memberOf: {
       '@type': 'SportsOrganization',
-      name: team.leagueFullName,
+      name: teamMeta.leagueFullName,
     },
-    sameAs: wikidataTeamMap[team.id] || [],
+    sameAs: wikidataTeamMap[teamMeta.id] || [],
     homeLocation: {
       '@type': 'Place',
-      name: team.venue.name,
+      name: teamMeta.venue.name,
       address: {
         '@type': 'PostalAddress',
-        streetAddress: team.venue.address,
+        streetAddress: teamMeta.venue.address,
         addressLocality: 'Vancouver',
         addressRegion: 'BC',
         addressCountry: 'CA',
       },
     },
-    url: `https://vanheartbeat.ca/sports-teams/${team.id}`,
+    url: `https://vanheartbeat.ca/sports-teams/${teamMeta.id}`,
   },
   {
     '@context': 'https://schema.org',
@@ -67,7 +74,7 @@ const teamSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Sports Teams', item: 'https://vanheartbeat.ca/sports-teams' },
-      { '@type': 'ListItem', position: 3, name: team.name, item: `https://vanheartbeat.ca/sports-teams/${team.id}` },
+      { '@type': 'ListItem', position: 3, name: teamMeta.name, item: `https://vanheartbeat.ca/sports-teams/${teamMeta.id}` },
     ],
   },
 ];
@@ -87,20 +94,13 @@ const relatedItems: RelatedItem[] = [
     badge: 'Wire',
     icon: '📰',
   },
-  {
-    title: 'Free Community Events',
-    subtitle: 'Pre-game festivals & Vancouver fan zones',
-    href: '/events',
-    badge: 'Events',
-    icon: '🎉',
-  },
 ];
 ---
 
 <PlatformLayout
-  title={`${team.name} Schedule, Scores & Standings — VanHeartbeat`}
-  description={`Live scores, complete game schedule, standings, 5-game form, and TV/radio broadcast channels for the ${team.name} (${team.league}).`}
-  currentPath={`/sports-teams/${team.id}`}
+  title={team ? `${team.name} Schedule, Scores & Standings — VanHeartbeat` : `${teamMeta.name} — Live Data Unavailable`}
+  description={team ? `Live scores, complete game schedule, standings, 5-game form, and TV/radio broadcast channels for the ${team.name} (${team.league}).` : 'Live sports team data is temporarily unavailable.'}
+  currentPath={`/sports-teams/${teamMeta.id}`}
 >
   <JsonLd schema={teamSchema} />
 
@@ -112,7 +112,7 @@ const relatedItems: RelatedItem[] = [
         <span>/</span>
         <a href="/sports-teams" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Sports Teams</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate">{team.name}</span>
+        <span class="text-slate-900 dark:text-white truncate">{teamMeta.name}</span>
       </nav>
 
       <a
@@ -123,7 +123,13 @@ const relatedItems: RelatedItem[] = [
       </a>
     </div>
 
+    {!team && (
+      <LiveDataUnavailable toolName={`${teamMeta.name}`} variant="page" error={!sportsTeamsResult.ok ? sportsTeamsResult.error : undefined} />
+    )}
+
     <!-- Team Hero Card -->
+    {team && (
+    <>
     <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-sky-50/40 to-slate-50 dark:from-slate-900 dark:via-sky-950/20 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-6 lg:p-8 shadow-xs">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
         <div class="flex items-start gap-4">
@@ -138,8 +144,13 @@ const relatedItems: RelatedItem[] = [
             <h1 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               {team.name}
             </h1>
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-              {team.standings.divisionOrConf} • <span class="font-bold text-slate-900 dark:text-white">{team.standings.record}</span> ({team.standings.points} pts)
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+              <span>{team.standings.divisionOrConf} • <span class="font-bold text-slate-900 dark:text-white">{team.standings.record}</span> ({team.standings.points} pts)</span>
+              {!team.standingsLive && (
+                <span class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[9px] font-semibold uppercase tracking-wide" title="Live league feed unavailable this request — showing last known standings">
+                  Not live
+                </span>
+              )}
             </p>
           </div>
         </div>
@@ -287,6 +298,8 @@ const relatedItems: RelatedItem[] = [
 
     <!-- Stadium & Transit Wayfinding -->
     <TransitGuide venue={team.venue} teamName={team.name} />
+    </>
+    )}
 
     <!-- Connected Cross-Utility Telemetry -->
     <RelatedTelemetry items={relatedItems} />

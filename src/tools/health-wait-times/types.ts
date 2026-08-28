@@ -12,14 +12,12 @@ export interface TriageWaitData {
   patientCountTreating?: number;   // e.g. 34
   intensity: WaitIntensity;
   lastUpdated: string;             // ISO 8601
-  isStale: boolean;
 }
 
 export interface OperatingHours {
   isOpen24_7: boolean;
   openTime?: string;               // "08:00"
   closeTime?: string;              // "20:00"
-  isCurrentlyOpen: boolean;
   acceptingWalkIns: boolean;
   notes?: string;
 }

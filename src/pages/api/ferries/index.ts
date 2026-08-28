@@ -10,7 +10,19 @@ export const GET: APIRoute = async ({ request }) => {
   const category = url.searchParams.get('category') as RouteCategory | null;
   const search = url.searchParams.get('search')?.toLowerCase();
 
-  let routes = await getLiveRoutes();
+  const routesResult = await getLiveRoutes();
+
+  if (!routesResult.ok) {
+    return new Response(JSON.stringify({ error: routesResult.error }), {
+      status: 503,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=300',
+      },
+    });
+  }
+
+  let routes = routesResult.data;
 
   if (provider) {
     routes = routes.filter((r) => r.provider === provider);

@@ -13,8 +13,18 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const articles = await getLiveNews();
-  const alerts = await getLiveBreakingAlerts();
+  const articlesResult = await getLiveNews();
+  const alertsResult = await getLiveBreakingAlerts();
+
+  if (!articlesResult.ok) {
+    return new Response(JSON.stringify({ error: articlesResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const articles = articlesResult.data;
+  const alerts = alertsResult.ok ? alertsResult.data : [];
 
   if (id) {
     const article = getArticleById(id, articles);

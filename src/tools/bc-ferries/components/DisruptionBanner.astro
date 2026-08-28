@@ -2,19 +2,27 @@
 import { getMarineWeather } from '../services/ferryService';
 import { getWeatherRiskMeta } from '../services/standbyCalc';
 
-const weather = await getMarineWeather();
-const weatherMeta = getWeatherRiskMeta(weather.advisoryLevel);
+const weatherResult = await getMarineWeather();
+const weatherMeta = weatherResult.ok ? getWeatherRiskMeta(weatherResult.data.advisoryLevel) : null;
 ---
 
 <div class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
   <div class="space-y-1">
     <div class="flex items-center gap-2">
-      <span class={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${weatherMeta.badgeBg} ${weatherMeta.badgeText}`}>
-        <span>🌊 {weatherMeta.label}</span>
-      </span>
-      <span class="text-xs text-slate-400">
-        Strait of Georgia • Wind: {weather.windSpeedKnots} kts {weather.windDirection}
-      </span>
+      {weatherResult.ok && weatherMeta ? (
+        <>
+          <span class={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${weatherMeta.badgeBg} ${weatherMeta.badgeText}`}>
+            <span>🌊 {weatherMeta.label}</span>
+          </span>
+          <span class="text-xs text-slate-400">
+            Strait of Georgia • Wind: {weatherResult.data.windSpeedKnots} kts {weatherResult.data.windDirection}
+          </span>
+        </>
+      ) : (
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">
+          <span>🌊 Marine Weather Unavailable</span>
+        </span>
+      )}
     </div>
     <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
       Metro Vancouver Marine Transit Radar

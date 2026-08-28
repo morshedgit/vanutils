@@ -7,14 +7,11 @@ import { getAllNeighbourhoods } from '../tools/carshare-parking/services/parking
 import { getLiveFacilities } from '../tools/health-wait-times/services/healthService';
 import { getLiveCrossings } from '../tools/bridge-traffic/services/bridgeService';
 import { getLiveStations } from '../tools/air-quality/services/airQualityService';
-import { getLiveProposals } from '../tools/civic-development/services/civicService';
-import { getLiveEvents } from '../tools/community-events/services/eventService';
-import { getLiveSchools } from '../tools/school-catchment/services/catchmentService';
 import { getLiveNews } from '../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../tools/sports-facilities/services/sportsService';
 import { getLiveWeather } from '../tools/weather-forecast/services/weatherService';
-import { getLiveSportsTeams } from '../tools/sports-teams/services/sportsTeamsService';
+import { getAllTeams } from '../tools/sports-teams/services/sportsTeamsService';
 import { getLiveSalesEvents } from '../tools/sales-events/services/salesService';
 
 export const GET: APIRoute = async ({ request }) => {
@@ -52,18 +49,22 @@ export const GET: APIRoute = async ({ request }) => {
 
   // BC Ferries
   try {
-    const ferryRoutes = await getLiveRoutes();
-    ferryRoutes.forEach((r) => {
-      dynamicRoutes.push({ url: `${baseUrl}/ferries/${r.id}`, priority: '0.8', changefreq: 'always' });
-    });
+    const ferryRoutesResult = await getLiveRoutes();
+    if (ferryRoutesResult.ok) {
+      ferryRoutesResult.data.forEach((r) => {
+        dynamicRoutes.push({ url: `${baseUrl}/ferries/${r.id}`, priority: '0.8', changefreq: 'always' });
+      });
+    }
   } catch (e) {}
 
   // Mountain Snow
   try {
-    const mountains = await getLiveMountains();
-    mountains.forEach((m) => {
-      dynamicRoutes.push({ url: `${baseUrl}/snow/${m.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
+    const mountainsResult = await getLiveMountains();
+    if (mountainsResult.ok) {
+      mountainsResult.data.forEach((m) => {
+        dynamicRoutes.push({ url: `${baseUrl}/snow/${m.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Carshare Parking
@@ -76,98 +77,89 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Health / ER
   try {
-    const facilities = await getLiveFacilities();
-    facilities.forEach((f) => {
-      dynamicRoutes.push({ url: `${baseUrl}/health/${f.id}`, priority: '0.8', changefreq: 'always' });
-    });
+    const facilitiesResult = await getLiveFacilities();
+    if (facilitiesResult.ok) {
+      facilitiesResult.data.forEach((f) => {
+        dynamicRoutes.push({ url: `${baseUrl}/health/${f.id}`, priority: '0.8', changefreq: 'always' });
+      });
+    }
   } catch (e) {}
 
   // Bridges & Tunnels
   try {
-    const crossings = await getLiveCrossings();
-    crossings.forEach((c) => {
-      dynamicRoutes.push({ url: `${baseUrl}/bridges/${c.id}`, priority: '0.8', changefreq: 'always' });
-    });
+    const crossingsResult = await getLiveCrossings();
+    if (crossingsResult.ok) {
+      crossingsResult.data.forEach((c) => {
+        dynamicRoutes.push({ url: `${baseUrl}/bridges/${c.id}`, priority: '0.8', changefreq: 'always' });
+      });
+    }
   } catch (e) {}
 
   // Air Quality
   try {
-    const stations = await getLiveStations();
-    stations.forEach((s) => {
-      dynamicRoutes.push({ url: `${baseUrl}/air/${s.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
-  } catch (e) {}
-
-  // Civic Development
-  try {
-    const proposals = await getLiveProposals();
-    proposals.forEach((p) => {
-      dynamicRoutes.push({ url: `${baseUrl}/civic/${p.id}`, priority: '0.7', changefreq: 'weekly' });
-    });
-  } catch (e) {}
-
-  // Community Events
-  try {
-    const events = await getLiveEvents();
-    events.forEach((ev) => {
-      dynamicRoutes.push({ url: `${baseUrl}/events/${ev.id}`, priority: '0.8', changefreq: 'daily' });
-    });
-  } catch (e) {}
-
-  // School Catchment
-  try {
-    const schools = await getLiveSchools();
-    schools.forEach((sc) => {
-      dynamicRoutes.push({ url: `${baseUrl}/schools/${sc.id}`, priority: '0.7', changefreq: 'weekly' });
-    });
+    const stationsResult = await getLiveStations();
+    if (stationsResult.ok) {
+      stationsResult.data.forEach((s) => {
+        dynamicRoutes.push({ url: `${baseUrl}/air/${s.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Local News Articles
   try {
-    const articles = await getLiveNews();
-    articles.forEach((a) => {
-      dynamicRoutes.push({ url: `${baseUrl}/news/${a.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
+    const articlesResult = await getLiveNews();
+    if (articlesResult.ok) {
+      articlesResult.data.forEach((a) => {
+        dynamicRoutes.push({ url: `${baseUrl}/news/${a.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Real Estate Submarkets
   try {
-    const market = await getLiveMarketHeartbeat();
-    market.submarkets.forEach((sm) => {
-      dynamicRoutes.push({ url: `${baseUrl}/market/${sm.id}`, priority: '0.7', changefreq: 'daily' });
-    });
+    const marketResult = await getLiveMarketHeartbeat();
+    if (marketResult.ok) {
+      marketResult.data.submarkets.forEach((sm) => {
+        dynamicRoutes.push({ url: `${baseUrl}/market/${sm.id}`, priority: '0.7', changefreq: 'daily' });
+      });
+    }
   } catch (e) {}
 
   // Sports Facilities
   try {
-    const sports = await getLiveSportsFacilities();
-    sports.forEach((sp) => {
-      dynamicRoutes.push({ url: `${baseUrl}/sports/${sp.id}`, priority: '0.7', changefreq: 'daily' });
-    });
+    const sportsResult = await getLiveSportsFacilities();
+    if (sportsResult.ok) {
+      sportsResult.data.forEach((sp) => {
+        dynamicRoutes.push({ url: `${baseUrl}/sports/${sp.id}`, priority: '0.7', changefreq: 'daily' });
+      });
+    }
   } catch (e) {}
 
   // Weather Microclimates
   try {
-    const weatherStations = await getLiveWeather();
-    weatherStations.forEach((ws) => {
-      dynamicRoutes.push({ url: `${baseUrl}/weather/${ws.id}`, priority: '0.8', changefreq: 'hourly' });
-    });
+    const weatherResult = await getLiveWeather();
+    if (weatherResult.ok) {
+      weatherResult.data.forEach((ws) => {
+        dynamicRoutes.push({ url: `${baseUrl}/weather/${ws.id}`, priority: '0.8', changefreq: 'hourly' });
+      });
+    }
   } catch (e) {}
 
   // Major Sports Teams
   try {
-    const { teams } = await getLiveSportsTeams();
-    teams.forEach((tm) => {
+    getAllTeams().forEach((tm) => {
       dynamicRoutes.push({ url: `${baseUrl}/sports-teams/${tm.id}`, priority: '0.8', changefreq: 'daily' });
     });
   } catch (e) {}
 
   // Warehouse & Sample Sales
   try {
-    const sales = await getLiveSalesEvents();
-    sales.forEach((sl) => {
-      dynamicRoutes.push({ url: `${baseUrl}/sales/${sl.id}`, priority: '0.8', changefreq: 'daily' });
-    });
+    const salesResult = await getLiveSalesEvents();
+    if (salesResult.ok) {
+      salesResult.data.forEach((sl) => {
+        dynamicRoutes.push({ url: `${baseUrl}/sales/${sl.id}`, priority: '0.8', changefreq: 'daily' });
+      });
+    }
   } catch (e) {}
 
   const allUrls = [...staticRoutes, ...dynamicRoutes];

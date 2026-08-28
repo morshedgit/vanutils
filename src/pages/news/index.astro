@@ -4,14 +4,17 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import BreakingAlertBanner from '../../tools/local-news/components/BreakingAlertBanner.astro';
 import FilterTabs from '../../tools/local-news/components/FilterTabs.astro';
 import ArticleCard from '../../tools/local-news/components/ArticleCard.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveNews, getLiveBreakingAlerts, getNewsOverviewStats } from '../../tools/local-news/services/newsService';
 
 // Tiered Edge Cache: 5-minute edge TTL, 10-minute background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
-const articles = await getLiveNews();
-const alerts = await getLiveBreakingAlerts();
-const stats = getNewsOverviewStats(articles, alerts);
+const articlesResult = await getLiveNews();
+const alertsResult = await getLiveBreakingAlerts();
+const articles = articlesResult.ok ? articlesResult.data : [];
+const alerts = alertsResult.ok ? alertsResult.data : [];
+const stats = articlesResult.ok ? getNewsOverviewStats(articles, alerts) : null;
 
 const newsSchema = [
   {
@@ -76,56 +79,62 @@ const newsSchema = [
     <!-- Breaking News & Emergency Alert Ribbon -->
     <BreakingAlertBanner alerts={alerts} />
 
-    <!-- Hero Header Snapshot -->
-    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Verified Non-Paywalled Wire • {stats.totalArticles} Active Reports</span>
+    {articlesResult.ok && stats ? (
+      <>
+        <!-- Hero Header Snapshot -->
+        <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Verified Non-Paywalled Wire • {stats.totalArticles} Active Reports</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+              Real-Time Civic News, Transit Updates & Weather Advisories
+            </h2>
+            <p class="text-xs text-slate-300">
+              Curated directly from CBC Vancouver, City of Vancouver Media Releases, TransLink, and Environment Canada. Zero ads, zero tracking.
+            </p>
+          </div>
+
+          <!-- Instant Keyword Filter -->
+          <div class="w-full sm:w-64">
+            <input
+              type="text"
+              id="news-search-input"
+              aria-label="Filter news wire"
+              placeholder="Filter news wire..."
+              class="w-full px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 transition-colors"
+            />
+          </div>
+        </section>
+
+        <!-- Pinned Headlines Section (Mirrors Home Dashboard Card) -->
+        <div id="pinned-news-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Pinned News Feed (Shown on Main Dashboard)</span>
+            </span>
+            <span class="text-[11px] text-slate-400">Click star on any story to customize</span>
+          </div>
+          <div id="pinned-news-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <!-- Dynamically populated via client JS -->
+          </div>
         </div>
-        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Real-Time Civic News, Transit Updates & Weather Advisories
-        </h2>
-        <p class="text-xs text-slate-300">
-          Curated directly from CBC Vancouver, City of Vancouver Media Releases, TransLink, and Environment Canada. Zero ads, zero tracking.
-        </p>
-      </div>
 
-      <!-- Instant Keyword Filter -->
-      <div class="w-full sm:w-64">
-        <input
-          type="text"
-          id="news-search-input"
-          aria-label="Filter news wire"
-          placeholder="Filter news wire..."
-          class="w-full px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 transition-colors"
-        />
-      </div>
-    </section>
+        <!-- Category Filter Tabs -->
+        <FilterTabs activeTab="all" />
 
-    <!-- Pinned Headlines Section (Mirrors Home Dashboard Card) -->
-    <div id="pinned-news-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-          <span>⭐</span>
-          <span>Pinned News Feed (Shown on Main Dashboard)</span>
-        </span>
-        <span class="text-[11px] text-slate-400">Click star on any story to customize</span>
-      </div>
-      <div id="pinned-news-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        <!-- Dynamically populated via client JS -->
-      </div>
-    </div>
-
-    <!-- Category Filter Tabs -->
-    <FilterTabs activeTab="all" />
-
-    <!-- Articles Grid -->
-    <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {articles.map((article) => (
-        <ArticleCard article={article} />
-      ))}
-    </div>
+        <!-- Articles Grid -->
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {articles.map((article) => (
+            <ArticleCard article={article} />
+          ))}
+        </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Local News Wire" variant="page" error={!articlesResult.ok ? articlesResult.error : undefined} />
+    )}
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">

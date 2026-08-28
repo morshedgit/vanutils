@@ -5,12 +5,18 @@ import DisruptionBanner from '../../tools/bc-ferries/components/DisruptionBanner
 import SeaBusPulse from '../../tools/bc-ferries/components/SeaBusPulse.astro';
 import FilterTabs from '../../tools/bc-ferries/components/FilterTabs.astro';
 import RouteCard from '../../tools/bc-ferries/components/RouteCard.astro';
-import { getLiveRoutes } from '../../tools/bc-ferries/services/ferryService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveRoutes, getAllRoutes } from '../../tools/bc-ferries/services/ferryService';
 
 // Set Edge Cache header: 60s max age, 300s background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
-const routes = await getLiveRoutes();
+const routesResult = await getLiveRoutes();
+const routes = routesResult.ok ? routesResult.data : [];
+// Routes with no live match this request are dropped rather than shown with
+// baseline sailings (see getLiveRoutes) — surface that gap instead of
+// silently shrinking the "Showing all N" count. See issue #35.
+const droppedRouteCount = routesResult.ok ? getAllRoutes().length - routes.length : 0;
 
 const ferriesSchema = [
   {
@@ -91,25 +97,33 @@ const ferriesSchema = [
       </div>
     </div>
 
-    <!-- TransLink SeaBus Live Pulse Banner -->
+    <!-- TransLink SeaBus Scheduled Headway Banner -->
     <SeaBusPulse />
 
     <!-- Filter & Search Controls -->
     <FilterTabs />
 
     <!-- Routes Grid Section -->
-    <div class="space-y-2">
-      <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
-        <span id="ferry-count-display">Showing all {routes.length} marine routes</span>
-        <span>Tap any route for full timetable & cams</span>
-      </div>
+    {routesResult.ok ? (
+      <div class="space-y-2">
+        <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <span id="ferry-count-display">
+            {droppedRouteCount > 0
+              ? `Showing ${routes.length} of ${routes.length + droppedRouteCount} marine routes — ${droppedRouteCount} unavailable this request`
+              : `Showing all ${routes.length} marine routes`}
+          </span>
+          <span>Tap any route for full timetable & cams</span>
+        </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5" id="ferries-grid">
-        {routes.map((route) => (
-          <RouteCard route={route} />
-        ))}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5" id="ferries-grid">
+          {routes.map((route) => (
+            <RouteCard route={route} />
+          ))}
+        </div>
       </div>
-    </div>
+    ) : (
+      <LiveDataUnavailable toolName="BC Ferries Radar" variant="page" error={routesResult.error} />
+    )}
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">

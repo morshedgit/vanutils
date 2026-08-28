@@ -210,7 +210,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 - **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
   - Asynchronous loader `getLiveProposals()` implemented in `src/tools/civic-development/services/civicService.ts`.
   - Parallel queries to official City of Vancouver REST/GeoJSON endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
-  - Graceful Failover: If upstream municipal endpoints encounter latency or downtime, the loader immediately falls back to the last-known verified snapshot with `isStale: true` and an explicit timestamp rather than blocking page render.
+  - Explicit Failure, No Fallback (issue #35): If upstream endpoints fail or time out, the loader returns `{ ok: false, error }` rather than the last-known snapshot — never a baseline number dressed up as current.
 - **Tiered Edge Caching Matrix**:
   - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')` (Low/Periodic Acuity: 1-hour edge cache with 24-hour background revalidation).
 - **The Zero-Fluff, High-Density Dashboard Card Standard**:
@@ -286,7 +286,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     architecturalDrawingsUrl: string;
     officialCityUrl: string;
     lastUpdated: string;           // ISO 8601
-    isStale: boolean;
   }
   ```
 - **Performance Budget**:
@@ -307,7 +306,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 - **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
   - Asynchronous loader `getLiveEvents()` implemented in `src/tools/community-events/services/eventService.ts`.
   - Parallel queries to official municipal, Park Board, VPL, and TransLink feeds using `AbortSignal.timeout(1200)` / `AbortController`.
-  - Graceful Failover: If upstream feeds experience latency or outages, the loader immediately returns the last-known verified live event snapshot with `isStale: true` and an explicit timestamp rather than blocking page render.
+  - Explicit Failure, No Fallback (issue #35): If upstream endpoints fail or time out, the loader returns `{ ok: false, error }` rather than the last-known snapshot — never a baseline number dressed up as current.
 - **Tiered Edge Caching Matrix**:
   - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (30-minute edge cache with 2-hour background revalidation).
 - **The Zero-Fluff, High-Density Dashboard Card Standard**:
@@ -370,7 +369,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     transitAccess: TransitAccessInfo;
     officialSourceUrl: string;
     lastUpdated: string;             // ISO 8601
-    isStale: boolean;
   }
   ```
 - **Performance Budget**:
@@ -391,7 +389,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
   - Asynchronous loader `getLiveCatchment(addressOrCoords)` implemented in `src/tools/school-catchment/services/catchmentService.ts`.
   - Parallel queries to VSB SD39 GeoJSON, BC Ministry of Education, and VCH endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
   - Point-in-Polygon Geofencing executes on Cloudflare Edge in $< 50\text{ms}$.
-  - Graceful Failover: Falls back to the last-known verified SD39 catchment boundary index with `isStale: true` and an explicit timestamp warning if upstream GIS services experience latency.
+  - Explicit Failure, No Fallback (issue #35): If upstream endpoints fail or time out, the loader returns `{ ok: false, error }` rather than the last-known snapshot — never a baseline number dressed up as current.
 - **Tiered Edge Caching Matrix**:
   - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800')` (24-hour edge cache with 7-day background revalidation).
 - **The Zero-Fluff, High-Density Dashboard Card Standard**:
@@ -497,7 +495,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 - **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
   - Asynchronous loaders `getLiveNews()` and `getLiveBreakingAlerts()` implemented in `src/tools/local-news/services/newsService.ts`.
   - Parallel queries to verified upstream feeds using `AbortSignal.timeout(1200)` / `AbortController`.
-  - Graceful Failover: Falls back to the last-known verified news snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+  - Explicit Failure, No Fallback (issue #35): If upstream endpoints fail or time out, the loader returns `{ ok: false, error }` rather than the last-known snapshot — never a baseline number dressed up as current.
 - **Tiered Edge Caching Matrix**:
   - Breaking Alerts: `Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120')` (High Real-Time Acuity: 1-minute edge cache with 2-minute SWR).
   - General News Feed: `Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')` (Medium Volatility: 5-minute edge cache with 10-minute SWR).
@@ -550,7 +548,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     timestamp: string;               // ISO 8601
     summary: string;
     actionUrl?: string;
-    isStale: boolean;
   }
 
   export interface NewsArticle {
@@ -563,7 +560,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     publishedAt: string;             // ISO 8601
     url: string;                     // Direct canonical source URL
     isBreaking: boolean;
-    isStale: boolean;
   }
   ```
 - **Performance Budget**:
@@ -589,7 +585,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 - **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
   - Asynchronous loader `getLiveMarketHeartbeat(submarket?)` implemented in `src/tools/housing-market/services/marketService.ts`.
   - Parallel queries to GVR MLS® HPI datasets, Bank of Canada Valet REST API, and CMHC endpoints using `AbortSignal.timeout(1200)` / `AbortController`.
-  - Graceful Failover: Falls back to the last-known verified monthly municipal market snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+  - Explicit Failure, No Fallback (issue #35): If upstream endpoints fail or time out, the loader returns `{ ok: false, error }` rather than the last-known snapshot — never a baseline number dressed up as current.
 - **Tiered Edge Caching Matrix**:
   - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800')` (Low/Periodic Acuity: 24-hour edge cache with 7-day background SWR revalidation).
 - **The Zero-Fluff, High-Density Dashboard Card Standard**:
@@ -676,7 +672,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     benchmarks: HpiBenchmark[];
     rental: RentalMetrics;
     lastUpdated: string; // ISO 8601
-    isStale: boolean;
   }
 
   export interface MarketHeartbeatData {
@@ -684,7 +679,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     submarkets: SubmarketPulse[];
     mortgage: MortgageBenchmark;
     lastUpdated: string;
-    isStale: boolean;
   }
   ```
 - **Performance Budget**:
@@ -708,7 +702,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 - **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
   - Asynchronous loader `getLiveSportsFacilities(activity?)` implemented in `src/tools/sports-facilities/services/sportsService.ts`.
   - Parallel queries to municipal GeoJSON endpoints and Park Board activity schedules using `AbortSignal.timeout(1200)` / `AbortController`.
-  - Graceful Failover: Falls back to the last-known verified recreation schedule snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+  - Explicit Failure, No Fallback (issue #35): If upstream endpoints fail or time out, the loader returns `{ ok: false, error }` rather than the last-known snapshot — never a baseline number dressed up as current.
 - **Tiered Edge Caching Matrix**:
   - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (30-minute edge cache with 2-hour background SWR revalidation).
 - **The Zero-Fluff, High-Density Dashboard Card Standard**:
@@ -786,7 +780,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     playabilityStatus?: FieldPlayability;
     officialScheduleUrl: string;
     lastUpdated: string;             // ISO 8601
-    isStale: boolean;
   }
   ```
 - **Performance Budget**:
@@ -811,7 +804,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
 - **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
   - Asynchronous loader `getLiveWeather(stationOrCoords?)` implemented in `src/tools/weather-forecast/services/weatherService.ts`.
   - Parallel queries to Open-Meteo HRDPS Canadian model endpoints and ECCC feeds using `AbortSignal.timeout(1200)` / `AbortController`.
-  - Graceful Failover: Falls back to the last-known verified meteorological snapshot with `isStale: true` and an explicit timestamp rather than blocking edge render.
+  - Explicit Failure, No Fallback (issue #35): If upstream endpoints fail or time out, the loader returns `{ ok: false, error }` rather than the last-known snapshot — never a baseline number dressed up as current.
 - **Tiered Edge Caching Matrix**:
   - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')` (Medium Volatility: 5-minute edge cache with 10-minute background SWR revalidation).
 - **The Zero-Fluff, High-Density Dashboard Card Standard**:
@@ -902,7 +895,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     };
     officialStationCode?: string;  // e.g. "CWVR", "CWVF"
     lastUpdated: string;           // ISO 8601
-    isStale: boolean;
   }
 
   export interface WeatherOverviewStats {
@@ -928,7 +920,7 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
   - Finding verified dates, opening hour queues, ticket requirements vs. general walk-in, bag check rules, communal fitting room setup, and payment restrictions for Vancouver warehouse and sample sales is fragmented across social media rumors and spam coupon sites.
   - Delivers a sub-second, zero-ad radar with 1-tap calendar synchronization (.ics), lineup advice, transit routes, and parking maximums.
 - **Edge Ingestion & 1.2s Fast Dynamic Loader Protocol**:
-  - Asynchronous loader `getLiveSalesEvents(category?)` implemented in `src/tools/sales-events/services/salesService.ts` using `AbortSignal.timeout(1200)` and verified snapshot fallback with `isStale: true`.
+  - Asynchronous loader `getLiveSalesEvents(category?)` implemented in `src/tools/sales-events/services/salesService.ts`, returning `Promise<LiveResult<SalesEvent[]>>` (issue #35). Its only genuine live signal is a date-based status evaluation against schedule data, which never depends on the venue-feed fetch and is therefore always current.
 - **Tiered Edge Caching Matrix**:
   - `Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200')` (Medium-Low Volatility: 30-minute edge cache with 2-hour SWR revalidation).
 - **The Zero-Fluff, High-Density Dashboard Card Standard**:
@@ -978,7 +970,6 @@ All utility cards on the Main Dashboard (`/` or `src/pages/index.astro`) must st
     officialSourceUrl: string;
     featuredItems: string[];
     lastUpdated: string;
-    isStale: boolean;
   }
   ```
 - **Performance Budget**:

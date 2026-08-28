@@ -4,42 +4,46 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import WaitTimeBadge from '../../tools/health-wait-times/components/WaitTimeBadge.astro';
 import EmergencyDisclaimer from '../../tools/health-wait-times/components/EmergencyDisclaimer.astro';
-import { getLiveFacilities, getFacilityById, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveFacilities, getFacilityById, formatWaitTime, computeIsCurrentlyOpen, BASELINE_FACILITIES } from '../../tools/health-wait-times/services/healthService';
 
 // Set Edge Cache header: 5 min max age, 10 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
 const { facility: facilityId } = Astro.params;
-const allLive = await getLiveFacilities();
-const facility = getFacilityById(facilityId || '', allLive);
 
-if (!facility) {
+// Baseline lookup is metadata-only (name/address) so an unknown id still 404s
+// even when the live upstream is down; it is never used for telemetry values.
+const facilityMeta = getFacilityById(facilityId || '', BASELINE_FACILITIES);
+if (!facilityMeta) {
   return Astro.redirect('/health');
 }
 
-const waitMins = facility.triageData?.waitTimeMinutes;
-const isOpen = facility.hours.isCurrentlyOpen;
+const facilitiesResult = await getLiveFacilities();
+const facility = facilitiesResult.ok ? getFacilityById(facilityId || '', facilitiesResult.data) : undefined;
+const waitMins = facility?.triageData?.waitTimeMinutes;
+const isOpen = facility ? computeIsCurrentlyOpen(facility) : undefined;
 
 const facilitySchema = [
   {
     '@context': 'https://schema.org',
-    '@type': facility.facilityType === 'emergency_department' ? 'Hospital' : 'MedicalClinic',
-    name: facility.name,
-    description: `Real-time wait times and urgent medical care for ${facility.name} in ${facility.municipality}, BC.`,
-    url: `https://vanheartbeat.ca/health/${facility.id}`,
+    '@type': facilityMeta.facilityType === 'emergency_department' ? 'Hospital' : 'MedicalClinic',
+    name: facilityMeta.name,
+    description: `Real-time wait times and urgent medical care for ${facilityMeta.name} in ${facilityMeta.municipality}, BC.`,
+    url: `https://vanheartbeat.ca/health/${facilityMeta.id}`,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: facility.address,
-      addressLocality: facility.municipality,
+      streetAddress: facilityMeta.address,
+      addressLocality: facilityMeta.municipality,
       addressRegion: 'BC',
       addressCountry: 'CA',
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: facility.latitude,
-      longitude: facility.longitude,
+      latitude: facilityMeta.latitude,
+      longitude: facilityMeta.longitude,
     },
-    isEmergencyService: facility.facilityType === 'emergency_department',
+    isEmergencyService: facilityMeta.facilityType === 'emergency_department',
   },
   {
     '@context': 'https://schema.org',
@@ -47,7 +51,7 @@ const facilitySchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Health Wait Times', item: 'https://vanheartbeat.ca/health' },
-      { '@type': 'ListItem', position: 3, name: facility.name, item: `https://vanheartbeat.ca/health/${facility.id}` },
+      { '@type': 'ListItem', position: 3, name: facilityMeta.name, item: `https://vanheartbeat.ca/health/${facilityMeta.id}` },
     ],
   },
 ];
@@ -79,10 +83,10 @@ const relatedItems: RelatedItem[] = [
 
 <ToolLayout
   toolId="health-wait-times"
-  title={`${facility.name} — Live Wait Time`}
-  description={`Real-time emergency department triage wait times, patients waiting, diagnostic imaging services, and directions for ${facility.name}.`}
-  currentPath={`/health/${facility.id}`}
-  badgeText={facility.healthAuthority === 'fraser_health' ? 'Fraser Health' : 'Vancouver Coastal'}
+  title={facility ? `${facility.name} — Live Wait Time` : `${facilityMeta.name} — Live Data Unavailable`}
+  description={facility ? `Real-time emergency department triage wait times, patients waiting, diagnostic imaging services, and directions for ${facility.name}.` : 'Live ER wait time data is temporarily unavailable.'}
+  currentPath={`/health/${facilityMeta.id}`}
+  badgeText={facilityMeta.healthAuthority === 'fraser_health' ? 'Fraser Health' : 'Vancouver Coastal'}
   status="active"
 >
   <JsonLd schema={facilitySchema} />
@@ -95,17 +99,23 @@ const relatedItems: RelatedItem[] = [
         <span>/</span>
         <a href="/health" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">ER &amp; Urgent Care</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate">{facility.shortName}</span>
+        <span class="text-slate-900 dark:text-white truncate">{facilityMeta.shortName}</span>
       </div>
       <span class="text-xs text-slate-400">
-        {facility.municipality} • {facility.facilityType === 'emergency_department' ? 'Emergency Department' : 'Urgent & Primary Care'}
+        {facilityMeta.municipality} • {facilityMeta.facilityType === 'emergency_department' ? 'Emergency Department' : 'Urgent & Primary Care'}
       </span>
     </nav>
 
     <!-- Mandatory Medical Emergency Notice -->
     <EmergencyDisclaimer />
 
+    {!facility && (
+      <LiveDataUnavailable toolName={`${facilityMeta.name}`} variant="page" error={!facilitiesResult.ok ? facilitiesResult.error : undefined} />
+    )}
+
     <!-- Facility Hero Header -->
+    {facility && (
+    <>
     <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1.5">
         <div class="flex items-center gap-2">
@@ -200,6 +210,8 @@ const relatedItems: RelatedItem[] = [
         </p>
       </div>
     </section>
+    </>
+    )}
 
     <!-- Connected Cross-Utility Telemetry -->
     <RelatedTelemetry items={relatedItems} />
@@ -207,7 +219,7 @@ const relatedItems: RelatedItem[] = [
     <!-- 1-Tap Navigation & Official Portal Links -->
     <div class="flex flex-col sm:flex-row gap-3 pt-2">
       <a
-        href={`https://maps.google.com/?q=${facility.latitude},${facility.longitude}`}
+        href={`https://maps.google.com/?q=${facilityMeta.latitude},${facilityMeta.longitude}`}
         target="_blank"
         rel="noopener noreferrer"
         class="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs sm:text-sm shadow-sm transition-colors"
@@ -215,7 +227,7 @@ const relatedItems: RelatedItem[] = [
         <span>📍 Open Google Maps Navigation</span>
       </a>
       <a
-        href={facility.officialPortalUrl}
+        href={facilityMeta.officialPortalUrl}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm transition-colors"

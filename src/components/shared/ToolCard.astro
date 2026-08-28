@@ -7,9 +7,7 @@ import { getLiveNeighbourhoods, evaluateNeighbourhoodSpot } from '../../tools/ca
 import { getLiveFacilities, formatWaitTime } from '../../tools/health-wait-times/services/healthService';
 import { getLiveCrossings } from '../../tools/bridge-traffic/services/bridgeService';
 import { getLiveStations } from '../../tools/air-quality/services/airQualityService';
-import { getLiveProposals } from '../../tools/civic-development/services/civicService';
-import { getLiveEvents } from '../../tools/community-events/services/eventService';
-import { getLiveSchools } from '../../tools/school-catchment/services/catchmentService';
+import LiveDataUnavailable from './LiveDataUnavailable.astro';
 import { getLiveNews, formatTimeAgo } from '../../tools/local-news/services/newsService';
 import { getLiveMarketHeartbeat, formatCurrency, getConditionLabel } from '../../tools/housing-market/services/marketService';
 import { getLiveSportsFacilities } from '../../tools/sports-facilities/services/sportsService';
@@ -24,7 +22,8 @@ interface Props {
 const { tool } = Astro.props;
 
 // Fetch live telemetry for high-density listings at the edge
-const allBeaches = tool.id === 'can-i-swim' ? await getLiveBeaches() : [];
+const swimResult = tool.id === 'can-i-swim' ? await getLiveBeaches() : null;
+const allBeaches = swimResult?.ok ? swimResult.data : [];
 const initialBeaches = allBeaches.slice(0, 4);
 const safeBeachesCount = allBeaches.filter((b) => b.currentStatus === 'safe').length;
 const cautionBeachesCount = allBeaches.filter((b) => b.currentStatus === 'caution').length;
@@ -32,23 +31,27 @@ const advisoryBeachesCount = allBeaches.filter((b) => b.currentStatus === 'advis
 const validBeaches = allBeaches.filter((b) => typeof b.latestSample?.eColiCount === 'number');
 const avgEColi = validBeaches.length > 0
   ? Math.round(validBeaches.reduce((acc, b) => acc + b.latestSample.eColiCount, 0) / validBeaches.length)
-  : 26;
+  : 0;
 
-const allFerryRoutes = tool.id === 'bc-ferries' ? await getLiveRoutes() : [];
+const ferriesResult = tool.id === 'bc-ferries' ? await getLiveRoutes() : null;
+const allFerryRoutes = ferriesResult?.ok ? ferriesResult.data : [];
 const initialFerryRoutes = allFerryRoutes.slice(0, 3);
 
-const allMountains = tool.id === 'mountain-snow' ? await getLiveMountains() : [];
+const snowResult = tool.id === 'mountain-snow' ? await getLiveMountains() : null;
+const allMountains = snowResult?.ok ? snowResult.data : [];
 const initialMountains = allMountains.slice(0, 4);
 const avgFreezingLevel = allMountains.length > 0
   ? Math.round(allMountains.reduce((acc, m) => acc + m.currentFreezingLevelMeters, 0) / allMountains.length)
-  : 3500;
+  : 0;
 const snowBadgeText = avgFreezingLevel > 3000 ? `0°C @ ${avgFreezingLevel}m (Summer)` : `${avgFreezingLevel}m FZ`;
 
-const allNeighbourhoods = tool.id === 'evo-parking' ? await getLiveNeighbourhoods() : [];
+const parkingResult = tool.id === 'evo-parking' ? await getLiveNeighbourhoods() : null;
+const allNeighbourhoods = parkingResult?.ok ? parkingResult.data : [];
 const initialNeighbourhoods = allNeighbourhoods.slice(0, 4);
 const safeNeighbourhoodsCount = allNeighbourhoods.filter((n) => evaluateNeighbourhoodSpot(n).clearanceStatus === 'safe').length;
 
-const allFacilities = tool.id === 'health-wait-times' ? await getLiveFacilities() : [];
+const healthResult = tool.id === 'health-wait-times' ? await getLiveFacilities() : null;
+const allFacilities = healthResult?.ok ? healthResult.data : [];
 const facilitiesWithWait = allFacilities.filter((f) => f.triageData?.waitTimeMinutes !== undefined);
 const barChartFacilities = facilitiesWithWait.slice(0, 3);
 // Start the list below after the bar chart's own facilities so the homepage
@@ -61,64 +64,54 @@ const minWaitText = minWaitFacility?.triageData?.waitTimeMinutes !== undefined
   ? `${formatWaitTime(minWaitFacility.triageData.waitTimeMinutes)} Min ER`
   : `${allFacilities.length} ERs Tracking`;
 
-const allCrossings = tool.id === 'bridge-traffic' ? await getLiveCrossings() : [];
+const crossingsResult = tool.id === 'bridge-traffic' ? await getLiveCrossings() : null;
+const allCrossings = crossingsResult?.ok ? crossingsResult.data : [];
 const initialCrossings = allCrossings.slice(0, 4);
 const lionsGate = allCrossings.find((c) => c.id === 'lions-gate');
 const lionsGateLanes = lionsGate?.counterflow?.activeConfiguration
   ? (lionsGate.counterflow.activeConfiguration.includes('2 Lanes Northbound') ? '2 NB Active' : '1 NB Active')
   : 'Flowing';
 
-const allStations = tool.id === 'air-quality' ? await getLiveStations() : [];
+const airResult = tool.id === 'air-quality' ? await getLiveStations() : null;
+const allStations = airResult?.ok ? airResult.data : [];
 const initialStations = allStations.slice(0, 4);
 const avgAqhi = allStations.length > 0
   ? Math.round(allStations.reduce((acc, s) => acc + s.currentAQHI, 0) / allStations.length)
-  : 2;
+  : 0;
 
-const allProposals = tool.id === 'civic-development' ? await getLiveProposals() : [];
-const initialProposals = allProposals.slice(0, 4);
-const avgStoreys = allProposals.length > 0
-  ? Math.round(allProposals.reduce((sum, p) => sum + p.storeys, 0) / allProposals.length)
-  : 24;
-const avgFsr = allProposals.length > 0
-  ? (allProposals.reduce((sum, p) => sum + p.proposedFSR, 0) / allProposals.length).toFixed(1)
-  : '7.5';
 
-const allEvents = tool.id === 'community-events' ? await getLiveEvents() : [];
-const initialEvents = allEvents.slice(0, 4);
-
-const allSchools = tool.id === 'school-catchment' ? await getLiveSchools() : [];
-const initialSchools = allSchools.slice(0, 4);
-const frenchSchoolsCount = allSchools.filter((s) => s.programs?.includes('early_french_immersion') || s.programs?.includes('late_french_immersion')).length;
-const englishSchoolsCount = allSchools.filter((s) => s.programs?.includes('english_regular')).length;
-const englishPct = allSchools.length > 0 ? Math.round((englishSchoolsCount / allSchools.length) * 100) : 60;
-const frenchPct = allSchools.length > 0 ? Math.round((frenchSchoolsCount / allSchools.length) * 100) : 40;
-
-const allNews = tool.id === 'local-news' ? await getLiveNews() : [];
+const newsResult = tool.id === 'local-news' ? await getLiveNews() : null;
+const allNews = newsResult?.ok ? newsResult.data : [];
 const initialNews = allNews.slice(0, 4);
 
-const marketHeartbeat = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
+const marketResult = tool.id === 'housing-market' ? await getLiveMarketHeartbeat() : null;
+const marketHeartbeat = marketResult?.ok ? marketResult.data : null;
 const initialSubmarkets = marketHeartbeat ? marketHeartbeat.submarkets.slice(0, 4) : [];
-const sarPercent = marketHeartbeat?.metroOverview?.salesToActiveRatio ?? (initialSubmarkets[0]?.salesToActiveRatio ?? 18.4);
-const sarCondition = marketHeartbeat?.metroOverview?.marketCondition ? getConditionLabel(marketHeartbeat.metroOverview.marketCondition) : 'Balanced';
-const condoBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'condo')?.benchmarkPrice || 780000;
-const detachedBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'detached')?.benchmarkPrice || 1950000;
+const sarPercent = marketHeartbeat?.metroOverview?.salesToActiveRatio ?? 0;
+const sarCondition = marketHeartbeat?.metroOverview?.marketCondition ? getConditionLabel(marketHeartbeat.metroOverview.marketCondition) : '';
+const condoBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'condo')?.benchmarkPrice ?? 0;
+const detachedBenchmarkPrice = marketHeartbeat?.metroOverview?.benchmarks.find((b) => b.propertyType === 'detached')?.benchmarkPrice ?? 0;
 
-const allSportsFacilities = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : [];
+const sportsResult = tool.id === 'sports-courts' ? await getLiveSportsFacilities() : null;
+const allSportsFacilities = sportsResult?.ok ? sportsResult.data : [];
 const initialSportsFacilities = allSportsFacilities.slice(0, 3);
 const totalCourtsCount = allSportsFacilities.reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
 const lightedCourtsCount = allSportsFacilities.filter((f) => f.courtDetails?.hasLights).reduce((sum, f) => sum + (f.courtDetails?.totalCourts || 1), 0);
 
-const allWeatherStations = tool.id === 'weather-forecast' ? await getLiveWeather() : [];
+const weatherResult = tool.id === 'weather-forecast' ? await getLiveWeather() : null;
+const allWeatherStations = weatherResult?.ok ? weatherResult.data : [];
 const initialWeatherStations = allWeatherStations.slice(0, 4);
 const avgWeatherTemp = allWeatherStations.length > 0
   ? Math.round((allWeatherStations.reduce((acc, s) => acc + s.current.temperatureCelsius, 0) / allWeatherStations.length) * 10) / 10
-  : 19.4;
+  : 0;
 
-const sportsTeamsData = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
+const sportsTeamsResult = tool.id === 'sports-teams' ? await getLiveSportsTeams() : null;
+const sportsTeamsData = sportsTeamsResult?.ok ? sportsTeamsResult.data : null;
 const allSportsTeams = sportsTeamsData ? sportsTeamsData.teams : [];
 const initialSportsTeams = allSportsTeams.slice(0, 4);
 
-const allSalesEvents = tool.id === 'sales-events' ? await getLiveSalesEvents() : [];
+const salesResult = tool.id === 'sales-events' ? await getLiveSalesEvents() : null;
+const allSalesEvents = salesResult?.ok ? salesResult.data : [];
 const initialSalesEvents = allSalesEvents.slice(0, 4);
 const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || allSalesEvents[0];
 ---
@@ -141,22 +134,19 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     
     <a href={tool.path} class="shrink-0">
       <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
-        {tool.id === 'can-i-swim' && `${safeBeachesCount}/${allBeaches.length} Safe`}
-        {tool.id === 'bc-ferries' && `${allFerryRoutes.length} Live Routes`}
-        {tool.id === 'mountain-snow' && snowBadgeText}
-        {tool.id === 'evo-parking' && `${safeNeighbourhoodsCount}/${allNeighbourhoods.length} Safe Zones`}
-        {tool.id === 'health-wait-times' && minWaitText}
-        {tool.id === 'bridge-traffic' && lionsGateLanes}
-        {tool.id === 'air-quality' && `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})`}
-        {tool.id === 'civic-development' && `${allProposals.length} Proposals`}
-        {tool.id === 'community-events' && `${allEvents.length} Free Events`}
-        {tool.id === 'school-catchment' && 'VSB SD39'}
-        {tool.id === 'local-news' && 'Live Wire'}
-        {tool.id === 'housing-market' && `${sarPercent}% SAR`}
-        {tool.id === 'sports-courts' && `${totalCourtsCount} Courts`}
-        {tool.id === 'weather-forecast' && `${avgWeatherTemp}°C Regional Avg`}
-        {tool.id === 'sports-teams' && `${allSportsTeams.length} Pro Teams`}
-        {tool.id === 'sales-events' && `${allSalesEvents.length} Verified Sales`}
+        {tool.id === 'can-i-swim' && (swimResult?.ok ? `${safeBeachesCount}/${allBeaches.length} Safe` : 'Unavailable')}
+        {tool.id === 'bc-ferries' && (ferriesResult?.ok ? `${allFerryRoutes.length} Live Routes` : 'Unavailable')}
+        {tool.id === 'mountain-snow' && (snowResult?.ok ? snowBadgeText : 'Unavailable')}
+        {tool.id === 'evo-parking' && (parkingResult?.ok ? `${safeNeighbourhoodsCount}/${allNeighbourhoods.length} Safe Zones` : 'Unavailable')}
+        {tool.id === 'health-wait-times' && (healthResult?.ok ? minWaitText : 'Unavailable')}
+        {tool.id === 'bridge-traffic' && (crossingsResult?.ok ? lionsGateLanes : 'Unavailable')}
+        {tool.id === 'air-quality' && (airResult?.ok ? `AQHI ${avgAqhi} (${avgAqhi <= 3 ? 'Low' : 'Mod'})` : 'Unavailable')}
+        {tool.id === 'local-news' && (newsResult?.ok ? 'Live Wire' : 'Unavailable')}
+        {tool.id === 'housing-market' && (marketResult?.ok ? `${sarPercent}% SAR` : 'Unavailable')}
+        {tool.id === 'sports-courts' && (sportsResult?.ok ? `${totalCourtsCount} Courts` : 'Unavailable')}
+        {tool.id === 'weather-forecast' && (weatherResult?.ok ? `${avgWeatherTemp}°C Regional Avg` : 'Unavailable')}
+        {tool.id === 'sports-teams' && (sportsTeamsResult?.ok ? `${allSportsTeams.length} Pro Teams` : 'Unavailable')}
+        {tool.id === 'sales-events' && (salesResult?.ok ? `${allSalesEvents.length} Verified Sales` : 'Unavailable')}
       </span>
     </a>
   </div>
@@ -165,7 +155,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
   <div class="my-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80">
     
     <!-- 1. CAN I SWIM: 30-Day Regional E. coli Area Curve & Safety Distribution Bar -->
-    {tool.id === 'can-i-swim' && (
+    {tool.id === 'can-i-swim' && !swimResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'can-i-swim' && swimResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1">
@@ -212,7 +205,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 2. BC FERRIES: Live Vehicle Deck Capacity Progress Meters -->
-    {tool.id === 'bc-ferries' && (
+    {tool.id === 'bc-ferries' && !ferriesResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'bc-ferries' && ferriesResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Live Deck Space</span>
@@ -243,7 +239,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 3. MOUNTAIN SNOW: Elevation Matrix & Freezing Line Cross-Section -->
-    {tool.id === 'mountain-snow' && (
+    {tool.id === 'mountain-snow' && !snowResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'mountain-snow' && snowResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Freezing Level vs Peaks</span>
@@ -289,7 +288,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 4. CAR-SHARE PARKING: Radar Clearance Dial & Rush-Hour Timeline -->
-    {tool.id === 'evo-parking' && (
+    {tool.id === 'evo-parking' && !parkingResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'evo-parking' && parkingResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Curbside Clearance Timeline</span>
@@ -318,7 +320,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 5. ER & URGENT CARE: Comparative Wait Time Bar Chart -->
-    {tool.id === 'health-wait-times' && (
+    {tool.id === 'health-wait-times' && !healthResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'health-wait-times' && healthResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Real-Time ER Wait Times</span>
@@ -349,7 +354,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 6. BRIDGES & TUNNELS: Dynamic Counterflow Visualizer & Delay Chart -->
-    {tool.id === 'bridge-traffic' && (
+    {tool.id === 'bridge-traffic' && !crossingsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'bridge-traffic' && crossingsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Lions Gate Counterflow</span>
@@ -376,7 +384,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 7. AIR QUALITY: 24h PM2.5 Particulate Area Sparkline & AQHI Gauge -->
-    {tool.id === 'air-quality' && (
+    {tool.id === 'air-quality' && !airResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'air-quality' && airResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>24h PM2.5 Fine Particulate</span>
@@ -413,102 +424,11 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
       </div>
     )}
 
-    <!-- 8. CIVIC DEVELOPMENT: Skyline Tower Height Distribution -->
-    {tool.id === 'civic-development' && (
-      <div class="space-y-2">
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-          <span>Broadway Corridor Towers</span>
-          <span class="text-sky-600 dark:text-sky-400">{allProposals.length} Proposals</span>
-        </div>
-
-        <!-- Visual Skyline Silhouette Bar Chart -->
-        <div class="h-10 flex items-end justify-between gap-1.5 px-2 pt-1 border-b border-slate-200 dark:border-slate-800">
-          {allProposals.slice(0, 6).map((p) => {
-            const heightPct = Math.min(100, Math.max(25, Math.round((p.storeys / 45) * 100)));
-            return (
-              <div class="flex-1 bg-sky-500/80 rounded-t" style={`height: ${heightPct}%`} title={`${p.storeys} Storeys (${p.address})`}></div>
-            );
-          })}
-        </div>
-
-        <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-          <span>Average: {avgStoreys} Storeys</span>
-          <span>{avgFsr} Proposed FSR</span>
-        </div>
-      </div>
-    )}
-
-    <!-- 9. COMMUNITY EVENTS: 7-Day Event Activity Spark-Calendar -->
-    {tool.id === 'community-events' && (
-      <div class="space-y-2">
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-          <span>7-Day Free Event Activity</span>
-          <span class="text-emerald-600 dark:text-emerald-400 font-bold">{allEvents.length} Free Events</span>
-        </div>
-
-        <!-- 7-Day Column Activity Chart -->
-        <div class="h-10 flex items-end justify-between gap-1 px-1">
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-t h-2"></div>
-            <span class="text-[8px] text-slate-400">M</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-t h-3"></div>
-            <span class="text-[8px] text-slate-400">T</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500/50 rounded-t h-5"></div>
-            <span class="text-[8px] text-slate-400">W</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500/60 rounded-t h-4"></div>
-            <span class="text-[8px] text-slate-400">T</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500/80 rounded-t h-8"></div>
-            <span class="text-[8px] font-bold text-emerald-600">F</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500 rounded-t h-10"></div>
-            <span class="text-[8px] font-bold text-emerald-600">S</span>
-          </div>
-          <div class="flex-1 flex flex-col items-center gap-0.5">
-            <div class="w-full bg-emerald-500 rounded-t h-9"></div>
-            <span class="text-[8px] font-bold text-emerald-600">S</span>
-          </div>
-        </div>
-      </div>
-    )}
-
-    <!-- 10. SCHOOL CATCHMENT: Program Distribution & Feeder Bar -->
-    {tool.id === 'school-catchment' && (
-      <div class="space-y-2">
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-          <span>VSB Program Feeder Tracks</span>
-          <span class="text-sky-600 dark:text-sky-400">SD39 Vancouver</span>
-        </div>
-
-        <!-- Program Proportion Bar -->
-        <div class="space-y-1">
-          <div class="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full flex overflow-hidden">
-            <div class="bg-sky-500" style={`width: ${englishPct}%`} title={`Standard English (${englishPct}%)`}></div>
-            <div class="bg-indigo-500" style={`width: ${frenchPct}%`} title={`French Immersion (${frenchPct}%)`}></div>
-          </div>
-          <div class="flex justify-between text-[9px] text-slate-400 font-medium">
-            <span>📘 {englishPct}% English</span>
-            <span>🇫🇷 {frenchPct}% French</span>
-          </div>
-        </div>
-
-        <div class="flex justify-between text-[9px] pt-0.5 text-slate-500 dark:text-slate-400">
-          <span>Elementary: K-7</span>
-          <span>Secondary: 8-12</span>
-        </div>
-      </div>
-    )}
-
     <!-- 11. LOCAL NEWS: Breaking Frequency Pulse Visualizer -->
-    {tool.id === 'local-news' && (
+    {tool.id === 'local-news' && !newsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'local-news' && newsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1">
@@ -537,7 +457,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 12. HOUSING MARKET: SAR % Liquidity Gauge & Benchmark Trends -->
-    {tool.id === 'housing-market' && (
+    {tool.id === 'housing-market' && !marketResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'housing-market' && marketResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Sales-to-Active Ratio (SAR %)</span>
@@ -568,7 +491,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 13. SPORTS & REC: Recreation Facilities Donut / Multi-Facility Breakdown -->
-    {tool.id === 'sports-courts' && (
+    {tool.id === 'sports-courts' && !sportsResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'sports-courts' && sportsResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span>Drop-in Facilities Matrix</span>
@@ -599,7 +525,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 14. WEATHER: Embedded Third-Party Live Weather Map Widget (Windy.com) -->
-    {tool.id === 'weather-forecast' && (
+    {tool.id === 'weather-forecast' && !weatherResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'weather-forecast' && weatherResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1.5">
@@ -636,6 +565,9 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 15. MAJOR SPORTS TEAMS: Live Game Day Radar & Standings -->
+    {tool.id === 'sports-teams' && !sportsTeamsData && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
     {tool.id === 'sports-teams' && sportsTeamsData && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
@@ -667,7 +599,10 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
     )}
 
     <!-- 16. WAREHOUSE & SAMPLE SALES: Live Sales Radar & Next Major Drop -->
-    {tool.id === 'sales-events' && (
+    {tool.id === 'sales-events' && !salesResult?.ok && (
+      <LiveDataUnavailable toolName={tool.name} variant="card" />
+    )}
+    {tool.id === 'sales-events' && salesResult?.ok && (
       <div class="space-y-2">
         <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
           <span class="flex items-center gap-1">
@@ -876,56 +811,6 @@ const nextMajorSale = allSalesEvents.find((s) => s.status !== 'concluded') || al
       </div>
     )}
 
-    <!-- CIVIC DEVELOPMENT -->
-    {tool.id === 'civic-development' && (
-      <div class="space-y-1" id="main-card-civic-grid">
-        {initialProposals.map((p) => (
-          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-proposal-id={p.id}>
-            <a href={`/civic/${p.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
-              {p.address}
-            </a>
-            <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
-              {p.storeys}st • {p.units.totalUnits}u
-            </span>
-          </div>
-        ))}
-      </div>
-    )}
-
-    <!-- COMMUNITY EVENTS -->
-    {tool.id === 'community-events' && (
-      <div class="space-y-1" id="main-card-events-grid">
-        {initialEvents.map((e) => {
-          const d = new Date(e.startDateTime);
-          return (
-            <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-event-id={e.id}>
-              <a href={`/events/${e.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
-                {e.title}
-              </a>
-              <span class="shrink-0 font-semibold text-[11px] text-emerald-600 dark:text-emerald-400">
-                {d.toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric', timeZone: 'America/Vancouver' })}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    )}
-
-    <!-- SCHOOL CATCHMENT -->
-    {tool.id === 'school-catchment' && (
-      <div class="space-y-1" id="main-card-schools-grid">
-        {initialSchools.map((s) => (
-          <div class="flex items-center justify-between py-0.5 border-b border-slate-100 dark:border-slate-800/60" data-school-id={s.id}>
-            <a href={`/schools/${s.id}`} class="truncate pr-2 font-medium hover:text-sky-500 transition-colors">
-              {s.name}
-            </a>
-            <span class="shrink-0 font-bold text-[11px] text-sky-600 dark:text-sky-400">
-              {s.programs.includes('early_french_immersion') ? '🇫🇷 French' : '📘 K-7'}
-            </span>
-          </div>
-        ))}
-      </div>
-    )}
 
     <!-- LOCAL NEWS -->
     {tool.id === 'local-news' && (

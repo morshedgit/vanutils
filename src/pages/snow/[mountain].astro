@@ -6,22 +6,26 @@ import ElevationVisualizer from '../../tools/mountain-snow/components/ElevationV
 import RoadStatusCard from '../../tools/mountain-snow/components/RoadStatusCard.astro';
 import SnowfallBar from '../../tools/mountain-snow/components/SnowfallBar.astro';
 import WebcamMatrix from '../../tools/mountain-snow/components/WebcamMatrix.astro';
-import { getLiveMountains, getMountainById, getAvalancheMeta } from '../../tools/mountain-snow/services/snowService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveMountains, getMountainById, getAvalancheMeta, BASELINE_MOUNTAINS } from '../../tools/mountain-snow/services/snowService';
 
 // Set Edge Cache header: 5 min max age, 10 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
 const { mountain: mountainId } = Astro.params;
-const allLive = await getLiveMountains();
-const mountain = getMountainById(mountainId || '', allLive);
 
-if (!mountain) {
+// Baseline lookup is metadata-only (name/region) so an unknown id still 404s
+// even when the live upstream is down; it is never used for telemetry values.
+const mountainMeta = getMountainById(mountainId || '', BASELINE_MOUNTAINS);
+if (!mountainMeta) {
   return Astro.redirect('/snow');
 }
 
-const avAlpine = getAvalancheMeta(mountain.avalancheRating.alpine);
-const avTreeline = getAvalancheMeta(mountain.avalancheRating.treeline);
-const avBelow = getAvalancheMeta(mountain.avalancheRating.belowTreeline);
+const mountainsResult = await getLiveMountains();
+const mountain = mountainsResult.ok ? getMountainById(mountainId || '', mountainsResult.data) : undefined;
+const avAlpine = mountain ? getAvalancheMeta(mountain.avalancheRating.alpine) : null;
+const avTreeline = mountain ? getAvalancheMeta(mountain.avalancheRating.treeline) : null;
+const avBelow = mountain ? getAvalancheMeta(mountain.avalancheRating.belowTreeline) : null;
 
 const wikidataMap: Record<string, string[]> = {
   whistler: ['https://en.wikipedia.org/wiki/Whistler_Blackcomb', 'https://www.wikidata.org/wiki/Q1429986'],
@@ -34,13 +38,13 @@ const mountainSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'SkiResort',
-    name: mountain.name,
-    description: `Real-time coastal freezing level, snow conditions, road status, and live webcams for ${mountain.name}.`,
-    url: `https://vanheartbeat.ca/snow/${mountain.id}`,
-    sameAs: wikidataMap[mountain.id] || [],
+    name: mountainMeta.name,
+    description: `Real-time coastal freezing level, snow conditions, road status, and live webcams for ${mountainMeta.name}.`,
+    url: `https://vanheartbeat.ca/snow/${mountainMeta.id}`,
+    sameAs: wikidataMap[mountainMeta.id] || [],
     address: {
       '@type': 'PostalAddress',
-      addressLocality: mountain.region === 'north_shore' ? 'North Vancouver' : 'Whistler',
+      addressLocality: mountainMeta.region === 'north_shore' ? 'North Vancouver' : 'Whistler',
       addressRegion: 'BC',
       addressCountry: 'CA',
     },
@@ -51,7 +55,7 @@ const mountainSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Mountain Snow Line', item: 'https://vanheartbeat.ca/snow' },
-      { '@type': 'ListItem', position: 3, name: mountain.name, item: `https://vanheartbeat.ca/snow/${mountain.id}` },
+      { '@type': 'ListItem', position: 3, name: mountainMeta.name, item: `https://vanheartbeat.ca/snow/${mountainMeta.id}` },
     ],
   },
 ];
@@ -83,10 +87,10 @@ const relatedItems: RelatedItem[] = [
 
 <ToolLayout
   toolId="mountain-snow"
-  title={`${mountain.name} — Snow Line & Elevation Matrix`}
-  description={`Real-time coastal freezing level, snow conditions, road status, and live webcams for ${mountain.name}.`}
-  currentPath={`/snow/${mountain.id}`}
-  badgeText={mountain.region === 'north_shore' ? 'North Shore' : 'Sea-to-Sky'}
+  title={mountain ? `${mountain.name} — Snow Line & Elevation Matrix` : `${mountainMeta.name} — Live Data Unavailable`}
+  description={mountain ? `Real-time coastal freezing level, snow conditions, road status, and live webcams for ${mountain.name}.` : 'Live mountain snow data is temporarily unavailable.'}
+  currentPath={`/snow/${mountainMeta.id}`}
+  badgeText={mountainMeta.region === 'north_shore' ? 'North Shore' : 'Sea-to-Sky'}
   status="active"
 >
   <JsonLd schema={mountainSchema} />
@@ -98,10 +102,16 @@ const relatedItems: RelatedItem[] = [
       <span>/</span>
       <a href="/snow" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Snow Line</a>
       <span>/</span>
-      <span class="text-slate-900 dark:text-white truncate">{mountain.name}</span>
+      <span class="text-slate-900 dark:text-white truncate">{mountainMeta.name}</span>
     </nav>
 
+    {!mountain && (
+      <LiveDataUnavailable toolName={`${mountainMeta.name} Snow Report`} variant="page" error={!mountainsResult.ok ? mountainsResult.error : undefined} />
+    )}
+
     <!-- Header Card -->
+    {mountain && avAlpine && avTreeline && avBelow && (
+    <>
     <section class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -183,6 +193,8 @@ const relatedItems: RelatedItem[] = [
       <section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3">
         <WebcamMatrix webcams={mountain.webcams} mountainName={mountain.name} />
       </section>
+    )}
+    </>
     )}
 
     <!-- Connected Cross-Utility Telemetry -->

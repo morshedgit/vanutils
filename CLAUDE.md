@@ -33,15 +33,15 @@ npm run preview
 - **Zero Synthetic Math**: Never use `Math.sin`, `Math.random`, `idx * factor`, or synthetic curves to invent data points, historical sparklines, bacteria counts, or wait times.
 - **Zero Timestamp-Only Syncs**: `scripts/sync-live-*.js` must never just touch `lastUpdated` without parsing authentic upstream data.
 - **Zero Simulated Latency**: Never use fake `setTimeout()` promises in `services/`.
-- **Zero Fabricated Baselines**: Static baseline JSON in `src/tools/*/data/` must be snapshots from official government/open data sources.
-- **Explicit Stale Failover**: If an upstream API fails, transparently return `isStale: true` with the last authentic timestamp. Never invent numbers.
+- **Zero Fabricated Baselines**: Static baseline JSON in `src/tools/*/data/` must be snapshots from official government/open data sources, and exists as **seed/reference metadata only** (station names, coordinates, route IDs) — it must never be rendered to end users as if it were current live telemetry.
+- **No Silent Stale Fallback**: If an upstream API fails or times out, `getLive<ToolData>()` must return an explicit `{ ok: false, error }` result (see `src/services/shared/liveResult.ts`), never baseline data dressed up as current. Pages and cards must render a dedicated "Live data unavailable" state instead of numbers — never invent numbers, and never let a failure look like a live reading.
 
 ### ⚡ Rule 2: The 5-Pillar Runtime Edge Ingestion Practice
-1. **Dynamic Edge Loader**: Every tool must implement `getLive<ToolData>()` called in Edge SSR (`output: "server"`).
+1. **Dynamic Edge Loader**: Every tool must implement `getLive<ToolData>()` called in Edge SSR (`output: "server"`), returning `Promise<LiveResult<ToolData>>` from `src/services/shared/liveResult.ts`. This is the sole source of live values — data is never baked in at build/deploy time (`npm run build` runs `astro build` only; it does not run any data-sync step).
 2. **1.2s Timeout SLA**: Wrap all network calls in `edgeFetch()` (`AbortSignal.timeout(1200)`).
 3. **100% Real Upstream Endpoints**: Query official public REST, XML, or GeoJSON APIs directly.
-4. **Resilient Failover**: Fall back to verified baseline with `isStale: true` on timeout/error.
-5. **Tiered Edge Caching**: Set appropriate `Cache-Control: public, s-maxage=..., stale-while-revalidate=...` response headers.
+4. **Explicit Failure, No Fallback**: On timeout/error, return `{ ok: false, error }` — never fall back to baseline data. `scripts/sync-live-*.js` and `scripts/scrape-official-data.js` are manual/one-time baseline-seeding tools only, run by hand when refreshing reference metadata; they are never part of the build or request path.
+5. **Per-Module Edge Caching**: Wrap the upstream fetch with `withEdgeCache()` (`src/services/shared/edgeCache.ts`, backed by the Cloudflare Workers Cache API) using a TTL matched to that data's real-world change frequency (e.g. live game scores/ferry decks ~60s, air quality/weather/ER waits ~5min, event listings ~30min, planning proposals/school catchments/housing stats ~24h) — so upstream APIs aren't hit on every request without ever presenting a cache miss as stale-but-live.
 
 ### 🎨 Rule 3: Zero-Fluff, High-Density Card Standard
 - Main dashboard cards (`src/components/shared/ToolCard.astro`) must be 100% clickable containers (`<a>`).

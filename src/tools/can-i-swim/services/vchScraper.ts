@@ -2,56 +2,62 @@ import type { Beach, BeachFilterOptions } from '../types';
 import beachesData from '../data/beaches.json';
 import { calculateDistanceKm } from '../../../services/shared/geo';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
-// Cast imported JSON data to typed Beach array
+// Seed/reference metadata only (beach names, coordinates, amenities) — never
+// presented as live water-quality readings. See issue #35.
 export const BEACHES: Beach[] = beachesData as Beach[];
 
+const CACHE_TTL_SECONDS = 3600; // VCH/Fraser Health lab results are published at most daily
+
 /**
- * Dynamically loads live beach telemetry from Metro Vancouver GIS at the edge
+ * Dynamically loads live beach telemetry from Metro Vancouver GIS at the edge.
+ * Returns ok:false (no baseline masquerading as live) when the upstream fetch fails.
  */
-export async function getLiveBeaches(): Promise<Beach[]> {
-  try {
+export async function getLiveBeaches(): Promise<LiveResult<Beach[]>> {
+  return withEdgeCache('can-i-swim-beaches', CACHE_TTL_SECONDS, async () => {
     const endpoint =
       'https://gis.metrovancouver.org/arcgis/rest/services/Hosted/Beach_Site/FeatureServer/8/query?where=1%3D1&outFields=*&f=json&outSR=4326';
     const res = await edgeFetch<{
       features: Array<{ attributes: Record<string, any>; geometry?: { x: number; y: number } }>;
     }>(endpoint, { timeoutMs: 1200 });
 
-    if (res.data && Array.isArray(res.data.features) && res.data.features.length > 0) {
-      const liveFeatures = res.data.features;
-      return BEACHES.map((b) => {
-        const matched = liveFeatures.find((f) => {
-          const siteName = (f.attributes?.Site_Name || f.attributes?.SiteName || f.attributes?.Name || '').toLowerCase();
-          return siteName.includes(b.name.toLowerCase()) || b.name.toLowerCase().includes(siteName);
-        });
+    if (!res.data || !Array.isArray(res.data.features) || res.data.features.length === 0) {
+      return null;
+    }
 
-        if (matched) {
-          const attr = matched.attributes;
-          const eColi = typeof attr.EColi === 'number' ? attr.EColi : b.latestSample.eColiCount;
-          let status: 'safe' | 'caution' | 'advisory' = 'safe';
-          if (eColi > 400) status = 'advisory';
-          else if (eColi > 200) status = 'caution';
+    const liveFeatures = res.data.features;
+    return BEACHES.map((b) => {
+      const matched = liveFeatures.find((f) => {
+        const siteName = (f.attributes?.Site_Name || f.attributes?.SiteName || f.attributes?.Name || '').toLowerCase();
+        return siteName.includes(b.name.toLowerCase()) || b.name.toLowerCase().includes(siteName);
+      });
 
-          return {
-            ...b,
-            currentStatus: status,
-            latestSample: {
-              ...b.latestSample,
-              eColiCount: eColi,
-            },
-            isStale: false,
-          };
-        }
+      if (matched) {
+        const attr = matched.attributes;
+        const eColi = typeof attr.EColi === 'number' ? attr.EColi : b.latestSample.eColiCount;
+        let status: 'safe' | 'caution' | 'advisory' = 'safe';
+        if (eColi > 400) status = 'advisory';
+        else if (eColi > 200) status = 'caution';
 
         return {
           ...b,
-          isStale: false,
+          currentStatus: status,
+          latestSample: {
+            ...b.latestSample,
+            eColiCount: eColi,
+          },
+          isLive: true,
         };
-      });
-    }
-  } catch (e) {}
+      }
 
-  return BEACHES.map((b) => ({ ...b, isStale: true }));
+      // No matching feature in this request's live GIS response — surface
+      // the seed reading as explicitly not-live rather than showing it
+      // identically to a genuinely live-matched beach (health/safety signal).
+      return { ...b, isLive: false };
+    });
+  });
 }
 
 /**

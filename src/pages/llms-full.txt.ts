@@ -8,8 +8,6 @@ import { getLiveStations as getLiveAirStations } from '../tools/air-quality/serv
 import { getLiveSportsTeams } from '../tools/sports-teams/services/sportsTeamsService';
 import { getLiveSalesEvents } from '../tools/sales-events/services/salesService';
 import { getLiveMarketHeartbeat } from '../tools/housing-market/services/marketService';
-import { getLiveProposals } from '../tools/civic-development/services/civicService';
-import { getLiveEvents } from '../tools/community-events/services/eventService';
 import { getAllBeaches } from '../tools/can-i-swim/services/vchScraper';
 import { getAllNeighbourhoods, evaluateNeighbourhoodSpot } from '../tools/carshare-parking/services/parkingEvaluator';
 
@@ -22,30 +20,36 @@ export const GET: APIRoute = async ({ request }) => {
 
   // Concurrent telemetry fetches
   const [
-    weather,
-    mountains,
-    ferries,
-    crossings,
-    health,
-    air,
-    sportsTeamsData,
-    sales,
-    market,
-    proposals,
-    communityEvents,
+    weatherResult,
+    mountainsResult,
+    ferriesResult,
+    crossingsResult,
+    healthResult,
+    airResult,
+    sportsTeamsResult,
+    salesResult,
+    marketResult,
   ] = await Promise.all([
-    getLiveWeather().catch(() => []),
-    getLiveMountains().catch(() => []),
-    getLiveRoutes().catch(() => []),
-    getLiveCrossings().catch(() => []),
-    getLiveFacilities().catch(() => []),
-    getLiveAirStations().catch(() => []),
-    getLiveSportsTeams().catch(() => ({ teams: [], gameDaySummary: { totalTeams: 0, gamesTodayCount: 0, teamsPlayingToday: [] } })),
-    getLiveSalesEvents().catch(() => []),
-    getLiveMarketHeartbeat().catch(() => null),
-    getLiveProposals().catch(() => []),
-    getLiveEvents().catch(() => []),
+    getLiveWeather(),
+    getLiveMountains(),
+    getLiveRoutes(),
+    getLiveCrossings(),
+    getLiveFacilities(),
+    getLiveAirStations(),
+    getLiveSportsTeams(),
+    getLiveSalesEvents(),
+    getLiveMarketHeartbeat(),
   ]);
+
+  const weather = weatherResult.ok ? weatherResult.data : [];
+  const air = airResult.ok ? airResult.data : [];
+  const mountains = mountainsResult.ok ? mountainsResult.data : [];
+  const ferries = ferriesResult.ok ? ferriesResult.data : [];
+  const crossings = crossingsResult.ok ? crossingsResult.data : [];
+  const health = healthResult.ok ? healthResult.data : [];
+  const market = marketResult.ok ? marketResult.data : null;
+  const sportsTeamsData = sportsTeamsResult.ok ? sportsTeamsResult.data : { teams: [], gameDaySummary: { gamesTodayCount: 0, imminentGame: null } };
+  const sales = salesResult.ok ? salesResult.data : [];
 
   const beaches = getAllBeaches();
   const neighbourhoods = getAllNeighbourhoods();
@@ -120,16 +124,6 @@ ${market ? `- **Metro Vancouver Composite**: Benchmark Price: $${market.metroOve
 
 ## 11. Warehouse & Sample Sales Radar (/sales)
 ${sales.map((s) => `- **${s.name}** (${s.brand}): ${s.startDate} to ${s.endDate} @ ${s.venueName} | Discount: ${s.discountRange} | Entry: ${s.entryType.replace(/_/g, ' ')}`).join('\n')}
-
----
-
-## 12. Civic Rezoning & Broadway Plan Radar (/civic)
-${proposals.map((p) => `- **${p.address}** (${p.neighbourhood}): ${p.storeys} Storeys | ${p.proposedFSR} FSR | ${p.units.totalUnits} Units (${p.units.belowMarketRental} Below-Market) | Status: ${p.status.toUpperCase()}`).join('\n')}
-
----
-
-## 13. Free Community Events (/events)
-${communityEvents.map((e) => `- **${e.title}**: ${e.startDateTime.split('T')[0]} @ ${e.venueName} (${e.neighbourhood}) | Free Admission: Yes | All Ages: ${e.isAllAges ? 'Yes' : 'No'}`).join('\n')}
 `;
 
   return new Response(markdown, {

@@ -1,6 +1,7 @@
 ---
 import type { HealthcareFacility } from '../types';
 import WaitTimeBadge from './WaitTimeBadge.astro';
+import { computeIsCurrentlyOpen } from '../services/healthService';
 
 interface Props {
   facility: HealthcareFacility;
@@ -8,7 +9,7 @@ interface Props {
 
 const { facility } = Astro.props;
 const waitMins = facility.triageData?.waitTimeMinutes;
-const isOpen = facility.hours.isCurrentlyOpen;
+const isOpen = computeIsCurrentlyOpen(facility);
 ---
 
 <div

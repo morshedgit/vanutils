@@ -63,7 +63,6 @@ export interface WeatherStation {
   };
   officialStationCode?: string;  // e.g. "CWVR", "CWVF"
   lastUpdated: string;           // ISO 8601
-  isStale: boolean;
 }
 
 export interface WeatherOverviewStats {

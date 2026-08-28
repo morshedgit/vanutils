@@ -4,38 +4,42 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
 import StandbyGauge from '../../tools/bc-ferries/components/StandbyGauge.astro';
 import WebcamGrid from '../../tools/bc-ferries/components/WebcamGrid.astro';
-import { getLiveRoutes, getRouteById } from '../../tools/bc-ferries/services/ferryService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveRoutes, getRouteById, BASELINE_ROUTES } from '../../tools/bc-ferries/services/ferryService';
 import { getStandbyMeta } from '../../tools/bc-ferries/services/standbyCalc';
 
 // Set Edge Cache header: 60s max age, 300s background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
 const { route: routeId } = Astro.params;
-const allLive = await getLiveRoutes();
-const route = getRouteById(routeId || '', allLive);
 
-if (!route) {
+// Baseline lookup is metadata-only (name/terminals) so an unknown id still
+// 404s even when the live upstream is down; it is never used for telemetry values.
+const routeMeta = getRouteById(routeId || '', BASELINE_ROUTES);
+if (!routeMeta) {
   return Astro.redirect('/ferries');
 }
 
-const reverseRoute = route.reverseRouteId ? getRouteById(route.reverseRouteId, allLive) : undefined;
-const nextSailing = route.nextSailings[0];
+const routesResult = await getLiveRoutes();
+const route = routesResult.ok ? getRouteById(routeId || '', routesResult.data) : undefined;
+const reverseRoute = route?.reverseRouteId && routesResult.ok ? getRouteById(route.reverseRouteId, routesResult.data) : undefined;
+const nextSailing = route?.nextSailings[0];
 const standbyMeta = nextSailing ? getStandbyMeta(nextSailing.standbyRisk) : undefined;
 
 const routeSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'TouristInformationCenter',
-    name: `${route.name} Marine Route`,
-    description: `Real-time vehicle deck space, standby odds, sailing status, and DriveBC approach webcams for ${route.name}.`,
-    url: `https://vanheartbeat.ca/ferries/${route.id}`,
+    name: `${routeMeta.name} Marine Route`,
+    description: `Real-time vehicle deck space, standby odds, sailing status, and DriveBC approach webcams for ${routeMeta.name}.`,
+    url: `https://vanheartbeat.ca/ferries/${routeMeta.id}`,
     sameAs: [
       'https://en.wikipedia.org/wiki/BC_Ferries',
       'https://www.wikidata.org/wiki/Q795724',
     ],
     address: {
       '@type': 'PostalAddress',
-      addressLocality: route.originTerminal,
+      addressLocality: routeMeta.originTerminal,
       addressRegion: 'BC',
       addressCountry: 'CA',
     },
@@ -46,7 +50,7 @@ const routeSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Ferry Standby Radar', item: 'https://vanheartbeat.ca/ferries' },
-      { '@type': 'ListItem', position: 3, name: route.name, item: `https://vanheartbeat.ca/ferries/${route.id}` },
+      { '@type': 'ListItem', position: 3, name: routeMeta.name, item: `https://vanheartbeat.ca/ferries/${routeMeta.id}` },
     ],
   },
 ];
@@ -78,10 +82,10 @@ const relatedItems: RelatedItem[] = [
 
 <ToolLayout
   toolId="bc-ferries"
-  title={`${route.name} — Live Marine Radar`}
-  description={`Real-time vehicle deck space, standby odds, sailing status, and DriveBC approach webcams for ${route.name}.`}
-  currentPath={`/ferries/${route.id}`}
-  badgeText={route.provider === 'bc-ferries' ? 'BC Ferries' : route.provider.toUpperCase()}
+  title={route ? `${route.name} — Live Marine Radar` : `${routeMeta.name} — Live Data Unavailable`}
+  description={route ? `Real-time vehicle deck space, standby odds, sailing status, and DriveBC approach webcams for ${route.name}.` : 'Live marine transit data is temporarily unavailable.'}
+  currentPath={`/ferries/${routeMeta.id}`}
+  badgeText={route ? (route.provider === 'bc-ferries' ? 'BC Ferries' : route.provider.toUpperCase()) : 'Live Data Unavailable'}
   status="active"
 >
   <JsonLd schema={routeSchema} />
@@ -93,10 +97,16 @@ const relatedItems: RelatedItem[] = [
       <span>/</span>
       <a href="/ferries" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Ferry Standby</a>
       <span>/</span>
-      <span class="text-slate-900 dark:text-white truncate">{route.name}</span>
+      <span class="text-slate-900 dark:text-white truncate">{routeMeta.name}</span>
     </nav>
 
+    {!route && (
+      <LiveDataUnavailable toolName={`${routeMeta.name} Marine Route`} variant="page" error={!routesResult.ok ? routesResult.error : undefined} />
+    )}
+
     <!-- Header Route Card -->
+    {route && (
+    <>
     <section class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -222,6 +232,8 @@ const relatedItems: RelatedItem[] = [
       <section class="space-y-3">
         <WebcamGrid cameras={route.highwayCameras} />
       </section>
+    )}
+    </>
     )}
 
     <!-- Connected Cross-Utility Telemetry -->

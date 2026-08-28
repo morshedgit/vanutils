@@ -1,7 +1,13 @@
 import type { SportsTeam, SportsTeamsHeartbeat, MatchResult, TeamGame } from '../types';
 import teamsData from '../data/teams.json';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only (schedule/venue/broadcast) — never presented
+// as live standings. See issue #35.
 export const BASELINE_TEAMS: SportsTeam[] = teamsData as SportsTeam[];
+
+const CACHE_TTL_SECONDS = 60; // live game scores change quickly
 
 /**
  * Returns all registered major Vancouver sports franchises
@@ -83,16 +89,20 @@ export function getGameDaySummary(teams: SportsTeam[]) {
 }
 
 /**
- * Dynamic live loader for Cloudflare Pages SSR with 1.2s fast timeout fallback
+ * Dynamic live loader for Cloudflare Pages SSR with 1.2s fast timeout.
+ * Returns ok:false (no baseline standings masquerading as live) if neither
+ * upstream league feed responds this request — BC Lions (CFL) and the
+ * Canadians (baseball) have no live standings source integrated yet, so
+ * their schedule/venue metadata is seed/reference data regardless.
  */
-export async function getLiveSportsTeams(): Promise<SportsTeamsHeartbeat> {
-  const teams = [...BASELINE_TEAMS];
+export async function getLiveSportsTeams(): Promise<LiveResult<SportsTeamsHeartbeat>> {
+  return withEdgeCache<SportsTeamsHeartbeat>('sports-teams-heartbeat', CACHE_TTL_SECONDS, async () => {
+    const teams = BASELINE_TEAMS.map((t) => ({ ...t, standings: { ...t.standings }, standingsLive: false }));
+    let anyLiveSignal = false;
 
-  try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s edge timeout
 
-    // Attempt live NHL standings query for Canucks
     try {
       const nhlPromise = fetch('https://api-web.nhle.com/v1/standings/now', {
         signal: controller.signal,
@@ -109,10 +119,12 @@ export async function getLiveSportsTeams(): Promise<SportsTeamsHeartbeat> {
               canucks.standings.rank = canucksStandings.divisionSequence || canucks.standings.rank;
               canucks.standings.goalDiffOrMargin = canucksStandings.goalDifferential;
               canucks.standings.streak = `${canucksStandings.streakCount}${canucksStandings.streakCode}`;
+              canucks.standingsLive = true;
+              anyLiveSignal = true;
             }
           }
         }
-      });
+      }).catch(() => {});
 
       const mlsPromise = fetch('https://site.api.espn.com/apis/v2/sports/soccer/usa.1/standings', {
         signal: controller.signal,
@@ -132,33 +144,33 @@ export async function getLiveSportsTeams(): Promise<SportsTeamsHeartbeat> {
               const pts = stats.find((s: any) => s.name === 'points')?.value || 0;
               const rank = stats.find((s: any) => s.name === 'rank')?.value || whitecaps.standings.rank;
               const gd = stats.find((s: any) => s.name === 'pointDifferential')?.value || 0;
-              
+
               whitecaps.standings.record = `${wins}-${losses}-${ties}`;
               whitecaps.standings.points = pts;
               whitecaps.standings.rank = rank;
               whitecaps.standings.goalDiffOrMargin = gd;
+              whitecaps.standingsLive = true;
+              anyLiveSignal = true;
             }
           }
         }
       }).catch(() => {});
 
       await Promise.allSettled([nhlPromise, mlsPromise]);
-    } catch {
-      // Graceful fallback to verified baseline data
     } finally {
       clearTimeout(timeoutId);
     }
-  } catch {
-    // Edge timeout triggered, proceed with baseline telemetry
-  }
 
-  const gameDaySummary = getGameDaySummary(teams);
+    if (!anyLiveSignal) return null;
 
-  return {
-    timestamp: new Date().toISOString(),
-    teams,
-    gameDaySummary,
-  };
+    const gameDaySummary = getGameDaySummary(teams);
+
+    return {
+      timestamp: new Date().toISOString(),
+      teams,
+      gameDaySummary,
+    };
+  });
 }
 
 /**

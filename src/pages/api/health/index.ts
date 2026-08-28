@@ -13,7 +13,16 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const facilities = await getLiveFacilities();
+  const facilitiesResult = await getLiveFacilities();
+
+  if (!facilitiesResult.ok) {
+    return new Response(JSON.stringify({ error: facilitiesResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const facilities = facilitiesResult.data;
 
   if (facilityId) {
     const facility = getFacilityById(facilityId, facilities);

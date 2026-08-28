@@ -51,13 +51,12 @@ export interface SalesEvent {
   officialSourceUrl: string;
   featuredItems: string[];
   lastUpdated: string;        // ISO 8601
-  isStale: boolean;
 }
 
 export interface SalesOverviewStats {
   activeSalesCount: number;
   upcomingThisMonth: number;
   avgDiscountPercent: number;
-  nextMajorSaleName: string;
-  nextMajorSaleDate: string;
+  nextMajorSaleName: string | null;
+  nextMajorSaleDate: string | null;
 }

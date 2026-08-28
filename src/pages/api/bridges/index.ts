@@ -13,7 +13,16 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const crossings = await getLiveCrossings();
+  const crossingsResult = await getLiveCrossings();
+
+  if (!crossingsResult.ok) {
+    return new Response(JSON.stringify({ error: crossingsResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const crossings = crossingsResult.data;
 
   if (crossingId) {
     const crossing = getCrossingById(crossingId, crossings);

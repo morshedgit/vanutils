@@ -35,6 +35,11 @@ export interface Beach {
   currentStatus: WaterQualityStatus;
   advisoryReason?: string;
   latestSample: SamplingRecord;
+  // False when this beach had no matching feature in the live VCH/Metro
+  // Vancouver GIS response — currentStatus/latestSample are the last-known
+  // seed values, not a fresh reading. Undefined on baseline-only lookups
+  // (metadata paths that never call getLiveBeaches). See issue #35.
+  isLive?: boolean;
   officialSourceUrl: string;
   description: string;
   bestFor: string[];

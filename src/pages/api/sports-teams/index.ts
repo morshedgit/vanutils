@@ -1,11 +1,23 @@
 import type { APIRoute } from 'astro';
-import { getLiveSportsTeams, getTeamById } from '../../../tools/sports-teams/services/sportsTeamsService';
+import { getLiveSportsTeams } from '../../../tools/sports-teams/services/sportsTeamsService';
 
 export const GET: APIRoute = async ({ url }) => {
   const teamId = url.searchParams.get('team');
 
+  const result = await getLiveSportsTeams();
+
+  if (!result.ok) {
+    return new Response(JSON.stringify({ error: result.error }), {
+      status: 503,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+      },
+    });
+  }
+
   if (teamId) {
-    const team = getTeamById(teamId);
+    const team = result.data.teams.find((t) => t.id === teamId);
     if (!team) {
       return new Response(JSON.stringify({ error: `Team '${teamId}' not found.` }), {
         status: 404,
@@ -25,9 +37,7 @@ export const GET: APIRoute = async ({ url }) => {
     });
   }
 
-  const heartbeat = await getLiveSportsTeams();
-
-  return new Response(JSON.stringify(heartbeat), {
+  return new Response(JSON.stringify(result.data), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',

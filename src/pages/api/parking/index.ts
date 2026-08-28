@@ -14,7 +14,16 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
-  const allNeighbourhoods = await getLiveNeighbourhoods();
+  const neighbourhoodsResult = await getLiveNeighbourhoods();
+
+  if (!neighbourhoodsResult.ok) {
+    return new Response(JSON.stringify({ error: neighbourhoodsResult.error }), {
+      status: 503,
+      headers,
+    });
+  }
+
+  const allNeighbourhoods = neighbourhoodsResult.data;
 
   if (neighbourhoodSlug) {
     const neighbourhood = getNeighbourhoodBySlug(neighbourhoodSlug, allNeighbourhoods);

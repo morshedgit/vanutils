@@ -10,7 +10,8 @@ import { getLiveBreakingAlerts } from '../tools/local-news/services/newsService'
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
 const allTools = TOOLS_REGISTRY;
-const alerts = await getLiveBreakingAlerts();
+const alertsResult = await getLiveBreakingAlerts();
+const alerts = alertsResult.ok ? alertsResult.data : [];
 
 const outdoorsCount = allTools.filter((t) => t.category === 'outdoors').length;
 const transitCount = allTools.filter((t) => t.category === 'transit').length;

@@ -6,8 +6,13 @@ import type {
   AvalancheDanger,
 } from '../types';
 import mountainsData from '../data/mountains.json';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only — never presented as live telemetry. See issue #35.
 export const BASELINE_MOUNTAINS: MountainResort[] = mountainsData as MountainResort[];
+
+const CACHE_TTL_SECONDS = 1800; // 30 minutes
 
 const mountainLocations = [
   {
@@ -53,24 +58,29 @@ const mountainLocations = [
 ];
 
 /**
- * Dynamically fetches live mountain atmospheric soundings at the edge
+ * Dynamically fetches live mountain atmospheric soundings at the edge.
+ * Returns ok:false (no baseline masquerading as live) when the upstream fetch fails.
  */
-export async function getLiveMountains(): Promise<MountainResort[]> {
-  try {
+export async function getLiveMountains(): Promise<LiveResult<MountainResort[]>> {
+  return withEdgeCache<MountainResort[]>('mountain-snow-resorts', CACHE_TTL_SECONDS, async () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s fast edge timeout
 
-    const updated = await Promise.all(
-      BASELINE_MOUNTAINS.map(async (mountain) => {
-        const loc = mountainLocations.find((l) => l.id === mountain.id);
-        if (!loc) return mountain;
+    const liveMountains: MountainResort[] = [];
 
-        const topElevation = loc.bands[loc.bands.length - 1].elevationMeters;
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lng}&elevation=${topElevation}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,freezing_level_height,snowfall&daily=snowfall_sum&timezone=America/Vancouver`;
+    try {
+      await Promise.all(
+        BASELINE_MOUNTAINS.map(async (mountain) => {
+          const loc = mountainLocations.find((l) => l.id === mountain.id);
+          if (!loc) return;
 
-        try {
-          const res = await fetch(url, { signal: controller.signal });
-          if (res.ok) {
+          const topElevation = loc.bands[loc.bands.length - 1].elevationMeters;
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lng}&elevation=${topElevation}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,freezing_level_height,snowfall&daily=snowfall_sum&timezone=America/Vancouver`;
+
+          try {
+            const res = await fetch(url, { signal: controller.signal });
+            if (!res.ok) return;
+
             const data = await res.json();
             const current = data.current;
             const daily = data.daily;
@@ -82,7 +92,7 @@ export async function getLiveMountains(): Promise<MountainResort[]> {
             const elevationBands = loc.bands.map((b) => {
               const diffFromTopMeters = topElevation - b.elevationMeters;
               const bandTemp = parseFloat((peakTemp + (diffFromTopMeters * 0.0065)).toFixed(1));
-              
+
               let precip: PrecipitationType = 'clear';
               if (current.precipitation > 0) {
                 if (bandTemp <= -1.5) precip = 'snow';
@@ -102,7 +112,7 @@ export async function getLiveMountains(): Promise<MountainResort[]> {
               };
             });
 
-            return {
+            liveMountains.push({
               ...mountain,
               currentFreezingLevelMeters: freezingLevel,
               snowfall: {
@@ -111,21 +121,19 @@ export async function getLiveMountains(): Promise<MountainResort[]> {
               },
               elevationBands,
               lastUpdated: new Date().toISOString(),
-            };
+            });
+          } catch (e) {
+            // No genuine live reading for this mountain — omitted rather than
+            // falling back to a baseline snapshot dressed up as current.
           }
-        } catch (e) {
-          // Fallback to baseline
-        }
-        return mountain;
-      })
-    );
-    clearTimeout(timeoutId);
-    return updated;
-  } catch (e) {
-    // Return baseline
-  }
+        })
+      );
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
-  return BASELINE_MOUNTAINS;
+    return liveMountains.length > 0 ? liveMountains : null;
+  });
 }
 
 export function getAllMountains(): MountainResort[] {

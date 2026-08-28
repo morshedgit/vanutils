@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "npm run data:sync:all && astro build",
+    "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
     "data:sync:all": "node scripts/scrape-official-data.js && node scripts/sync-live-ferries.js && node scripts/sync-live-snow.js && node scripts/sync-live-parking.js && node scripts/sync-live-health.js && node scripts/sync-live-bridges.js && node scripts/sync-live-air.js && node scripts/sync-live-civic.js && node scripts/sync-live-events.js && node scripts/sync-live-schools.js && node scripts/sync-live-news.js && node scripts/sync-live-market.js && node scripts/sync-live-sports.js && node scripts/sync-live-weather.js && node scripts/sync-live-sports-teams.js && node scripts/sync-live-sales.js",

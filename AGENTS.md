@@ -26,10 +26,10 @@ VanHeartbeat operates under a strict **Zero-Fake / Zero-Stale Law**. AI agents a
 
 ### 🚫 Prohibited Practices:
 1. **Zero Mathematical Generators**: Never use mathematical formulas (`Math.sin`, `Math.random`, `idx * factor`) to synthesize trendlines, bacteria counts, wait times, or weather values.
-2. **Zero Timestamp-Only Syncs**: Synchronization scripts in `scripts/` must never simply touch `lastUpdated = new Date().toISOString()` on static data. Every sync script must parse real data from an authentic public endpoint.
+2. **Zero Timestamp-Only Syncs**: Synchronization scripts in `scripts/` must never simply touch `lastUpdated = new Date().toISOString()` on static data. Every sync script must parse real data from an authentic public endpoint. These scripts are manual/one-time seed-refresh tools only — never part of `npm run build` or the request path.
 3. **Zero Simulated Timeouts**: Never use `setTimeout()` or artificial promises to mimic network latency in `services/`.
-4. **Zero Synthetic / Mock Baselines**: Baseline snapshots in `src/tools/*/data/*.json` must originate from verified historical open datasets or official public releases, never fabricated.
-5. **Zero Silent Fallbacks**: If an upstream public API is unavailable, the system must transparently display `unmonitored`, `closed`, or `isStale: true` with the last authentic timestamp. Never invent fallback numbers.
+4. **Zero Synthetic / Mock Baselines**: Baseline snapshots in `src/tools/*/data/*.json` must originate from verified historical open datasets or official public releases, never fabricated, and exist as **seed/reference metadata only** — never rendered to end users as if it were current live telemetry.
+5. **Zero Silent Fallbacks**: If an upstream public API is unavailable, `getLive<ToolData>()` must return an explicit `{ ok: false, error }` (see `src/services/shared/liveResult.ts`) — never baseline data dressed up as current. Pages and cards must render a dedicated "Live data unavailable" state instead of numbers. Never invent fallback numbers, and never let a failure look like a live reading.
 
 ---
 
@@ -60,9 +60,9 @@ Every utility module on VanHeartbeat must follow this standardized runtime edge 
             │                                           │
             ▼                                           ▼
 +───────────────────────+                   +───────────────────────+
-| Fresh Live Telemetry  |                   |  Verified Snapshot    |
-| - 100% Real Values    |                   |  - isStale: true      |
-| - isStale: false      |                   |  - Real Baseline Data |
+| Fresh Live Telemetry  |                   |   Explicit Failure    |
+| - 100% Real Values    |                   |  - ok: false          |
+| - ok: true            |                   |  - No numbers shown   |
 +───────────────────────+                   +───────────────────────+
             │                                           │
             └────────────────────┬──────────────────────┘
@@ -74,11 +74,11 @@ Every utility module on VanHeartbeat must follow this standardized runtime edge 
 ```
 
 ### Pillar Specifications:
-1. **Dynamic Edge Loader (`getLive<ToolData>()`)**: Every tool must export an async loader executed dynamically on each Server-Side Rendered (SSR) Edge request (`output: "server"`).
+1. **Dynamic Edge Loader (`getLive<ToolData>()`)**: Every tool must export an async loader executed dynamically on each Server-Side Rendered (SSR) Edge request (`output: "server"`), returning `Promise<LiveResult<ToolData>>` (`src/services/shared/liveResult.ts`). This is the sole source of live values — data is never baked in at build/deploy time.
 2. **Aggressive 1.2s Timeout SLA (`edgeFetch`)**: All upstream HTTP requests must be wrapped with `AbortSignal.timeout(1200)` using `services/shared/edgeFetch.ts` to ensure edge responses render in $< 1.2\text{s}$ without blocking the user.
 3. **100% Real Upstream Public Feeds**: Upstream data must originate from official public APIs, REST feeds, or XML/RSS feeds (e.g. DriveBC Open511, BC Ferries, Open-Meteo, Vancouver Coastal Health, Bank of Canada, City Open Data).
-4. **Graceful Failover to Verified Baseline (`isStale: true`)**: If the upstream API times out ($> 1200\text{ms}$) or errors, the edge worker must seamlessly return the pre-compiled baseline snapshot with an explicit `isStale: true` flag and the last verified timestamp.
-5. **Tiered Edge Cache-Control Headers**: Dynamic responses must set `s-maxage` and `stale-while-revalidate` according to data volatility:
+4. **Explicit Failure, No Fallback**: If the upstream API times out ($> 1200\text{ms}$) or errors, the loader returns `{ ok: false, error }` — never baseline data. `scripts/sync-live-*.js` are manual/one-time baseline-seeding tools only, run by hand, never part of the build or request path.
+5. **Per-Module Edge Caching + Tiered Cache-Control Headers**: Wrap the upstream fetch with `withEdgeCache()` (`src/services/shared/edgeCache.ts`, Cloudflare Workers Cache API) using a TTL matched to real-world change frequency, and set `s-maxage`/`stale-while-revalidate` accordingly:
    - *Rapid Transit & Ferries* (`/ferries`, `/bridges`): `public, s-maxage=60, stale-while-revalidate=120`
    - *Emergency & Weather* (`/health`, `/weather`, `/air`, `/snow`): `public, s-maxage=300, stale-while-revalidate=600`
    - *Sports & News* (`/sports-teams`, `/news`): `public, s-maxage=600, stale-while-revalidate=1200`
@@ -127,4 +127,4 @@ When creating or modifying a utility module:
 4. **Registry Declaration**: Register tool metadata in `src/config/tools.ts`.
 5. **High-Density Card Implementation**: Implement in `src/components/shared/ToolCard.astro` following the Zero-Fluff, High-Density Card standard.
 6. **Route Implementation**: Create `src/pages/<tool-id>/index.astro` and `src/pages/<tool-id>/[slug].astro` in Edge SSR mode with tiered `Cache-Control` headers and Wikidata `sameAs` entity links.
-7. **Verification**: Run `npm run data:sync:all`, `npm run check`, and `npm run build`.
+7. **Verification**: Run `npm run check` and `npm run build` (`data:sync:all` is a manual seed-refresh command, not part of build verification).

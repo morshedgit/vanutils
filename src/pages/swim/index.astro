@@ -3,12 +3,14 @@ import ToolLayout from '../../layouts/ToolLayout.astro';
 import JsonLd from '../../components/shared/JsonLd.astro';
 import BeachCard from '../../tools/can-i-swim/components/BeachCard.astro';
 import FilterBar from '../../tools/can-i-swim/components/FilterBar.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveBeaches } from '../../tools/can-i-swim/services/vchScraper';
 
 // Set Edge Cache header: 10 min max age, 30 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
-const beaches = await getLiveBeaches();
+const beachesResult = await getLiveBeaches();
+const beaches = beachesResult.ok ? beachesResult.data : [];
 
 const swimSchema = [
   {
@@ -86,30 +88,36 @@ const swimSchema = [
       </div>
     </div>
 
-    <!-- Filter & Search Controls -->
-    <FilterBar />
+    {beachesResult.ok ? (
+      <>
+        <!-- Filter & Search Controls -->
+        <FilterBar />
 
-    <!-- Beaches List Grid -->
-    <div class="space-y-2">
-      <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
-        <span id="beach-count-display">All Metro Beaches ({beaches.length})</span>
-        <span>Tap any beach for historical chart</span>
-      </div>
+        <!-- Beaches List Grid -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <span id="beach-count-display">All Metro Beaches ({beaches.length})</span>
+            <span>Tap any beach for historical chart</span>
+          </div>
 
-      <!-- High Density 2-Column Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="beaches-grid">
-        {beaches.map((beach) => (
-          <BeachCard beach={beach} />
-        ))}
-      </div>
+          <!-- High Density 2-Column Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="beaches-grid">
+            {beaches.map((beach) => (
+              <BeachCard beach={beach} />
+            ))}
+          </div>
 
-      <!-- Empty State -->
-      <div id="no-beaches-empty-state" class="hidden rounded-xl border border-dashed border-slate-300 dark:border-slate-800 p-8 text-center space-y-1">
-        <span class="text-2xl">🏖️</span>
-        <h3 class="text-xs font-bold text-slate-900 dark:text-white">No matching beaches</h3>
-        <p class="text-[11px] text-slate-400">Try changing your search query or region filter.</p>
-      </div>
-    </div>
+          <!-- Empty State -->
+          <div id="no-beaches-empty-state" class="hidden rounded-xl border border-dashed border-slate-300 dark:border-slate-800 p-8 text-center space-y-1">
+            <span class="text-2xl">🏖️</span>
+            <h3 class="text-xs font-bold text-slate-900 dark:text-white">No matching beaches</h3>
+            <p class="text-[11px] text-slate-400">Try changing your search query or region filter.</p>
+          </div>
+        </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Can I Swim Today?" variant="page" error={beachesResult.error} />
+    )}
   </div>
 </ToolLayout>
 

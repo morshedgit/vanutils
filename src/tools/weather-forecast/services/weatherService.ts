@@ -1,8 +1,13 @@
 import type { WeatherStation, WeatherOverviewStats, WeatherCondition, StationRegion } from '../types';
 import stationsData from '../data/stations.json';
 import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { withEdgeCache } from '../../../services/shared/edgeCache';
+import type { LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only — never presented as live telemetry. See issue #35.
 export const BASELINE_STATIONS: WeatherStation[] = stationsData as WeatherStation[];
+
+const CACHE_TTL_SECONDS = 300; // 5 minutes
 
 function mapWmoCodeToCondition(code: number): WeatherCondition {
   if (code === 0) return 'sunny';
@@ -20,12 +25,13 @@ function mapWmoCodeToCondition(code: number): WeatherCondition {
 }
 
 /**
- * Dynamically fetches live microclimate weather telemetry at the edge with fallback
+ * Dynamically fetches live microclimate weather telemetry at the edge.
+ * Returns ok:false (no baseline masquerading as live) when the upstream fetch fails.
  */
-export async function getLiveWeather(): Promise<WeatherStation[]> {
-  try {
+export async function getLiveWeather(): Promise<LiveResult<WeatherStation[]>> {
+  return withEdgeCache<WeatherStation[]>('weather-forecast-stations', CACHE_TTL_SECONDS, async () => {
     // Parallel queries to Open-Meteo HRDPS Canadian Model
-    const fetchPromises = BASELINE_STATIONS.map(async (st) => {
+    const fetchPromises = BASELINE_STATIONS.map(async (st): Promise<WeatherStation | null> => {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${st.latitude}&longitude=${st.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,uv_index_max,sunrise,sunset&timezone=America%2FVancouver&forecast_days=7`;
 
       const res = await edgeFetch<any>(url, { timeoutMs: 1200 });
@@ -104,21 +110,20 @@ export async function getLiveWeather(): Promise<WeatherStation[]> {
             uvIndex: Math.round(curr.uv_index || 5),
             precipitation24hMm: Math.round((curr.precipitation || 0) * 10) / 10,
           },
-          hourly: hourly.length > 0 ? hourly : st.hourly,
-          daily: daily.length > 0 ? daily : st.daily,
+          hourly,
+          daily,
           lastUpdated: new Date().toISOString(),
-          isStale: false,
         };
       }
 
-      return st;
+      // No genuine live reading for this station — omitted rather than
+      // falling back to a baseline snapshot dressed up as current.
+      return null;
     });
 
-    const liveStations = await Promise.all(fetchPromises);
-    return liveStations;
-  } catch (e) {}
-
-  return BASELINE_STATIONS.map((s) => ({ ...s, isStale: true }));
+    const liveStations = (await Promise.all(fetchPromises)).filter((s): s is WeatherStation => s !== null);
+    return liveStations.length > 0 ? liveStations : null;
+  });
 }
 
 export function getAllStations(): WeatherStation[] {

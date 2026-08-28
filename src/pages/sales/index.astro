@@ -4,11 +4,13 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import { getLiveSalesEvents, getSalesOverviewStats } from '../../tools/sales-events/services/salesService';
 import SaleCard from '../../tools/sales-events/components/SaleCard.astro';
 import FilterTabs from '../../tools/sales-events/components/FilterTabs.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 
 // Edge SSR caching policy (30m edge cache, 2h SWR)
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=7200');
 
-const allSales = await getLiveSalesEvents();
+const salesResult = await getLiveSalesEvents();
+const allSales = salesResult.ok ? salesResult.data : [];
 const stats = await getSalesOverviewStats();
 
 const activeSales = allSales.filter((s) => s.status === 'active_now');
@@ -145,54 +147,66 @@ const salesSchema = [
           Next Major Drop
         </span>
         <div class="truncate">
-          <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate block">
-            {stats.nextMajorSaleName}
-          </span>
-          <span class="text-[10px] text-sky-600 dark:text-sky-400 font-semibold">
-            {stats.nextMajorSaleDate}
-          </span>
+          {stats.nextMajorSaleName ? (
+            <>
+              <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate block">
+                {stats.nextMajorSaleName}
+              </span>
+              <span class="text-[10px] text-sky-600 dark:text-sky-400 font-semibold">
+                {stats.nextMajorSaleDate}
+              </span>
+            </>
+          ) : (
+            <span class="text-xs sm:text-sm font-bold text-slate-400">None scheduled</span>
+          )}
         </div>
       </div>
     </div>
 
-    <!-- Category Filter Bar & Live Search -->
-    <FilterTabs />
+    {salesResult.ok ? (
+      <>
+        <!-- Category Filter Bar & Live Search -->
+        <FilterTabs />
 
-    <!-- Active Now Section (If Any) -->
-    {activeSales.length > 0 && (
-      <div class="space-y-3">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-            Doors Open Today (Active Now)
-          </h2>
+        <!-- Active Now Section (If Any) -->
+        {activeSales.length > 0 && (
+          <div class="space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+              <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                Doors Open Today (Active Now)
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {activeSales.map((sale) => (
+                <SaleCard sale={sale} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- Upcoming Sales Grid -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>📅</span>
+              <span>Upcoming Warehouse &amp; Sample Sales</span>
+            </h2>
+            <span class="text-xs text-slate-500 dark:text-slate-400">
+              Chronological Order
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5" id="sales-grid">
+            {upcomingSales.map((sale) => (
+              <SaleCard sale={sale} />
+            ))}
+          </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {activeSales.map((sale) => (
-            <SaleCard sale={sale} />
-          ))}
-        </div>
-      </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Warehouse & Sample Sales Radar" variant="page" error={salesResult.error} />
     )}
-
-    <!-- Upcoming Sales Grid -->
-    <div class="space-y-3">
-      <div class="flex items-center justify-between">
-        <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <span>📅</span>
-          <span>Upcoming Warehouse &amp; Sample Sales</span>
-        </h2>
-        <span class="text-xs text-slate-500 dark:text-slate-400">
-          Chronological Order
-        </span>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5" id="sales-grid">
-        {upcomingSales.map((sale) => (
-          <SaleCard sale={sale} />
-        ))}
-      </div>
-    </div>
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">

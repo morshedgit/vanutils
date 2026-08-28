@@ -26,8 +26,8 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
 - Connects every utility to verified municipal, provincial, and federal open data endpoints.
 - Wraps all network fetches in `edgeFetch()` with a strict **1.2s timeout SLA** (`AbortSignal.timeout(1200)`).
 - Eliminates 100% of synthetic formulas, randomizers, and simulated timeouts.
-- Provides seamless, non-blocking failover to verified snapshots with explicit `isStale: true` flags.
-- Configures tiered Cloudflare Edge cache headers (`public, s-maxage=60..300, stale-while-revalidate=120..600`).
+- Returns an explicit `{ ok: false, error }` result on upstream failure (`src/services/shared/liveResult.ts`) — never a baseline snapshot dressed up as current (superseded by issue #35's no-fallback policy; see that issue for the current contract).
+- Configures tiered Cloudflare Edge cache headers (`public, s-maxage=60..300, stale-while-revalidate=120..600`) via `withEdgeCache()` per module.
 
 ---
 
@@ -56,9 +56,9 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
             │                                           │
             ▼                                           ▼
 +───────────────────────+                   +───────────────────────+
-| Fresh Live Telemetry  |                   |  Verified Snapshot    |
-| - 100% Real Values    |                   |  - isStale: true      |
-| - isStale: false      |                   |  - Real Baseline Data |
+| Fresh Live Telemetry  |                   |   Explicit Failure    |
+| - 100% Real Values    |                   |  - ok: false          |
+| - ok: true            |                   |  - No numbers shown   |
 +───────────────────────+                   +───────────────────────+
             │                                           │
             └────────────────────┬──────────────────────┘
@@ -73,7 +73,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
 1. **Dynamic Edge Loader (`getLive<ToolData>()`)**: Every tool must export an async loader executed dynamically on each Server-Side Rendered (SSR) Edge request (`output: "server"`).
 2. **Aggressive 1.2s Timeout SLA (`edgeFetch`)**: All upstream HTTP requests must be wrapped with `AbortSignal.timeout(1200)` to ensure edge responses render in $< 1.2\text{s}$ without blocking the user.
 3. **100% Real Upstream Public Feeds**: Upstream data must originate from official public APIs, REST feeds, or XML/RSS feeds. **Zero mock data, zero synthetic math, zero hardcoded placeholders.**
-4. **Graceful Failover to Verified Baseline (`isStale: true`)**: If the upstream API times out ($> 1200\text{ms}$) or errors, the edge worker must seamlessly return the pre-compiled baseline snapshot with an explicit `isStale: true` flag and the last verified timestamp.
+4. **Explicit Failure, No Fallback**: If the upstream API times out ($> 1200\text{ms}$) or errors, the edge worker returns `{ ok: false, error }` — never the pre-compiled baseline snapshot dressed up as current (issue #35).
 5. **Tiered Edge Cache-Control Headers**: Dynamic responses must set `s-maxage` (e.g. 60–300s) and `stale-while-revalidate` (e.g. 120–600s) so Cloudflare's global edge network absorbs high traffic surges while keeping data fresh.
 
 ---
@@ -116,7 +116,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
   - Parse `locationsWithWaitTimes` from the embedded `__NEXT_DATA__` JSON payload.
   - Map facility slugs to internal identifiers (`VGH`, `SPH`, `MSJ`, `LGH`, `RHS`, `BCHBCCHILDREN`, `BH`, `RCH`, `SMH-A`, and UPCCs).
   - Ingest real-time `waitTimeMinutes` (e.g. 149m, 69m, 161m) and calculate triage intensity (`low`: $<90\text{m}$, `moderate`: $90-210\text{m}$, `high`: $>210\text{m}$).
-* **Failover**: If timeout occurs, serve `facilities.json` with `isStale: true` and last verified timestamp.
+* **Failover**: If timeout occurs, return `{ ok: false, error }` — never serve `facilities.json` as if it were live (issue #35).
 
 ---
 
@@ -128,7 +128,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
   - Calculate official Canadian AQHI:
     $$\text{AQHI} = \left(\frac{10}{10.4}\right) \times 100 \times \left[(e^{0.000537 \times \text{O}_3} - 1) + (e^{0.000871 \times \text{NO}_2} - 1) + (e^{0.000487 \times \text{PM}_{2.5}} - 1)\right]$$
   - Ingest 24-hour historical $\text{PM}_{2.5}$ readings for sparkline rendering.
-* **Failover**: Fall back to `stations.json` baseline with `isStale: true`.
+* **Failover**: Return `{ ok: false, error }` — never fall back to `stations.json` as if it were live (issue #35).
 
 ---
 
@@ -142,7 +142,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
   - Extract genuine weekly lab-tested geometric mean (30-day 5-sample) and latest single-sample E. coli count ($\text{CFU}/100\text{mL}$).
   - Completely eliminate the `Math.sin(idx) * factor` formula.
   - Evaluate safety limits: `safe` ($\le 200$), `caution` ($235-400$), `advisory` ($>400$ or geo mean $>200$).
-* **Failover**: Fall back to last verified lab sample date with `isStale: true`.
+* **Failover**: Return `{ ok: false, error }` rather than showing the last verified lab sample date as if it were current (issue #35).
 
 ---
 
@@ -155,7 +155,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
   - Replace simulated `setTimeout` in `salesService.ts` with real `edgeFetch()`.
   - Ingest newly scheduled major warehouse sales and sample drops from venue feeds.
   - Dynamically evaluate event status against current PST date (`upcoming`, `active_now`, `concluded`).
-* **Failover**: Fall back to verified curated `sales.json` baseline.
+* **Failover**: The date-based status evaluation against `sales.json` schedule data is itself the live signal (not a fallback) — it never depends on the venue-feed fetch above, so it is always current (see `salesService.ts`).
 
 ---
 
@@ -165,7 +165,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
 * **Ingestion Logic**:
   - Ingest official non-commercial City of Vancouver permitted festivals, community days, and park celebrations.
   - Filter for free admission and extract dates, times, and venue coordinates.
-* **Failover**: Fall back to verified `events.json` snapshot with `isStale: true`.
+* **Failover**: Return `{ ok: false, error }` — never fall back to `events.json` as if it were live (issue #35).
 
 ---
 
@@ -175,7 +175,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
 * **Ingestion Logic**:
   - Connect to VSB SD39 announcements feed for active closures (snow days, seismic upgrades).
   - Verify elementary-to-secondary feeder paths and childcare capacity notes.
-* **Failover**: Fall back to verified `schools.json` snapshot with `isStale: true`.
+* **Failover**: Return `{ ok: false, error }` — never fall back to `schools.json` as if it were live (issue #35).
 
 ---
 
@@ -186,7 +186,7 @@ Implement a **Unified Runtime Edge Ingestion Engine** that:
   - Ingest active Lower Mainland road incidents and stalls.
   - Dynamically compute travel times: `travelTime = normalTime + baseDelay + (hasMajorIncident ? 14 : (hasMinorIncident ? 6 : 0))`.
   - Dynamically update crossing status (`flowing`, `moderate`, `heavy`, `closed`).
-* **Failover**: Fall back to `crossings.json` with baseline estimates and `isStale: true`.
+* **Failover**: Return `{ ok: false, error }` — never fall back to `crossings.json` baseline estimates as if they were live (issue #35).
 
 ---
 

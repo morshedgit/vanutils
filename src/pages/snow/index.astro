@@ -4,13 +4,19 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import FilterTabs from '../../tools/mountain-snow/components/FilterTabs.astro';
 import MountainCard from '../../tools/mountain-snow/components/MountainCard.astro';
 import WebcamMatrix from '../../tools/mountain-snow/components/WebcamMatrix.astro';
-import { getLiveMountains, getSnowOverviewStats } from '../../tools/mountain-snow/services/snowService';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveMountains, getSnowOverviewStats, getAllMountains } from '../../tools/mountain-snow/services/snowService';
 
 // Set Edge Cache header: 5 min max age, 10 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
 
-const mountains = await getLiveMountains();
-const stats = getSnowOverviewStats(mountains);
+const mountainsResult = await getLiveMountains();
+const mountains = mountainsResult.ok ? mountainsResult.data : [];
+// Mountains with no live match this request are dropped rather than shown
+// with a baseline snapshot (see getLiveMountains) — surface that gap instead
+// of silently shrinking the "Showing all N" count. See issue #35.
+const droppedMountainCount = mountainsResult.ok ? getAllMountains().length - mountains.length : 0;
+const stats = mountainsResult.ok ? getSnowOverviewStats(mountains) : null;
 const allWebcams = mountains.flatMap((m) => m.webcams);
 
 const snowSchema = [
@@ -73,65 +79,75 @@ const snowSchema = [
   <JsonLd schema={snowSchema} />
 
   <div class="space-y-5 max-w-5xl mx-auto">
-    <!-- Freezing Level & Snow Hero -->
-    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-          <span>Coastal 0°C Freezing Level: ~{stats.avgFreezingLevel}m (Summer Alpine)</span>
+    {mountainsResult.ok && stats ? (
+      <>
+        <!-- Freezing Level & Snow Hero -->
+        <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+              <span>Coastal 0°C Freezing Level: ~{stats.avgFreezingLevel}m (Summer Alpine)</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+              Vancouver Mountain Snow & Elevation Matrix
+            </h2>
+            <p class="text-xs text-slate-300">
+              {stats.avgFresh24hCm > 0 ? `${stats.avgFresh24hCm}cm fresh snow in last 24h` : 'Summer Season • Hiking & Sightseeing Trails Open'} • {stats.totalOpenLifts} Sightseeing & Bike Lifts Active
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700">
+              {stats.avgFresh24hCm > 0 ? '❄️ Powder on Peak' : '☀️ Summer Trails Open'}
+            </span>
+          </div>
+        </section>
+
+        <!-- Pinned Mountains Bar (Mirrors Home Dashboard Card) -->
+        <div id="pinned-snow-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+              <span class="text-amber-500">⭐</span> My Mountains (Shown on Home Dashboard)
+            </span>
+            <span class="text-[11px] text-slate-400">
+              Click ⭐ on any mountain to customize
+            </span>
+          </div>
+
+          <div id="pinned-snow-container" class="flex flex-wrap gap-1.5">
+            <!-- Dynamically populated via client script -->
+          </div>
         </div>
-        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Vancouver Mountain Snow & Elevation Matrix
-        </h2>
-        <p class="text-xs text-slate-300">
-          {stats.avgFresh24hCm > 0 ? `${stats.avgFresh24hCm}cm fresh snow in last 24h` : 'Summer Season • Hiking & Sightseeing Trails Open'} • {stats.totalOpenLifts} Sightseeing & Bike Lifts Active
-        </p>
-      </div>
 
-      <div class="flex items-center gap-2 shrink-0">
-        <span class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700">
-          {stats.avgFresh24hCm > 0 ? '❄️ Powder on Peak' : '☀️ Summer Trails Open'}
-        </span>
-      </div>
-    </section>
+        <!-- Filter & Search Controls -->
+        <FilterTabs />
 
-    <!-- Pinned Mountains Bar (Mirrors Home Dashboard Card) -->
-    <div id="pinned-snow-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
-      <div class="flex items-center justify-between text-xs">
-        <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-          <span class="text-amber-500">⭐</span> My Mountains (Shown on Home Dashboard)
-        </span>
-        <span class="text-[11px] text-slate-400">
-          Click ⭐ on any mountain to customize
-        </span>
-      </div>
+        <!-- Mountain Cards Grid -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <span id="mountain-count-display">
+              {droppedMountainCount > 0
+                ? `Showing ${mountains.length} of ${mountains.length + droppedMountainCount} mountain resorts — ${droppedMountainCount} unavailable this request`
+                : `Showing all ${mountains.length} mountain resorts`}
+            </span>
+            <span>Tap any mountain for full report</span>
+          </div>
 
-      <div id="pinned-snow-container" class="flex flex-wrap gap-1.5">
-        <!-- Dynamically populated via client script -->
-      </div>
-    </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="mountains-grid">
+            {mountains.map((mountain) => (
+              <MountainCard mountain={mountain} />
+            ))}
+          </div>
+        </div>
 
-    <!-- Filter & Search Controls -->
-    <FilterTabs />
-
-    <!-- Mountain Cards Grid -->
-    <div class="space-y-2">
-      <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
-        <span id="mountain-count-display">Showing all {mountains.length} mountain resorts</span>
-        <span>Tap any mountain for full report</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="mountains-grid">
-        {mountains.map((mountain) => (
-          <MountainCard mountain={mountain} />
-        ))}
-      </div>
-    </div>
-
-    <!-- Live Multi-Mountain Webcam Matrix -->
-    <section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3 shadow-xs">
-      <WebcamMatrix webcams={allWebcams.slice(0, 4)} mountainName="All Mountains" />
-    </section>
+        <!-- Live Multi-Mountain Webcam Matrix -->
+        <section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3 shadow-xs">
+          <WebcamMatrix webcams={allWebcams.slice(0, 4)} mountainName="All Mountains" />
+        </section>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Mountain Snow Line" variant="page" error={!mountainsResult.ok ? mountainsResult.error : undefined} />
+    )}
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">

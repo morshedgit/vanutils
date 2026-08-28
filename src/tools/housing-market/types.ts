@@ -52,7 +52,6 @@ export interface SubmarketPulse {
   benchmarks: HpiBenchmark[];
   rental: RentalMetrics;
   lastUpdated: string; // ISO 8601
-  isStale: boolean;
 }
 
 export interface MarketHeartbeatData {
@@ -60,5 +59,4 @@ export interface MarketHeartbeatData {
   submarkets: SubmarketPulse[];
   mortgage: MortgageBenchmark;
   lastUpdated: string;
-  isStale: boolean;
 }

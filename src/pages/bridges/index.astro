@@ -4,13 +4,15 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 import IncidentsBanner from '../../tools/bridge-traffic/components/IncidentsBanner.astro';
 import FilterTabs from '../../tools/bridge-traffic/components/FilterTabs.astro';
 import CrossingCard from '../../tools/bridge-traffic/components/CrossingCard.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveCrossings, getBridgeOverviewStats } from '../../tools/bridge-traffic/services/bridgeService';
 
 // Set Edge Cache header: 60s max age, 120s background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
 
-const crossings = await getLiveCrossings();
-const stats = getBridgeOverviewStats(crossings);
+const crossingsResult = await getLiveCrossings();
+const crossings = crossingsResult.ok ? crossingsResult.data : [];
+const stats = crossingsResult.ok ? getBridgeOverviewStats(crossings) : null;
 const allIncidents = crossings.flatMap((c) => c.activeIncidents);
 
 const bridgesSchema = [
@@ -65,56 +67,62 @@ const bridgesSchema = [
   <JsonLd schema={bridgesSchema} />
 
   <div class="space-y-5 max-w-5xl mx-auto">
-    <!-- Active Incidents / Stalls Alert -->
-    <IncidentsBanner incidents={allIncidents} />
+    {crossingsResult.ok && stats ? (
+      <>
+        <!-- Active Incidents / Stalls Alert -->
+        <IncidentsBanner incidents={allIncidents} />
 
-    <!-- Hero Counterflow & Delay Snapshot -->
-    <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>{stats.activeCounterflowsCount} Dynamic Counterflows Active • Peak Crossing: {stats.highestDelayCrossingName} (+{stats.highestDelayMinutes}m)</span>
+        <!-- Hero Counterflow & Delay Snapshot -->
+        <section class="rounded-2xl bg-slate-900 text-white p-4 sm:p-5 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>{stats.activeCounterflowsCount} Dynamic Counterflows Active • Peak Crossing: {stats.highestDelayCrossingName} (+{stats.highestDelayMinutes}m)</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
+              Real-Time Metro Vancouver Bridge Telemetry
+            </h2>
+            <p class="text-xs text-slate-300">
+              Tracking 10 major marine connectors across Burrard Inlet, False Creek, and Fraser River.
+            </p>
+          </div>
+
+          <a
+            href="/bridges/lions-gate"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
+          >
+            <span>🔄</span>
+            <span>Lions Gate Counterflow Cam</span>
+          </a>
+        </section>
+
+        <!-- Pinned Crossings Section (Mirrors Home Dashboard Card) -->
+        <div id="pinned-bridges-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Pinned Crossings (Shown on Main Dashboard)</span>
+            </span>
+            <span class="text-[11px] text-slate-400">Click star on any bridge to customize</span>
+          </div>
+          <div id="pinned-bridges-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <!-- Dynamically populated via client JS -->
+          </div>
         </div>
-        <h2 class="text-base sm:text-lg font-bold tracking-tight text-white">
-          Real-Time Metro Vancouver Bridge Telemetry
-        </h2>
-        <p class="text-xs text-slate-300">
-          Tracking 10 major marine connectors across Burrard Inlet, False Creek, and Fraser River.
-        </p>
-      </div>
 
-      <a
-        href="/bridges/lions-gate"
-        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all shrink-0"
-      >
-        <span>🔄</span>
-        <span>Lions Gate Counterflow Cam</span>
-      </a>
-    </section>
+        <!-- Filter Tabs -->
+        <FilterTabs activeTab="all" />
 
-    <!-- Pinned Crossings Section (Mirrors Home Dashboard Card) -->
-    <div id="pinned-bridges-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-          <span>⭐</span>
-          <span>Pinned Crossings (Shown on Main Dashboard)</span>
-        </span>
-        <span class="text-[11px] text-slate-400">Click star on any bridge to customize</span>
-      </div>
-      <div id="pinned-bridges-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        <!-- Dynamically populated via client JS -->
-      </div>
-    </div>
-
-    <!-- Filter Tabs -->
-    <FilterTabs activeTab="all" />
-
-    <!-- Crossings Directory Grid -->
-    <div id="crossings-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {crossings.map((crossing) => (
-        <CrossingCard crossing={crossing} />
-      ))}
-    </div>
+        <!-- Crossings Directory Grid -->
+        <div id="crossings-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {crossings.map((crossing) => (
+            <CrossingCard crossing={crossing} />
+          ))}
+        </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Bridges & Tunnel Radar" variant="page" error={!crossingsResult.ok ? crossingsResult.error : undefined} />
+    )}
   </div>
 </ToolLayout>
 

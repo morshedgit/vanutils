@@ -39,6 +39,12 @@ const { beach, distanceKm } = Astro.props;
       <span class="distance-text">{distanceKm ? `${distanceKm.toFixed(1)} km` : 'Calculating...'}</span>
       <span>•</span>
       <span>{beach.currentStatus === 'unmonitored' ? 'Awaiting lab test' : `${beach.latestSample.eColiCount} CFU`}</span>
+      {beach.isLive === false && (
+        <>
+          <span>•</span>
+          <span class="text-amber-600 dark:text-amber-400 font-semibold" title="No matching live GIS feature this request — showing last known reading">Last known</span>
+        </>
+      )}
     </div>
   </a>
 

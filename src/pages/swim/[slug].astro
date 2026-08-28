@@ -3,7 +3,8 @@ import PlatformLayout from '../../layouts/PlatformLayout.astro';
 import StatusBadge from '../../components/shared/StatusBadge.astro';
 import SafetyLegend from '../../tools/can-i-swim/components/SafetyLegend.astro';
 import RelatedTelemetry, { type RelatedItem } from '../../components/shared/RelatedTelemetry.astro';
-import { getLiveBeaches, getBeachById, getNearbyCleanBeaches } from '../../tools/can-i-swim/services/vchScraper';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
+import { getLiveBeaches, getBeachById, getNearbyCleanBeaches, BEACHES } from '../../tools/can-i-swim/services/vchScraper';
 import { getStatusMeta } from '../../tools/can-i-swim/services/healthCalc';
 import JsonLd from '../../components/shared/JsonLd.astro';
 
@@ -11,15 +12,19 @@ import JsonLd from '../../components/shared/JsonLd.astro';
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
 const { slug } = Astro.params;
-const allBeaches = await getLiveBeaches();
-const beach = getBeachById(slug || '', allBeaches);
 
-if (!beach) {
+// Baseline lookup is metadata-only (name/coords/amenities) so an unknown slug still
+// 404s even when the live upstream is down; it is never used for water-quality values.
+const beachMeta = getBeachById(slug || '', BEACHES);
+if (!beachMeta) {
   return Astro.redirect('/swim');
 }
 
-const meta = getStatusMeta(beach.currentStatus);
-const nearbyClean = getNearbyCleanBeaches(beach.id, 3);
+const beachesResult = await getLiveBeaches();
+const beach = beachesResult.ok ? getBeachById(slug || '', beachesResult.data) : undefined;
+
+const meta = beach ? getStatusMeta(beach.currentStatus) : null;
+const nearbyClean = beach ? getNearbyCleanBeaches(beach.id, 3) : [];
 
 const wikidataBeachMap: Record<string, string[]> = {
   'english-bay-beach': ['https://en.wikipedia.org/wiki/English_Bay_(Vancouver)', 'https://www.wikidata.org/wiki/Q3054274'],
@@ -37,18 +42,18 @@ const beachSchema = [
   {
     '@context': 'https://schema.org',
     '@type': 'TouristAttraction',
-    name: beach.name,
-    description: `Vancouver Coastal Health water quality monitoring site for ${beach.name}, ${beach.municipality}.`,
-    url: `https://vanheartbeat.ca/swim/${beach.id}`,
-    sameAs: wikidataBeachMap[beach.id] || [],
+    name: beachMeta.name,
+    description: `Vancouver Coastal Health water quality monitoring site for ${beachMeta.name}, ${beachMeta.municipality}.`,
+    url: `https://vanheartbeat.ca/swim/${beachMeta.id}`,
+    sameAs: wikidataBeachMap[beachMeta.id] || [],
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: beach.latitude,
-      longitude: beach.longitude,
+      latitude: beachMeta.latitude,
+      longitude: beachMeta.longitude,
     },
     address: {
       '@type': 'PostalAddress',
-      addressLocality: beach.municipality,
+      addressLocality: beachMeta.municipality,
       addressRegion: 'BC',
       addressCountry: 'CA',
     },
@@ -59,7 +64,7 @@ const beachSchema = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'VanHeartbeat', item: 'https://vanheartbeat.ca' },
       { '@type': 'ListItem', position: 2, name: 'Can I Swim', item: 'https://vanheartbeat.ca/swim' },
-      { '@type': 'ListItem', position: 3, name: beach.name, item: `https://vanheartbeat.ca/swim/${beach.id}` },
+      { '@type': 'ListItem', position: 3, name: beachMeta.name, item: `https://vanheartbeat.ca/swim/${beachMeta.id}` },
     ],
   },
 ];
@@ -90,9 +95,9 @@ const relatedItems: RelatedItem[] = [
 ---
 
 <PlatformLayout
-  title={`${beach.name} Water Quality — Can I Swim?`}
-  description={`Live E. coli bacteria levels, 30-day water quality trend, safety status and amenities for ${beach.name}, ${beach.municipality}.`}
-  currentPath={`/swim/${beach.id}`}
+  title={beach ? `${beach.name} Water Quality — Can I Swim?` : `${beachMeta.name} — Live Data Unavailable`}
+  description={beach ? `Live E. coli bacteria levels, 30-day water quality trend, safety status and amenities for ${beach.name}, ${beach.municipality}.` : 'Live water quality data is temporarily unavailable.'}
+  currentPath={`/swim/${beachMeta.id}`}
 >
   <JsonLd schema={beachSchema} />
 
@@ -104,7 +109,7 @@ const relatedItems: RelatedItem[] = [
         <span>/</span>
         <a href="/swim" class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors">Can I Swim</a>
         <span>/</span>
-        <span class="text-slate-900 dark:text-white truncate max-w-[180px] sm:max-w-none">{beach.name}</span>
+        <span class="text-slate-900 dark:text-white truncate max-w-[180px] sm:max-w-none">{beachMeta.name}</span>
       </nav>
 
       <div class="flex items-center gap-2">
@@ -120,6 +125,12 @@ const relatedItems: RelatedItem[] = [
       </div>
     </div>
 
+    {!beach && (
+      <LiveDataUnavailable toolName={`${beachMeta.name} Water Quality`} variant="page" error={!beachesResult.ok ? beachesResult.error : undefined} />
+    )}
+
+    {beach && meta && (
+    <>
     <!-- Safety Status Hero Banner -->
     <section class={`rounded-3xl border p-4 sm:p-6 lg:p-8 shadow-sm ${meta.bannerBg} ${meta.cardBorder}`}>
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -146,8 +157,13 @@ const relatedItems: RelatedItem[] = [
 
         <!-- Latest Numbers Card -->
         <div class="bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-5 rounded-2xl shrink-0 min-w-[240px] shadow-sm space-y-3">
-          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Latest Laboratory Test
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <span>Latest Laboratory Test</span>
+            {beach.isLive === false && (
+              <span class="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-300 text-[9px] normal-case font-semibold" title="No matching live GIS feature this request — showing last known reading">
+                Last known
+              </span>
+            )}
           </div>
           <div>
             <div class="text-3xl font-black text-slate-900 dark:text-white">
@@ -335,6 +351,8 @@ const relatedItems: RelatedItem[] = [
         </div>
       </div>
     </section>
+    </>
+    )}
 
     <!-- Nearby Clean Alternatives (FR-SWIM-04) -->
     {nearbyClean.length > 0 && (

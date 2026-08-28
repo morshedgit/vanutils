@@ -51,5 +51,4 @@ export interface SportsFacility {
   playabilityStatus?: FieldPlayability;
   officialScheduleUrl: string;
   lastUpdated: string;             // ISO 8601
-  isStale: boolean;
 }

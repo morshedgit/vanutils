@@ -5,13 +5,16 @@ import MarketConditionBadge from '../../tools/housing-market/components/MarketCo
 import MortgageRadar from '../../tools/housing-market/components/MortgageRadar.astro';
 import SubmarketCard from '../../tools/housing-market/components/SubmarketCard.astro';
 import FilterTabs from '../../tools/housing-market/components/FilterTabs.astro';
+import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
 import { getLiveMarketHeartbeat, formatCurrency, formatPercent } from '../../tools/housing-market/services/marketService';
 
 // Tiered Edge Cache: 24-hour edge TTL, 7-day background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
 
-const data = await getLiveMarketHeartbeat();
-const { metroOverview, submarkets, mortgage } = data;
+const marketResult = await getLiveMarketHeartbeat();
+const metroOverview = marketResult.ok ? marketResult.data.metroOverview : null;
+const submarkets = marketResult.ok ? marketResult.data.submarkets : [];
+const mortgage = marketResult.ok ? marketResult.data.mortgage : null;
 
 const marketSchema = [
   {
@@ -73,76 +76,82 @@ const marketSchema = [
   <JsonLd schema={marketSchema} />
 
   <div class="space-y-5 max-w-5xl mx-auto">
-    <!-- Regional Composite Market Pulse Banner -->
-    <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm space-y-4">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div class="space-y-1">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-sky-400">Greater Vancouver REALTORS® & CMHC Open Data</span>
-            <MarketConditionBadge condition={metroOverview.marketCondition} sar={metroOverview.salesToActiveRatio} />
-          </div>
-          <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">
-            Metro Vancouver Housing & Rental Heartbeat
-          </h2>
-          <p class="text-xs text-slate-300">
-            Tracking {metroOverview.totalActiveListings} active MLS® listings, {metroOverview.totalSales} monthly sales, and regional benchmark indices across 9 submarkets.
-          </p>
-        </div>
-
-        <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs shrink-0 space-y-1">
-          <div class="flex justify-between gap-4 text-slate-400">
-            <span>Median Days on Market:</span>
-            <span class="font-bold text-white">{metroOverview.medianDaysOnMarket} days</span>
-          </div>
-          <div class="flex justify-between gap-4 text-slate-400">
-            <span>Regional Rental Vacancy:</span>
-            <span class="font-bold text-emerald-400">{metroOverview.rental.vacancyRatePercent}%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Regional HPI Composite Row -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-xs">
-        {metroOverview.benchmarks.map((b) => (
-          <div class="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50">
-            <span class="text-slate-400 capitalize block mb-0.5">{b.propertyType === 'all' ? 'All Residential' : b.propertyType}:</span>
-            <div class="text-sm sm:text-base font-black text-white">
-              {formatCurrency(b.benchmarkPrice)}
+    {marketResult.ok && metroOverview && mortgage ? (
+      <>
+        <!-- Regional Composite Market Pulse Banner -->
+        <section class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 border border-slate-800 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-sky-400">Greater Vancouver REALTORS® & CMHC Open Data</span>
+                <MarketConditionBadge condition={metroOverview.marketCondition} sar={metroOverview.salesToActiveRatio} />
+              </div>
+              <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">
+                Metro Vancouver Housing & Rental Heartbeat
+              </h2>
+              <p class="text-xs text-slate-300">
+                Tracking {metroOverview.totalActiveListings} active MLS® listings, {metroOverview.totalSales} monthly sales, and regional benchmark indices across 9 submarkets.
+              </p>
             </div>
-            <span class={`text-[10px] font-bold ${b.change1MonthPercent >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-              {formatPercent(b.change1MonthPercent)} MoM • {formatPercent(b.change1YearPercent)} YoY
-            </span>
+
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs shrink-0 space-y-1">
+              <div class="flex justify-between gap-4 text-slate-400">
+                <span>Median Days on Market:</span>
+                <span class="font-bold text-white">{metroOverview.medianDaysOnMarket} days</span>
+              </div>
+              <div class="flex justify-between gap-4 text-slate-400">
+                <span>Regional Rental Vacancy:</span>
+                <span class="font-bold text-emerald-400">{metroOverview.rental.vacancyRatePercent}%</span>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-    </section>
 
-    <!-- Bank of Canada & Mortgage Calculator Component -->
-    <MortgageRadar mortgage={mortgage} />
+          <!-- Regional HPI Composite Row -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-xs">
+            {metroOverview.benchmarks.map((b) => (
+              <div class="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50">
+                <span class="text-slate-400 capitalize block mb-0.5">{b.propertyType === 'all' ? 'All Residential' : b.propertyType}:</span>
+                <div class="text-sm sm:text-base font-black text-white">
+                  {formatCurrency(b.benchmarkPrice)}
+                </div>
+                <span class={`text-[10px] font-bold ${b.change1MonthPercent >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  {formatPercent(b.change1MonthPercent)} MoM • {formatPercent(b.change1YearPercent)} YoY
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
 
-    <!-- Pinned Submarkets Section (Mirrors Home Dashboard Card) -->
-    <div id="pinned-market-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-          <span>⭐</span>
-          <span>Pinned Submarkets (Shown on Main Dashboard)</span>
-        </span>
-        <span class="text-[11px] text-slate-400">Click star on any submarket below to customize</span>
-      </div>
-      <div id="pinned-market-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        <!-- Dynamically populated via client JS -->
-      </div>
-    </div>
+        <!-- Bank of Canada & Mortgage Calculator Component -->
+        <MortgageRadar mortgage={mortgage} />
 
-    <!-- Filter Tabs -->
-    <FilterTabs activeTab="all" />
+        <!-- Pinned Submarkets Section (Mirrors Home Dashboard Card) -->
+        <div id="pinned-market-section" class="p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Pinned Submarkets (Shown on Main Dashboard)</span>
+            </span>
+            <span class="text-[11px] text-slate-400">Click star on any submarket below to customize</span>
+          </div>
+          <div id="pinned-market-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <!-- Dynamically populated via client JS -->
+          </div>
+        </div>
 
-    <!-- Submarket Cards Grid -->
-    <div id="submarkets-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {submarkets.map((submarket) => (
-        <SubmarketCard submarket={submarket} />
-      ))}
-    </div>
+        <!-- Filter Tabs -->
+        <FilterTabs activeTab="all" />
+
+        <!-- Submarket Cards Grid -->
+        <div id="submarkets-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {submarkets.map((submarket) => (
+            <SubmarketCard submarket={submarket} />
+          ))}
+        </div>
+      </>
+    ) : (
+      <LiveDataUnavailable toolName="Housing & Mortgage Radar" variant="page" error={!marketResult.ok ? marketResult.error : undefined} />
+    )}
 
     <!-- FAQ Accordion for SEO & GEO -->
     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">

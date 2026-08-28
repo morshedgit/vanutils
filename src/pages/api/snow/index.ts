@@ -9,7 +9,19 @@ export const GET: APIRoute = async ({ request }) => {
   const region = url.searchParams.get('region') as MountainRegion | null;
   const search = url.searchParams.get('search')?.toLowerCase();
 
-  let mountains = await getLiveMountains();
+  const mountainsResult = await getLiveMountains();
+
+  if (!mountainsResult.ok) {
+    return new Response(JSON.stringify({ error: mountainsResult.error }), {
+      status: 503,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      },
+    });
+  }
+
+  let mountains = mountainsResult.data;
 
   if (region && region !== 'all') {
     mountains = mountains.filter((m) => m.region === region);

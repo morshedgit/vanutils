@@ -5,8 +5,10 @@ import type {
   RushHourRestriction,
 } from '../types';
 import neighbourhoodsData from '../data/neighbourhoods.json';
-import { edgeFetch } from '../../../services/shared/edgeFetch';
+import { liveFail, liveOk, type LiveResult } from '../../../services/shared/liveResult';
 
+// Seed/reference metadata only (rules/schedules) — never presented as live
+// telemetry values. See issue #35.
 export const NEIGHBOURHOODS: NeighbourhoodParkingProfile[] = neighbourhoodsData as NeighbourhoodParkingProfile[];
 
 const WEEKDAY_MAP: Record<string, number> = {
@@ -114,22 +116,30 @@ function isSweepDayToday(sweepDaysText: string, date: Date): boolean {
 }
 
 /**
- * Dynamically loads live parking regulations and sweeping schedules at the edge
+ * Evaluates live parking regulations and sweeping schedules at the edge
+ * against the current time. Deliberately NOT cached — the clearance status
+ * is a function of the current minute (rush hour / street sweeping windows),
+ * so caching it would serve a stale clearance decision past a rule's start
+ * time. There is no upstream network call here on purpose: the underlying
+ * rules are static reference data, and the only genuinely "live" signal is
+ * the clock-based evaluation below, which never depends on a fetch. Returns
+ * ok:false only if the evaluation itself throws.
  */
-export async function getLiveNeighbourhoods(): Promise<NeighbourhoodParkingProfile[]> {
+export async function getLiveNeighbourhoods(): Promise<LiveResult<NeighbourhoodParkingProfile[]>> {
   try {
-    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parking-meters/records?limit=1';
-    await edgeFetch(endpoint, { timeoutMs: 1200 });
-  } catch (e) {}
+    const now = new Date();
+    const evaluated = NEIGHBOURHOODS.map((n) => {
+      const evalResult = evaluateNeighbourhoodSpot(n, now);
+      return {
+        ...n,
+        overallClearance: evalResult.clearanceStatus,
+      };
+    });
 
-  const now = new Date();
-  return NEIGHBOURHOODS.map((n) => {
-    const evalResult = evaluateNeighbourhoodSpot(n, now);
-    return {
-      ...n,
-      overallClearance: evalResult.clearanceStatus,
-    };
-  });
+    return liveOk(evaluated, now.toISOString(), 'live');
+  } catch (e: any) {
+    return liveFail(e?.message || 'Parking evaluation failed');
+  }
 }
 
 export function getAllNeighbourhoods(): NeighbourhoodParkingProfile[] {

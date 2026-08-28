@@ -15,8 +15,8 @@ While VanUtils has established robust TypeScript schemas, responsive Tailwind UI
 Implement a **Unified Ingestion & Edge Telemetry Pipeline** that:
 - Connects directly to verified municipal, provincial, and federal open endpoints.
 - Implements lightweight, zero-dependency Edge parsers for GeoJSON, RSS/XML, and REST payloads.
-- Enforces runtime Edge loaders (`AbortSignal.timeout(1200)`) with graceful failover to verified snapshots (`isStale: true`).
-- Provides automated cron synchronization scripts to keep offline snapshots continuously refreshed.
+- Enforces runtime Edge loaders (`AbortSignal.timeout(1200)`) that return an explicit `{ ok: false, error }` on upstream failure — never a baseline snapshot dressed up as current (issue #35; see `src/services/shared/liveResult.ts`).
+- Provides manual, one-time seed-refresh scripts to keep offline reference snapshots up to date — these are never wired into the build or deployment pipeline (issue #35).
 
 ---
 
@@ -40,10 +40,10 @@ Implement a **Unified Ingestion & Edge Telemetry Pipeline** that:
                                                  │
                                                  ▼
 +───────────────────────────────────────────────────────────────────────────────────────────────────+
-|                                RESILIENT REAL-DATA SNAPSHOT FALLBACK                              |
+|                          EXPLICIT-FAILURE LIVERESULT CONTRACT (issue #35)                         |
 |  - Primary: Live Upstream Response (0ms - 1200ms)                                                 |
-|  - Secondary: Cloudflare KV / Edge Cache Hit                                                      |
-|  - Failover: Last-Known Verified Snapshot with explicit timestamp & `isStale: true`               |
+|  - Secondary: Cloudflare Workers Cache API Hit (`withEdgeCache()`, per-module TTL)                 |
+|  - On Failure: { ok: false, error } — never a baseline snapshot dressed up as current              |
 +───────────────────────────────────────────────────────────────────────────────────────────────────+
 ```
 
@@ -177,7 +177,7 @@ To keep bundle size $< 25\text{ KB}$ and avoid heavyweight Node dependencies:
 
 ## 5. Non-Functional Requirements & Edge SLA
 
-- **Edge Execution SLA**: Every live loader must return within **$\le 1,200\text{ms}$**. If upstream latency exceeds 1.2s, the edge runtime immediately serves the verified fallback snapshot with `isStale: true`.
+- **Edge Execution SLA**: Every live loader must return within **$\le 1,200\text{ms}$**. If upstream latency exceeds 1.2s, the loader returns `{ ok: false, error }` — never the baseline snapshot dressed up as current (issue #35).
 - **Zero Synthetic Data Mandate**: Generating random or simulated metrics is strictly prohibited across all tools.
 - **Client JS Budget**: $< 20\text{ KB}$ total client payload across all pages.
 - **Lighthouse Performance**: 95+ target across Performance, Accessibility, Best Practices, and SEO.
@@ -190,5 +190,5 @@ To keep bundle size $< 25\text{ KB}$ and avoid heavyweight Node dependencies:
 | :--- | :--- | :---: |
 | **M1: Edge Ingestion Utilities** | Build `edgeFetch.ts` and `xmlParser.ts` in `src/services/shared/`. | Ready |
 | **M2: Tool Services Live Fetchers** | Update all 13 `services/*.ts` with authentic dynamic Edge loaders and 1.2s timeout. | Ready |
-| **M3: Sync Scrapers Enhancement** | Upgrade `scripts/sync-live-*.js` to parse and populate real API payloads during build sync. | Ready |
-| **M4: Validation & Audit** | Verify `npm run data:sync:all`, `npm run check`, and Edge SSR builds with zero mock data. | Ready |
+| **M3: Sync Scrapers Enhancement** | Upgrade `scripts/sync-live-*.js` to parse and populate real API payloads. These remain manual, one-time seed-refresh tools — not part of `npm run build` (issue #35). | Ready |
+| **M4: Validation & Audit** | Verify `npm run check` and Edge SSR builds with zero mock data (`data:sync:all` is a manual command, not part of build verification). | Ready |

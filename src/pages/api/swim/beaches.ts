@@ -37,7 +37,19 @@ export const GET: APIRoute = async ({ request }) => {
     userLng,
   };
 
-  const allBeaches = await getLiveBeaches();
+  const beachesResult = await getLiveBeaches();
+
+  if (!beachesResult.ok) {
+    return new Response(JSON.stringify({ success: false, error: beachesResult.error }), {
+      status: 503,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+
+  const allBeaches = beachesResult.data;
   const filtered = filterBeaches(allBeaches, filterOptions);
   const stats = getBeachStats(allBeaches);
 
