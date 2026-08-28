@@ -5,7 +5,7 @@ import RelatedTelemetry, { type RelatedItem } from '../../components/shared/Rela
 import WaitTimeBadge from '../../tools/health-wait-times/components/WaitTimeBadge.astro';
 import EmergencyDisclaimer from '../../tools/health-wait-times/components/EmergencyDisclaimer.astro';
 import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
-import { getLiveFacilities, getFacilityById, formatWaitTime, BASELINE_FACILITIES } from '../../tools/health-wait-times/services/healthService';
+import { getLiveFacilities, getFacilityById, formatWaitTime, computeIsCurrentlyOpen, BASELINE_FACILITIES } from '../../tools/health-wait-times/services/healthService';
 
 // Set Edge Cache header: 5 min max age, 10 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
@@ -22,7 +22,7 @@ if (!facilityMeta) {
 const facilitiesResult = await getLiveFacilities();
 const facility = facilitiesResult.ok ? getFacilityById(facilityId || '', facilitiesResult.data) : undefined;
 const waitMins = facility?.triageData?.waitTimeMinutes;
-const isOpen = facility?.hours.isCurrentlyOpen;
+const isOpen = facility ? computeIsCurrentlyOpen(facility) : undefined;
 
 const facilitySchema = [
   {

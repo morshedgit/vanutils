@@ -19,9 +19,6 @@ const CACHE_TTL_SECONDS = 300; // ER wait times change every few minutes
 export async function getLiveFacilities(): Promise<LiveResult<HealthcareFacility[]>> {
   return withEdgeCache<HealthcareFacility[]>('health-wait-times-facilities', CACHE_TTL_SECONDS, async () => {
     const now = new Date();
-    const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
-    const vancouverDate = new Date(vancouverTimeString);
-    const hour = vancouverDate.getHours();
 
     const res = await edgeFetch<string>('https://www.edwaittimes.ca/legacy', { timeoutMs: 1200 });
     if (!res.data || typeof res.data !== 'string') return null;
@@ -40,7 +37,6 @@ export async function getLiveFacilities(): Promise<LiveResult<HealthcareFacility
         l.slug?.toLowerCase() === f.id
       );
       const liveWait = matched?.waitTime?.waitTimeMinutes;
-      const isOpen = f.facilityType === 'emergency_department' ? true : (hour >= 8 && hour < 22);
 
       let intensity: WaitIntensity = 'unavailable';
       if (liveWait !== undefined && liveWait !== null) {
@@ -59,13 +55,24 @@ export async function getLiveFacilities(): Promise<LiveResult<HealthcareFacility
               lastUpdated: matched?.waitTime?.createdAt || now.toISOString(),
             }
           : f.triageData,
-        hours: {
-          ...f.hours,
-          isCurrentlyOpen: isOpen,
-        },
       };
     });
   });
+}
+
+/**
+ * Computes a facility's open/closed status from the current Vancouver
+ * wall-clock hour. Deliberately NOT baked into `getLiveFacilities`'s cached
+ * response — this is a function of the current minute, so caching it
+ * alongside the (up to 5-minute-TTL) wait-time data could serve a stale
+ * "open" status for up to 5 minutes past actual closing. Callers should
+ * compute this at render time instead.
+ */
+export function computeIsCurrentlyOpen(facility: HealthcareFacility, now: Date = new Date()): boolean {
+  if (facility.facilityType === 'emergency_department') return true;
+  const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
+  const hour = new Date(vancouverTimeString).getHours();
+  return hour >= 8 && hour < 22;
 }
 
 export function getAllFacilities(): HealthcareFacility[] {
@@ -149,6 +156,6 @@ export function getHealthOverviewStats(facilities: HealthcareFacility[] = BASELI
     minERWaitMinutes: shortest.wait,
     minERWaitFormatted: formatWaitTime(shortest.wait),
     totalERs: ers.length,
-    openUPCCsCount: upccs.filter((f) => f.hours.isCurrentlyOpen).length,
+    openUPCCsCount: upccs.filter((f) => computeIsCurrentlyOpen(f)).length,
   };
 }

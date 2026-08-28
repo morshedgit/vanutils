@@ -50,7 +50,14 @@ const { team } = Astro.props;
     <!-- Standings Bar & 5-Game Form -->
     <div class="grid grid-cols-2 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 text-xs">
       <div>
-        <div class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Record &amp; Points</div>
+        <div class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+          <span>Record &amp; Points</span>
+          {!team.standingsLive && (
+            <span class="px-1 py-px rounded bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[9px] normal-case font-semibold" title="Live league feed unavailable this request — showing last known standings">
+              not live
+            </span>
+          )}
+        </div>
         <div class="font-black text-slate-900 dark:text-white text-sm">
           {team.standings.record} <span class="text-xs font-normal text-slate-500">({team.standings.points} pts)</span>
         </div>

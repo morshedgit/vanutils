@@ -22,7 +22,6 @@
       "isOpen24_7": false,
       "openTime": "08:00",
       "closeTime": "20:00",
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true,
       "notes": "Open daily 8:00 AM - 8:00 PM for emergency care"
     },
@@ -58,7 +57,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true
     },
     "servicesAvailable": [
@@ -95,7 +93,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true
     },
     "servicesAvailable": [
@@ -132,7 +129,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true,
       "notes": "Dedicated specialized emergency care for children and youth (0-16 years)"
     },
@@ -171,7 +167,6 @@
       "isOpen24_7": false,
       "openTime": "08:00",
       "closeTime": "22:00",
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true,
       "notes": "Open daily 8:00 AM - 10:00 PM for urgent walk-in care"
     },
@@ -210,7 +205,6 @@
       "isOpen24_7": false,
       "openTime": "08:00",
       "closeTime": "20:00",
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true,
       "notes": "Open daily 8:00 AM - 8:00 PM for non-life-threatening urgent conditions"
     },
@@ -248,7 +242,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true
     },
     "servicesAvailable": [
@@ -286,7 +279,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true
     },
     "servicesAvailable": [
@@ -321,7 +313,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true
     },
     "servicesAvailable": [
@@ -356,7 +347,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true
     },
     "servicesAvailable": [
@@ -393,7 +383,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true,
       "notes": "Features dedicated separate Pediatric Emergency Department for children"
     },
@@ -430,7 +419,6 @@
     },
     "hours": {
       "isOpen24_7": true,
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true
     },
     "servicesAvailable": [
@@ -467,7 +455,6 @@
       "isOpen24_7": false,
       "openTime": "08:00",
       "closeTime": "22:00",
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true,
       "notes": "Open daily 8:00 AM - 10:00 PM for urgent same-day care"
     },
@@ -506,7 +493,6 @@
       "isOpen24_7": false,
       "openTime": "08:00",
       "closeTime": "22:00",
-      "isCurrentlyOpen": true,
       "acceptingWalkIns": true,
       "notes": "Open daily 8:00 AM - 10:00 PM"
     },

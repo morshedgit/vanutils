@@ -48,10 +48,14 @@ export async function getLiveBeaches(): Promise<LiveResult<Beach[]>> {
             ...b.latestSample,
             eColiCount: eColi,
           },
+          isLive: true,
         };
       }
 
-      return b;
+      // No matching feature in this request's live GIS response — surface
+      // the seed reading as explicitly not-live rather than showing it
+      // identically to a genuinely live-matched beach (health/safety signal).
+      return { ...b, isLive: false };
     });
   });
 }

@@ -57,6 +57,6 @@ export interface SalesOverviewStats {
   activeSalesCount: number;
   upcomingThisMonth: number;
   avgDiscountPercent: number;
-  nextMajorSaleName: string;
-  nextMajorSaleDate: string;
+  nextMajorSaleName: string | null;
+  nextMajorSaleDate: string | null;
 }

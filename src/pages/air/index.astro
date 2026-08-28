@@ -6,13 +6,17 @@ import FilterTabs from '../../tools/air-quality/components/FilterTabs.astro';
 import StationCard from '../../tools/air-quality/components/StationCard.astro';
 import CleanAirShelters from '../../tools/air-quality/components/CleanAirShelters.astro';
 import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
-import { getLiveStations, getAllShelters, getAirOverviewStats } from '../../tools/air-quality/services/airQualityService';
+import { getLiveStations, getAllShelters, getAirOverviewStats, getAllStations } from '../../tools/air-quality/services/airQualityService';
 
 // Set Edge Cache header: 10 min max age, 30 min background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
 
 const stationsResult = await getLiveStations();
 const stations = stationsResult.ok ? stationsResult.data : [];
+// Stations with no live match this request are dropped rather than shown
+// with a baseline snapshot (see getLiveStations) — surface that gap instead
+// of silently shrinking the station list. See issue #35.
+const droppedStationCount = stationsResult.ok ? getAllStations().length - stations.length : 0;
 const shelters = getAllShelters();
 const stats = stationsResult.ok ? getAirOverviewStats(stations) : null;
 
@@ -125,6 +129,11 @@ const airSchema = [
         <FilterTabs activeTab="all" />
 
         <!-- Stations Directory Grid -->
+        {droppedStationCount > 0 && (
+          <p class="px-1 text-xs text-amber-600 dark:text-amber-400 font-medium">
+            Showing {stations.length} of {stations.length + droppedStationCount} stations — {droppedStationCount} unavailable this request
+          </p>
+        )}
         <div id="stations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {stations.map((station) => (
             <StationCard station={station} />

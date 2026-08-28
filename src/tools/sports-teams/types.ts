@@ -80,6 +80,11 @@ export interface SportsTeam {
     accent: string;
   };
   standings: TeamStandings;
+  // True when this team's standings were merged from a live league feed this
+  // request; false/undefined when the league's live fetch failed/timed out
+  // (or this is baseline seed metadata) and `standings` is the untouched
+  // seed clone. See issue #35.
+  standingsLive?: boolean;
   lastGame: TeamGame | null;
   nextGame: TeamGame | null;
   recentGames: TeamGame[];

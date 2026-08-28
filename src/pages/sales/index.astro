@@ -147,12 +147,18 @@ const salesSchema = [
           Next Major Drop
         </span>
         <div class="truncate">
-          <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate block">
-            {stats.nextMajorSaleName}
-          </span>
-          <span class="text-[10px] text-sky-600 dark:text-sky-400 font-semibold">
-            {stats.nextMajorSaleDate}
-          </span>
+          {stats.nextMajorSaleName ? (
+            <>
+              <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate block">
+                {stats.nextMajorSaleName}
+              </span>
+              <span class="text-[10px] text-sky-600 dark:text-sky-400 font-semibold">
+                {stats.nextMajorSaleDate}
+              </span>
+            </>
+          ) : (
+            <span class="text-xs sm:text-sm font-bold text-slate-400">None scheduled</span>
+          )}
         </div>
       </div>
     </div>

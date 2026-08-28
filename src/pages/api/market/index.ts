@@ -13,12 +13,21 @@ export const GET: APIRoute = async ({ request }) => {
     'Access-Control-Allow-Origin': '*',
   };
 
+  // Errors must not inherit the 24h success TTL — a transient upstream
+  // (Bank of Canada) outage would otherwise get cached as "unavailable" for
+  // up to a day after it recovers.
+  const errorHeaders = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-store',
+    'Access-Control-Allow-Origin': '*',
+  };
+
   const marketResult = await getLiveMarketHeartbeat();
 
   if (!marketResult.ok) {
     return new Response(JSON.stringify({ error: marketResult.error }), {
       status: 503,
-      headers,
+      headers: errorHeaders,
     });
   }
 
@@ -29,7 +38,7 @@ export const GET: APIRoute = async ({ request }) => {
     if (!submarket) {
       return new Response(JSON.stringify({ error: 'Submarket not found' }), {
         status: 404,
-        headers,
+        headers: errorHeaders,
       });
     }
 

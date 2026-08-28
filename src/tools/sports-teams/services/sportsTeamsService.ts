@@ -97,7 +97,7 @@ export function getGameDaySummary(teams: SportsTeam[]) {
  */
 export async function getLiveSportsTeams(): Promise<LiveResult<SportsTeamsHeartbeat>> {
   return withEdgeCache<SportsTeamsHeartbeat>('sports-teams-heartbeat', CACHE_TTL_SECONDS, async () => {
-    const teams = BASELINE_TEAMS.map((t) => ({ ...t, standings: { ...t.standings } }));
+    const teams = BASELINE_TEAMS.map((t) => ({ ...t, standings: { ...t.standings }, standingsLive: false }));
     let anyLiveSignal = false;
 
     const controller = new AbortController();
@@ -119,6 +119,7 @@ export async function getLiveSportsTeams(): Promise<LiveResult<SportsTeamsHeartb
               canucks.standings.rank = canucksStandings.divisionSequence || canucks.standings.rank;
               canucks.standings.goalDiffOrMargin = canucksStandings.goalDifferential;
               canucks.standings.streak = `${canucksStandings.streakCount}${canucksStandings.streakCode}`;
+              canucks.standingsLive = true;
               anyLiveSignal = true;
             }
           }
@@ -148,6 +149,7 @@ export async function getLiveSportsTeams(): Promise<LiveResult<SportsTeamsHeartb
               whitecaps.standings.points = pts;
               whitecaps.standings.rank = rank;
               whitecaps.standings.goalDiffOrMargin = gd;
+              whitecaps.standingsLive = true;
               anyLiveSignal = true;
             }
           }

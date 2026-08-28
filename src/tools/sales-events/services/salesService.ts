@@ -30,26 +30,19 @@ function computeLiveStatus(events: SalesEvent[]): SalesEvent[] {
   });
 }
 
-import { edgeFetch } from '../../../services/shared/edgeFetch';
-
 /**
  * Evaluates each sale's live status (upcoming/active_now/concluded) against
  * today's date. Deliberately not cached beyond the request — the same
  * reasoning as carshare-parking/sports-facilities: this is a function of the
- * current date, not something that can go stale. The special-events open-data
- * query below has no per-sale fields that map onto SalesEvent, so it isn't
- * merged in; this loader's only genuine "live" signal is the date-based
- * status evaluation, which never depends on that fetch. Returns ok:false only
- * if the evaluation itself throws.
+ * current date, not something that can go stale. There is no upstream
+ * network call here on purpose: the City of Vancouver special-events feed
+ * has no per-sale fields that map onto SalesEvent, so this loader's only
+ * genuine "live" signal is the date-based status evaluation below, which
+ * never depends on a fetch. Returns ok:false only if the evaluation itself
+ * throws.
  */
 export async function getLiveSalesEvents(category?: string): Promise<LiveResult<SalesEvent[]>> {
   try {
-    // Check City of Vancouver / Venue events endpoint with 1.2s timeout
-    await edgeFetch<{ results: any[] }>(
-      'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/special-events/records?limit=5',
-      { timeoutMs: 1200 }
-    ).catch(() => null);
-
     const now = new Date();
     const sales = computeLiveStatus(BASELINE_SALES);
     const filtered = category && category !== 'all' ? sales.filter((s) => s.category === category) : sales;
@@ -103,7 +96,7 @@ export async function getSalesOverviewStats(): Promise<SalesOverviewStats> {
     activeSalesCount: activeCount,
     upcomingThisMonth: upcomingCount,
     avgDiscountPercent: avgDiscount,
-    nextMajorSaleName: nextSale ? nextSale.name : 'Aritzia Warehouse Sale',
-    nextMajorSaleDate: nextSale ? nextSale.startDate : '2026-08-27',
+    nextMajorSaleName: nextSale ? nextSale.name : null,
+    nextMajorSaleDate: nextSale ? nextSale.startDate : null,
   };
 }

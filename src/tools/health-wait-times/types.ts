@@ -18,7 +18,6 @@ export interface OperatingHours {
   isOpen24_7: boolean;
   openTime?: string;               // "08:00"
   closeTime?: string;              // "20:00"
-  isCurrentlyOpen: boolean;
   acceptingWalkIns: boolean;
   notes?: string;
 }

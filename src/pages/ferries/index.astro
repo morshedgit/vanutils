@@ -6,13 +6,17 @@ import SeaBusPulse from '../../tools/bc-ferries/components/SeaBusPulse.astro';
 import FilterTabs from '../../tools/bc-ferries/components/FilterTabs.astro';
 import RouteCard from '../../tools/bc-ferries/components/RouteCard.astro';
 import LiveDataUnavailable from '../../components/shared/LiveDataUnavailable.astro';
-import { getLiveRoutes } from '../../tools/bc-ferries/services/ferryService';
+import { getLiveRoutes, getAllRoutes } from '../../tools/bc-ferries/services/ferryService';
 
 // Set Edge Cache header: 60s max age, 300s background revalidation
 Astro.response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
 const routesResult = await getLiveRoutes();
 const routes = routesResult.ok ? routesResult.data : [];
+// Routes with no live match this request are dropped rather than shown with
+// baseline sailings (see getLiveRoutes) — surface that gap instead of
+// silently shrinking the "Showing all N" count. See issue #35.
+const droppedRouteCount = routesResult.ok ? getAllRoutes().length - routes.length : 0;
 
 const ferriesSchema = [
   {
@@ -93,7 +97,7 @@ const ferriesSchema = [
       </div>
     </div>
 
-    <!-- TransLink SeaBus Live Pulse Banner -->
+    <!-- TransLink SeaBus Scheduled Headway Banner -->
     <SeaBusPulse />
 
     <!-- Filter & Search Controls -->
@@ -103,7 +107,11 @@ const ferriesSchema = [
     {routesResult.ok ? (
       <div class="space-y-2">
         <div class="flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
-          <span id="ferry-count-display">Showing all {routes.length} marine routes</span>
+          <span id="ferry-count-display">
+            {droppedRouteCount > 0
+              ? `Showing ${routes.length} of ${routes.length + droppedRouteCount} marine routes — ${droppedRouteCount} unavailable this request`
+              : `Showing all ${routes.length} marine routes`}
+          </span>
           <span>Tap any route for full timetable & cams</span>
         </div>
 

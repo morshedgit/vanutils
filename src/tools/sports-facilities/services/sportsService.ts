@@ -1,6 +1,5 @@
 import type { SportsFacility, FacilityCategory } from '../types';
 import facilitiesData from '../data/facilities.json';
-import { edgeFetch } from '../../../services/shared/edgeFetch';
 import { liveFail, liveOk, type LiveResult } from '../../../services/shared/liveResult';
 
 // Seed/reference metadata only (courts/pools/rinks) — never presented as
@@ -11,17 +10,15 @@ export const BASELINE_FACILITIES: SportsFacility[] = facilitiesData as SportsFac
  * Evaluates each facility's open/closed session status against the current
  * Vancouver clock time. Deliberately NOT cached — the same reasoning as
  * carshare-parking's clearance evaluation: it's a function of the current
- * hour, so caching would serve a stale open/closed status. The
- * parks-facilities open-data query below has no per-facility fields that
- * map onto SportsFacility (booking/session status), so it isn't merged in —
- * this loader's only genuine "live" signal is the clock-based evaluation,
- * which never depends on that fetch.
+ * hour, so caching would serve a stale open/closed status. There is no
+ * upstream network call here on purpose: the City of Vancouver
+ * parks-facilities feed has no per-facility fields that map onto
+ * SportsFacility (booking/session status), so this loader's only genuine
+ * "live" signal is the clock-based evaluation below, which never depends on
+ * a fetch.
  */
 export async function getLiveSportsFacilities(): Promise<LiveResult<SportsFacility[]>> {
   try {
-    const endpoint = 'https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-facilities/records?limit=10';
-    await edgeFetch<{ results: any[] }>(endpoint, { timeoutMs: 1200 }).catch(() => null);
-
     const now = new Date();
     const vancouverTimeString = now.toLocaleString('en-US', { timeZone: 'America/Vancouver' });
     const vancouverDate = new Date(vancouverTimeString);
